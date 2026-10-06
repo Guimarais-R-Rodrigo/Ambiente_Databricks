@@ -9,6 +9,10 @@ Não há uma skill única: use `@hub-ml-eda-profissional` para perfil/qualidade,
 os helpers declarados por essa skill em
 [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
+A skill selecionada e sua [policy](../../hub_padroes/skill_enforcement/policy.json)
+governam a execução. Uma checagem independente é alternativa antes da seleção;
+não substitua a EDA protegida por SQL/helper direto depois de selecioná-la.
+
 ## Antes de usar
 
 Defina se a comparação é de schema, conteúdo, reconciliação, migração, período ou

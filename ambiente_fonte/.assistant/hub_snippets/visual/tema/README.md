@@ -1,7 +1,6 @@
 # `visual.tema` — conferir uma configuração antes de mudar a aparência
 
-> **CUSTOMIZADO PELO HUB · V02 INTEGRADA · O NÚCLEO NÃO APLICA CORES SOZINHO.** O núcleo valida
-> uma proposta; a V03 permite consumo Plotly por opt-in, sem instalar painel, aprovar identidade ou publicar arquivos.
+> **CUSTOMIZADO PELO HUB · O NÚCLEO NÃO APLICA CORES SOZINHO.** Valida uma proposta; consumidores aplicam explicitamente, sem aprovar identidade ou publicar arquivos.
 
 <!-- readme-objeto: 1.0.0 -->
 
@@ -11,7 +10,7 @@
 |---|---|
 | O que é? | Leitor e verificador de configurações visuais completas. |
 | Para que serve? | Conferir se uma proposta pode ser interpretada com segurança. |
-| Quando usar? | Preparação de tema e integração de futuros componentes. |
+| Quando usar? | Preparação de tema e integração explícita de consumidores. |
 | Quando evitar? | Para mudar um gráfico agora ou autorizar uma publicação. |
 | O que exige? | Pacote completo, Python compatível e dependências de validação. |
 | O que entrega? | Configuração isolada, identificadores de integridade e avisos. |
@@ -35,18 +34,21 @@ qual conteúdo foi conferido. Um erro não aciona outro tema silenciosamente.
 
 ## 3. Quando faz sentido usar?
 
-Na preparação de uma proposta e nos adaptadores de gráficos, cabeçalhos
-e materiais editoriais. A V03 já conecta explicitamente este núcleo ao `theme_plotly`
-por uma rota opt-in; outros consumidores continuam em suas rotas atuais até a sprint
-específica de cada um. Também permite testar uma configuração em Python sem
-compute Spark ou acesso a dados de clientes.
+Use na preparação de uma proposta para gráficos, cabeçalhos e materiais editoriais. O núcleo permite conferir uma configuração em Python sem compute Spark ou dados de clientes. Escolha o próximo componente pelo efeito:
+
+| Necessidade | Componente | Efeito |
+|---|---|---|
+| Validar/serializar | `visual.tema` | configuração isolada/bytes em memória |
+| Aplicar em figura | [theme_plotly](../theme_plotly/README.md) | altera a figura recebida; registro é outra chamada |
+| Aplicar em HTML/tabela | rotas `_resolvido` dos componentes | retorna string com tema explícito |
+| Experimentar/comparar | [theme_lab](../theme_lab/README.md) | rascunho e prévia; persistência apenas quando solicitada em pasta autorizada |
 
 ## 4. Quando não usar?
 
 Não use para publicar uma identidade, conceder acesso ou modificar um dashboard.
 Um tema válido pode não ser legível ou adequado à marca. Por exemplo, chamar
 uma configuração de “alto contraste” não certifica que ela seja acessível.
-Para Plotly, a V03 mantém a rota legada e acrescenta uma integração opt-in com
+Para Plotly, há rota legada e integração opt-in com
 [`theme_plotly`](../theme_plotly/): somente um `ResolvedTheme` explícito é consumido
 pela API nova. Isso não migra gráficos existentes nem transforma a validação em aprovação.
 
@@ -109,6 +111,15 @@ O azul esperado nessa referência é `#005CA9`. Isso confere um valor de exemplo
 não a aparência de uma tela. Instruções de instalação do Hub continuam no
 [README do produto](../../../README.md).
 
+Assinaturas de consulta, carga e serialização:
+
+- `resolve_theme(value: bytes | dict[str, Any], *, expected_context: str | None=None)`
+- `load_theme(root: str | Path, relative_path: str, *, expected_sha256: str | None=None, expected_context: str | None=None)`
+- `load_reference_theme(context: str='notebook')`
+- `export_theme(theme: ResolvedTheme)`
+
+`resolve_theme` recebe bytes JSON estritos ou `dict` já construído; `load_theme` lê `.json` sob raiz explícita; `export_theme` devolve bytes `hub-json-v1`, sem salvar. Contextos aceitos: `notebook`, `readme`, `presentation`. Aceitação pelo schema não garante suporte de um consumidor. Consulte os [erros e recuperação](../../../hub_padroes/identidade_visual/ERROS.md).
+
 ## 10. Decisões e configurações que mais importam
 
 `expected_context` impede usar uma configuração de notebook onde se espera material
@@ -120,7 +131,7 @@ autoria; a importação não corrige uma cor inválida em silêncio.
 
 ## 11. Limitações, riscos e armadilhas
 
-Não há UI, adapter, banco de propostas, aprovação ou publicação. As referências
+Este núcleo não contém UI, adapter, banco de propostas, aprovação ou publicação. [theme_lab](../theme_lab/README.md) e [theme_plotly](../theme_plotly/README.md) são componentes separados. As referências
 são testes, não presets aprovados para produção. A checagem de arquivos recusa
 atalhos simbólicos e arquivos especiais, mas não é sandbox contra um processo
 hostil capaz de substituir pastas pais simultaneamente; use permissões controladas.
@@ -135,9 +146,7 @@ interlinguagens. PNGs continuam estáticos e nenhum recurso é recolorido.
 
 As [constantes atuais](../../constants/colors/) e o helper
 [`theme_plotly`](../theme_plotly/) atendem aos usos legados e seguem preservados.
-O verificador de manutenção V01 cobre política e documentação; ele reutiliza as
-mesmas funções de validação deste núcleo e não deve ser copiado para o workspace.
-Aplicação nativa de temas em Apps e dashboards pertence às etapas posteriores.
+Para autoria assistida, use [theme_lab](../theme_lab/README.md). O [App](../../../hub_padroes/identidade_visual/databricks_app/README.md) prepara propostas e a [ponte AI/BI](../../../hub_padroes/identidade_visual/aibi/README.md) prepara candidatos locais; não concedem aprovação ou publicação.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -154,7 +163,7 @@ visual, teste com iniciante ou homologação de runtime.
 [exemplo](exemplo_tema.py) compõem este objeto. O [padrão central](../../../hub_padroes/identidade_visual/README.md)
 é o dono das regras; o [guia de erros](../../../hub_padroes/identidade_visual/ERROS.md)
 orienta correções. O [Manual Técnico](../../../MANUAL_TECNICO.md#catalogo-helpers)
-continua sendo o catálogo integrado. A adaptação Plotly virá na V03.
+continua sendo o catálogo integrado. Para aplicar, siga [theme_plotly](../theme_plotly/README.md); para experimentar, siga [theme_lab](../theme_lab/README.md).
 
 ## 15. Referências
 
@@ -162,5 +171,4 @@ As assinaturas e efeitos são definidos pela implementação e fachada acima.
 A referência dos parâmetros deriva do schema, não de uma segunda lista manual.
 Consulta técnica em 12/09/2026: [JSON em Python](https://docs.python.org/3/library/json.html)
 e [resolução de schemas](https://python-jsonschema.readthedocs.io/en/stable/referencing/).
-Testes desta candidata são locais e no CI conforme o checkpoint; não há alegação
-de execução no Databricks, revisão independente ou usabilidade com iniciante.
+Validação de contrato não certifica renderização, acessibilidade ou usabilidade no Databricks; cada consumidor e destino exigem conferência própria.

@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|
 | ... | ... | ... | ... | ... | ... |
 
-## Exemplo (banking — propensão a CDB)
+## Exemplo ilustrativo fictício (banking — propensão a CDB)
 
 | Notebook | Papel no corpus | Entradas | Saídas | Granularidade | Obs |
 |---|---|---|---|---|---|

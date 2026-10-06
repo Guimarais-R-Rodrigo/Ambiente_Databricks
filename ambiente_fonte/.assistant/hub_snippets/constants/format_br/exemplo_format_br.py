@@ -6,7 +6,7 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Seis funções de formatação que produzem `3.375.674` e `92,8%` sem depender de configuração do sistema.
 
-# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas abaixo são referências sintéticas observadas; não representam execução atual do seu ambiente.
 # MAGIC
 # COMMAND ----------
 # MAGIC %md
@@ -126,10 +126,8 @@ print("  fmt_delta(0.005,  'bps') ->", fmt_delta(0.005, "bps"))
 # MAGIC **+240,0 pp**. A docstring diz (`-0.032 para -3.2pp`); a assinatura, não.
 # MAGIC
 # MAGIC **E `bps` multiplica por 10.000, não por 100** — o que é correto (um ponto
-# MAGIC base é um centésimo de ponto percentual) e é mais uma escala para errar. A
-# MAGIC docstring do módulo chegou a documentar esse caso com um exemplo errado por
-# MAGIC um fator de dez; foi corrigida, e a célula acima existe para que a próxima
-# MAGIC divergência apareça na execução em vez de ficar no comentário.
+# MAGIC base é um centésimo de ponto percentual). `fmt_delta(0.0005, "bps")`
+# MAGIC produz `+5 bps`; mantenha essa escala de entrada explícita ao conferir a saída.
 # MAGIC
 # MAGIC A defesa que funciona não é lembrar: é **nunca deixar a escala implícita no
 # MAGIC nome da variável**. `taxa_resposta_ratio` e `delta_pp_ratio` são feios e

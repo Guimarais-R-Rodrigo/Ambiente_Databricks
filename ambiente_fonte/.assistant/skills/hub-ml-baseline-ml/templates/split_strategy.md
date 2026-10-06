@@ -1,71 +1,50 @@
 # Template: Estratégia de Split
 
-> **[N train]** treino | **[N val]** validação | **[N test]** teste | **[Strategy]** estratégia
+## Definir antes do treino
+- Uso futuro, instante de decisão, disponibilidade das features e target: [contrato]
+- Coluna temporal/frequência, entidade e unidade: [confirmadas]
+- Divisões, janelas e gap: [valores e justificativa do caso]
+- Critério de overlap de entidades: [proibir ou permitir histórico em painel, com motivo]
+- Estado da validação: [NÃO EXECUTADO/parcial/executado e evidência]
 
+## Seleção
+1. Previsão futura: usar divisão temporal e teste fora do tempo.
+2. Entidades repetidas: definir se devem ser disjuntas entre partições. Em painéis,
+   histórico da mesma entidade pode ser legítimo; disponibilidade temporal continua obrigatória.
+3. Aleatório/estratificado: apenas quando tempo e entidade não causarem vazamento.
+4. Proporções não são universais; considerar quantidade de períodos, eventos,
+   maturidade do target e orçamento, mantendo teste intocado.
 
-## Uso
-Guia de decisão para escolher o tipo de split adequado.
+## Rota temporal canônica
+Consultar [`temporal_split`](../../../hub_snippets/ml/split_temporal/README.md).
+Assinatura efetiva: `temporal_split(df, date_col, train_pct=0.70,
+val_pct=0.15, gap_periods=1, period_unit="M", *, group_col=None)`.
+Os defaults são da API, não recomendação universal. No perfil sintético
+`BINARY_TEMPORAL_LOCAL_V1`, prevalecem os valores fixos do perfil e seu runner.
 
-## Árvore de decisão
-
+Pseudocódigo de preparação, não célula executável:
 ```text
-1. O problema envolve previsão FUTURA?
-   ├── SIM → Split TEMPORAL (por data)
-   │         Gap de 1 período entre treino e validação
-   │         Treino: passado | Val: intermediário | Teste: mais recente
-   │
-   └── NÃO → 2. Mesma entidade pode aparecer em múltiplas linhas?
-              ├── SIM → Split por GRUPO (GroupKFold)
-              │         Ex.: id_cliente não repete entre splits
-              │
-              └── NÃO → 3. Há desbalanceamento de classes?
-                         ├── SIM → Split ESTRATIFICADO
-                         │         Mantém proporção de classes em cada split
-                         │
-                         └── NÃO → Split ALEATÓRIO (random)
+confirmar calendário, datas válidas, unidade, cortes e política de entidades
+chamar temporal_split com os parâmetros aprovados do contrato
+conferir limites reais de treino/validação/teste e exclusões
+ajustar preprocessamento somente no treino; avaliar com teste intocado
 ```
 
-## Proporções padrão
+O helper normaliza datas em `period_unit` e divide períodos observados inteiros,
+sem cortar por fração de linhas. `gap_periods` pula buckets observados; se faltam
+meses/dias, isso não garante um gap exato em tempo corrido. Conferir períodos
+ausentes e as fronteiras reais antes de considerar o contrato satisfeito.
+`group_col` exclui da validação entidades vistas no treino, e do teste as vistas
+antes; pode esvaziar partições e falhar. Quantificar essas exclusões.
 
-| Split | Treino | Validação | Teste |
-|---|---|---|---|
-| Padrão | 70% | 15% | 15% |
-| Dados escassos (N < 10k) | 60% | 20% | 20% |
-| Walk-forward (séries) | Expanding window | 1 período | 1 período |
+## Conferência
+- [ ] Datas, fuso, fronteiras e disponibilidade até cada decisão comprovados
+- [ ] Nenhum bucket temporal foi dividido por posição de linha
+- [ ] Gap observado cumpre o contrato de horizonte/atraso
+- [ ] Overlap de entidade tratado conforme uso, sem exclusão silenciosa
+- [ ] Binning, imputação, scaling e seleção ajustados apenas no treino
+- [ ] N/eventos e período de cada partição registrados; vazio/uma classe tratados
+- [ ] Receipt/verificador da rota conferidos quando aplicáveis
 
-## Anti-leakage checklist
-
-- [ ] Nenhuma informação futura ao evento está no treino
-- [ ] Split temporal tem gap entre treino e validação
-- [ ] Mesma entidade NÃO aparece em treino E teste
-- [ ] Features foram calculadas ANTES da data de split
-- [ ] Target leakage ausente (nenhuma feature é proxy do target)
-
-## Código de referência
-
-```python
-# Split temporal
-df_sorted = df.sort_values('dt_referencia')
-n = len(df_sorted)
-train = df_sorted.iloc[:int(0.70*n)]
-val = df_sorted.iloc[int(0.70*n):int(0.85*n)]
-test = df_sorted.iloc[int(0.85*n):]
-
-# Split estratificado
-from sklearn.model_selection import train_test_split
-X_train, X_temp, y_train, y_temp = train_test_split(
-    X, y, test_size=0.30, stratify=y, random_state=42)
-X_val, X_test, y_val, y_test = train_test_split(
-    X_temp, y_temp, test_size=0.50, stratify=y_temp, random_state=42)
-```
-
----
-
-#### ✅ Validação do split
-
-| Check | Status |
-|---|---|
-| Sem leakage temporal | ✅ / ❌ |
-| Distribuição do target preservada | ✅ / ❌ |
-| Sem overlap entre conjuntos | ✅ / ❌ |
-| Proporção adequada (60/20/20 ou similar) | ✅ / ❌ |
+Sem dados ou execução, manter checagens pendentes. Este guia não implementa
+split alternativo nem autoriza treino ou efeitos persistentes.

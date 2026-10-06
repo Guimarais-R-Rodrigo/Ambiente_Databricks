@@ -1,0 +1,10 @@
+{
+  "id": "DB8",
+  "url": "https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/",
+  "title": "Bundles",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "Declarative Automation Bundles is current documented naming; existing APIs are not renamed by editorial work.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

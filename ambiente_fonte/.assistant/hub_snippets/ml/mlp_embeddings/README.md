@@ -59,6 +59,20 @@ Depois de fixar treino/validação, você treina a MLP e compara AUC com um Ligh
 
 ## 7. O que você precisa antes de usar?
 
+Valide códigos antes da conversão destrutiva para `int64`; o wrapper pode truncar frações:
+
+```python
+import numpy as np
+for blocos in [X_cat_train, X_cat_val]:
+    assert len(blocos) == len(cat_dims)
+    for codigos, cardinalidade in zip(blocos, cat_dims):
+        a = np.asarray(codigos)
+        assert np.isfinite(a).all() and (a == np.floor(a)).all()
+        assert ((a >= 0) & (a < cardinalidade)).all()
+```
+
+Preserve encoders ajustados no treino. Reserve e treine um índice de desconhecido se essa for a política escolhida; inventar um índice novo na inferência ultrapassa a tabela de embeddings. Exija ambas as classes também na validação para AUC.
+
 `X_num_train`/`X_num_val` devem ser matrizes 2-D com o mesmo número de colunas e somente valores finitos. `y_train` e `y_val` são convertidos para `float32` e achatados.
 
 `X_cat_train` e `X_cat_val` são listas: uma array por feature categórica. O tamanho das duas listas deve igualar `len(cat_dims)`, e cada array deve alinhar com seu split. Os valores são convertidos para `int64`; códigos precisam estar em `[0, cardinalidade)`.
@@ -83,6 +97,31 @@ A classe pública `EmbeddingMLP` também pode ser instanciada manualmente com `t
 
 ## 9. Como usar este recurso no Hub?
 
+Inferência binária, sem novo ajuste, depois de aplicar os **mesmos** encoders e transformações numéricas do treino:
+
+```python
+import numpy as np
+import torch
+
+num = np.asarray(X_num_novo, dtype=np.float32)
+assert num.ndim == 2 and np.isfinite(num).all()
+assert len(X_cat_novo) == len(cat_dims)
+categoricas = []
+for valores, cardinalidade in zip(X_cat_novo, cat_dims):
+    a = np.asarray(valores).reshape(-1)
+    assert len(a) == len(num) and np.isfinite(a).all()
+    assert (a == np.floor(a)).all() and ((0 <= a) & (a < cardinalidade)).all()
+    categoricas.append(a.astype(np.int64))
+device = next(model.parameters()).device
+model.eval()
+with torch.no_grad():
+    x_num = torch.as_tensor(num, dtype=torch.float32, device=device)
+    x_cat = [torch.as_tensor(a, dtype=torch.long, device=device) for a in categoricas]
+    probabilidades = model(x_num, x_cat).reshape(-1).cpu().numpy()
+```
+
+O treinador pronto retorna saída Sigmoid binária; isso não é calibração adicional. Preserve também arquitetura, mapeamentos e schema ao guardar o modelo por uma rota autorizada.
+
 ```python
 from hub_snippets.ml.mlp_embeddings import train_embedding_mlp
 
@@ -98,7 +137,7 @@ model, metrics = train_embedding_mlp(
 )
 ```
 
-O [notebook](exemplo_mlp_embeddings.py) instala PyTorch e reinicia a sessão. A prosa histórica será ajustada nesta R05 para não dizer que one-hot “não expressa” relações ou que árvores necessariamente deixam de aprendê-las; o ponto correto é que embeddings oferecem uma representação densa compartilhável que deve ser comparada empiricamente.
+O notebook instala PyTorch e reinicia a sessão. Embeddings oferecem uma representação densa aprendida; seu valor deve ser comparado com one-hot, modelos lineares e árvores no mesmo protocolo.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -136,6 +175,8 @@ Antes de produção, empacote também os mapeamentos categóricos e todo o pré-
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. A documentação oficial de [`torch.nn.Embedding`](https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding) descreve a camada como tabela de lookup de tamanho e dimensão fixos, indexada por inteiros.
+[Evidência histórica local e limites](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R05.md). A comparação entre representações depende do protocolo e não demonstra superioridade inerente sobre árvores. O comentário junto à fixture do notebook sobre one-hot não deve ser lido como limitação universal de representação.
 
-A evidência de runtime desta R05 será registrada no relatório. Este README não afirma publicação no Databricks, superioridade sobre árvores nem auditoria independente.
+Consulte torch.nn.Embedding para o contrato de índices e dimensões. Preserve mapeamentos categóricos e preprocessing na inferência. O exemplo sintético não demonstra superioridade sobre árvores nem garante repetibilidade entre runtimes.
+
+Referências primárias de conceito/API: [`torch.nn.Embedding`](https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding).

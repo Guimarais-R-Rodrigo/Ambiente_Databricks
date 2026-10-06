@@ -4,9 +4,13 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
       - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - "Novo_Ambiente_Simulado/**"
+      - 'ambiente_fonte/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "tools/tests/test_skill_enforcement_se02.py"
@@ -17,9 +21,13 @@ on:
   push:
     branches: [main]
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
       - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - "Novo_Ambiente_Simulado/**"
+      - 'ambiente_fonte/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "tools/tests/test_skill_enforcement_se02.py"
@@ -51,6 +59,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Dependências declaradas para validador e certificação
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Certificação SE02 reproduzível
         run: python -B tools/skill_enforcement/certify_local.py --profile se02 --evidence-dir "$RUNNER_TEMP/sef-certification"
 
@@ -69,7 +85,7 @@ jobs:
         with:
           name: se02-preflight-renderizado
           path: |
-            Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/
-            Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
+            .artifacts/simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/
+            .artifacts/simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
           if-no-files-found: error
           retention-days: 7

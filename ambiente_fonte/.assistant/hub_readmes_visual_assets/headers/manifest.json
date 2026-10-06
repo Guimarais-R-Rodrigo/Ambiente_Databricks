@@ -4,15 +4,16 @@
   "scope": "shared_readme_notebook_headers",
   "render_mode": "frozen_generated_background_plus_deterministic_typography",
   "original": {
-    "path": "src/fundo_tecnologico_original.png",
+    "path": "tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png",
+    "path_base": "repository",
     "width": 1983,
     "height": 793,
     "sha256": "4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71"
   },
   "input_hashes": {
     "copy": "8a1c883b85cdac846aa7159de5aac83f85766cab663dfae21462704ec6d36c7c",
-    "generator": "018185730303009ceb0d3eedc78efef2dafabb7df2cd306d0301a460f3ddd1ca",
-    "shared_library": "0630dbb2c7ef9ef2682ce417bbbcd0bed161ce6f6872824e8b8b330e10016852",
+    "generator": "09fcbba11bbe366442ad64741e207a2df452bac3b0dc0b6213ec3da286da512b",
+    "shared_library": "36808cbff404537b53cee21a4eef914721cffb16ac82d9a08e8d876c8f2977bb",
     "visual_tokens": "f397e639d45f4c1db5206982a12ebfbfdf3bb3e34ed78531863f9456056edbdd",
     "dependency_lock": "16890a3bcc03d4f6dc0c8a41b2c875581d3505a2f2739cdfefa00cc2d7fffc71",
     "inter_400": "e20fa0b4fd2dd26e4d14b3ac3cc922509c3a63fa5e910e90c614544aa042dd45",
@@ -58,12 +59,14 @@
       ],
       "reduced": [
         {
-          "path": "qa/cabecalho_crm_720.png",
+          "path": "tools/readme_visuals/qa/headers/cabecalho_crm_720.png",
+          "path_base": "repository",
           "sha256": "285293f92bf286a090f87a53c95ddf3fd8861e80684a062b2e9dd00d54701de4",
           "display_width": 720
         },
         {
-          "path": "qa/cabecalho_crm_960.png",
+          "path": "tools/readme_visuals/qa/headers/cabecalho_crm_960.png",
+          "path_base": "repository",
           "sha256": "bde81ab502695364de1898880cecc4491a3eafc951de0db170743aff11741358",
           "display_width": 960
         }
@@ -117,12 +120,14 @@
       ],
       "reduced": [
         {
-          "path": "qa/cabecalho_squad_720.png",
+          "path": "tools/readme_visuals/qa/headers/cabecalho_squad_720.png",
+          "path_base": "repository",
           "sha256": "ca3b84a6b1b4069d1a07b1b49fb5be7164a5d7f0761d8511f93057b7f04d4b00",
           "display_width": 720
         },
         {
-          "path": "qa/cabecalho_squad_960.png",
+          "path": "tools/readme_visuals/qa/headers/cabecalho_squad_960.png",
+          "path_base": "repository",
           "sha256": "78f2e459bc5bb72ef34a8f2aec4b1ea9da5dede14037457749b6f03d2fd416fe",
           "display_width": 960
         }

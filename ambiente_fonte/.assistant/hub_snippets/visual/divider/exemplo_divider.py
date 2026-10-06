@@ -19,7 +19,7 @@
 # MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
+# MAGIC | Diferença Free × trabalho | confira compatibilidade e renderização no destino; a demonstração não homologa todo runtime |
 
 # COMMAND ----------
 

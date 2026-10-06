@@ -1,5 +1,9 @@
 # V11 — temas nativos Databricks AI/BI
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. A [prova real posterior V12-AIBI-01](../V12/evidencias/V12-AIBI-01/README.md) cobre somente import em dashboard draft; não pertence ao ensaio original V11.
+
+## Registro histórico preservado
+
 ## Estado
 
 **ACEITA E INTEGRADA NO GIT; FECHAMENTO DOCUMENTAL PÓS-MERGE; SEM HOMOLOGAÇÃO OU OPERAÇÃO REAL NO DATABRICKS.**
@@ -36,7 +40,7 @@ O escopo entregue inclui:
 
 Isso é deliberado: a documentação oficial verificada descreve capacidades de tema e oferece `Export theme` / `Import theme`, mas não publica um schema estável e completo do JSON de tema exportado. Alterar o contrato central ou gerar um JSON supostamente nativo sem esse contrato criaria uma interpretação paralela e insegura.
 
-A ponte fica em `ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/` e possui espelho byte a byte em `Novo_Ambiente_Simulado`.
+A ponte fica em `ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/` e possui espelho byte a byte na [saída gerada vigente](../../../manutencao/saida-gerada.md), `.artifacts/simulado/`. `Novo_Ambiente_Simulado` é o nome preservado nas evidências históricas da V11.
 
 ## Como a projeção funciona
 

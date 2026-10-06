@@ -92,11 +92,7 @@ displayHTML(html)
 # MAGIC Não é gradiente, não é "destaque a coluna inteira", e não conhece limiar
 # MAGIC de negócio nenhum.
 # MAGIC
-# MAGIC É por isso que esta demonstração precisou de uma coluna com negativos.
-# MAGIC Uma versão anterior deste notebook passava `highlight_cols=["nulos_pct",
-# MAGIC "psi"]` — colunas sem nenhum valor negativo — e afirmava que as duas
-# MAGIC ficavam destacadas. **Zero células eram pintadas**, e o HTML devolvido não
-# MAGIC continha uma única ocorrência da cor de destaque.
+# MAGIC Esta demonstração inclui negativos para exercitar o contrato de realce. Valores positivos de PSI ou nulidade não são destacados por essa regra.
 # MAGIC
 # MAGIC A consequência prática: para "PSI acima de 0,25 é alerta" este helper não
 # MAGIC serve como está. Ou você calcula uma coluna de desvio (negativa quando

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "offline static contracts only; no native client certification",
+  "tracked_and_new_files": 2473,
+  "canonical_skills": 5,
+  "generated_files": 5,
+  "requirements": 215,
+  "core_lines": 72,
+  "core_bytes": 4725,
+  "product_pairs": 691,
+  "migration_freeze": true,
+  "historical_matches": 90,
+  "warnings": []
+}

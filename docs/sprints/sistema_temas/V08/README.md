@@ -1,5 +1,9 @@
 # V08 — integração transversal com skills, padrões e Manual
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 > **Estado atual:** aceita por Rodrigo e integrada no Git em 14/09/2026 pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03` e o merge efetivo na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. Sem publicação Databricks. O [checkpoint](CHECKPOINT_V08.md) e o [registro de testes](TESTES.md) concentram evidências, failures preservados e limites do fechamento.
 
 ## Objetivo

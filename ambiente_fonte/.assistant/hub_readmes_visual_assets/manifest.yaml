@@ -4,13 +4,13 @@ approved_direction: sprint_0
 contracts: specs/visual_contracts.yaml
 inputs:
   - path: tools/readme_visuals/production.mjs
-    sha256: 47d1cdfd55f8e7a06a3a88b7038da2cd25e4178d16e312f0b946840731c30a57
+    sha256: ff30a5cc06db5618717421ed13c14ddf99562cebd99d6e0530464f4d332d889d
   - path: tools/readme_visuals/validate_production.mjs
-    sha256: e2f96328d5a8833ead0699e8d176cef3b94aa9eb69803900f40e793c391f886b
+    sha256: e66cf529f7f3df7e280d60baed745e6d1041db7a70742ed927c14b606f49cfa7
   - path: tools/readme_visuals/lib.mjs
-    sha256: 0630dbb2c7ef9ef2682ce417bbbcd0bed161ce6f6872824e8b8b330e10016852
+    sha256: 36808cbff404537b53cee21a4eef914721cffb16ac82d9a08e8d876c8f2977bb
   - path: tools/readme_visuals/headers.mjs
-    sha256: 018185730303009ceb0d3eedc78efef2dafabb7df2cd306d0301a460f3ddd1ca
+    sha256: 09fcbba11bbe366442ad64741e207a2df452bac3b0dc0b6213ec3da286da512b
   - path: tools/readme_visuals/archetypes/top.mjs
     sha256: 6ebdc9c9b65d321e2f0d94ad1a75ef77e3c0fa06ec3d3f8ce0755508a6ad5ed6
   - path: tools/readme_visuals/archetypes/snippets.mjs
@@ -20,9 +20,13 @@ inputs:
   - path: tools/readme_visuals/archetypes/methods.mjs
     sha256: b10ea61a894a49fe76d333c39176fee829b59e8d448474f748b6474673a0c480
   - path: tools/readme_visuals/package.json
-    sha256: f9fbd435c540f08d84258aa33f8e707a6847a5aa03e65a54c57c9f29d01cf459
+    sha256: 8c40bf0e98edc041dd79c5041c89aae46a88f0bed60c037a07949d3e6f1d0cc4
   - path: tools/readme_visuals/pnpm-lock.yaml
     sha256: 16890a3bcc03d4f6dc0c8a41b2c875581d3505a2f2739cdfefa00cc2d7fffc71
+  - path: tools/readme_visuals/assets/headers/src/copy.json
+    sha256: 8a1c883b85cdac846aa7159de5aac83f85766cab663dfae21462704ec6d36c7c
+  - path: tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png
+    sha256: 4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71
   - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml
     sha256: a7c70ca4d17435c8fe7ae8347ffa1c684b10f67a105a66c0ab1934c3c096c339
   - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/approved_signatures.json
@@ -39,10 +43,6 @@ inputs:
     sha256: 40885ddf7cb2c44747d3f3d4e40cc21bbde33028e2ee8c1e94d5c8e2f05483ce
   - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/visual_system/archetypes.yaml
     sha256: 0aec174e57a7e5c82f67af56ecb52d9498054c66ea79555ca95d41727e7d987b
-  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/copy.json
-    sha256: 8a1c883b85cdac846aa7159de5aac83f85766cab663dfae21462704ec6d36c7c
-  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/fundo_tecnologico_original.png
-    sha256: 4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71
   - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-400-normal.woff
     sha256: e20fa0b4fd2dd26e4d14b3ac3cc922509c3a63fa5e910e90c614544aa042dd45
   - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-600-normal.woff

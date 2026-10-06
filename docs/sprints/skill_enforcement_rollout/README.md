@@ -2,13 +2,13 @@
 
 A SER sucede operacionalmente o SEF, sem reabrir SE01–SE08. O objetivo é sustentar o nível adequado por superfície, não transformar todas as skills em L4. A policy do produto continua sendo a fonte operacional dos níveis.
 
-## Estado integrado e frente corrente
+## Estado integrado e decisões pendentes
 
 SER00 e SER01 estão integradas. O B0 — mecanismo comum da execução paralela —
 foi aceito e integrado pela PR #113 no merge
 `4ba7f551767d847381df1556ed937116258fa77d`.
 
-A frente corrente é a **B1 — skills executáveis**, no
+O escopo técnico A de **B1 — skills executáveis** está aceito e integrado; o desenho e a origem ficam no
 [pacote isolado do controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
 do PR #118.
 Ela reúne Safra, Explainability, Validação Estatística, Cross-EDA, Feature
@@ -59,5 +59,9 @@ foram cancelados para preservar créditos.
 - [Gates proporcionais após o PR #121](B1_GATES_POS_MERGE_2026-10-01.md)
 
 Diagnóstico, certificação, prova externa, promoção e merge permanecem estados
-distintos. O conteúdo desta candidata não altera o controller nem substitui
+distintos. O pacote integrado não altera o controller nem substitui
 os registros históricos de G6.
+
+## Próxima decisão
+
+Qual evidência adicional de B (orquestração Genie) ou C (promoção por superfície) será solicitada? É uma decisão nova com escopo e autorização próprios. A está fechado no escopo aceito; não repetir G6 ou iniciar campanha automaticamente.

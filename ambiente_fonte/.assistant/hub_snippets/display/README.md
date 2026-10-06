@@ -4,7 +4,7 @@
 
 Agrupa helpers de apresentação de DataFrames, matrizes e distribuições para tornar resultados mais legíveis sem confundir visualização com transformação de negócio.
 
-Este é um **índice de categoria**, não um README de objeto. Ele organiza a navegação entre os guias locais já validados; a implementação continua definida pelos módulos Python e cada objeto mantém seu próprio exemplo.
+Este é um **índice de categoria**, não um README de objeto. Ele organiza a navegação entre os guias locais com contrato e evidência delimitada por objeto; a implementação continua definida pelos módulos Python e cada objeto mantém seu próprio exemplo.
 
 ## Quando começar por esta categoria?
 
@@ -19,11 +19,15 @@ Use quando o dado já existe e a necessidade principal é inspecionar ou comunic
 
 ## Objetos disponíveis
 
-| Objeto | Papel resumido | Documentação |
+| Objeto | Entrada/API | Retorno e efeito |
 |---|---|---|
-| [`correlation_matrix`](correlation_matrix/README.md) | entenda relações entre variáveis numéricas | [guia local](correlation_matrix/README.md) |
-| [`dataframe_styled`](dataframe_styled/README.md) | apresente uma tabela sem mudar seus dados | [guia local](dataframe_styled/README.md) |
-| [`distribution_grid`](distribution_grid/README.md) | veja a forma das variáveis, não só a média | [guia local](distribution_grid/README.md) |
+| [`correlation_matrix`](correlation_matrix/README.md) | Spark → `plot_correlation` ou variante resolvida | figura + pares; cálculo distribuído, matriz quadrática no driver |
+| [`dataframe_styled`](dataframe_styled/README.md) | pandas → `display_styled` ou variante resolvida | HTML local; não converte Spark; requer Jinja2 |
+| [`distribution_grid`](distribution_grid/README.md) | Spark → `plot_distributions` ou variante resolvida | figura; recorte para pandas e dados dos histogramas no browser |
+
+Antes do primeiro import, siga a [preparação da biblioteca](../README.md#passo-a-passo-operacional-como-usar-um-snippet).
+
+As rotas `_resolvido` recebem tema explícito; as legadas mantêm o comportamento padrão. Correlação coleta uma matriz, distribuição coleta linhas limitadas e tabela estilizada já recebe pandas local. Nunca converta uma base Spark inteira apenas porque a categoria se chama display.
 
 ## Cuidados da categoria
 

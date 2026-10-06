@@ -12,6 +12,8 @@ resultado de teste, ele pode e deve ser atualizado quando a operação muda.
 | Conferir cada pré-condição da replicação | [Checklist de replicação](checklist-replicacao.md) |
 | Conferir Genie, instruções e imagens no trabalho | [Aceite humano](testes-genie-trabalho.md) |
 
+A sequência é local-first: [ciclo de vida](ciclo-de-vida.md) governa mudanças gerais; [certificação SEF/SER](../../tools/skill_enforcement/README.md#ser--certificação-prospectiva) acrescenta os gates das superfícies protegidas. Publicação, runtime e replicação exigem escopo autorizado próprio.
+
 ## Ordem segura
 
 ```mermaid
@@ -31,6 +33,7 @@ verificação no destino.
 - Descreva comandos copiáveis, pré-condições e critério de sucesso.
 - Não inclua usuário, host, token ou caminho corporativo real; use placeholders.
 - Mudança de decisão arquitetural pede ADR. Mudança no modo de executar pede
-  atualização do playbook e entrada no `CHANGELOG.md`.
+  atualização do playbook e evidência datada; mudança relevante de operação entra
+  como marco no `CHANGELOG.md`.
 
 Volte ao [índice de documentação](../README.md).

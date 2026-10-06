@@ -19,7 +19,7 @@
 # MAGIC | Bibliotecas | Plotly disponível; NumPy para gerar os dados sintéticos desta demonstração |
 # MAGIC | Dados | sintéticos, com correlação plantada |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | a falha histórica abaixo exige conferir suporte a `VectorAssembler` e `Correlation.corr` no compute escolhido |
+# MAGIC | Diferença Free × trabalho | confira suporte a `VectorAssembler` e `Correlation.corr` no compute escolhido |
 
 # COMMAND ----------
 
@@ -65,7 +65,8 @@ except Exception as erro:
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC Registro de execução sintética de referência, preservado como falha no runtime
+# MAGIC do laboratório; não representa uma execução atual nem incompatibilidade universal:
 # MAGIC
 # MAGIC ```text
 # MAGIC linhas: 3000 | colunas: 4
@@ -74,12 +75,10 @@ except Exception as erro:
 # MAGIC   None.org.apache.spark.ml.feature.VectorAssembler
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A base foi construída com `limite_credito` valendo três vezes a
-# MAGIC `renda` mais um ruído pequeno. O comentário numérico na célula de geração
-# MAGIC foi preservado como histórico, mas o coeficiente deve ser calculado, não
-# MAGIC inferido daquela anotação. Em um ambiente compatível, esse par deve mostrar
-# MAGIC associação positiva forte; a lista de pares e o mapa são saídas distintas.
-# MAGIC A transcrição acima registra uma execução antiga, não o teste da R03-B.
+# MAGIC Confirme suporte a `VectorAssembler` e `Correlation.corr` no compute escolhido.
+# MAGIC A base sintética tem `limite_credito` igual a três vezes `renda` mais ruído pequeno; calcule a matriz e confira o sinal e a magnitude. Não deduza o coeficiente de comentários. A lista de pares e o mapa são saídas distintas.
+# MAGIC
+# MAGIC Falhas registradas em outros runtimes não certificam incompatibilidade universal; peça suporte se as APIs exigidas não estiverem disponíveis.
 # MAGIC
 # MAGIC O par redundante é o achado que este helper existe para produzir: duas
 # MAGIC variáveis quase idênticas num modelo dividem a importância entre si, e cada

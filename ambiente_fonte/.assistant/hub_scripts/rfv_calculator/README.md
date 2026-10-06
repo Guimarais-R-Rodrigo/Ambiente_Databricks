@@ -57,6 +57,10 @@ O exemplo também conta manualmente eventos até o corte e compara com `frequenc
 
 ## 7. O que você precisa antes de usar?
 
+Prepare chave de entidade **não nula**. O código agrupa a entidade nula, mas os left joins das janelas por igualdade não a casam; os campos de janela acabam zerados. Isso pode parecer inatividade quando é problema de chave.
+
+O código chama `int(period)` antes de validar: valores como float podem ser truncados. Forneça inteiros positivos previamente validados; não existe validação estrita do tipo inteiro na entrada.
+
 `table_name` precisa ser legível pela sessão Spark. `col_cliente`, `col_data` e `col_valor` devem existir. A função não valida o grão: você precisa garantir que cada linha represente a unidade que pretende contar como frequência.
 
 `dt_referencia` precisa ser convertível pelo Spark para `date` no ambiente de execução. `periodos` é convertido para inteiros, deduplicado e ordenado; precisa conter ao menos um valor positivo.
@@ -64,6 +68,8 @@ O exemplo também conta manualmente eventos até o corte e compara com `frequenc
 O valor precisa admitir `sum`. O código não proíbe negativos, estornos ou nulos: decidir se eles fazem parte do “valor” correto é responsabilidade do domínio.
 
 ## 8. O que este recurso entrega?
+
+A saída inclui a coluna indicada por `col_cliente`. Entidades sem evento com data válida até o corte não aparecem. Se a população elegível inclui clientes sem atividade, o consumidor precisa de uma âncora definida e de um join explícito.
 
 O DataFrame retorna uma linha por cliente presente antes/no corte, com:
 
@@ -79,6 +85,8 @@ O DataFrame retorna uma linha por cliente presente antes/no corte, com:
 Os campos de janela ausentes são preenchidos com zero. `valor_total` não recebe esse preenchimento; se todas as observações de valor de um cliente forem nulas, a semântica de `sum` do Spark precisa ser considerada.
 
 ## 9. Como usar este recurso no Hub?
+
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
 
 ```python
 from hub_scripts.rfv_calculator import rfv_calculator
@@ -105,6 +113,8 @@ A definição de frequência é **contagem de linhas**, não contagem distinta d
 
 ## 11. Limitações, riscos e armadilhas
 
+O retorno é um DataFrame Spark **lazy**: construir o plano não equivale a persistir ou testar todos os dados. Colunas ausentes geram `ValueError`; incompatibilidades de tipo/ANSI e datas inválidas podem aparecer ao analisar ou executar o plano. Separe a chamada das ações posteriores como `show`, `count` ou escrita.
+
 A conversão `to_date` descarta componente de horário. Se decisões dependem de hora/minuto, a granularidade não é suficiente.
 
 O script filtra datas nulas depois da conversão. Entradas textuais malformadas podem ter comportamento dependente da configuração ANSI/versão do Spark; valide e normalize datas antes de confiar no corte.
@@ -121,6 +131,8 @@ Uma agregação Spark SQL manual pode ser melhor quando há uma única janela e 
 
 ## 13. Como saber se o resultado faz sentido?
 
+Inclua casos de entidade nula e valor inteiramente nulo, além de entidade sem evento válido. Verifique `valor_total` nulo versus campos de janela preenchidos por zero; não trate ambos como o mesmo fato.
+
 Escolha um cliente pequeno e conte manualmente eventos até `dt_referencia`. Verifique `frequencia_total`, `ultima_data`, `recencia` e a soma de valor.
 
 Confirme que nenhuma linha com data posterior entra. Para cada janela, teste as duas bordas: evento exatamente no corte e evento exatamente em `corte - (N - 1)` devem entrar; o dia anterior deve ficar fora.
@@ -135,6 +147,4 @@ Depois das features, documente a regra de decisão que as consome. Score, segmen
 
 ## 15. Referências
 
-O contrato específico é sustentado pelos arquivos locais vinculados, revisados na R04-B em 12/09/2026. A semântica de datas, `datediff`, `date_sub`, agregações e joins segue Apache Spark; os detalhes usados aqui estão explícitos na implementação.
-
-A validação da sprint inclui casos sintéticos com Spark real para corte temporal e janelas. Revisão do texto pelo próprio autor não é auditoria independente nem homologação no Databricks.
+Contrato: [implementação](rfv_calculator.py), [fachada](__init__.py) e [exemplo](exemplo_rfv_calculator.py). Corte inclusivo, coerção por `int`, agregações e joins são comportamentos desta implementação. O cenário do exemplo não verifica disponibilidade temporal em uma fonte real.

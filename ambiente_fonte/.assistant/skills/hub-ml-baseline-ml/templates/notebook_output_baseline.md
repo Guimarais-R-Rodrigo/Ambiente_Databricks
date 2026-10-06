@@ -2,6 +2,11 @@
 
 ## Uso
 Estrutura sugerida para notebooks gerados com `@hub-ml-baseline-ml`.
+Selecionar seções conforme o perfil realmente suportado. Um plano fica NÃO
+EXECUTADO; resultado ausente fica NÃO CALCULADO; artefato fora do perfil fica
+NÃO APLICÁVEL com motivo. Não gerar dados, treino, tracking ou plots só para
+preencher o layout. Receipt e verifier da rota continuam obrigatórios quando
+aplicáveis; este molde não os substitui.
 
 ## Estrutura
 
@@ -19,7 +24,7 @@ Estrutura sugerida para notebooks gerados com `@hub-ml-baseline-ml`.
 ---
 
 ## 1. Setup e Configuração
-[Imports, seed=42, MLflow experiment, logging]
+[Imports e seed confirmados; experimento/logging somente quando aplicáveis e autorizados]
 
 ## 2. Carga e Validação
 [Load dataset, validar schema, importar Context Card se disponível]
@@ -29,10 +34,10 @@ Estrutura sugerida para notebooks gerados com `@hub-ml-baseline-ml`.
 [Declarar: N_treino, N_val, N_teste, N_features]
 
 ## 4. Baseline Trivial
-[Treinar baseline, métricas, registrar MLflow run tipo=trivial]
+[Baseline e métricas conforme rota; MLflow somente se autorizado, caso contrário NÃO APLICÁVEL]
 
 ## 5. Modelo Principal
-[Treinar modelo, otimização (se Optuna), early stopping]
+[Treino pelo perfil disponível; tuning/early stopping somente se suportados e solicitados]
 
 ## 6. Avaliação Comparativa
 
@@ -49,11 +54,12 @@ Estrutura sugerida para notebooks gerados com `@hub-ml-baseline-ml`.
 | [métrica] | [val] | [val] | [val] | [lower-upper] | +Δ |
 
 ### 6.2 Curvas diagnósticas
-[ROC, PR, Lift, Calibration — com anotações]
+[Somente curvas produzidas e pertinentes; indicar NÃO APLICÁVEL ou NÃO EXECUTADO]
 
 ## 7. Feature Importance
-[Top-20: gain + permutation + SHAP summary]
-[Narrativa: "As top-3 features explicam X% das decisões"]
+[Método de importância suportado, conjunto, escala, top-k e normalização declarados]
+[SHAP/permutation/gain são condicionais ao modelo e à rota; sem resultado, NÃO CALCULADO]
+[Importância relativa não é percentual de decisões nem efeito causal]
 
 ## 8. Diagnóstico de Overfitting
 [Gap treino-teste + semáforo + recomendação]
@@ -62,5 +68,5 @@ Estrutura sugerida para notebooks gerados com `@hub-ml-baseline-ml`.
 [3 frases + semáforo + próximos passos]
 
 ## 10. Context Card (handoff)
-[JSON de handoff para `@hub-ml-explainability`]
+[Proveniência e limitações verificadas; handoff para `@hub-ml-explainability` se solicitado e aplicável]
 ```

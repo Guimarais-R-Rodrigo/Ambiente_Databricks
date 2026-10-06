@@ -1,8 +1,47 @@
 # Execução de Micromodelos
 
+## Preparação por rota
+
+| Rota | Precisa fornecer | Dependência/efeito |
+|---|---|---|
+| Validar YAML | arquivo, schema e contexto do caso | `jsonschema`, `regex`, `PyYAML`; leitura local |
+| Descobrir metadados | sessão Spark, catálogo e escopo autorizados | SELECT allowlisted em `information_schema`; sem registros de negócio |
+| Exemplo sintético | arquivos originais do caso | cálculo local/stdout; sem MLflow ou tabela |
+| Tracking | política, backend, identidade e autorização específicos | MLflow somente pela API compartilhada; pode persistir recursos |
+
+Na rota Databricks, `snapshot_id` identifica a observação local; não é snapshot transacional entre views. `table_tags=NOT_IMPLEMENTED` e `constraint_comment=NOT_COLLECTED`. `DENIED`, `UNAVAILABLE` ou coleta parcial não provam inexistência. Confira o [adapter](databricks.py) e os limites de [MetadataCollector](metadados.py) antes de interpretar ausência.
+
+Para carregar/validar e calcular fingerprint, use a [receita do contrato](../contratos/README.md#revisar-uma-alteração). O [exemplo de recência](../exemplos/recencia_contato/README.md) é a receita local completa; não existe executor universal de YAML arbitrário.
+
 Biblioteca de contrato, descoberta por metadados e ensaios sintéticos para um micromodelo de domínio.
 
 <!-- readme-objeto: 1.0.0 -->
+
+### Ler um envelope sem consultar Databricks
+
+A receita abaixo usa somente uma fixture em memória, a partir da raiz `.assistant`. Ela observa um schema fictício e não busca tabelas ou registros:
+
+```python
+from hub_micromodelos.execucao.metadados import Binding, FixtureProvider, MetadataCollector
+fixture = {"fixture_version": "1.0", "synthetic": True,
+    "catalog": "catalogo_sintetico", "snapshot_id": "readme_obs_01",
+    "streams": [{"operation": "schemas", "scope": [], "status": "OK",
+                 "items": [{"name": "demo", "description": None}]}]}
+collector = MetadataCollector(FixtureProvider(fixture), Binding("catalogo_sintetico"))
+discovery = collector.discover()
+envelope = collector.envelope(discovery, {})
+assert envelope["mode"] == "METADATA_ONLY"
+assert envelope["observation_status"] == "OBSERVED"
+assert envelope["catalog_complete"] is False
+assert envelope["data_access_authorized"] is False
+print(envelope["coverage"], envelope["snapshot_id"], envelope["calls"])
+```
+
+`discovery.schemas` contém `status`, `reason`, `items` e `catalog_complete`; `objects` contém apenas schemas solicitados e observados. `details` só aceita candidatas previamente observadas. O envelope reúne `observation_status`, `coverage=ESCOPO_OBSERVADO`, `snapshot_id`, `calls` e limites de autoridade. Mesmo `OBSERVED` não significa catálogo completo. Uma página negada/indisponível produz `DENIED`/`UNAVAILABLE` ou observação parcial; não preencha objetos ausentes por hipótese. `MetadataError`, por exemplo `BINDING_MISMATCH` ou `CANDIDATE_NOT_OBSERVED`, interrompe o fluxo: confira binding/escopo antes de tentar novamente.
+
+Para metadata real, as assinaturas são `DatabricksMetadataProvider(spark, binding)` e `MetadataCollector(provider, binding, limits=None)`, seguidas de `discover(schemas=None)`, `details(candidates)` e `envelope(discovery, details)`. A sessão e o catálogo vêm do caller autorizado; não existe fallback a registros de negócio.
+
+Tracking não tem executor genérico nesta pasta. A [API governada de MLflow](../../hub_snippets/ml/mlflow_run/README.md) exige run/política/efeitos próprios. O exemplo local acima não chama essa API, não gera Receipt de tracking e não aprova um modelo.
 
 ## Visão rápida
 
@@ -58,7 +97,7 @@ Com a raiz `.assistant` no caminho Python, importe `hub_micromodelos.execucao.es
 | coletar metadata com limites | `metadados.MetadataCollector`; `databricks.DatabricksMetadataProvider` com sessão injetada | Consulta apenas a metadata permitida ao ambiente configurado; não concede permissão de registros. |
 | propor shortlist ou YAML inicial | `fluxo.discover_opportunities`, `known_objective` | Hipóteses e especificação com incerteza explícita; o CLI de `fluxo.py` usa fixture local. |
 | preparar roteiro de estudo | `artefatos.render_artifacts` | Textos de notebook e README `NOT_RUN`; não abre run. |
-| conferir o piloto sintético | `execucao.run_greenfield_lab` | Resultado E0 da fixture própria do laboratório. |
+| conferir o piloto sintético | `execucao.run_greenfield_lab` | Cálculo da fixture fictícia do laboratório; não prova desempenho corporativo. |
 | preparar handoff | `entrega.prepare_handoff` | Rascunho `DRAFT_NOT_SUBMITTED`, sem publicação. |
 | ver catálogo e impacto | `catalogo.build_catalog`, `impact_by_source` | Inventário derivado das especificações fornecidas. |
 
@@ -86,4 +125,4 @@ Confira schema e invariantes, compare a assinatura antes e depois de mudanças m
 
 ## 15. Referências
 
-O comportamento descrito é o dos módulos desta pasta e do [schema](../contratos/micromodelo.schema.json). As decisões de domínio estão no Manual Técnico do Hub e na documentação arquitetural da frente de Micromodelos.
+As funções e o JSON Schema desta pasta definem os contratos. Use o guia de jornada para escolher a etapa e o Manual para entender a integração com o Hub. Consulte o [schema](../contratos/micromodelo.schema.json), a [jornada](../guias/README.md) e o [Manual](../../MANUAL_TECNICO.md#micromodelos).

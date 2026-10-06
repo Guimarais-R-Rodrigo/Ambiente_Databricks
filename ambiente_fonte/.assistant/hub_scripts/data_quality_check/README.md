@@ -57,6 +57,8 @@ O [notebook de exemplo](exemplo_data_quality_check.py) mostra também uma duplic
 
 ## 7. O que você precisa antes de usar?
 
+Para freshness, o maior valor deve chegar ao Python como `date` ou `datetime`. String de data não é convertida: retorna `days_old=None` e freshness `fail`. Data futura produz idade negativa e passa no critério atual; isso não verifica plausibilidade temporal.
+
 `table_name` precisa ser resolvível por `spark.table` e legível pelo usuário. `pk_columns` deve conter ao menos um nome de coluna existente. `date_column`, quando informado, também precisa existir.
 
 Os defaults são `null_warn=5.0`, `null_fail=20.0` e `freshness_days=2.0`. A função exige `0 <= null_warn <= null_fail <= 100` e prazo de atualidade não negativo. Esses valores são configuração do Hub, não exigência da plataforma.
@@ -78,9 +80,11 @@ O retorno é um dicionário:
 | `checks.freshness` | Quando solicitado: maior valor, idade em dias e status. |
 | `alerts` | Lista estruturada dos checks que não ficaram em `pass`. |
 
-`null_pct` está em percentual de 0 a 100. O check usa `isNull`; string vazia, sentinelas como `-999` e `NaN` não são automaticamente tratados como `NULL`.
+O caminho real é `checks["nulls"][coluna]["pct"]`, percentual de 0 a 100; a contagem fica em `count`. Exemplo ilustrativo de item: `{"count": 2, "pct": 5.0, "status": "warn"}`. Não existe `null_pct` neste retorno. O check usa `isNull`; string vazia, sentinelas como `-999` e `NaN` não são automaticamente tratados como `NULL`.
 
 ## 9. Como usar este recurso no Hub?
+
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
 
 Comece pelo [notebook de exemplo](exemplo_data_quality_check.py), que usa dados sintéticos e views temporárias. Revise os nomes dessas views se estiver em sessão compartilhada.
 
@@ -108,6 +112,14 @@ Os limites de nulos são inclusivos: percentual `>= null_fail` vira `fail`; caso
 O relógio de referência é `date.today()` no processo Python, não um parâmetro da chamada. Para reprocessamentos históricos ou calendários específicos, essa escolha pode não corresponder à pergunta desejada.
 
 ## 11. Limitações, riscos e armadilhas
+
+**Tabela vazia:** `row_count=0`, taxas de nulos 0 e check de chave `pass`. Com limiares padrão positivos e sem freshness, o retorno pode ser `pass`/score 100; com `null_warn=0` ou `null_fail=0`, a classificação de nulos muda. Com freshness sem data válida, retorna `fail`. Confira volume explicitamente; vazio não prova aptidão.
+
+| Condição | Resultado |
+|---|---|
+| `pk_columns` vazio, coluna requerida ausente ou thresholds inconsistentes | `ValueError` |
+| Falha de tabela, permissão, sessão ou expressão Spark | exceção de runtime |
+| Check calculado que violou limite | retorno com `status="fail"`, sem exceção automática |
 
 A função dispara ações Spark sobre a tabela inteira. Há uma agregação larga para nulos e uma contagem de chaves distintas; volume, largura, particionamento e cardinalidade afetam custo.
 
@@ -139,8 +151,4 @@ Depois de um alerta, transforme a hipótese em uma investigação específica. S
 
 ## 15. Referências
 
-O contrato específico é sustentado pela implementação, fachada e notebook vinculados acima, revisados na R04-B em 12/09/2026. O texto foi confrontado com o comportamento do código; revisão pelo próprio autor não é auditoria independente.
-
-A documentação Databricks de [boas práticas de governança e qualidade](https://docs.databricks.com/aws/en/lakehouse-architecture/data-governance/best-practices) e de [patterns de expectations](https://docs.databricks.com/aws/en/ldp/expectation-patterns) sustenta a distinção entre diagnóstico ad hoc e regra de pipeline. Fontes consultadas em 12/09/2026.
-
-A validação específica da R04-B, incluindo Spark real, é registrada no relatório da sprint após a execução. Não há, nesta redação, alegação de publicação ou homologação em workspace Databricks.
+Contrato: [implementação](data_quality_check.py), [fachada](__init__.py) e [exemplo](exemplo_data_quality_check.py). Os limites de status e score são locais; um diagnóstico não homologa uma fonte. Para regras de pipeline, consulte a documentação de [expectations](https://docs.databricks.com/aws/en/ldp/expectation-patterns), referência de plataforma consultada em 12/09/2026, não prova de execução deste helper.

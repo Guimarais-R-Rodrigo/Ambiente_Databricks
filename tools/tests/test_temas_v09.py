@@ -21,7 +21,7 @@ from temas_v09_transicao import (  # noqa: E402
     validate_theme_zip,
 )
 
-SIM = ROOT / "Novo_Ambiente_Simulado" / "Users" / "usuario-free"
+SIM = ROOT / ".artifacts/simulado" / "Users" / "usuario-free"
 
 
 class ThemeTransitionContractTests(unittest.TestCase):

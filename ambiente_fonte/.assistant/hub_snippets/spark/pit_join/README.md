@@ -65,6 +65,8 @@ Com janela máxima de cinco dias, a referência de 08/01 permanece elegível; co
 
 Confirme as colunas a trazer, os tipos e os nomes internos que não devem colidir. Nem todo erro de coluna ou conversão é validado antecipadamente pela função: alguns aparecem na análise ou execução Spark. A compatibilidade com um runtime específico deve ser testada, não deduzida apenas de “usa PySpark”.
 
+Pré-validação externa recomendada: evite/renomeie colunas chamadas `__disponivel_em`, `__ts_feature_ref`, `__rank`, `__empatados` e prefixos `__pit_*` nas entradas. O código usa esses auxiliares e não verifica todas as colisões. A guarda da coluna `__feature_disponivel_em` com sufixo não substitui essa revisão.
+
 ## 8. O que este recurso entrega?
 
 A tupla `(saida, diagnostico)` contém o DataFrame enriquecido e um dicionário de diagnóstico. O retorno tabular mantém as colunas de fatos e acrescenta as selecionadas, com sufixo quando informado. Não inclui automaticamente a referência do histórico.
@@ -88,6 +90,30 @@ A função dispara contagens para empates e diagnósticos e coleta um pequeno ag
 
 O exemplo não escreve tabela persistente. Testes locais de um helper Spark e os números históricos do notebook não certificam permissões, Spark Connect ou desempenho no workspace de destino. As [limitações atuais de serverless](https://docs.databricks.com/aws/en/compute/serverless/limitations) são específicas desse ambiente e precisam ser verificadas separadamente.
 
+Caso sintético completo em sessão Spark existente, com datas sem hora e fuso já confirmado:
+
+```python
+from datetime import datetime
+from pyspark.sql import functions as F
+from hub_snippets.spark.pit_join import pit_join
+fatos = spark.createDataFrame([(1, datetime(2026, 1, 12))], "id int, decisao timestamp")
+features = spark.createDataFrame(
+    [(1, datetime(2026, 1, 8), 10.0), (1, datetime(2026, 1, 11), 20.0)],
+    "id int, referencia timestamp, valor double",
+)
+saida, diagnostico = pit_join(
+    fatos, features, "id", "decisao", "referencia",
+    atraso_publicacao_dias=3, janela_maxima_dias=5,
+    colunas_feature=["valor"], sufixo="_hist",
+    politica_empate="erro", devolver_disponibilidade=True,
+)
+assert saida.count() == fatos.count()
+assert saida.filter(F.col("__feature_disponivel_em_hist") > F.col("decisao")).count() == 0
+assert saida.first()["valor_hist"] == 10.0
+```
+
+As asserções disparam ações, não escritas. A expectativa vem das datas de referência + três dias, independentemente do diagnóstico devolvido.
+
 ## 10. Decisões e configurações que mais importam
 
 `janela_maxima_dias=None` não limita a idade. Quando informada, deve ser um inteiro positivo e mede idade da referência, não tempo desde a publicação. `colunas_feature=None` traz as colunas não chave e não temporais do histórico; selecionar apenas as necessárias torna a intenção mais clara.
@@ -106,7 +132,7 @@ Além disso, a cobertura diagnóstica não avalia utilidade preditiva, causalida
 
 Uma junção por chave pode atender dados estáticos sem versões temporais. Para um único corte, um filtro seguido de seleção da última versão por entidade pode ser suficiente. Não elimine a seleção da versão quando o filtro deixa várias candidatas.
 
-A funcionalidade [point-in-time do Feature Store](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series) é outra solução, sujeita ao contrato do serviço; não é executada por este helper. No Hub, [join_diagnostics](../join_diagnostics/join_diagnostics.py) ajuda a examinar cruzamentos e [split_temporal](../../ml/split_temporal/split_temporal.py) trata a separação da base. São complementos com responsabilidades próprias.
+A funcionalidade [point-in-time do Feature Store](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series) é outra solução, sujeita ao contrato do serviço; não é executada por este helper. No Hub, [join_diagnostics](../join_diagnostics/README.md) ajuda a examinar cruzamentos e [split_temporal](../../ml/split_temporal/README.md) trata a separação da base. São complementos com responsabilidades próprias.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -120,6 +146,9 @@ A [implementação](pit_join.py) é dona das condições e do diagnóstico; a [f
 
 ## 15. Referências
 
-Contrato conferido na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. A [documentação de point-in-time joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series), consultada em 12/09/2026, sustenta o conceito, não a equivalência deste helper ao serviço. A [referência de limitações serverless](https://docs.databricks.com/aws/en/compute/serverless/limitations), na mesma data, delimita o ambiente; não é uma homologação do código.
+O contrato local está na [implementação](pit_join.py). A [documentação de point-in-time joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series), consultada em 12/09/2026, sustenta o conceito, não a equivalência deste helper ao serviço. A [referência de limitações serverless](https://docs.databricks.com/aws/en/compute/serverless/limitations), na mesma data, delimita o ambiente; não é uma homologação do código.
 
-A redação inicial e a revisão de fechamento R02 são técnicas e didáticas pelo próprio autor. A [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982) exercitou este helper com PySpark 4.0.1 real, incluindo elegibilidade temporal, empate, janela e preservação de fatos repetidos. O ambiente local do fechamento não possui PySpark; essa evidência anterior não foi apresentada como reexecução local. Ela não equivale a execução do notebook no Databricks, teste de escala, Spark Connect ou auditoria independente.
+| Evidência | Alcance |
+|---|---|
+| [Teste sintético registrado em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982), PySpark 4.0.1 | elegibilidade, empate, janela e fatos repetidos naquela execução |
+| Ambiente de destino | exige conferência própria; o registro acima não certifica Databricks, Spark Connect, escala ou auditoria independente |

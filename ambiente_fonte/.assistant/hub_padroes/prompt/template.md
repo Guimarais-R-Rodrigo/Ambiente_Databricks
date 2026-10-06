@@ -32,11 +32,7 @@ Sem `__init__.py`: prompt não é importado.
 
 **Declare sempre a rota.** Normalmente é uma skill recomendada. Em utilitário sem
 skill única, diga explicitamente que a escolha depende do objetivo, liste as
-rotas possíveis e peça `@` determinístico quando uma delas for escolhida.
-Depender do roteamento automático para um pedido ambíguo é apostar: em teste
-real, um pedido de análise direta levou o assistente a preterir a skill do Hub
-em favor de uma nativa da plataforma — com argumento defensável. O prompt existe
-para remover essa aposta.
+rotas possíveis e peça seleção explícita por `@` quando uma delas for escolhida. Isso esclarece intenção, mas não comprova carregamento, execução ou resultado. Registre o que foi realmente observado.
 
 ### Sobre os placeholders
 
@@ -54,9 +50,9 @@ assistente de recomendar um segmento de 28 pessoas.
 competente são **sistemáticas e previsíveis**, e portanto verificáveis por quem
 lê. Liste de duas a quatro, cada uma com o motivo de importar.
 
-## O notebook, que não executa
+## O briefing e o preparo do notebook
 
-Prompt não roda: a resposta vem de uma interação que notebook nenhum reproduz.
+O texto do briefing não roda; o notebook pode executar preparação e escrita. Para apenas preencher o pedido, dispense preparo desnecessário. A resposta depende da interação real.
 O formato é de três partes:
 
 1. **Preparo executável** — cria a base a que o prompt se refere, para que quem
@@ -79,8 +75,7 @@ O checklist é **um só para os seis tipos**, e mora em
 Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
 tem um bloco específico para prompt.
 
-A lista abaixo era a antiga, preservada porque um item dela não estava no
-canônico — os demais foram absorvidos:
+Verifique também os requisitos específicos deste tipo:
 
 ```text
 [ ] o cabeçalho declara a skill recomendada ou as rotas possíveis

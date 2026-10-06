@@ -1,5 +1,7 @@
 # Descoberta progressiva e evidências
 
+No ambiente de trabalho, pesquise somente a instalação autorizada. A rota de checkout, quando disponível e solicitada, é manutenção opcional; a presença de `tools/`, quarentena ou cópia histórica não amplia o escopo de busca ou execução. Preserve a distinção de versões e fontes.
+
 ## Raiz e fontes
 
 `HUB_ROOT` é a raiz de componentes escolhida para este atendimento. Em checkout, use `ambiente_fonte/.assistant/`; no workspace, use a instalação autorizada realmente acessível. Não procure automaticamente em todas as pastas de usuários. Em anexos, limite a conclusão ao que foi recebido.

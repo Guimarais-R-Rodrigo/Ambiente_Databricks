@@ -131,7 +131,7 @@ class TemasV06Tests(unittest.TestCase):
 
     def test_generation_contract_is_mirrored(self):
         src = ASSISTANT / "hub_readmes_visual_assets/specs/theme_generation.yaml"
-        sim = ROOT / "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/theme_generation.yaml"
+        sim = ROOT / ".artifacts/simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/theme_generation.yaml"
         self.assertEqual(src.read_bytes(), sim.read_bytes())
         text = src.read_text(encoding="utf-8")
         self.assertIn("ResolvedTheme", text)

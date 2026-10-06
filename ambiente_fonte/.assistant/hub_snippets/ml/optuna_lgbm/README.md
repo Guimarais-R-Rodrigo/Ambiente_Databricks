@@ -57,6 +57,8 @@ Você roda 50 trials com `task="binary"`. O `Study` guarda valores, parâmetros 
 
 ## 7. O que você precisa antes de usar?
 
+Para a rota binária com AUC, confirme **ambas as classes 0 e 1 no treino e na validação** antes de consumir compute. A checagem local não garante as duas classes na validação; uma única classe pode chegar ao fit e produzir erro ou AUC indefinida depois, conforme a versão. Essa é uma pré-condição de uso, não uma validação adicional já implementada.
+
 Treino e validação precisam estar alinhados e prontos para LightGBM. O helper não valida dimensões de `X`, valores infinitos, leakage, schema ou transformações.
 
 Para classificação, precisa haver ao menos duas classes no treino e toda classe da validação deve existir no treino. Para regressão não há validação específica do domínio do target.
@@ -83,6 +85,19 @@ O helper não devolve o modelo do melhor trial. Cada modelo existe apenas dentro
 
 ## 9. Como usar este recurso no Hub?
 
+Reconstrução explícita após a busca binária com `metric="auc"`:
+
+```python
+import lightgbm as lgb
+params_novo_fit = {"objective": "binary", "metric": "auc", "verbosity": -1,
+                   "random_state": 42, "n_estimators": 500, **best_params}
+modelo = lgb.LGBMClassifier(**params_novo_fit)
+modelo.fit(X_train, y_train, eval_set=[(X_val, y_val)],
+           callbacks=[lgb.early_stopping(50), lgb.log_evaluation(0)])
+```
+
+É um **novo fit**, não recuperação do modelo do trial: `best_iteration` e o modelo não foram preservados pelo retorno. Para regressão use `LGBMRegressor`, `objective="regression"`, `metric="rmse"`; para multiclasse use `LGBMClassifier`, `objective="multiclass"`, `metric="multi_logloss"` e `num_class` conforme as classes de treino. Preserve os demais parâmetros fixos/callbacks e avalie um teste independente depois, sem usá-lo no early stopping.
+
 ```python
 from hub_snippets.ml.optuna_lgbm import optimize_lgbm
 
@@ -101,6 +116,19 @@ Para treinar o modelo escolhido, combine conscientemente `best_params` com os pa
 
 ## 10. Decisões e configurações que mais importam
 
+Espaço fixado no código (limites inclusivos):
+
+| Parâmetro | Intervalo | Distribuição |
+|---|---|---|
+| `learning_rate` | 0,01–0,3 | float logarítmica |
+| `num_leaves` | 15–127 | inteira |
+| `max_depth` | 3–12 | inteira |
+| `min_child_samples` | 5–100 | inteira |
+| `subsample` | 0,5–1,0 | float uniforme |
+| `colsample_bytree` | 0,5–1,0 | float uniforme |
+| `reg_alpha` | 0,001–10 | float logarítmica |
+| `reg_lambda` | 0,001–10 | float logarítmica |
+
 `task` determina tanto o estimador quanto a função objetivo efetiva. O argumento `metric` tem alcance menor do que o nome sugere: no binário ele é colocado em `params["metric"]`, mas o valor que o Optuna maximiza continua sendo AUC calculada por `roc_auc_score`. Em regressão e multiclasse, `metric` é substituído por `rmse` e `multi_logloss` respectivamente.
 
 `n_trials` e `timeout` definem orçamento, mas a quantidade efetiva concluída pode depender do timeout e do custo dos trials. O `TPESampler` tem seed 42; isso ajuda a repetir a sequência sob condições semelhantes, não garante igualdade entre versões/bibliotecas.
@@ -108,6 +136,8 @@ Para treinar o modelo escolhido, combine conscientemente `best_params` com os pa
 Um ponto técnico importante: o espaço sugere `subsample` entre 0,5 e 1,0, mas não configura `subsample_freq`. Na API LightGBM, frequência zero desabilita bagging periódico. Assim, esse eixo pode ser inerte na configuração padrão do estimador. Trate essa limitação como parte do espaço efetivamente pesquisado.
 
 ## 11. Limitações, riscos e armadilhas
+
+A chamada altera a verbosidade global de `optuna.logging` para `WARNING`. O helper não restaura o estado anterior. Não faz chamadas MLflow próprias, mas autologging externo configurado na sessão continua sendo um efeito separado.
 
 A função usa uma única validação em todos os trials. Quanto mais decisões são tomadas olhando a mesma validação, maior o risco de adaptar o processo àquela amostra. Cross-validation, nested validation ou janelas múltiplas não são implementadas aqui.
 
@@ -135,6 +165,6 @@ Depois da busca, reconstrua o candidato de forma explícita, registre toda a con
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. A [documentação do `TPESampler`](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.TPESampler.html) descreve o algoritmo TPE e seus modelos `l(x)`/`g(x)`. A [API `LGBMClassifier`](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMClassifier.html) documenta `subsample_freq=0` como default sem subsampling periódico.
+Consulte TPESampler do Optuna e a API LightGBM da versão instalada. O helper usa uma única validação e não devolve modelo treinado; registre parâmetros fixos e pesquisados, refaça o fit e avalie um teste independente.
 
-A evidência de runtime desta R05 será registrada no relatório da sprint. Sem publicação Databricks, homologação de workspace ou revisão independente presumida.
+Referências primárias de conceito/API: [documentação do `TPESampler`](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.TPESampler.html), [API `LGBMClassifier`](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMClassifier.html).

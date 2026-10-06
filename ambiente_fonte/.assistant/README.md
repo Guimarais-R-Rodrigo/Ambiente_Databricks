@@ -8,6 +8,16 @@
 
 ---
 
+
+## Primeiro uso: escolha uma tarefa
+
+1. **Usar no notebook:** localize o recurso em [Snippets](hub_snippets/README.md) ou [Scripts](hub_scripts/README.md), leia seu README e confirme a instalação. O [primeiro import explicado](MANUAL_TECNICO.md#bootstrap) ajuda a conferir caminho, dependência e origem antes de chamar a função.
+2. **Orientar a Genie Code:** escolha a [skill](skills/README.md), preencha um [briefing](hub_prompts/README.md) e declare se quer explicação, plano ou execução. Carregar instruções não executa código; consulte a [policy](hub_padroes/skill_enforcement/README.md) da rota protegida.
+3. **Conferir a entrega:** compare saídas aos critérios independentes da tarefa, registre versão, ambiente e o que não foi executado. Para manutenção/publicação, encaminhe a necessidade ao responsável pela instalação; essas operações não fazem parte de uma análise comum.
+
+Para criar um recurso autorizado, use os [padrões](hub_padroes/README.md). Se o objetivo envolve uma característica de domínio, comece por [Micromodelos](hub_micromodelos/README.md).
+
+
 ## 🧭 Mapa de Uso
 
 > **Este documento acompanha a utilização do ecossistema:** escolha do componente, contexto fornecido à Genie Code, importação no notebook e revisão do resultado.
@@ -86,7 +96,7 @@ data de observação, MOB máximo comparável e tratamento das safras incompleta
 
 Não sabe qual escolher? O [Concierge Hub](skills/hub-ml-concierge/README.md) ajuda
 a localizar e combinar recursos existentes. Ele não é uma etapa obrigatória e
-não executa análises durante a descoberta. Sua homologação conversacional permanece pendente.
+não executa análises durante a descoberta. Confira quais fontes e evidências foram realmente acessadas na conversa.
 
 ### 📦 2. Hub Snippets (`hub_snippets/`)
 
@@ -155,7 +165,7 @@ Quando uma informação for desconhecida, use `NÃO INFORMADO` e peça inspeçã
 - **Como ajudam:** mantêm estrutura, API, exemplo, teste e documentação coerentes.
 - **Como são ativados:** consulta manual ou contexto explícito. A skill `@hub-ml-criar-objeto` pode orientar sua aplicação.
 
-Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
+Consulte o [Hub Padrões](hub_padroes/README.md).
 
 ### 🧩 Área de domínio: Hub Micromodelos (`hub_micromodelos/`)
 
@@ -169,15 +179,13 @@ A skill opera em `L1/audit` nesta versão; código importável e exemplo sintét
 
 Ao chegar a um snippet, script ou prompt concreto, leia primeiro o `README.md` da pasta. Ele orienta escolha, requisitos, efeitos, limites e interpretação; depois use o notebook de exemplo e a implementação ou briefing. O guia não equivale a homologação de runtime ou aprovação de negócio.
 
-### 🎨 Sistema de Temas — V00–V07 integradas no Git
+### 🎨 Sistema de Temas: aparência configurável
 
-O Sistema de Temas possui um núcleo validado (`ResolvedTheme`), adaptadores opt-in para Plotly e HTML, Visual Lab de autoria em notebook, geração editorial orientada por tema e consumidores runtime integrados em `display`/`ml`. **Nada disso troca automaticamente o padrão da equipe nem publica um tema.**
+O sistema permite validar configurações, ajustar propostas no [Visual Lab](hub_snippets/visual/theme_lab/README.md) e aplicar aparência aos consumidores documentados. O [App](hub_padroes/identidade_visual/databricks_app/README.md) salva sessões de autoria; a [ponte AI/BI](hub_padroes/identidade_visual/aibi/README.md) prepara candidatos compatíveis com export real e binding revisado.
 
-Para autoria e comparação, comece pelo [Visual Lab](hub_snippets/visual/theme_lab/README.md). Para contrato, tokens, primeiro uso e limites, consulte o [padrão de identidade visual](hub_padroes/identidade_visual/README.md). Para um consumidor concreto, abra o README local e use a rota `_resolvido` quando ela existir.
+As APIs legadas continuam padrão; o consumo de `ResolvedTheme` é explícito e opt-in. Cada superfície exige permissões e validações próprias. A configuração não muda automaticamente o padrão da equipe nem publica tema. SHAP/Matplotlib e Kaplan–Meier mantêm limites: selecionar um tema não prova que seus plots foram recoloridos.
 
-A V07 integrou, entre outros, correlação, distribuições, curvas de ML, timeline de monitoramento, UMAP e safras. `dataframe_styled` já era coberto pela V04. SHAP/Matplotlib e Kaplan–Meier permanecem exceções explícitas ao theming atual; selecionar um tema não autoriza afirmar que seus plots foram recoloridos.
-
-Integração Git não equivale a publicação no workspace, aprovação visual, acessibilidade, ACL real ou UAT. A V08 organiza transversalmente essas orientações em skills, padrões e Manual sem criar uma segunda fonte de verdade.
+Para escolher a rota, consulte o [padrão de identidade visual](hub_padroes/identidade_visual/README.md) e o README do consumidor. Validar configuração não homologa browser, acessibilidade, ACL ou uso real.
 
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
 > `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados
@@ -371,7 +379,4 @@ Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação
 
 ## Entender um objeto antes de executar
 
-Nos objetos já documentados, comece pelo `README.md` da própria pasta. Ele
-explica conceito, escolha e limites, e aponta para o notebook. A migração é
-gradual; o [Manual](MANUAL_TECNICO.md#readmes-objeto) mantém a visão integrada.
-A inclusão do guia não instala dependências nem executa código.
+Antes de usar um recurso, leia seu README local, confira pré-requisitos e efeitos e siga o exemplo autorizado. O guia não instala dependências nem comprova que o código foi executado no seu ambiente. Cada snippet, script ou prompt operacional tem guia local no contrato editorial 1.0.0; o [Manual](MANUAL_TECNICO.md#readmes-objeto) explica como usá-lo.

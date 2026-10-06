@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from api_publica import api_publica
 from notebook_marker import eh_notebook
 from repo_inventory import git_paths
+from project_policy import SIMULATED_ROOT
 
 TEXTOS = {'.py', '.md', '.css', '.html', '.js', '.mjs', '.json', '.yaml', '.yml',
           '.toml', '.ipynb', '.txt', '.sql', '.svg'}
@@ -37,7 +38,7 @@ PADROES = {
 }
 IMAGEM_MD = re.compile(r'!\[([^\]]*)\]\(([^\n)]+)\)|<img\b[^>]*?src=[\'\"]([^\'\"]+)[\'\"][^>]*>', re.I)
 CENTRAIS = ('/constants/colors/', '/constants/styles/', '/visual_system/tokens.')
-RAIZES_PROTEGIDAS = ('ambiente_fonte/', 'Novo_Ambiente_Simulado/')
+RAIZES_PROTEGIDAS = ('ambiente_fonte/', SIMULATED_ROOT.as_posix() + '/', 'Novo_Ambiente_Simulado/')
 
 
 def git(root: Path, *args: str) -> str:
@@ -51,7 +52,7 @@ def git(root: Path, *args: str) -> str:
 
 
 def camada(path: str) -> str:
-    if path.startswith('Novo_Ambiente_Simulado/'):
+    if path.startswith((SIMULATED_ROOT.as_posix() + '/', 'Novo_Ambiente_Simulado/')):
         return 'derivado'
     if path.startswith('ambiente_fonte/'):
         return 'produto'

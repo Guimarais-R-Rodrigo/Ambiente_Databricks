@@ -6,6 +6,9 @@ Este exemplar mostra como transformar problemas de uma tabela em um diagnóstico
 legível, sem tentar corrigir os dados automaticamente. É **referência dos
 padrões do Hub**, não um script de produção homologado.
 
+
+Antes de confiar em `pass`, confira `linhas > 0`: base vazia pode passar. `pct_nulo_alerta` é inativo; qualquer resposta nula gera `fail`, que é retorno, não exceção. A função lê; o preparo do notebook pode sobrescrever tabela persistente. O check de grão compara linhas e chaves distintas, sem separar duplicidade de chave nula. Exemplo interpretativo: `status="fail"` pede inspeção dos checks, não corrige dados nem bloqueia sozinho o código seguinte.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -130,11 +133,7 @@ não execute todo o notebook indiscriminadamente.
 pequena. Esse mínimo é uma política do exemplo, não uma garantia estatística.
 A chave e a coluna de resposta definem o que se está diagnosticando.
 
-**`pct_nulo_alerta` aparece nos padrões, mas não é usado para decidir os alertas.**
-Qualquer quantidade de respostas nulas gera `fail` no código atual, mesmo
-mudando aquele valor. Essa limitação foi registrada na R01, sem alteração da
-implementação. O argumento `limites` também não valida nomes desconhecidos
-ou todos os tipos/intervalos recebidos.
+pct_nulo_alerta não controla os alertas nesta implementação: qualquer resposta nula gera fail. O argumento limites não valida todas as chaves, tipos e intervalos.
 
 ## 11. Limitações, riscos e armadilhas
 
@@ -190,7 +189,4 @@ não nulos, pode ser conferida na documentação oficial de
 [funções SQL do Apache Spark](https://spark.apache.org/docs/latest/api/sql/index.html),
 consultada em 12/09/2026. Isso não substitui teste no runtime de destino.
 
-R01: leitura estática e revisão do próprio autor; PySpark não estava instalado
-nesta sessão local. Nenhuma tabela foi acessada, criada ou removida e nenhum
-teste de workspace foi realizado. Revisão independente e aceite humano estão
-pendentes; as limitações foram documentadas, não corrigidas silenciosamente.
+Antes de usar, confirme PySpark e sessão compatíveis no seu ambiente. Este exemplar não certifica a base nem substitui validação de negócio.

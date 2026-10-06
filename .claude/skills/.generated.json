@@ -1,0 +1,41 @@
+{
+  "generator": "tools/ai_controls.py",
+  "version": "1.0.0",
+  "entries": [
+    {
+      "source": ".agents/skills/forward-test-skills/SKILL.md",
+      "destination": ".claude/skills/forward-test-skills/SKILL.md",
+      "source_sha256": "d40f1830780a4cc37b45771ad4cd09a3ac4c060888a59144ed2d0be3428a71ee",
+      "output_sha256": "a98451cdd9d366164cc13c386bf821892e9c271bd5f6f8e981ad8cb7aa5ae5a5",
+      "transform": "frontmatter-preserved provenance comment"
+    },
+    {
+      "source": ".agents/skills/publicar-free/SKILL.md",
+      "destination": ".claude/skills/publicar-free/SKILL.md",
+      "source_sha256": "e03da537aa276d6c5ef50b374fb6a551d747106157155778016dc2c4bb590471",
+      "output_sha256": "0d58af946145f2fe8c2fc259327890906eacc1c71e2b7a47727b7712304629a7",
+      "transform": "frontmatter-preserved provenance comment"
+    },
+    {
+      "source": ".agents/skills/render-simulado/SKILL.md",
+      "destination": ".claude/skills/render-simulado/SKILL.md",
+      "source_sha256": "fd238703ef92f43e27bd13b46cf4722adb20345f67cd00dd3ed80e8a8e69d4ed",
+      "output_sha256": "0351d3aac18446fbe815ebf252f38c23bc964d42f520512575e70f9fcdee20f6",
+      "transform": "frontmatter-preserved provenance comment"
+    },
+    {
+      "source": ".agents/skills/replicar-trabalho/SKILL.md",
+      "destination": ".claude/skills/replicar-trabalho/SKILL.md",
+      "source_sha256": "07ab3078b02ad416d18be29bf92174244b3009368ed887ecd3704ff07b97cdfe",
+      "output_sha256": "dbf84a000499f76e437e0b662dc5d718538ba3da07587612292a554cead8638e",
+      "transform": "frontmatter-preserved provenance comment"
+    },
+    {
+      "source": ".agents/skills/validar-assistant/SKILL.md",
+      "destination": ".claude/skills/validar-assistant/SKILL.md",
+      "source_sha256": "9d2df73f212a9567af9be230f673f276c9efd8b39230b1015cb7023f489f5864",
+      "output_sha256": "33ad7b3bf0f504b87458da9b718c632050995eae8b62e359eaa91ba8c155ff33",
+      "transform": "frontmatter-preserved provenance comment"
+    }
+  ]
+}

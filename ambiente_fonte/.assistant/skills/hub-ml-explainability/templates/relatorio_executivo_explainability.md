@@ -1,54 +1,48 @@
-# Template: Relatório Executivo de Explicabilidade (E1)
-
-> **[Top-1 feature]** driver principal | **[X]%** importância | **[AUC]** performance | **[N]** observações explicadas
-
+# Template: Relatório Executivo de Explicabilidade
 
 ## Uso
-Relatório de 1 página para gestores e stakeholders não-técnicos.
+Camada executiva para gestores; a camada editorial não indica ambiente de
+execução ou homologação. Traduzir somente resultados efetivamente
+observados da [skill](../SKILL.md); sem eles, entregar plano/NÃO EXECUTADO.
 
----
+## Objeto explicado
+- Modelo/versão e origem: [identificação comprovada]
+- Target, classe, população e período: [definições]
+- Método, conjunto/background e N: [fonte]
+- Escala explicada: [saída bruta, log-odds, probabilidade ou valor previsto]
+- Performance: [métrica realmente calculada, valor, benchmark e incerteza; ou NÃO AVALIADA]
 
-## Explicabilidade do Modelo — [Target]
+## O que influencia as previsões
 
-**Modelo**: [algoritmo] | **Performance**: [AUC/métrica principal] | **Data**: [timestamp]
+Os principais fatores que influenciam as previsões do modelo no recorte são:
 
-### O que o modelo aprendeu
+| Fator | Descrição | Importância na escala declarada | Direção/padrão observado | Limitação |
+|---|---|---|---|---|
+| [nome] | [significado] | [valor, método e normalização ou NÃO CALCULADO] | [contribuição para a previsão] | [variação por segmento/correlação] |
 
-Os **5 principais fatores** que determinam [target em linguagem de negócio] são:
+Importância explica o comportamento do modelo. Não determina o target real,
+não mede percentual de decisões e não comprova causa, proteção ou benefício
+por intervir no fator. Só usar porcentagem com denominador matemático declarado.
 
-| # | Fator | O que é | Impacto | Direção | O que fazer |
-|---|---|---|---|---|---|
-| 1 | [nome negócio] | [descrição 1 linha] | 🔴 Alto | [↑ risco / ↓ protege] | [ação acionável] |
-| 2 | [nome negócio] | [descrição 1 linha] | 🔴 Alto | [↑/↓] | [ação] |
-| 3 | [nome negócio] | [descrição 1 linha] | 🟡 Médio | [↑/↓] | [ação] |
-| 4 | [nome negócio] | [descrição 1 linha] | 🟡 Médio | [↑/↓] | [ação] |
-| 5 | [nome negócio] | [descrição 1 linha] | 🟢 Moderado | [↑/↓] | [ação] |
+## Exemplos locais, se produzidos
 
-### Em resumo
+| Caso agregado/mascarado | Predição e unidade | Contribuições observadas | Evidência |
+|---|---|---|---|
+| [caso representativo] | [valor; probabilidade só quando essa for a escala] | [fatores e valores] | [artefato ou NÃO EXECUTADO] |
 
-> "Clientes com [condição do fator #1] têm [X]x mais [probabilidade] de [evento].
-> O fator mais **controlável** pela empresa é [fator acionável], sugerindo
-> [intervenção concreta] como principal alavanca de [objetivo]."
+Não converter contribuição SHAP bruta em probabilidade aditiva. Não divulgar
+atributos pessoais em exemplos locais.
 
-### Exemplos concretos
+## Confiança e limites
+- AUC-ROC mede ordenação de pares, não percentual de casos corretos. Informar
+  acurácia apenas se calculada separadamente, com threshold/população.
+- Escopo de validade: [período, segmentos, cobertura e incerteza observados]
+- O que o método não captura: [limitações, proxies, dependências entre features]
+- Verificação: [fonte/estado e escopo; não inferir aprovação por Receipt isolado]
 
-| Perfil | Probabilidade de [evento] | Fatores dominantes |
-|---|---|---|
-| [Perfil alto risco] | [X]% | [fator 1] + [fator 2] |
-| [Perfil baixo risco] | [X]% | [fator 3] protege |
-| [Perfil típico] | [X]% | Nenhum fator domina |
+## Recomendações
+1. Investigação: [padrão a verificar e evidência necessária]
+2. Hipótese de intervenção: [se pertinente, desenho causal/experimento necessário antes de afirmar efeito]
+3. Controle/monitoramento: [owner e critério definidos]
 
-### Confiança e limitações
-
-| Aspecto | Detalhe |
-|---|---|
-| Acurácia do modelo | Identifica corretamente [X]% dos casos |
-| Válido para | [período] / [segmento] |
-| NÃO captura | [lista: variáveis externas, comportamento futuro, etc.] |
-| Atualização | Recomendada a cada [X] meses |
-
-### Recomendações de ação
-
-1. **Imediata**: [ação prioritária baseada no fator #1]
-2. **Curto prazo**: [ação baseada em fatores controláveis]
-3. **Monitorar**: [fator que pode mudar com o tempo]
+Recomendação técnica não autoriza intervenção, retreino, publicação ou promoção.

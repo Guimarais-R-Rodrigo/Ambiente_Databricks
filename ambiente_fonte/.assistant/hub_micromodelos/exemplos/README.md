@@ -1,5 +1,7 @@
 # Exemplos de Micromodelos
 
+O caso original de recência reconcilia sete pessoas: 2 `TRUE`, 1 `FALSE` e 4 `INDETERMINADO`. `migracao_simulada.py` compara saídas sintéticas; não realiza migração institucional.
+
 Casos fictícios para aprender o contrato e conferir resultados sem usar dados corporativos.
 
 ## Para que serve e quando usar
@@ -8,7 +10,7 @@ Comece pelo caso de recência de contato para ver um `micromodelo.yaml` preenchi
 
 ## Como usar
 
-No diretório do produto, execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir` e depois `python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py`. Os scripts usam somente os arquivos locais da pasta do exemplo e imprimem resultados, sem publicar.
+No raiz `.assistant`, com as [dependências de execução](../execucao/README.md#preparação-por-rota) disponíveis, execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir` e depois `python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py`. Os scripts usam somente os arquivos locais da pasta do exemplo e imprimem resultados, sem publicar.
 
 ## O que existe aqui
 
@@ -20,7 +22,7 @@ No diretório do produto, execute `python hub_micromodelos/exemplos/recencia_con
 
 ## Limites e armadilhas
 
-Resultados desses arquivos são ensaios E0. A fonte fictícia, a decisão humana, o MLflow e a publicação têm estados separados na especificação. Uma saída comparada ao oráculo local demonstra reprodução do cálculo, não validade estatística ou aceite de governança.
+Os resultados são ensaios locais com dados fictícios. Reproduzir o resultado esperado confere o cálculo do exemplo; não valida estatisticamente o micromodelo nem aprova seu uso real.
 
 ## Onde continuar
 

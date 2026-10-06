@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "tools/aceite_trabalho.py"
       - "tools/aceite_micromodelos_trabalho.py"
       - "tools/kit_transicao_trabalho.py"
@@ -36,7 +40,9 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-          cache-dependency-path: tools/requirements-dev.txt
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -50,6 +56,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Gate local sem credenciais Databricks
         run: python tools/ci_local.py --verbose
       - name: Contrato V09 do Sistema de Temas

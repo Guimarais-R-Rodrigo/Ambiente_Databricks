@@ -1,17 +1,8 @@
 name: Assets e geração V06
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v06*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_readmes_visual_assets/**'
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/tema/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/**'
-      - 'tools/readme_visuals/**'
-      - 'tools/tests/test_temas_v06*.py'
-      - 'docs/sprints/sistema_temas/V06/**'
-      - '.github/workflows/temas-v06-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -41,6 +32,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V06 — assets, derivado controlado e determinismo
         run: python -B tools/tests/test_temas_v06.py -v
       - name: Regressões de temas V01–V06

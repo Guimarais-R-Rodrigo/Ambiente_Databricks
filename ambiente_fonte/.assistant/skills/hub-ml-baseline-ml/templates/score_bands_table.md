@@ -4,11 +4,11 @@
 
 
 ## Uso
-Formato padronizado para tabela de faixas de score.
+Formato para análise técnica de faixas de score; não aprova clientes nem define política de crédito. Declarar população, período, direção do score, maturidade dos labels, fronteiras dos intervalos e critérios aprovados. Sem política, estado NÃO CLASSIFICADO.
 
 ## Formato
 
-| Faixa | Score min | Score max | N | % base | Bons | Maus | Taxa default | Aprov. acum. |
+| Faixa | Score min | Score max | N | % base | Bons | Maus | Taxa default | Volume acum. |
 |---|---|---|---|---|---|---|---|---|
 | A (melhor) | [X] | [X] | [N] | [X]% | [N] | [N] | [X]% | [X]% |
 | B | [X] | [X] | [N] | [X]% | [N] | [N] | [X]% | [X]% |
@@ -18,16 +18,15 @@ Formato padronizado para tabela de faixas de score.
 
 ## Critérios de qualidade das faixas
 
-- Mínimo 5% da base por faixa (representatividade)
-- Taxa de default monotonicamente crescente de A→E
-- Faixa A deve ter taxa ≤ 50% da taxa média
-- Faixa E deve ter taxa ≥ 200% da taxa média
-- Ponto de corte: definir entre quais faixas aprovamos/reprovamos
+- N mínimo/volume por faixa: [critério do estudo, incerteza e responsável]
+- Monotonicidade esperada: [direção do score e justificativa; investigar desvios]
+- Taxa relativa por faixa: [benchmark e critério aprovado, sem corte universal]
+- Estabilidade por período/segmento: [método, evidência e limitação]
+- Corte candidato: [simulação técnica]; qualquer decisão sobre clientes exige política e autoridade próprias.
 
 ## Interpretação executiva
 
-"Ao aprovar até a faixa [X], incluímos [Y]% dos clientes e esperamos
-uma taxa de inadimplência de [Z]% — comparada com [W]% sem modelo."
+"Na simulação do corte [X], [Y]% da população avaliada está incluída, com taxa observada [Z]% e incerteza [IC/método]. Essa análise não autoriza aprovação de clientes nem garante taxa futura."
 
 ---
 
@@ -35,8 +34,8 @@ uma taxa de inadimplência de [Z]% — comparada com [W]% sem modelo."
 
 | Faixa | Score range | N | % base | Taxa evento | Risco |
 |---|---|---|---|---|---|
-| A (baixo risco) | [X]-[X] | [N] | [X]% | [X]% | 🟢 |
-| B | [X]-[X] | [N] | [X]% | [X]% | 🟢 |
-| C | [X]-[X] | [N] | [X]% | [X]% | 🟡 |
-| D | [X]-[X] | [N] | [X]% | [X]% | 🟡 |
-| E (alto risco) | [X]-[X] | [N] | [X]% | [X]% | 🔴 |
+| A (baixo risco) | [X]-[X] | [N] | [X]% | [X]% | [critério/ NÃO CLASSIFICADO] |
+| B | [X]-[X] | [N] | [X]% | [X]% | [critério/ NÃO CLASSIFICADO] |
+| C | [X]-[X] | [N] | [X]% | [X]% | [critério/ NÃO CLASSIFICADO] |
+| D | [X]-[X] | [N] | [X]% | [X]% | [critério/ NÃO CLASSIFICADO] |
+| E (alto risco) | [X]-[X] | [N] | [X]% | [X]% | [critério/ NÃO CLASSIFICADO] |

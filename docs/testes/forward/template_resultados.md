@@ -3,7 +3,7 @@
 Executor: <quem rodou> · Workspace: Databricks Free · Réplica publicada em: <data/commit>
 
 Preencha **Observado** com a skill que o Genie Code carregou (ou "nenhuma").
-Veredito: PASS/FAIL conforme `.claude/skills/forward-test-skills/SKILL.md`.
+Veredito: PASS/FAIL conforme `.agents/skills/forward-test-skills/SKILL.md`.
 
 | # | Skill | Caso | Esperado | Observado | Veredito | Ação |
 |---|---|---|---|---|---|---|

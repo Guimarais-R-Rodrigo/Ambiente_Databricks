@@ -7,6 +7,9 @@ junto da precisão da estimativa, em vez de decidir olhando apenas a maior taxa.
 É **material dos padrões do Hub**, não um novo helper operacional nem uma
 implementação homologada para produção.
 
+
+`decidivel` significa somente `n >= minimo_para_decisao`. Não testa diferença, corrige viés ou aprova campanha. Comece pelo cálculo explicado abaixo; o [notebook demonstrativo](exemplo_taxa_resposta_campanha.py) exige autorização para seu preparo com escrita. Duas taxas iguais, 20/500 e 2/50, têm volumes e incertezas diferentes; essa conta é ilustrativa.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -82,11 +85,7 @@ Considere uma campanha fictícia. Um segmento teve 20 respostas em 500 contatos;
 outro teve duas em 50. Ambos mostram 4%. O primeiro tem mais observações, embora
 isso não elimine eventual viés de seleção.
 
-Com o mínimo padrão de 100 contatos, a marca `decidivel` seria verdadeira no
-primeiro grupo e falsa no segundo. Esse é um exemplo aritmético e uma leitura
-da condição implementada, **não uma transcrição de execução PySpark nesta
-sprint**. O próximo passo é examinar os intervalos e o contexto, não transferir
-a decisão inteira para a marca booleana.
+Este exemplo é aritmético e ilustra a condição implementada; não é saída observada de execução.
 
 ## 7. O que você precisa antes de usar?
 
@@ -154,11 +153,7 @@ diferenças, corrigir comparações múltiplas ou otimizar resultado financeiro.
 A função não calcula ajuste por seleção, custo de contato ou potencial de
 resposta incremental.
 
-Ela também não fornece um ajuste para populações finitas ou contatos
-correlacionados. Os requisitos sobre dados devem ser revistos antes de usar o
-intervalo para generalizar resultados. No notebook histórico há interpretações
-mais fortes que o retorno sustenta; a nota R01 delimita esse problema sem
-alterar o código ou fabricar uma nova execução.
+O cálculo não ajusta população finita ou dependência entre contatos. Intervalo de confiança não prevê o máximo de respostas futuras.
 
 ## 12. Quais são as alternativas?
 
@@ -199,6 +194,4 @@ contrato e comportamento. A expressão de Wilson foi conferida na documentação
 primária do [NIST sobre limites para proporções binomiais](https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/agcoulci.htm),
 consultada em 12/09/2026; a página apresenta a expressão usada neste código.
 
-Revisão R01: leitura estática do módulo, fachada e notebook; revisão do próprio
-autor, sem auditor independente. Fórmula ilustrativa não é execução do helper.
-Teste Spark/Databricks e aceite humano permanecem separados e pendentes.
+Confira o exemplo em sessão Spark compatível antes de usar e preserve os pressupostos de amostragem e independência.

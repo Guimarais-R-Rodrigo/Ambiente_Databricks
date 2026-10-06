@@ -1,0 +1,54 @@
+{
+  "status": "BLOCKED",
+  "tested_sha": "420976e7b76373721998a5df96e996530764688d",
+  "tested_tree": "ade8ff3bab3533cfa10803cdc44b537a3c22ab50",
+  "platform": "Linux x86_64",
+  "client": "Codex CLI",
+  "client_version": "0.159.2",
+  "authentication_probe": "Existing ChatGPT authentication reported; no identity or credential read/saved",
+  "reported_model": null,
+  "working_directory_sanitized": "<repo> (repository root)",
+  "invocation_sanitized": "timeout 90 codex exec --sandbox read-only --ephemeral --json --color never --cd <repo> <prompt>",
+  "prompt": "Read-only native acceptance smoke test for this repository. Do not change files, settings, credentials or permissions, do not use network or launch another model, and do not run render, publication, tests or installs. First report which repository instruction files and skill names were supplied by the client at session start, clearly distinguishing direct startup evidence from your own inference. Then select the maintainer procedure for local assistant structure validation and read only that SKILL.md and its relevant local owner help/source as needed. Report the canonical source, expected output/exit meaning, the distinction from runtime certification, and what remains unproven about native discovery. Do not claim a native loader PASS from merely reading a file. Answer concisely.",
+  "exit_code": 1,
+  "observed_error": "failed to initialize in-process app-server client: Read-only file system (os error 30)",
+  "stderr_sanitized": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\nReading additional input from stdin...\nError: failed to initialize in-process app-server client: Read-only file system (os error 30)\n",
+  "stdout_bytes": 0,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "model_session_started": false,
+  "native_loading_observed": false,
+  "retry_attempted": false,
+  "settings_or_auth_changes": false,
+  "observed_at_utc": "2026-10-06T19:30:29.115633+00:00",
+  "remaining_profiles": [
+    {
+      "client": "Claude Code",
+      "status": "BLOCKED",
+      "reason": "executable absent",
+      "owner": "Operator / maintainer",
+      "next_step": "Use an authorized installed client and execute native-test-protocol at frozen SHA; installation/auth requires separate approval."
+    },
+    {
+      "client": "Gemini CLI",
+      "status": "BLOCKED",
+      "reason": "executable absent",
+      "owner": "Operator / maintainer",
+      "next_step": "Use an authorized installed client and execute native-test-protocol at frozen SHA; installation/auth requires separate approval."
+    },
+    {
+      "client": "Grok Build",
+      "status": "BLOCKED",
+      "reason": "executable absent",
+      "owner": "Operator / maintainer",
+      "next_step": "Use an authorized installed client and execute native-test-protocol at frozen SHA; installation/auth requires separate approval."
+    },
+    {
+      "client": "Windows",
+      "status": "BLOCKED",
+      "reason": "No Windows executor or PowerShell",
+      "owner": "Operator / maintainer",
+      "next_step": "Run native clone/path/case/LF/skills tests on an authorized Windows environment."
+    }
+  ],
+  "codex_next_step": "Operator must repeat in an authorized supported client environment that can initialize normally, without bypassing sandbox or modifying this executor security settings."
+}

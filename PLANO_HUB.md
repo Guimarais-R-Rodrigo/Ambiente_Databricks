@@ -1,5 +1,13 @@
 # Plano de reestruturação — de ambiente pessoal a Hub de equipe
 
+> **Localizador vigente — 06/10/2026.** O corpo abaixo registra o plano e o estado
+> de agosto de 2026; suas contagens, próximos passos e referências ao changelog
+> são históricos. A decisão de paleta da §2.2 permanece vigente. Para decisões
+> posteriores, use o [índice ADR](docs/decisions/README.md); para execução/estado
+> corrente, os [owners vivos](docs/ai/context/projeto.md#owners-vivos). A organização
+> por tarefa e a retenção da história seguem o [ADR-0026](docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md).
+> O texto original é preservado abaixo, sem recontar sprints ou resultados.
+
 Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditada
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
@@ -154,7 +162,10 @@ módulo — funções, classes e constantes em maiúscula que não começam com 
 Não é curadoria.
 
 Isto não é preferência. Há **sete** imports cruzados reais entre módulos da
-biblioteca, e `tests/test_core.py` importa dez nomes de oito módulos:
+biblioteca, e `tests/test_core.py` importava dez nomes de oito módulos na observação histórica.
+**Localizador de 06/10/2026:** a suíte de manutenção passa a
+[`tools/tests/runtime/test_core.py`](tools/tests/runtime/test_core.py); a lista
+abaixo preserva o inventário do plano original:
 
 ```text
 display/correlation_matrix  -> visual.theme_plotly : aplicar_tema
@@ -571,8 +582,10 @@ Fecha com **delete remoto das 12 pastas órfãs** antes do `--verify`.
   `novo_projeto.md` precisa de tratamento à parte — ele manda gerar um `AGENTS.md`
   a partir do template de `x_projects`, pasta removida.
 - **6 — `spark` (7) e `testing` (1).** Herda material de três notebooks (§4.4).
-  `tests/test_core.py` não ganha pasta nem notebook: é suíte de regressão, única
-  exceção à regra, registrada para não parecer esquecimento.
+  No plano original, `tests/test_core.py` não ganhava pasta nem notebook por ser
+  suíte de regressão. **Localizador de 06/10/2026:** a suíte é mantida em
+  [`tools/tests/runtime/test_core.py`](tools/tests/runtime/test_core.py), fora do payload;
+  a exceção histórica não é uma receita para reinstalá-la no produto.
 - **7 — `ml` núcleo (16).** Os 16 que **não** estão na tabela "Módulos com
   dependência opcional" de `docs/testes/spark/README.md`. Risco próprio: as
   funções desses módulos nunca executaram no Free — o smoke test só testou
@@ -890,3 +903,9 @@ Seis objetos `hub_snippets/ml` recebem README local no contrato 1.0.0: Kaplan–
 
 ### Checkpoint R08 — clusters, anomalias e explicabilidade
 Seis objetos `hub_snippets/ml` recebem README local 1.0.0, com correções exclusivamente didáticas nos notebooks e preservação das APIs. A leva deve fechar em 55/75 operacionais e pausar antes da R09 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R08.md`.
+
+## Nota administrativa de manutenção — 06/10/2026
+
+Os paths de instruções citados acima registram o contexto de cada decisão. Para
+a manutenção corrente, leia AGENTS.md e docs/ai/README.md (ADR-0025). A exceção
+de identidade da paleta em §2.2 continua válida; o histórico não foi reescrito.

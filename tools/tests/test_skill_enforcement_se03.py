@@ -393,9 +393,16 @@ class SkillEnforcementSE03Tests(unittest.TestCase):
     def test_render_diff_gate_detects_untracked_derived_file(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
-            subprocess.run(["git", "init"], cwd=root, check=True, capture_output=True)
+            (root / "tools").mkdir()
+            for name in ("render_simulado.py", "project_policy.py", "simulado.py", "notebook_marker.py"):
+                shutil.copyfile(REPO_ROOT / "tools" / name, root / "tools" / name)
+            source = root / "ambiente_fonte"
+            (source / ".assistant").mkdir(parents=True)
+            (source / ".assistant/example.txt").write_text("synthetic\n")
+            (source / ".assistant_instructions.md").write_text("instructions\n")
+            subprocess.run([sys.executable, "-B", "tools/render_simulado.py", "--write"],
+                           cwd=root, check=True, capture_output=True)
             derived = root / certifier.DERIVED_ROOT
-            derived.mkdir(parents=True)
             (derived / "new-derived.txt").write_text("generated\n", encoding="utf-8")
 
             with mock.patch.object(certifier, "REPO_ROOT", root):

@@ -1,0 +1,10 @@
+{
+  "id": "A2",
+  "url": "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects",
+  "title": "How can I create and manage projects?",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "Project instructions distinct from project knowledge; RAG may be used on eligible plans.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

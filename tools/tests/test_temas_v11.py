@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PRODUCT = ROOT / "ambiente_fonte" / ".assistant"
 AIBI = PRODUCT / "hub_padroes" / "identidade_visual" / "aibi"
-MIRROR = ROOT / "Novo_Ambiente_Simulado" / "Users" / "usuario-free" / ".assistant" / "hub_padroes" / "identidade_visual" / "aibi"
+MIRROR = ROOT / ".artifacts/simulado" / "Users" / "usuario-free" / ".assistant" / "hub_padroes" / "identidade_visual" / "aibi"
 sys.path.insert(0, str(PRODUCT))
 sys.path.insert(0, str(AIBI))
 

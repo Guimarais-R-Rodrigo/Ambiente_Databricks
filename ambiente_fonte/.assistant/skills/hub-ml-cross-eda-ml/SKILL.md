@@ -34,7 +34,7 @@ Só afirme cobertura medida se houver `status="PASS"`, Receipt e
 chame `scripts/verify_diagnostic.py::verify` com contexto, datasets, `run_id`
 e oráculo de diagnóstico independentes do payload; exija `valid=true`.
 O resultado mantém `join_executed=false`, `pit_executed=false` e readiness
-pendente. PIT aplicável exige a rota SER06 descrita abaixo.
+pendente. PIT aplicável exige a rota PIT local sintética descrita abaixo.
 
 O diagnóstico estático tem `stage_level=L3_DIAGNOSTIC_ONLY` no
 `diagnostic_contract.json`; a rota PIT local tem `stage_level=L4_LOCAL_PROFILE`.

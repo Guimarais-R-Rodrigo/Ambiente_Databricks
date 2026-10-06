@@ -32,7 +32,7 @@ PROFILE = "ser01-object-validation-pre-promotion"
 CERTIFIER_VERSION = "SER-CERT-1"
 CERTIFIER_ID_PREFIX = "sercert1:"
 BRANCH = "ser/SER01-criar-objeto-l3"
-DERIVED_ROOT = "Novo_Ambiente_Simulado"
+DERIVED_ROOT = ".artifacts/simulado"  # compatibility name; renderer owns resolution
 
 
 class GateFailed(RuntimeError):
@@ -515,10 +515,8 @@ def main(argv=None) -> int:
                   [sys.executable, "-B", "tools/validate_assistant.py"])
         _run_step(runner, evidence, steps, "renderer",
                   [sys.executable, "-B", "tools/render_simulado.py", "--write"])
-        _, drift = _run_step(runner, evidence, steps, "render_diff",
-                             ["git", "status", "--porcelain", "--untracked-files=all", "--", DERIVED_ROOT])
-        if drift.strip():
-            raise GateFailed("DERIVED_STALE")
+        _run_step(runner, evidence, steps, "render_diff",
+                  [sys.executable, "-B", "tools/render_simulado.py", "--check"])
         _run_step(runner, evidence, steps, "readme_snapshot",
                   [sys.executable, "-B", "tools/validate_assistant.py", "--conferir-readme"])
         _run_step(runner, evidence, steps, "ci_local",

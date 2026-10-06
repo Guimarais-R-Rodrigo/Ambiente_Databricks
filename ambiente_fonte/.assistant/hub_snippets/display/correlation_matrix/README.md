@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 <!-- sistema-temas-v07: consumidores -->
-> **Atualização V07 — estado atual.** `plot_correlation` e
+> **Tema explícito.** `plot_correlation` e
 > `plot_correlation_matrix` continuam sendo as rotas legadas. Para aplicar um
 > `ResolvedTheme` notebook/light de forma opt-in, use
 > `plot_correlation_resolvido` ou `plot_correlation_matrix_resolvido`. A rota
@@ -91,7 +91,18 @@ assert len(pares) == 1 and abs(pares[0][2] - 1.0) < 1e-10
 print(pares)
 ```
 
-Para explorar a figura no notebook, use `fig.show()`. O [notebook didático](exemplo_correlation_matrix.py) configura o import pelo usuário da sessão e preserva uma falha histórica de execução no laboratório. Essa transcrição não é resultado novo nem prova de incompatibilidade em todo ambiente. O helper lê os dados e coleta a matriz; não grava tabelas.
+Para explorar a figura no notebook, use `fig.show()`. O [notebook didático](exemplo_correlation_matrix.py) configura o import pelo usuário da sessão e orienta conferir suporte às APIs no compute escolhido. Uma falha em outro ambiente não prova incompatibilidade universal. O helper lê os dados e coleta a matriz; não grava tabelas.
+
+Na mesma base sintética, a rota resolvida exige `ResolvedTheme` de contexto `notebook` e modo `light`, com as [dependências de temas](../../requirements-temas.txt):
+
+```python
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.display.correlation_matrix import plot_correlation_resolvido
+tema = load_reference_theme("notebook")
+fig, pares = plot_correlation_resolvido(base, tema, cols=["renda", "limite"])
+```
+
+O tema é validado antes do cálculo/amostragem. O alias resolvido recebe os mesmos argumentos; os dados não são reescritos.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -121,10 +132,12 @@ Na análise real, investigue NaNs, unidades de observação e nomes repetidos; c
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](correlation_matrix.py) define o cálculo e o retorno; a [fachada](__init__.py) declara os dois nomes públicos. O [exemplo](exemplo_correlation_matrix.py) oferece o cenário mais longo e sua evidência histórica. Consulte também o [tema](../../visual/theme_plotly/README.md) para entender o que é apresentação e o [guia da coleção](../../README.md) para preparar imports.
+A [implementação](correlation_matrix.py) define o cálculo e o retorno; a [fachada](__init__.py) declara `plot_correlation`, seu alias `plot_correlation_matrix`, `plot_correlation_resolvido` e seu alias `plot_correlation_matrix_resolvido`. O [exemplo](exemplo_correlation_matrix.py) oferece o cenário mais longo e a interpretação do contrato. Consulte também o [tema](../../visual/theme_plotly/README.md) para entender o que é apresentação e o [guia da coleção](../../README.md) para preparar imports.
 
 ## 15. Referências
 
 A [API do Spark Correlation](https://spark.apache.org/docs/4.2.0/api/python/reference/api/pyspark.ml.stat.Correlation.html) sustenta os métodos, o uso de posições e o exemplo com NaN; a versão da página não é uma alegação de versão instalada. As [limitações serverless da Databricks](https://docs.databricks.com/aws/en/compute/serverless/limitations) são referência de plataforma, não homologação deste helper. Fontes consultadas em 2026-09-12.
 
-A procedência do comportamento específico é a [implementação local](correlation_matrix.py), lida na base `c60f1e5`. Os casos reproduzíveis desta sprint ficam nas evidências R03-B do repositório. Conferência de cálculo e geração de figura não equivalem a teste visual no workspace. Revisão própria de ChatGPT; não houve auditoria independente.
+A [implementação local](correlation_matrix.py) define o cálculo. O registro histórico de falha permanece na documentação técnica de manutenção; este bloco não o reexecuta. Conferência de cálculo e geração de figura não equivalem a teste visual no workspace.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03B.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

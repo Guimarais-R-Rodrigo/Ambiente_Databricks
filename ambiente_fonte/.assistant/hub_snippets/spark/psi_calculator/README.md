@@ -59,7 +59,7 @@ O notebook registra esse cenário e mostra que `interpretar_psi(psi)` sem polít
 
 ## 7. O que você precisa antes de usar?
 
-Os dois DataFrames devem conter a coluna analisada. `n_bins` precisa estar entre 2 e 100. As populações não podem ser vazias no momento do cálculo do índice.
+Os dois DataFrames devem conter a coluna analisada. Forneça `n_bins` inteiro entre 2 e 100. O código checa o intervalo, mas um valor fracionário pode só falhar quando usado em `range`; tipo inteiro é pré-validação do consumidor. As populações não podem ser vazias no momento do cálculo do índice.
 
 Para `calcular_csi`, `feature_cols` não pode ser vazio e todas as colunas devem existir nos dois lados. O tipo usado para decidir “numérico ou categórico” vem de `df_base.dtypes`; confirme que a coluna atual possui semântica e tipo compatíveis.
 
@@ -84,6 +84,19 @@ print(interpretar_psi(psi))
 
 O [notebook](exemplo_psi_calculator.py) demonstra mudança de forma com média parecida, classificação somente com limiares explícitos e varredura por `calcular_csi`. Não persiste tabelas.
 
+Para conferir CSI misto, com política apenas ilustrativa e entradas sintéticas:
+
+```python
+from hub_snippets.spark.psi_calculator import calcular_csi, interpretar_psi
+referencia = spark.createDataFrame([(1.0, "A"), (2.0, "B"), (3.0, "A")], "valor double, grupo string")
+atual = spark.createDataFrame([(2.0, "A"), (3.0, "B"), (4.0, "B")], "valor double, grupo string")
+csi = calcular_csi(referencia, atual, ["valor", "grupo"], n_bins=2, max_categorias=10)
+for feature, indice in csi.items():
+    print(feature, interpretar_psi(indice, warning_threshold=0.10, critical_threshold=0.25))
+```
+
+Os dois limiares devem ser calibrados para o caso real; este bloco não autoriza retreino.
+
 ## 10. Decisões e configurações que mais importam
 
 A primeira decisão é a população de referência. Mudar a referência muda a régua. `n_bins` controla a granularidade desejada, mas quantis repetidos podem reduzir a quantidade efetiva de faixas.
@@ -98,11 +111,13 @@ A implementação numérica coleta apenas agregados por bucket, mas ainda execut
 
 A guarda é por número de categorias, não por tamanho textual ou memória real. Tipos são classificados a partir da referência; alteração de tipo entre períodos não recebe uma validação explícita de igualdade.
 
-O retorno do PSI não expõe os cortes; para auditoria detalhada por bucket, [`drift_detector`](../../../hub_scripts/drift_detector/drift_detector.py) possui contrato diferente e devolve boundaries e contribuições para coortes de uma tabela nomeada.
+O retorno do PSI não expõe os cortes; para auditoria detalhada por bucket, [`drift_detector`](../../../hub_scripts/drift_detector/README.md) possui contrato diferente e devolve boundaries e contribuições para coortes de uma tabela nomeada.
+
+Com referência constante ou quase toda ausente, quantis podem se repetir, deduplicar e deixar poucas faixas úteis. O índice pode ter sensibilidade limitada apesar de calculável; examine distribuição e massa ausente antes de interpretar um valor pequeno como estabilidade.
 
 ## 12. Quais são as alternativas?
 
-[`drift_detector`](../../../hub_scripts/drift_detector/drift_detector.py) compara duas coortes selecionadas por uma coluna de data em uma tabela e devolve detalhe por bucket para variáveis numéricas. Ele não é substituto exato: recebe `table_name`, só implementa PSI numérico e possui parâmetros de erro relativo e suavização.
+[`drift_detector`](../../../hub_scripts/drift_detector/README.md) compara duas coortes selecionadas por uma coluna de data em uma tabela e devolve detalhe por bucket para variáveis numéricas. Ele não é substituto exato: recebe `table_name`, só implementa PSI numérico e possui parâmetros de erro relativo e suavização.
 
 `psi_calculator` é mais direto quando você já tem dois DataFrames e também precisa de CSI categórico. Métodos como KS, Jensen-Shannon ou testes de hipótese respondem a contratos diferentes e não estão implementados aqui.
 
@@ -117,11 +132,13 @@ Verifique também nulos, unidades, faixas, quantidade de categorias e tamanho da
 - [Implementação](psi_calculator.py): bins, estabilidade e guardas.
 - [Fachada](__init__.py): exporta limite e três funções públicas.
 - [Notebook](exemplo_psi_calculator.py): cenário sintético e interpretação.
-- [`drift_detector`](../../../hub_scripts/drift_detector/drift_detector.py): comparação de coortes de uma tabela com detalhe numérico por bucket.
+- [`drift_detector`](../../../hub_scripts/drift_detector/README.md): comparação de coortes de uma tabela com detalhe numérico por bucket.
 - [Coleção](../../README.md): demais snippets Spark.
 
 ## 15. Referências
 
 O comportamento e as comparações foram conferidos em `psi_calculator.py`, `__init__.py`, `exemplo_psi_calculator.py` e na implementação local de `drift_detector`. O notebook documenta a distinção conceitual entre drift de entrada e performance.
 
-Os índices e limiares apresentados são mecanismos de monitoramento, não padrões Databricks. A R04-A registra execução sintética Spark em evidência própria; sem publicação, dados reais ou auditoria independente.
+Os índices e limiares apresentados são mecanismos de monitoramento, não padrões Databricks. Casos sintéticos não certificam dados reais nem runtime de destino.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

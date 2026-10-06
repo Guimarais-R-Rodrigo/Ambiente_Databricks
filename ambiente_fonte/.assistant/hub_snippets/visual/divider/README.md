@@ -8,7 +8,7 @@
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Quatro funções de separação visual. |
+| O que é? | Oito funções: quatro legadas e quatro variantes com tema explícito. |
 | Para que serve? | Tornar fronteiras entre blocos mais fáceis de perceber. |
 | Use quando... | Um notebook HTML precisa de hierarquia consistente. |
 | Evite quando... | A linha substituiria títulos, contexto ou navegação. |
@@ -53,9 +53,22 @@ A fronteira visual ajuda a localizar a mudança de assunto, mas não substitui a
 
 ## 7. O que você precisa antes de usar?
 
-O pacote precisa estar visível ao Python. O módulo importa `AZUL_CAIXA`; não exige Spark ou Plotly. A visualização necessita de suporte a HTML/CSS no destino.
+O pacote precisa estar visível ao Python. O módulo importa estilos de `constants.styles` e o tipo `ResolvedTheme` de `visual.tema`; não exige Spark ou Plotly. A visualização necessita de suporte a HTML/CSS no destino.
 
-O notebook usa Spark apenas em sua preparação de caminho e `displayHTML` para apresentar os resultados. Não lê nem grava tabelas de negócio. As funções não recebem parâmetros.
+O notebook usa Spark apenas em sua preparação de caminho e `displayHTML` para apresentar os resultados. Não lê nem grava tabelas de negócio. As quatro funções legadas não recebem parâmetros; as quatro variantes `_resolvido` recebem `theme`.
+
+APIs públicas (retorno `str`; `theme` é um `ResolvedTheme` de contexto `notebook` nas variantes resolvidas):
+
+- `divider_light()`
+- `divider_medium()`
+- `divider_heavy()`
+- `divider_section()`
+- `divider_light_resolvido(theme: ResolvedTheme)`
+- `divider_medium_resolvido(theme: ResolvedTheme)`
+- `divider_heavy_resolvido(theme: ResolvedTheme)`
+- `divider_section_resolvido(theme: ResolvedTheme)`
+
+A geração legada usa Python e o Hub. As rotas resolvidas revalidam o tema e exigem as [dependências de validação](../../requirements-temas.txt), sem instalação automática.
 
 ## 8. O que este recurso entrega?
 
@@ -81,9 +94,18 @@ print(divider_light().count("<hr"), divider_section().count("<hr"))
 
 Saída portátil conferida: `1 2`. O teste verifica os elementos gerados, não a aparência no workspace.
 
-### Caminho V04 — divisória com tema explícito
+### Tema explícito — divisória com tema explícito
 
 `divider_light_resolvido(theme)`, `divider_medium_resolvido(theme)`, `divider_heavy_resolvido(theme)` e `divider_section_resolvido(theme)` mantêm a mesma estrutura HTML das funções históricas. O tema troca apenas cores mapeadas; margens e a composição de duas linhas da divisória de seção continuam contrato do componente.
+
+```python
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.divider import divider_section_resolvido
+html = divider_section_resolvido(load_reference_theme("notebook"))
+assert html.count("<hr") == 2
+```
+
+A chamada gera HTML em memória; sua exibição é separada.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -95,11 +117,11 @@ Mantenha o mesmo significado para cada peso ao longo do notebook. Não use a fun
 
 O efeito visual depende do destino e de sua escala de exibição. Diferenças pequenas de espessura podem ser discretas; não há teste perceptual no módulo. A renderização Databricks é documentada, mas este README não comprova equivalência entre todos os ambientes.
 
-As funções legadas preservam seus estilos históricos. Na V04, as variantes `_resolvido` usam `constants.styles`: `divider.light`, `divider.medium` e `brand.primary` chegam do tema validado. Nenhuma delas cria mecanismo de atualização global. Mantenha os títulos mesmo quando a linha parecer suficiente.
+As funções legadas preservam seus estilos históricos. Na rota resolvida, as variantes `_resolvido` usam `constants.styles`: `divider.light`, `divider.medium` e `brand.primary` chegam do tema validado. Nenhuma delas cria mecanismo de atualização global. Mantenha os títulos mesmo quando a linha parecer suficiente.
 
 ## 12. Quais são as alternativas?
 
-Títulos e espaço em branco podem resolver a organização sem separadores. `---` atende a uma rota Markdown. [section_header](../section_header/section_header.py) oferece cabeçalho renderizado quando é necessário nomear a seção; [styles](../../constants/styles/README.md) concentra a materialização da rota V04, sempre por chamada explícita.
+Títulos e espaço em branco podem resolver a organização sem separadores. `---` atende a uma rota Markdown. [section_header](../section_header/README.md) oferece cabeçalho renderizado quando é necessário nomear a seção; [styles](../../constants/styles/README.md) concentra a materialização da rota resolvida, sempre por chamada explícita.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -115,4 +137,6 @@ Se o destino exibir tags literais, ele está mostrando texto ou não está inter
 
 A [implementação](divider.py) sustenta dimensões e efeitos. [Databricks — HTML em notebooks](https://docs.databricks.com/aws/en/notebooks/notebook-media#include-html), consultada em 12/09/2026, documenta `displayHTML` como rota de visualização.
 
-Revisão R03-A: leitura do módulo, fachada e exemplo; testes portáteis de conteúdo e determinismo. Sem alteração de layout, execução do notebook no Databricks ou auditoria independente.
+A [implementação](divider.py) e a [fachada](__init__.py) delimitam o contrato. Confira conteúdo, escape e aparência no destino: gerar uma string não homologa a interface nem acessibilidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

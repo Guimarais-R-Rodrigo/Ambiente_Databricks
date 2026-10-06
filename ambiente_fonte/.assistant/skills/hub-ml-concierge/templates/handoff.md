@@ -25,4 +25,4 @@ RETORNAR AO CONCIERGE SOMENTE SE: [surgir nova lacuna de recurso]
 ESTADO: recomendação produzida; execução da próxima etapa não presumida.
 ```
 
-Não inclua dados pessoais, credenciais, payloads de clientes ou resultados não observados. Mencione nomes de tabelas e paths reais somente no contexto autorizado de uso, nunca em evidência versionada desta área experimental.
+Não inclua dados pessoais, credenciais, payloads de clientes ou resultados não observados. Mencione nomes de tabelas e paths reais somente no contexto autorizado de uso, nunca em evidência versionada ou compartilhada sem autorização. Não grave identificadores sensíveis nesses registros.

@@ -70,8 +70,7 @@ fora compete com todas as vizinhas.
 | Formato de saída | o que entregar, e para quem |
 
 A seção de helpers não é opcional e não é decorativa: o Genie Code **não**
-descobre `hub_snippets` sozinho. A skill recomenda o módulo no texto que injeta,
-e quem importa é a pessoa, no notebook (ADR-0004).
+descobre `hub_snippets` sozinho. A skill declara o módulo; a execução exige importação e chamada explícita no runtime. Quando houver runner canônico para a etapa protegida, use essa rota e seus verificadores, preservando a obrigação de declaração de helpers (ADR-0004).
 
 ## Declarar a política SEF proporcional ao risco
 
@@ -105,8 +104,7 @@ O checklist é **um só para os seis tipos**, e mora em
 Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
 tem um bloco específico para skill.
 
-A lista abaixo era a antiga, preservada porque um item dela não estava no
-canônico — os demais foram absorvidos:
+Verifique também os requisitos específicos deste tipo:
 
 ```text
 [ ] o nome da pasta é idêntico ao campo name

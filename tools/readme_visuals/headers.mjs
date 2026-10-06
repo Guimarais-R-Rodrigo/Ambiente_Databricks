@@ -1,13 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { OUT, TOOL, ASSET, C, newCanvas, txt, write, sha } from './lib.mjs';
+import { OUT, TOOL, ASSET, QA, HEADER_SOURCE, ROOT, C, newCanvas, txt, write, sha } from './lib.mjs';
 
 // Production owns header inputs. The approved prototype remains a frozen reference.
 const root = path.join(ASSET, 'headers');
-const spec = JSON.parse(await fs.readFile(path.join(root, 'src/copy.json'), 'utf8'));
+const spec = JSON.parse(await fs.readFile(path.join(HEADER_SOURCE, 'copy.json'), 'utf8'));
 const { width, height, minimum_display_width: minimumWidth } = spec.canvas;
-const original = await fs.readFile(path.join(root, 'src/fundo_tecnologico_original.png'));
+const original = await fs.readFile(path.join(HEADER_SOURCE, 'fundo_tecnologico_original.png'));
 const originalMeta = await sharp(original).metadata();
 const checks = [];
 function check(ok, detail) {
@@ -68,22 +68,22 @@ for (const header of spec.headers) {
     check(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y, `${header.id}: separate text boxes ${i}/${j}`);
   }
   const overlay = Buffer.from(s.draw.svg());
-  await write(path.join(root, `src/${header.id}_tipografia.svg`), overlay);
+  await write(path.join(HEADER_SOURCE, `${header.id}_tipografia.svg`), overlay);
   const result = await sharp(background).composite([{ input: overlay }]).png({ compressionLevel: 9 }).toBuffer();
   const output = `png/${header.id}.png`;
   await write(path.join(root, output), result);
   const reduced = [];
   for (const w of [720, 960]) {
-    const samplePath = `qa/${header.id}_${w}.png`;
+    const samplePath = `headers/${header.id}_${w}.png`;
     const sample = await sharp(result).resize({ width: w }).png().toBuffer();
-    await write(path.join(root, samplePath), sample);
-    reduced.push({ path: samplePath, sha256: sha(sample), display_width: w });
+    await write(path.join(QA, samplePath), sample);
+    reduced.push({ path: `tools/readme_visuals/qa/${samplePath}`, path_base: "repository", sha256: sha(sample), display_width: w });
   }
   entries.push({ id: header.id, alt: header.alt, uses: header.uses, path: output,
     width, height, bytes: result.length, sha256: sha(result), texts: s.texts, reduced });
 }
 const inputPaths = [
-  ['copy', path.join(root, 'src/copy.json')],
+  ['copy', path.join(HEADER_SOURCE, 'copy.json')],
   ['generator', path.join(TOOL, 'headers.mjs')],
   ['shared_library', path.join(TOOL, 'lib.mjs')],
   ['visual_tokens', path.join(ASSET, 'visual_system/tokens.yaml')],
@@ -94,10 +94,10 @@ const inputHashes = Object.fromEntries(await Promise.all(inputPaths.map(async ([
 await write(path.join(root, 'manifest.json'), JSON.stringify({
   schema_version: 1, status: spec.status, scope: 'shared_readme_notebook_headers',
   render_mode: 'frozen_generated_background_plus_deterministic_typography',
-  original: { path: 'src/fundo_tecnologico_original.png', width: originalMeta.width, height: originalMeta.height, sha256: sha(original) },
+  original: { path: 'tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png', path_base: 'repository', width: originalMeta.width, height: originalMeta.height, sha256: sha(original) },
   input_hashes: inputHashes, headers: entries,
 }, null, 2) + '\n');
-await write(path.join(root, 'qa/validation.json'), JSON.stringify({
+await write(path.join(QA, 'headers/validation.json'), JSON.stringify({
   status: 'pass', check_count: checks.length, checks,
   limitations: ['Technical checks do not replace visual inspection in the consuming Markdown surface.'],
 }, null, 2) + '\n');

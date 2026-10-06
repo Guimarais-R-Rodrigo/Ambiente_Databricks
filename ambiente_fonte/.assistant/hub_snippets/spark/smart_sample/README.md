@@ -25,13 +25,13 @@ No modo estratificado, reserva pelo menos uma linha por estrato e distribui as v
 
 ## 2. Que problema este recurso resolve?
 
-A pergunta é: “Como obter um recorte menor para explorar os dados sem simplesmente pegar as primeiras linhas e, se necessário, sem perder categorias raras?”.
+A pergunta é: “Como obter um recorte menor para explorar os dados com limite de tamanho e, se necessário, presença de categorias raras?”.
 
 O helper não transforma a amostra em retrato imparcial para qualquer estimativa. Preservar todo estrato altera deliberadamente suas proporções quando estratos raros recebem pelo menos uma linha.
 
 ## 3. Quando faz sentido usar?
 
-Use para prototipação, inspeção visual e testes em que o dataset completo é desnecessário. O modo simples é apropriado quando uma amostra aleatória limitada basta.
+Use para prototipação, inspeção visual e testes em que o dataset completo é desnecessário. O modo simples é apropriado para recorte exploratório quando as limitações de inclusão abaixo são aceitáveis.
 
 Use `stratify_col` quando a presença de todas as categorias é mais importante que manter proporções exatas — por exemplo, revisar exemplos de cada canal ou UF antes de uma regra de qualidade.
 
@@ -51,6 +51,8 @@ Sem estratificação, conta a base completa para calcular `fraction = min(1, 1.2
 
 Com estratificação, conta quantos estratos distintos existem. Se forem mais que `n`, levanta erro. Caso contrário, calcula uma meta inteira por estrato que soma `n`, junta essa meta ao DataFrame e escolhe as primeiras linhas de cada estrato segundo ordenação aleatória com seed.
 
+**Contracaso do modo simples:** com `total=110` e `n=100`, `min(1, 1.2*100/110) = 1`. Todas as linhas entram em `sample`; o `limit(100)` pode selecionar um prefixo. Em geral, para `n < total <= 1,2 × n`, não há sorteio efetivo de inclusão. Mesmo com fração menor, o limite posterior pode privilegiar a ordem/partições do resultado. Não use essa rota como garantia de amostragem probabilística uniforme para inferência.
+
 ## 6. Exemplo de situação
 
 Uma base sintética tem 5.020 linhas, sendo apenas 20 de um segmento `XX`. Uma amostra simples de 200 pode não conter `XX`. A estratificada por `uf` garante ao menos uma linha de cada UF desde que o número de UFs seja menor ou igual a 200.
@@ -65,9 +67,11 @@ Antes de estratificar, defina o que a coluna representa e quantos valores distin
 
 A seed ajuda a reproduzir o sorteio sob a mesma entrada e plano; ela não é garantia de identidade eterna se partições, versões, dados ou plano mudarem.
 
+Antes de estratificar, confira externamente `__sample_rank` e `__stratum_target`: o primeiro pode ser sobrescrito e removido; o segundo pode gerar ambiguidade. Renomeie ou rejeite essas entradas conscientemente. O helper não implementa uma guarda completa de nomes reservados.
+
 ## 8. O que este recurso entrega?
 
-Retorna DataFrame Spark com o mesmo schema de entrada. Se a base possui `<= n` linhas, o retorno é o DataFrame original.
+Retorna DataFrame Spark; a preservação de schema pressupõe ausência de colisões com nomes auxiliares na rota estratificada. Se a base possui `<= n` linhas, o retorno é o DataFrame original.
 
 No modo simples, a saída tem **no máximo** `n` linhas e pode ter menos. No modo estratificado, quando a entrada tem mais que `n` linhas e o número de estratos não excede `n`, a alocação é construída para totalizar `n` linhas e preservar cada estrato ao menos uma vez.
 
@@ -110,6 +114,14 @@ Conte a saída e confirme `<= n`. No modo estratificado, compare os estratos dis
 
 Compare proporções por estrato antes e depois para visualizar a distorção. Teste duas seeds sobre a mesma base; diferenças são esperadas. Para reproducibilidade relevante, repita também com a mesma versão dos dados e mesma preparação.
 
+Casos de conferência documental:
+
+- `spark.range(110)`, `n=100`: confira teto e fração 1; não infira sorteio uniforme pelo tamanho.
+- Entrada com `__sample_rank`/`__stratum_target`: a pré-validação externa deve impedir a chamada estratificada até resolver a colisão.
+- Estratos `A`, `B` e `NULL`, com mais de `n` linhas e `n >= 3`: confira presença de todos por comparação null-safe e soma das cotas igual a `n`.
+
+Esses são critérios para testar no ambiente escolhido, não resultados de execução deste notebook.
+
 ## 14. Arquivos relacionados e próximos passos
 
 - [Implementação](smart_sample.py): caminhos simples e estratificado.
@@ -123,4 +135,6 @@ Compare proporções por estrato antes e depois para visualizar a distorção. T
 
 O comportamento foi conferido no código e no notebook desta pasta. As afirmações de tamanho distinguem explicitamente modo simples, estratificado e DataFrame já pequeno para não transformar um resultado histórico de 500 linhas em garantia universal.
 
-A R04-A executa casos sintéticos com Spark no runner e registra skips locais separadamente. Não há inferência de representatividade estatística, benchmark ou homologação Databricks.
+Tamanho e presença de estratos não demonstram representatividade estatística, benchmark ou homologação Databricks.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

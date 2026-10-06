@@ -19,7 +19,7 @@
 # MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | textos e valores definidos nas células; nenhuma tabela externa |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
+# MAGIC | Diferença Free × trabalho | confira compatibilidade e renderização no destino; a demonstração não homologa todo runtime |
 
 # COMMAND ----------
 
@@ -109,22 +109,9 @@ for v in valores:
 # MAGIC aparecer como “80/100” ainda no estilo de atenção. Verifique o número
 # MAGIC sem arredondamento antes de interpretar uma faixa. O helper também não
 # MAGIC recusa máximo zero ou valores fora do intervalo; o chamador deve validar.
-# MAGIC O contraste do estilo de atenção é uma limitação documentada no README,
-# MAGIC não corrigida por esta sprint documental.
+# MAGIC O contraste do estilo de atenção permanece uma limitação: consulte a medição no [README](README.md).
 # MAGIC
-# MAGIC ## Dívida registrada: as cores não vêm de `constants`
-# MAGIC
-# MAGIC O verde daqui é `#2E7D32`; o `VERDE` de `constants.colors` é `#8DC63F`.
-# MAGIC São **três sítios de declaração e dois valores**: `constants.styles`
-# MAGIC (`STYLE_BADGE_OK`) tem estilos de mesma finalidade, escritos separadamente, e
-# MAGIC nenhum dos dois usa o `VERDE` oficial.
-# MAGIC
-# MAGIC A distinção importa para quem for unificar: uma unificação de `styles` e `badge` precisa
-# MAGIC conferir contratos e apresentação; alinhar os dois ao `VERDE` de `colors`
-# MAGIC **troca as cores dos estados alinhados**. Ambas exigem revisão de produto.
-# MAGIC
-# MAGIC O inventário dos doze módulos com cor redeclarada está em
-# MAGIC `PLANO_HUB.md` §12.2.
+# MAGIC Os estilos legados vêm de `constants.styles`; as variantes resolvidas recebem tema explícito. A cor do texto do badge não precisa coincidir com uma cor de série. Nenhuma cor transforma o selo em aprovação de negócio.
 
 # COMMAND ----------
 # MAGIC %md

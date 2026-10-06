@@ -42,6 +42,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ASSISTANT_ROOT = REPO_ROOT / "ambiente_fonte" / ".assistant"
 ASSET_REL = "hub_readmes_visual_assets"
 ASSET_ROOT = ASSISTANT_ROOT / ASSET_REL
+QA_ROOT = REPO_ROOT / "tools" / "readme_visuals" / "qa"
 BASELINE_COMMIT = "f5461d8"
 ARTIFACT_ROOT = REPO_ROOT / ".artifacts" / "visual-v2" / "publication"
 
@@ -183,7 +184,7 @@ def collect_local_files(assistant_root: Path = ASSISTANT_ROOT) -> dict[str, Loca
     if _is_link(assistant_root) or _is_link(asset_root):
         raise PublicationError("raiz local não pode ser link simbólico ou junction")
 
-    validation = asset_root / "qa" / "validation.json"
+    validation = QA_ROOT / "validation.json"
     try:
         validation_payload = json.loads(validation.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:

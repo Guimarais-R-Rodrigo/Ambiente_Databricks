@@ -1,5 +1,9 @@
 # SE06 — Evals repetidos, adversariais e calibração
 
+> **Nota administrativa — 06/10/2026.** [SER e policy atuais](../../skill_enforcement_rollout/README.md) governam a continuidade. O texto abaixo preserva o fechamento SEF, inclusive níveis e próximos passos históricos; níveis posteriores não recertificam este ensaio. O fluxo original `DOD=PASS` não foi o caminho observado: a [decisão G2](DECISAO_G2.md) autorizou somente sequência em 24/25, com `DOD=INCOMPLETE` e `S06-A1-R4=NOT_RUN`.
+
+## Registro histórico preservado
+
 ## Estado
 
 **COLETA ENCERRADA POR GATE G2 EM 24/25; `S06-A1-R4=NOT_RUN`; `DOD=INCOMPLETE`; transição prospectiva para SE07 autorizada somente após integração da emenda G2.**

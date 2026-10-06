@@ -1,5 +1,19 @@
 # Testes — o que só execução e conversa respondem
 
+## Evidência por canal — leitura atual
+
+| Canal | Fonte e versão/escopo | O que não comprova |
+|---|---|---|
+| Estrutura local | [gates executáveis](../../tools/README.md); registrar SHA da rodada | runtime, publicação ou comportamento |
+| Runtime sintético | [B1 A, 01/10/2026](../sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md), integrado em `43dac176` | orquestração Genie completa ou policy promovida |
+| Transporte por conteúdo | [Micromodelos PR119, 30/09/2026](../sprints/micromodelos/PLANO_INTEGRACAO_HUB_MICROMODELOS.md), `63601e09`, readback 691/691 da release | homologação corporativa ou algoritmo correto |
+| Genie | [resultados B1](../sprints/skill_enforcement_rollout/GENIE_SKILLS_RESULTADOS_2026-09-28.md) e [retestes focais](../sprints/skill_enforcement_rollout/README.md) | runner/Receipt quando não observados |
+| Interface e UAT | [jornadas V12](../sprints/sistema_temas/V12/README.md), `a6309a4d`, e [handoff V13](../sprints/sistema_temas/V13/README.md), `62e94048` | readiness global; `A11-01=FAIL` e bloqueios persistem |
+| Autoridade | [policy atual](../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) e [ownership V14](../sprints/sistema_temas/V14/README.md) | autorização de um novo efeito remoto |
+
+Resultados de campanhas diferentes não são somados como certificação única. As seções datadas abaixo preservam o alcance original.
+
+
 Validação local prova forma. Esta pasta preserva os gates que dependem do
 Databricks real.
 

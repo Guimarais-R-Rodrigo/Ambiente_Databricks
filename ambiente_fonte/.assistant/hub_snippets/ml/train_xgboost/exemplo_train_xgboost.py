@@ -6,7 +6,7 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Treina XGBoost com a mesma interface e as mesmas métricas do baseline LightGBM, para comparação direta.
 
-# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC Leia o README do objeto para requisitos, efeitos e interpretação. As saídas mostradas são ilustrativas de uma execução identificada; ao reproduzir, registre versões e compare o contrato, sem esperar métricas idênticas.
 # MAGIC
 # COMMAND ----------
 # MAGIC %md

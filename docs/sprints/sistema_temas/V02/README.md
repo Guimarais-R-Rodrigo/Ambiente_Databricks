@@ -1,5 +1,9 @@
 # V02 — núcleo de temas, validação e resolução
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 > **ACEITA E INTEGRADA · PR #14 · 12/09/2026.** Rodrigo concedeu aceite explícito
 e a V02 foi integrada à `main` no commit
 `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`. Os quatro checks pós-merge passaram.

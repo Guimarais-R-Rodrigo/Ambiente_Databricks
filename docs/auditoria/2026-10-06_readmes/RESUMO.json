@@ -1,0 +1,33 @@
+{
+  "baseline_commit": "2f5a0cb94f82b78324f6a79d70af7d03e7b57040",
+  "source_records": 497,
+  "action_rows": 1135,
+  "physical_paths": 723,
+  "by_sprint": {
+    "S1": 64,
+    "S2": 58,
+    "S3": 65,
+    "S4": 225,
+    "S5": 350,
+    "S6": 301,
+    "S7": 61,
+    "S8": 11
+  },
+  "by_status": {
+    "CORRIGIDA_VERIFICADA": 1099,
+    "PRESERVADA_JUSTIFICADA": 36
+  },
+  "runtime_policy_algorithm_changed": false,
+  "databricks_publication": "NOT_RUN_NOT_AUTHORIZED",
+  "final_integration_checks": {
+    "candidate_commit": "a3fcf44e2c301177180304c399d7555a204f938b",
+    "ci_local": "PASS_12_OF_12",
+    "validator": "PASS_0_FAILURES_0_WARNINGS",
+    "package": "691_OF_691_BYTE_IDENTICAL",
+    "renderer": "IDEMPOTENT",
+    "dispositions": "1135_OF_1135",
+    "records": "497_OF_497",
+    "paths": "723_OF_723",
+    "scope": "LOCAL_DOCUMENTATION_ONLY"
+  }
+}

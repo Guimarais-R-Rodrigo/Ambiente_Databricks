@@ -45,6 +45,12 @@ Nunca preencher um estado por heranca do anterior. Se o verifier nao foi executa
 
 ## Score Consolidado
 
+Os pesos abaixo são um exemplo customizado, não política universal. Registrar
+os pesos aprovados para o caso e a redistribuição de dimensões N/A antes de
+calcular. Vetos críticos e estados do Receipt/Postflight/verifier prevalecem
+sobre qualquer média. Score editorial não autoriza `completion.authorized`.
+Sem evidência para pontuar, usar NÃO AVALIADO, sem estimar nota.
+
 ```markdown
 ## Score Consolidado: {score_final}/10 — {semaforo}
 
@@ -82,7 +88,7 @@ Para cada dimensao, usar este formato:
 - {avaliacao_qualitativa}
 
 **Checkpoints skill-especificos:**
-- [x] {checkpoint_atendido}
+- [ ] {checkpoint; marcar somente após evidência citada}
 - [ ] {checkpoint_ausente} <-- GAP
 
 **Justificativa da nota:**
@@ -130,16 +136,16 @@ Cobertura: {presentes}/{total} = {percentual}%
 ## Prescricoes Priorizadas
 
 ```markdown
-## Prescricoes (ordenadas por impacto no score)
+## Prescricoes (ordenadas por risco e impacto no contrato)
 
-| # | Prioridade | Dimensao | Gap | Acao | Esforco | Ganho estimado |
+| # | Prioridade | Dimensao | Gap | Acao | Esforco | Ganho fundamentado ou NÃO ESTIMADO |
 |---|---|---|---|---|---|---|
-| 1 | ALTA | D{n} | {gap} | {acao} | {min} min | +{delta} pts |
-| 2 | ALTA | D{n} | {gap} | {acao} | {min} min | +{delta} pts |
-| 3 | MEDIA | D{n} | {gap} | {acao} | {min} min | +{delta} pts |
+| 1 | ALTA | D{n} | {gap} | {acao} | {min} min | {delta e método de estimativa, ou NÃO ESTIMADO} |
+| 2 | ALTA | D{n} | {gap} | {acao} | {min} min | {delta e método de estimativa, ou NÃO ESTIMADO} |
+| 3 | MEDIA | D{n} | {gap} | {acao} | {min} min | {delta e método de estimativa, ou NÃO ESTIMADO} |
 | ... | ... | ... | ... | ... | ... | ... |
 
-**Score projetado apos correcoes ALTA:** {score_projetado}/10
+**Score após correções:** {NÃO REAVALIADO até nova evidência; projeção somente com fundamento explícito}
 ```
 
 ---

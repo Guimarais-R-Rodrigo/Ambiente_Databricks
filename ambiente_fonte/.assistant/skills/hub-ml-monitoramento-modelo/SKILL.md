@@ -5,7 +5,7 @@ description: Desenha e implementa monitoramento de modelos no Databricks para qu
 
 # Monitorar modelos em produção
 
-## Rota executável sintética SER11 (candidata)
+## Drift numérico sintético
 
 Para pedido explícito do perfil `DRIFT_NUMERIC_LOCAL_V1`, use
 `input.schema.json` e `scripts/preflight.py::preflight` antes de
@@ -148,7 +148,7 @@ Se a entrega usar um `ResolvedTheme` notebook validado, `PerformanceMonitor.plot
 
 Fornecer arquitetura, tabelas, métricas, baseline, thresholds justificados, queries/jobs, dashboard, alertas, runbook e matriz de decisão. Listar o que é monitorado automaticamente e o que depende de labels ou revisão humana.
 
-## Candidato executável SER12 — performance com labels maduras
+## Performance binária sintética com labels maduras
 
 Para o perfil sintético `BINARY_MATURE_PERFORMANCE_V1`, usar
 `scripts/preflight_performance.py::preflight`, depois

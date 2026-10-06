@@ -1,5 +1,9 @@
 # SE00 — Baseline reproduzível de execução de skills
 
+> **Nota administrativa — 06/10/2026.** [SER e policy atuais](../../skill_enforcement_rollout/README.md) governam a continuidade. O texto abaixo preserva o fechamento SEF, inclusive níveis e próximos passos históricos; níveis posteriores não recertificam este ensaio.
+
+## Registro histórico preservado
+
 ## Estado
 
 **ENCERRADA / HOMOLOGADA / INTEGRADA — 16/16 runs concluídos, PR #56 integrada na `main` e auditoria pós-merge concluída em 16/09/2026.**

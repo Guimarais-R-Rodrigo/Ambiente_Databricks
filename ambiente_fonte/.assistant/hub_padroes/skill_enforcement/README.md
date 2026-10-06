@@ -44,33 +44,14 @@ A API é somente leitura. Não altera contrato, arquivos, runtime ou estado de e
 - `warn`: desvio é acusado e exige revisão;
 - `enforce`: requisito implementado pode bloquear homologação.
 
-A SE07 começou com 14/14 skills. A reconciliação posterior de Micromodelos
-amplia o catálogo corrente para 15/15 com L1 estático; o baseline histórico
-permanece registrado na campanha SE07. Migração de uma skill para L1–L4 só ocorre quando os artefatos correspondentes existem e os testes pertinentes passam.
+## Como consultar o nível admitido
 
-## Operação permanente a partir da SE08
+A policy declara `current_level`, `target_level`, `scope_mode` e `protected_surfaces` de cada skill. Micromodelos está L1/audit; isso não classifica todas as skills como L1. Runners presentes podem ter evidência sintética sem que a policy tenha sido promovida. Confira o registro antes de executar: o alvo futuro não autoriza capacidade ausente.
 
-A policy deixa de ser apenas artefato da sprint SE07 e passa a integrar os gates
-permanentes do Hub:
+A promoção para o workspace do trabalho exige gate próprio. Ela não é autorizada por target, CI local ou aceite de dívida histórica. Ferramentas de publicação do laboratório não são rota de escrita corporativa.
 
-- o validador geral confere contratos e policy contra a mesma raiz analisada;
-- o gate local usa o perfil cumulativo SE08 em modo parcial/read-only;
-- a certificação FULL SE08 inclui regressões anteriores, policy, I/O, renderer,
-  diff do derivado e snapshot documental;
-- publicação/verify no Free e comportamento do Genie Code continuam evidências
-  separadas, nunca inferidas do gate local.
+`known_debt` pode conter descrição anterior à implementação: em Micromodelos, existe adapter metadata-only no módulo de domínio, embora a dívida cite sua ausência. Essa divergência textual não altera L1/audit nem comprova homologação. Sua reconciliação exige decisão específica da policy.
 
-A promoção para o workspace do trabalho exige gate próprio. Ela não é autorizada
-por `target_level`, por uma rodada verde de CI ou pelo aceite humano de uma
-dívida histórica. O publicador do Free continua proibido como rota de escrita no
-workspace corporativo.
+## Evidência e auditoria
 
-## Dívida da auditoria
-
-A política da `hub-ml-auditoria-skills` carrega explicitamente os achados da SE06:
-
-- `AUDIT_FALSE_REASSURANCE`;
-- `AUDIT_STATE_LADDER`;
-- `AUDIT_CONDITIONAL_APPLICABILITY`.
-
-A auditoria não pode chamar de “reverificado” um PASS apenas persistido no notebook.
+Um PASS salvo em notebook é evidência observada. Só chame o resultado de reverificado depois de executar o verificador canônico sobre os artefatos e inputs correspondentes. Preserve as restrições `AUDIT_FALSE_REASSURANCE`, `AUDIT_STATE_LADDER` e `AUDIT_CONDITIONAL_APPLICABILITY` da policy; nomes normativos não são dispensas.

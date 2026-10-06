@@ -1,18 +1,8 @@
 name: Homologação de jornadas V12
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v12*']
-  pull_request:
-    paths:
-      - 'tools/temas_v12_homologacao.py'
-      - 'tools/tests/test_temas_v12.py'
-      - 'tools/tests/test_temas_v12_evidencia_real.py'
-      - 'docs/sprints/sistema_temas/V12/**'
-      - 'docs/sprints/sistema_temas/README.md'
-      - 'docs/sprints/README.md'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.github/workflows/temas-v12-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -43,6 +33,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V12 — protocolo e mutantes negativos
         run: python -B tools/tests/test_temas_v12.py -v
       - name: V12 — evidência real AI/BI

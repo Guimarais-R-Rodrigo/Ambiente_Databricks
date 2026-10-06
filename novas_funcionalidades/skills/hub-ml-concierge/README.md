@@ -1,5 +1,7 @@
 # Concierge Hub
 
+> **Arquivo histórico do protótipo.** Não instalar ou testar esta cópia como produto atual. Use a [versão canônica](../../../ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md). Comandos, próximos passos e resultados abaixo preservam a experiência original; não concedem autorização para nova execução.
+
 **Estado: protótipo experimental 0.1.0, não instalado e não homologado no Databricks.**
 
 ## O que é e para quem é

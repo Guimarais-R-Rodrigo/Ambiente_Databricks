@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark/PySpark, Hub importável e permissão para criar/substituir views temporárias |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão; nenhuma tabela é criada |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | confirme runtime, permissões e relógio usado na freshness; resultado histórico não garante o mesmo status hoje |
 
 # COMMAND ----------
 

@@ -1,0 +1,10 @@
+{
+  "id": "DB7",
+  "url": "https://docs.databricks.com/aws/en/getting-started/free-edition-limitations",
+  "title": "Free limitations",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "Free documents serverless, Jobs and serving with limits; not evidence of corporate support or this account availability.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

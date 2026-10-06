@@ -26,6 +26,11 @@ jobs:
             tools/requirements-temas-dev.txt
       - name: Instalar dependências de manutenção
         run: python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Conferir contrato e documentação derivada
         run: python -B tools/temas_v01_contract.py
       - name: Regressões e mutantes V01

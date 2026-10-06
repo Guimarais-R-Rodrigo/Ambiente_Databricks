@@ -144,6 +144,8 @@ A skill roteável `hub-ml-micromodelos` pertence à MM04; fingerprint pertence �
 **Naquele gate histórico, MM02 permanecia bloqueada.**
 
 
-## Sprint corrente
+## Estado corrente e próxima decisão
 
-O B1 foi integrado no Git pelo PR #118 com `hub-ml-micromodelos` em L1/audit. A candidata de Micromodelos acrescenta o módulo de domínio e permanece em reconciliação local, sem promoção da policy. O laboratório MM04–MM13-LAB foi aceito para seu escopo sintético na branch `micromodelos/autonomia-local-v2`. O [plano E2](PLANO_PREPARACAO_E2.md) registra as próximas portas; nenhuma foi executada no trabalho. O núcleo MM03 e seus limites estão em [MM03](MM03/README.md). FULL R1 e FULL R2 são resultados históricos preservados, sem reclassificação.
+O módulo de domínio foi integrado pela PR #119 em `63601e09` (30/09/2026), como registra o [plano de integração](PLANO_INTEGRACAO_HUB_MICROMODELOS.md). A skill permanece L1/audit. Comece pelo [guia de uso do módulo](../../../ambiente_fonte/.assistant/hub_micromodelos/README.md) ou pelo [quickstart sintético](../../../ambiente_fonte/.assistant/hub_micromodelos/exemplos/recencia_contato/README.md).
+
+E0 sintético, provas E1 Free e E2 corporativo são dimensões separadas. O [plano E2](PLANO_PREPARACAO_E2.md) registra portas ainda não executadas no trabalho. FULL R1 e FULL R2 de MM03 permanecem resultados históricos, sem reclassificação; integração não promove a policy nem homologa fontes corporativas.

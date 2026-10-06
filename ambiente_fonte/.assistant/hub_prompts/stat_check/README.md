@@ -4,6 +4,8 @@
 
 Este recurso é um briefing para organizar uma validação estatística antes de modelagem ou inferência. Ele força a declarar unidade amostral, target, finalidade, método, população, tempo, hipóteses, critérios e modo de trabalho. O prompt não executa testes nem transforma significância estatística em causalidade.
 
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -39,7 +41,7 @@ Você declara unidade, target, objetivo, população e hipóteses. O prompt pede
 
 ## 6. Exemplo de situação
 
-Uma equipe quer saber se a taxa de resposta difere entre grupos. O briefing informa unidade cliente, target binário, amostra de conveniência, hipóteses e volume. A resposta deve discutir método e limitações de seleção; não deve concluir causalidade apenas por diferença estatisticamente significativa.
+Na fixture de campanha, investigar diferenças de resposta entre UFs e associação com renda usando uma amostra de conveniência. O resultado é observacional e tem generalização limitada. Um pedido chamado A/B só sustenta causalidade se desenho experimental, atribuição e pressupostos tiverem evidência correspondente.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,13 +49,13 @@ Preencha [stat_check.md](stat_check.md) com dataset, granularidade/chave/grupos,
 
 ## 8. O que este recurso entrega?
 
-O contrato solicita matriz de pergunta, estimando, método e pressupostos; diagnósticos; tamanho de efeito e incerteza; interpretação; código no nível solicitado; limitações e ameaças à validade. Esses elementos dependem da interação e dos dados efetivamente analisados.
+Solicita matriz pergunta→estimando→método→pressupostos; diagnósticos com efeito e incerteza; interpretação; código no nível solicitado; e limitações. Para cada pressuposto, marque **observado**, **não observado**, **violado** ou **não aplicável com justificativa**. Conhecer o teste não prova adequação do desenho.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [stat_check.md](stat_check.md), preencha o briefing e selecione dataset e contexto. O prompt recomenda `@hub-ml-validacao-estatistica`.
+Preencha [stat_check.md](stat_check.md). Siga a [skill correspondente](../../skills/hub-ml-validacao-estatistica/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. O perfil `TWO_SAMPLE_KS_PILOT_V1` é executável para dados sintéticos e condições delimitadas; não representa toda validação estatística. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing.
 
-O [notebook](exemplo_stat_check.py) cria `workspace.default.hub_exemplo_clientes` com `mode("overwrite")` usando dados sintéticos. Executar a Parte 1 pode substituir uma tabela existente com esse nome. A Parte 2 é texto; a Parte 3 depende de uma resposta real do Genie Code.
+O [notebook](exemplo_stat_check.py) sobrescreve `workspace.default.hub_exemplo_clientes`. Parte 3: **NÃO EXECUTADO**; preparar dados ou revisar texto não executa a conversa.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -69,7 +71,7 @@ Para exploração dos dados, use [eda_completa](../eda_completa/README.md). Para
 
 ## 13. Como saber se o resultado faz sentido?
 
-Confirme unidade, direção do target, população, exclusões e tratamento de nulos. Verifique se o método responde à pergunta declarada e se tamanho de efeito e intervalo de incerteza acompanham o p-valor. Compare interpretação com os pressupostos realmente avaliados.
+Confira unidade, target, população, exclusões e nulos. Vincule cada método à pergunta e aos pressupostos observados. Se houver repetição por cliente, reformule o método que pressupunha independência; se houver múltiplas comparações sem plano, rotule a análise como exploratória e não selecione apenas p-valores convenientes. Apresente efeito e incerteza quando calculados e suportados.
 
 ## 14. Arquivos relacionados e próximos passos
 
@@ -77,6 +79,6 @@ O [briefing](stat_check.md) contém o formulário; o [notebook](exemplo_stat_che
 
 ## 15. Referências
 
-A descrição local foi confrontada com [stat_check.md](stat_check.md) e [exemplo_stat_check.py](exemplo_stat_check.py). Esta revisão foi estática e não executou o notebook nem a interação do Genie Code.
+O [briefing](stat_check.md) define os campos e a entrega; o [notebook](exemplo_stat_check.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
 
-Para seleção de recursos no Genie Code, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code), consultada em 13/09/2026.
+Para anexar dataset e desenho de análise, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). Selecionar contexto não comprova adequação estatística ou execução.

@@ -1,5 +1,11 @@
 # SE02 — runbook local + Databricks Free
 
+> **Leitura histórica da campanha.** Os comandos abaixo com `Novo_Ambiente_Simulado`,
+> `git diff`, `git restore` ou `git add` sobre o espelho descrevem o layout versionado
+> daquela campanha. Para uma release atual, use a [saída gerada vigente](../../../manutencao/saida-gerada.md):
+> `.artifacts/simulado/` e `render_simulado.py --check`. Não use os comandos históricos
+> para certificar paridade nem recupere/remova conteúdo atual por associação.
+
 **Objetivo:** executar a candidata SE02 no regime `local-first`, publicar somente
 depois dos gates locais e iniciar os testes F02 no Databricks Free sem usar
 GitHub Actions como mecanismo iterativo.

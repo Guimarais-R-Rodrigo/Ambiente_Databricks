@@ -4,6 +4,9 @@
 > `@hub-ml-micromodelos` no modo `OBJETIVO_CONHECIDO`. Este texto não concede
 > acesso a dados, não aciona validação por si e não substitui a policy da skill.
 
+Contratos locais: [Hub Micromodelos](../../hub_micromodelos/README.md) e
+[schema/modelo/validação](../../hub_micromodelos/contratos/README.md).
+
 ## Quando usar
 
 Há uma característica/decisão a definir, mas faltam especificação, fontes ou
@@ -71,7 +74,8 @@ SAÍDA
 Se houver YAML, confira grupos MM01, `CATALOGO_PRODUTO`, fase coerente e
 proveniência sem `APROVADO`/`MEDIDO` fictícios. Sem schema acessível, confira
 que não houve YAML inferido nem score sem base. Inspeção textual do briefing não
-é teste conversacional. A execução E1 depende do usuário e E2 está fora do escopo.
+é teste conversacional. Execução de runtime E1 e uso corporativo E2 exigem
+evidência e autorização próprias.
 
 ## Limites
 

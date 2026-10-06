@@ -1,21 +1,8 @@
 name: Integração transversal V08
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v08*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/README.md'
-      - 'ambiente_fonte/.assistant/MANUAL_TECNICO.md'
-      - 'ambiente_fonte/.assistant/skills/**'
-      - 'ambiente_fonte/.assistant/hub_padroes/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/README.md'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/**'
-      - 'MANUAL_TECNICO.md'
-      - 'tools/tests/test_temas_v08.py'
-      - 'docs/sprints/sistema_temas/V08/**'
-      - '.github/workflows/temas-v08-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -46,6 +33,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V08 — integração transversal
         run: python -B tools/tests/test_temas_v08.py -v
       - name: Regressões de temas V01–V08

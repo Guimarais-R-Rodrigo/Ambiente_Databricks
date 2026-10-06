@@ -93,21 +93,12 @@ print(fixture_textual)
 # MAGIC %md
 # MAGIC ## Parte 3 — resposta real e limites
 # MAGIC
-# MAGIC Capturada em 29 set 2026 no Genie Code Free, com seleção e carregamento da
-# MAGIC skill declarados pelo usuário. A transcrição bruta tem SHA-256
-# MAGIC `d9b0600aa1184ca62e3cb95393eab2c91499f9b90d221fe9482d1b8b961eaa8a`
-# MAGIC e permanece fora do Git.
+# MAGIC Conversa E1 de 29/09/2026, caso P1, com fixture textual fornecida.
 # MAGIC
-# MAGIC - Rota observável na transcrição: carregamento de `hub-ml-micromodelos`.
-# MAGIC   Não há captura independente do indicador do menu.
-# MAGIC - A resposta registrou `YAML_NAO_CRIADO`, `MM01_NAO_VALIDADO` e
-# MAGIC   `SCORE_INDETERMINADO`; não alegou consulta a registros ou publicação.
-# MAGIC - Ressalva: alguns campos vindos do briefing foram chamados de `OBSERVADO`,
-# MAGIC   quando a proveniência correta é `FORNECIDA`. A policy integrada não foi
-# MAGIC   verificada de forma independente nessa resposta; a leitura do contrato
-# MAGIC   estático não substitui `policy.json`.
-# MAGIC - Veredito do conteúdo guardado: PASS com ressalvas. Não é validação MM01,
-# MAGIC   execução do runtime E1, certificação MM04 ou aceite humano.
+# MAGIC - A resposta registrou `YAML_NAO_CRIADO`, `MM01_NAO_VALIDADO` e `SCORE_INDETERMINADO`.
+# MAGIC - Não alegou consulta a registros ou publicação.
+# MAGIC - Ressalva: chamou alguns campos do briefing de `OBSERVADO`; a proveniência correta é `FORNECIDA`.
+# MAGIC - A policy integrada não foi verificada independentemente nessa resposta; ler um contrato estático não substitui consultar a policy vigente.
 # MAGIC
-# MAGIC A avaliação completa está em
-# MAGIC `docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md`.
+# MAGIC Essa conversa não demonstra execução de runtime E1, validação MM01,
+# MAGIC aceite humano ou homologação corporativa. Use os contratos locais para a próxima etapa.

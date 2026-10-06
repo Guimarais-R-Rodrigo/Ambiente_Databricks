@@ -1,133 +1,85 @@
 # Checklist — objeto novo do Hub
 
-Cole numa PR, num chamado ou no fim do notebook de trabalho.
+Use no chamado ou na entrega do objeto. Este é o checklist canônico do contrato
+do artefato; os templates de `hub_padroes/` apontam para cá. Marque apenas itens
+com evidência. Verificação por terceiro e juízo do autor são coisas distintas.
 
-**A lista está dividida em duas naturezas**, e a distinção não é formalidade:
-o primeiro grupo um terceiro consegue conferir sozinho, sem conversar com quem
-escreveu; o segundo é juízo de quem escreveu, e vale como declaração, não como
-prova. Um checklist que promete verificação e entrega opinião ensina a marcar
-tudo — e aí as linhas boas perdem força junto.
+`tools/validate_assistant.py`, `tools/api_publica.py` e
+`tools/spark_smoke_test.py` vivem no repositório e não viajam com `.assistant/`.
+No workspace, registrar dependências dessas ferramentas como “a conferir no
+repositório” e encaminhar ao mantenedor; não declarar que foram executadas.
+A contribuição, CI e publicação têm checklist próprio no repositório, em
+`docs/manutencao/CHECKLIST_OBJETO_NOVO.md`.
 
-Este é o checklist **canônico**. Os templates de `hub_padroes/` apontam para cá
-em vez de repetir a lista.
+## Pré-condições e evidência
 
----
+- [ ] Tipo confirmado: snippet, script, prompt, README, notebook ou skill
+- [ ] Demanda comparada ao catálogo; sobreposição resolvida explicitamente
+- [ ] Template atual do tipo lido; destino e escopo de escrita autorizados
+- [ ] Preflight, policy e gates exigidos pela [skill](../SKILL.md) respeitados
+- [ ] Geração, validação estrutural, autorização e escrita reportadas separadamente
+- [ ] Receipt/verificador aplicável observado, sem inferir runtime ou homologação
+- [ ] Destino existente, overwrite, merge, remoção e conversão não autorizados pelo mero PASS de preflight
+- [ ] Falha parcial conserva efeito e evidência; recuperação exige decisão, sem apagar ou repetir para sobrescrever
 
-> **Sobre os comandos deste checklist.** `tools/validate_assistant.py`,
-> `tools/api_publica.py` e `tools/spark_smoke_test.py` vivem **no repositório**,
-> não no workspace — eles não são publicados com o `.assistant/`. Quem estiver só
-> no Genie Code marca os itens que dependem deles como "a conferir no
-> repositório" e avisa quem for commitar.
+## Artefatos verificáveis
 
-## Parte 1 — verificável por terceiro
+### Snippet, script ou prompt
+- [ ] `README.md` segue o [contrato de objeto](../../../hub_padroes/readme/template_objeto.md)
+- [ ] [Checklist editorial](../../../hub_padroes/readme/checklist_objeto.md) com evidência
+- [ ] README e exemplo têm navegação recíproca e efeitos explícitos
 
-### Comum a todos os tipos
+### Snippet ou script
+- [ ] Nome `snake_case`, identificador Python válido
+- [ ] Snippet em `hub_snippets/<secao>/<nome>/`; script em `hub_scripts/<nome>/`, sem nível de seção
+- [ ] Módulo com mesmo nome da pasta, `__init__.py` e `exemplo_<nome>.py`
+- [ ] `exemplo_<nome>.py` abre com `# Databricks notebook source`
+- [ ] `__init__.py` corresponde à API pública integral; geração/conferência repo-side pendente quando indisponível
+- [ ] Docstrings com Args, Returns, Raises e armadilhas; assinatura e retornos conferidos no código
+- [ ] Sem `cache()`/`persist()` desprotegido, `toPandas()` sem limite ou sentinela numérica para erro
+- [ ] Sessão Spark via `getActiveSession() or getOrCreate()`, quando aplicável
+- [ ] Imports e caso representativo verificados ou NÃO EXECUTADOS com motivo
 
-- [ ] O tipo é um dos seis: snippet, script, prompt, README, notebook, skill
-      (`auditoria/` é molde de processo, não conta)
-- [ ] Nenhum objeto do `MANUAL_TECNICO.md#catalogo-helpers` atende à mesma demanda
-- [ ] `python tools/validate_assistant.py` aprovado
-- [ ] O inventário de `MANUAL_TECNICO.md` ganhou a ficha, com API e dependências conferidas
-- [ ] Entrada no `CHANGELOG.md`
+### Script
+- [ ] Entradas, retorno e efeitos seguem o contrato específico da tarefa
+- [ ] Diagnóstico por endereço e somente leitura, quando esse for o perfil contratado
+- [ ] Qualquer escrita, arquivo, tabela ou run é declarado e depende de autorização
+- [ ] Exemplo demonstra sucesso, falha e limites aplicáveis, sem outputs inventados
 
-### Se é snippet, script ou prompt
-
-- [ ] Existe `README.md` com o [contrato de objeto](../../../hub_padroes/readme/template_objeto.md)
-- [ ] O [checklist editorial](../../../hub_padroes/readme/checklist_objeto.md) foi aplicado e tem evidência
-- [ ] README e notebook têm links recíprocos; efeitos do exemplo estão explícitos
-- [ ] Em migração, a dispensa temporária foi removida; nenhuma implementação mudou
-
-### Se é snippet ou script
-
-- [ ] Nome em `snake_case`, identificador Python válido
-- [ ] Snippet mora em `hub_snippets/<secao>/<nome>/`; script mora em
-      `hub_scripts/<nome>/`, **sem** nível de seção
-- [ ] O módulo se chama **como a pasta**: `pit_join/pit_join.py`
-- [ ] Existe `exemplo_<nome>.py`, mesmo que o objeto seja trivial
-- [ ] **`exemplo_<nome>.py` abre com `# Databricks notebook source`**
-- [ ] `__init__.py` idêntico à saída de `python tools/api_publica.py`
-- [ ] Docstring da função tem `Args`, `Returns` e `Raises` (e `Note`, se houver
-      armadilha)
-- [ ] Sem `cache()`/`persist()` desprotegido, sem `toPandas()` sem limite, e sem
-      sentinela numérica para sinalizar erro
-- [ ] Sessão Spark obtida por `getActiveSession() or getOrCreate()`, se usa Spark
-- [ ] A tabela de módulos em `hub_snippets/README.md` (ou `hub_scripts/README.md`)
-      lista o objeto
-- [ ] O objeto importa: `from hub_snippets.<secao>.<nome> import <api>`
-- [ ] O smoke test continua verde (`tools/spark_smoke_test.py`)
-- [ ] Se é conversão: `grep` mostra que quem importava o módulo continua
-      importando
-
-### Se é script, além do acima
-
-- [ ] Recebe o **endereço** do que diagnostica — nome de tabela ou caminho —,
-      não o dado já carregado
-- [ ] Devolve veredito estruturado, com contagem do que foi varrido
-- [ ] Não escreve nada: sem tabela, sem arquivo, sem run de MLflow
-- [ ] O notebook mostra o caso que **passa** e o caso que **falha**
-
-### Se é notebook
-
+### Notebook
 - [ ] Abre com `# Databricks notebook source`
-- [ ] Tem tabela "o que este notebook assume do ambiente", com a linha **Escrita**
-- [ ] Tem bloco de saída com a cerca `text` — ou o bloco canônico de não executado
-- [ ] Se instala biblioteca: `%pip install` e `%restart_python` na abertura, com
-      o pin conferido em `requirements-optional.txt`
-- [ ] Tem seção "quando **não** usar"
-- [ ] Executou no ambiente alvo, e o resultado foi SUCCESS
+- [ ] Tabela de premissas do ambiente inclui **Escrita**, dependências e compute
+- [ ] Bloco `text` contém saída literal ou bloco canônico de não executado
+- [ ] Dependências opcionais e pins conferidos; instalação somente por mecanismo permitido e autorizado
+- [ ] “Quando não usar” específico do objeto
+- [ ] Execução no alvo: [resultado observado e fonte, NÃO EXECUTADO ou bloqueio]; forma válida não prova SUCCESS
 
-### Se é skill
+### Skill
+- [ ] Pasta igual a `name`; frontmatter conforme política local (`name`, `description`)
+- [ ] Description com função e gatilhos; inclusão/exclusão claras
+- [ ] `SKILL.md` com menos de 500 linhas, conforme o molde vigente
+- [ ] Corpo conciso, com fluxo, helpers, proibições e formato de saída
+- [ ] Helpers declarados por caminho de import e links resolvidos
+- [ ] Roteamento positivo/negativo/menção: [evidência ou NÃO EXECUTADO], sem inferir descoberta por estrutura
 
-- [ ] O nome da pasta é idêntico ao campo `name` do frontmatter
-- [ ] O frontmatter tem só `name` e `description`
-- [ ] A `description` declara o que a skill **não** cobre
-- [ ] O `SKILL.md` tem menos de 500 linhas
-- [ ] O corpo tem as cinco seções do template: quando se aplica, fluxo, helpers,
-      o que nunca fazer, formato de saída
-- [ ] Os helpers estão declarados por caminho de import, em tabela
-- [ ] Todos os caminhos de helper citados resolvem para objeto existente
-- [ ] `EXPECTED_SKILLS` em `tools/publicar_free.py` acompanha a contagem
-- [ ] Os dois inventários listam a skill: `skills/README.md` e a tabela de
-      invocação do `.assistant/README.md`
-- [ ] O roteiro de forward test ganhou os três casos, e o formulário de
-      resultados ganhou a linha
-- [ ] **Forward test executado**: caso positivo, caso negativo e `@menção`, cada
-      um em chat novo
-
-### Se é conversão de objeto que já existe
-
-- [ ] Assinatura, ordem e nome dos parâmetros **inalterados**
-- [ ] Nomes devolvidos — colunas, chaves — **inalterados**
-- [ ] Comportamento em base vazia, nulo e caso limite **inalterado**
+### Conversão de objeto existente
+- [ ] Assinatura, ordem/nome dos parâmetros e nomes devolvidos inalterados
+- [ ] Comportamento em vazio, nulo e bordas preservado
 - [ ] Nenhum identificador traduzido
-- [ ] A melhoria, se houver, está em **commit separado**
+- [ ] Melhorias funcionais separadas da conversão e dependentes de autorização própria
 
----
+## Juízo de quem escreveu
 
-## Parte 2 — juízo de quem escreveu
+Estes itens são declarações fundamentadas, não prova mecânica:
+- [ ] Docstring explica por que o objeto existe
+- [ ] Decisões não óbvias têm motivo; erros dizem como prosseguir
+- [ ] Limites calibráveis são nomeados e sua autoridade é identificada
+- [ ] Cabeçalho explica o problema; prosa usa resultados observados
+- [ ] Saída literal preservada e qualquer corte declarado
+- [ ] Limitações e “quando não usar” são específicas
 
-Ninguém confere isto por você. São declarações, e valem pelo que quem assina
-souber sustentar.
+## Limite da entrega
 
-- [ ] O tipo foi **confirmado** com quem pediu
-- [ ] O template do tipo foi lido nesta sessão, não de memória
-- [ ] A docstring do módulo diz **por que ele existe**, não o que ele faz
-- [ ] Toda decisão de projeto não óbvia tem comentário com o **motivo**
-- [ ] A mensagem de erro diz **o que fazer**, não só o que houve
-- [ ] Todo limite calibrável virou constante nomeada
-- [ ] O cabeçalho do notebook abre com o **problema**, não com a função
-- [ ] A saída colada é **literal**; se foi cortada, o corte está declarado
-- [ ] A prosa cita o número **obtido**, não o pretendido
-- [ ] A seção "quando não usar" é específica **deste** objeto, e não genérica
-
----
-
-## O que este checklist não cobre
-
-**Roteamento**, se o objeto for skill. Uma `description` nova compete com as
-existentes, e isso só se mede em chat: caso positivo, caso negativo e `@menção`.
-O roteiro está em `docs/testes/forward/roteiro.md`.
-
-**Comportamento em dado real.** Tudo aqui é sobre forma e sobre o laboratório. O
-que só aparece com volume, permissão e dado governado é assunto do runbook de
-replicação, em `docs/playbooks/`.
+Forma, testes locais e Receipt estrutural não comprovam roteamento no Genie,
+comportamento com dado real, ACL, publicação ou homologação. Cada pendência deve
+indicar a evidência faltante e quem pode conduzir a próxima etapa.

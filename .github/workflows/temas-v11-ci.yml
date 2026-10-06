@@ -1,17 +1,8 @@
 name: Temas nativos AI/BI V11
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v11*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/**'
-      - 'tools/tests/test_temas_v11.py'
-      - 'docs/sprints/sistema_temas/V11/**'
-      - 'docs/sprints/sistema_temas/README.md'
-      - 'docs/sprints/README.md'
-      - 'README.md'
-      - '.github/workflows/temas-v11-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -42,6 +33,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V11 — projeção AI/BI e guardas
         run: python -B tools/tests/test_temas_v11.py -v
       - name: Sintaxe V11 sem bytecode no produto

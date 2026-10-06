@@ -1,0 +1,85 @@
+{
+  "scope": "Repository implementation completion separate from full plan acceptance",
+  "stages": [
+    {
+      "id": "S00",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Verified refs/clean base, nonempty inventories, protected hashes and sanitized capabilities.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S01",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Granular215 obligations, control-map, ADR0025, official claims and authority contract.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S02",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "72-line AGENTS, routed neutral docs, four safe templates and dated observations.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S03",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Five portable canonical skills; owner commands, effects and caveats verified locally.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S04",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Five deterministic generated adapters; exact minimal root shims; no settings/hook/MCP changes.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S05",
+      "repository_implementation": "COMPLETE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Narrow consumer corrections, isolated renderer marker, original12 plus2 offline gates,60 unit cases.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S06",
+      "repository_implementation": "BLOCKED_NATIVE_ACCEPTANCE",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Native protocol and explicit blocked-client matrix; bounded Codex attempt failed before session.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    },
+    {
+      "id": "S07",
+      "repository_implementation": "LOCAL_DELIVERY_PREPARED",
+      "full_stage_acceptance": "BLOCKED",
+      "observed_output": "Independent A0 context-full review, protected integrity, real rollback and manual package preparation.",
+      "reason_full_acceptance_blocked": "Required native/platform acceptance remains unobserved; no retroactive removal from proposed scope. S07 also awaits manual remote publication/CI if requested.",
+      "evidence_sha": "420976e7b76373721998a5df96e996530764688d",
+      "owner": "Maintainer / operator",
+      "next_step": "Use native-test-protocol and close explicitly required client/platform cases; retain local evidence and do not infer global homologation."
+    }
+  ]
+}

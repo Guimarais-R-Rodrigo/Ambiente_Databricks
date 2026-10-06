@@ -1,5 +1,9 @@
 # V13 — consolidação operacional do Sistema de Temas
 
+> **Nota administrativa — 06/10/2026.** O fechamento S7 em `62e94048` foi seguido pela V14; “V14 não iniciada” abaixo descreve somente aquele fechamento. Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 ## Estado vigente
 
 A **V13 está integrada e encerrada no Git** após S0–S7, aceite explícito, merge da S7 e certificação pós-merge da `main`.

@@ -1,0 +1,10 @@
+{
+  "id": "DB4",
+  "url": "https://learn.microsoft.com/en-us/azure/databricks/genie-code/agent-mode",
+  "title": "Agent mode",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "Actions depend on permissions and approval mode; auto-approve is not a security boundary.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

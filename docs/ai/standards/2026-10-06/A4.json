@@ -1,0 +1,10 @@
+{
+  "id": "A4",
+  "url": "https://support.claude.com/en/articles/12512198-how-to-create-custom-skills",
+  "title": "How to create custom skills",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "ZIP skill packaging and enabling in Customize > Skills; separate from project knowledge.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

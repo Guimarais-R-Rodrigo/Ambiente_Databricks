@@ -15,7 +15,7 @@ description: Planeja e executa validação estatística no Databricks para quali
 acompanhar modelo em produção (`hub-ml-monitoramento-modelo`), onde o limiar vem
 de política e não de teste.
 
-## Execução verificável SER04 (perfil piloto)
+## Execução verificável do perfil KS
 
 Para uma comparação diagnóstica de **duas amostras independentes** com variável
 numérica contínua e hipótese bicaudal pré-registrada, use a rota canônica

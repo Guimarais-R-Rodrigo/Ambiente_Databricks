@@ -1,5 +1,9 @@
 # Sistema de Temas — V01: contrato e experiência proposta
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. O [Visual Lab](../../../../ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/README.md) é a rota de uso atual, distinta da especificação histórica.
+
+## Registro histórico preservado
+
 > **V01 COM ACEITE DE RODRIGO · CONTRATO 0.1.0 · AUTORIA CODEX · 12/09/2026.**
 > O seletor de temas **não está instalado**. Esta sprint entrega decisões,
 > especificações, exemplos de configuração e verificações de manutenção.

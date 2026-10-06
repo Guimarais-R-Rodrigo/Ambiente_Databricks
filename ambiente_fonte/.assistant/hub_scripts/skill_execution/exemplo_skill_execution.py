@@ -51,11 +51,11 @@ assert result.writes_performed is False
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## Invariantes já reproduzidos pela suíte SE02
+# MAGIC ## Resultado da demonstração de preflight
 # MAGIC
-# MAGIC O happy path automatizado executado no GitHub Actions confirmou estes
-# MAGIC invariantes. Este bloco não é uma captura do Databricks Free; a homologação
-# MAGIC remota permanece um gate separado da sprint.
+# MAGIC O bloco registra apenas o preflight L2 sintético. Não demonstra análise,
+# MAGIC Receipt, Postflight L4 nem execução dos demais perfis. PASS autoriza apenas
+# MAGIC prosseguir conforme o contrato; não declara a skill concluída.
 # MAGIC
 # MAGIC ```text
 # MAGIC status=PASS

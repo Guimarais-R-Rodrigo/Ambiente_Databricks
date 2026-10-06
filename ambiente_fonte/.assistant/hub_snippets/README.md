@@ -2,7 +2,7 @@
 
 # Hub Snippets
 
-> A biblioteca matemática e algorítmica central do ecossistema `.assistant`: funções e classes reutilizáveis, revisadas e testadas para fluxos de Machine Learning e Big Data no Databricks.
+> A biblioteca matemática e algorítmica central do ecossistema `.assistant`: funções e classes reutilizáveis para Machine Learning e Big Data, com contratos e evidências de validação delimitados por objeto.
 
 > **CONTEÚDO CUSTOMIZADO PELO HUB.** `hub_snippets` não é uma biblioteca institucional da Databricks nem é carregada automaticamente pela Genie Code. O notebook precisa tornar o pacote visível ao Python e importar explicitamente a função desejada.
 
@@ -56,7 +56,7 @@ Cada snippet resolve uma **dor analítica específica**, expondo uma API públic
 
 Para favorecer que o código seja limpo, fácil de encontrar e intuitivo tanto para pessoas quanto para a IA, os snippets seguem o padrão de organização chamado **Pasta de Objeto**.
 
-Cada snippet mantém o núcleo executável de três componentes abaixo. Cada objeto operacional inclui também `README.md`, a camada humana de conceito e escolha. A migração estrutural foi encerrada na R13:
+Cada objeto reúne README para escolha, fachada pública, implementação e exemplo. Os três componentes executáveis abaixo complementam o guia:
 
 ![Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.](../hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png)
 
@@ -70,7 +70,7 @@ Cada snippet mantém o núcleo executável de três componentes abaixo. Cada obj
 2. **`nome_do_snippet.py` (O Motor):** contém implementação, validações, tipagem e docstring. O código é a fonte técnica para a assinatura real.
 3. **`exemplo_nome_do_snippet.py` (O Guia Didático):** demonstra o uso com dados sintéticos e registra uma saída observada. Ele ensina o contrato exercitado; não promete compatibilidade com qualquer runtime ou volume.
 
-O Catálogo de Helpers (`.assistant/MANUAL_TECNICO.md#catalogo-helpers`) relaciona demanda, caminho público e dependências. Ele é o índice canônico; este README preserva uma leitura narrativa por categoria.
+O [Catálogo de Helpers](../MANUAL_TECNICO.md#catalogo-helpers) relaciona demanda, caminho público e dependências. Ele é o índice canônico; este README preserva uma leitura narrativa por categoria.
 
 ---
 
@@ -95,7 +95,7 @@ A biblioteca é dividida em seis categorias funcionais, agrupadas pela natureza 
 | [`constants`](constants/README.md) | padrões brasileiros, cores e estilos compartilhados |
 | [`testing`](testing/README.md) | dados sintéticos e fixtures |
 
-Cada categoria possui agora um índice local que lista todos os objetos diretamente nela e aponta para o README de cada recurso. `hub_snippets/tests/` permanece fora desse mapa porque é infraestrutura interna de regressão, não uma categoria de uso.
+Cada categoria possui um índice local que lista todos os objetos diretamente nela e aponta para o README de cada recurso. A suíte interna fica em `tools/tests/runtime/` no repositório de manutenção, fora do pacote de instalação e deste mapa de uso.
 
 ---
 
@@ -107,209 +107,29 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 ---
 
-**Núcleo de temas integrado no Git:** [`visual.tema`](visual/tema/README.md) confere configurações completas e isoladas. V03 conecta Plotly por opt-in e V04 estende a rota explícita a HTML/estilos/tabela pandas; consumidores legados permanecem o default e nenhuma dessas integrações publica ou homologa aparência no Databricks.
+Escolha pelo objetivo e siga o índice da categoria para contratos e retornos exatos:
 
-### 1. Categoria: `ml` (Machine Learning e Estatística Aplicada)
+| Tarefa | API/objeto e entrada típicos | Saída/execução | Onde começar |
+|---|---|---|---|
+| Treino tabular | `train_lightgbm_baseline`, `train_xgboost_baseline`, `train_catboost_baseline`; features e alvo | modelo/relatório no driver; tracking depende da rota | [ML](ml/README.md) |
+| Tempo | `temporal_split`, `walk_forward_cv`; pandas com datas/grão | partições/folds por contrato; driver; callback pode ter efeitos | [ML](ml/README.md) |
+| Avaliar e explicar | `calculate_binary_metrics`, `calculate_regression_metrics`, curvas e SHAP; modelo/predições/features alinhadas | métricas, atribuições, relatório/figura; driver e dependências opcionais | [ML](ml/README.md) |
+| Score e maturidade | WOE/IV, scorecard, bandas, safra e sobrevivência | agregados/modelos/curvas; WOE usa Spark, demais contratos variam | [ML](ml/README.md) |
+| Clusters/anomalias/projeções | features numéricas preparadas | rótulos, perfil, scores ou projeção; driver | [ML](ml/README.md) |
+| Drift e tracking | populações, labels maduras ou run autorizado | diagnóstico não retreina; MLflow cria recursos externos | [ML](ml/README.md) |
+| Datas, joins, nulos e amostra | DataFrames Spark e parâmetros explícitos | transformação ou diagnóstico; ações/coletas conforme objeto | [Spark](spark/README.md) |
+| Tabela, matriz e distribuição | pandas local ou Spark conforme helper | HTML/figura; matriz ou recorte no driver | [Display](display/README.md) |
+| Apresentação e tema | textos, figura ou ResolvedTheme | string, figura modificada ou efeito de sessão explícito | [Visual](visual/README.md) |
+| Formatar e consultar convenções | escalar, chave de mapa ou tema | strings, listas/dicionários; sem cálculo de negócio | [Constants](constants/README.md) |
+| Conferir com dados fictícios | dimensões pequenas e seed | geração em memória Python → DataFrame Spark | [Testing](testing/README.md) |
 
-*É o coração algorítmico do Hub, voltado a modelagem preditiva, risco de crédito, séries temporais e governança de modelos.*
+Modelos, métricas, rankings, embeddings e SHAP não estabelecem causalidade nem aprovam crédito, implantação ou retreino. Confirme grão, população, tempo, denominador, unidade, dependências e critérios do caso no guia específico.
 
-#### 📘 Modelos tabulares
-
-Antes de treinar ou ajustar estes modelos, use os guias locais para distinguir objetivo, métrica, dependência e limite de cada API:
-
-- [LightGBM baseline](ml/train_lgbm/README.md) — classificação/regressão, early stopping e defaults;
-- [CatBoost baseline](ml/train_catboost/README.md) — categóricas e efeitos de configuração;
-- [LambdaRank](ml/lgbm_ranker/README.md) — grupos e NDCG;
-- [Optuna + LightGBM](ml/optuna_lgbm/README.md) — busca, função objetivo e reconstrução do candidato;
-- [MLP com embeddings](ml/mlp_embeddings/README.md) — categóricas indexadas e treinador binário;
-- [TabNet](ml/tabnet_wrapper/README.md) — rede tabular e importância global.
-
-Os seis recursos são customizados pelo Hub e executados explicitamente; nenhum README aprova um modelo para produção.
-
-#### 📘 Séries e validação temporal
-
-Antes de modelar uma série, separe as camadas: features, partição/backtest e modelo. Os guias locais R06 documentam os contratos atuais:
-
-- [ARIMA](ml/arima_wrapper/README.md) — candidato auto-ARIMA e métricas in-sample;
-- [Features temporais](ml/lgbm_temporal/README.md) — lags/rollings pandas; **não treina LightGBM**;
-- [Prophet](ml/prophet_wrapper/README.md) — tendência, sazonalidade, feriados e forecast;
-- [Split temporal](ml/split_temporal/README.md) — treino/validação/teste por períodos observados;
-- [Walk-forward](ml/walk_forward/README.md) — múltiplos folds expansivos por callback.
-
-Os cinco recursos são customizados pelo Hub, driver-side e executados explicitamente. Nenhum guia transforma métrica in-sample em validação futura nem aprova modelo para produção.
-
-#### 🕒 Engenharia Temporal e Séries Temporais
-
-- **`lgbm_temporal`**: cria em pandas lags, estatísticas móveis, calendário e tendência; apesar do nome legado, a implementação atual não treina LightGBM.
-  - *Quando usar:* depois de definir grão, entidade e semântica temporal; `lag_n` conta observações anteriores e o processamento ocorre no driver.
-- **`split_temporal`**: divide um `pandas.DataFrame` em treino, validação e teste por períodos completos de calendário, com gaps opcionais.
-  - *Quando usar:* quando a avaliação precisa preservar ordem temporal. O helper não recebe datas finais fixas; recebe proporções, unidade de período e quantidade de gaps.
-- **`walk_forward`**: produz janelas sucessivas de validação temporal.
-  - *Quando usar:* para avaliar estabilidade ao longo de múltiplos cortes históricos, depois de definir tamanho das janelas e política de reentreino.
-- **`vintage_analysis`**: constrói curvas de safra e maturação por período de originação.
-  - *Quando usar:* em risco, retenção ou eventos cujo denominador, janela e censura tenham sido definidos.
-
-#### 📘 Score, safra e sobrevivência
-
-Estes seis guias cobrem três perguntas diferentes: **como o score organiza risco**, **como coortes amadurecem** e **como analisar tempo até evento com censura**. Não misture as escalas:
-
-- [Kaplan–Meier](ml/kaplan_meier/README.md) — sobrevivência não ajustada e log-rank;
-- [Bandas de score](ml/score_bands/README.md) — quantis, evento e cobertura cumulativa;
-- [Scorecard](ml/scorecard_builder/README.md) — WOE + coeficientes em escala de pontos;
-- [Cox PH](ml/survival_cox/README.md) — hazard ratios condicionais e teste de proporcionalidade;
-- [Vintage](ml/vintage_analysis/README.md) — safra × MOB com maturidade observada;
-- [WOE/IV](ml/woe_iv_calculator/README.md) — separação por faixa em Spark; binning é externo.
-
-Os guias não definem política de crédito, causalidade, regulação ou cutoff. Cada contrato precisa ser validado no problema real antes de virar decisão.
-
-#### 📘 Clusters, anomalias e explicabilidade
-
-A R08 separa quatro tarefas que costumam ser misturadas: **criar clusters**, **descrevê-los**, **projetá-los para visualização** e **explicar modelos/pontuar anomalias**:
-
-- [Autoencoder de anomalias](ml/autoencoder_anomaly/README.md) — erro de reconstrução treinado sobre referência normal;
-- [Profiling de clusters](ml/cluster_profiling/README.md) — médias, razões e diferenças descritivas por grupo;
-- [Suite de clustering](ml/clustering_suite/README.md) — K-Means/GMM/DBSCAN e métricas internas;
-- [Relatório de explicabilidade](ml/explainability_report/README.md) — camada Markdown executiva/técnica;
-- [SHAP explainer](ml/shap_explainer/README.md) — atribuições, ranking e plots;
-- [UMAP](ml/umap_viz/README.md) — projeção exploratória 2D.
-
-Métrica interna, ranking, embedding e SHAP são evidências diferentes. Nenhum desses objetos cria causalidade, persona, política ou homologação por conta própria.
-
-#### 📘 Avaliação, drift e MLOps
-
-- [Curvas ROC/PR/lift/KS](ml/curves_plotly/README.md) — `n` é metadado visual e não subamostra;
-- [Drift de features](ml/drift_detection/README.md) — PSI, KS, CSI e política explícita;
-- [Relatório de métricas](ml/metrics_report/README.md) — `ks_pct` em 0–100;
-- [Run MLflow governado](ml/mlflow_run/README.md) — efeito externo e runtime a revalidar;
-- [Monitor de performance](ml/performance_monitor/README.md) — investigação, sem retreino automático.
-
-#### 📊 Risco de Crédito e Scorecards
-
-- **`woe_iv_calculator`**: calcula *Weight of Evidence* (WOE) e *Information Value* (IV) para os tipos suportados.
-  - *Quando usar:* como diagnóstico ou transformação em scorecards, com binning, target e tratamento de categorias explicitamente revisados.
-- **`scorecard_builder`**: converte um modelo logístico compatível em uma escala de pontos configurável.
-  - *Quando usar:* quando a escala, odds, PDO e coeficientes foram validados. Transparência do cálculo não equivale a aprovação regulatória.
-- **`score_bands`**: organiza um score em faixas e resume evento e volumetria.
-  - *Quando usar:* para estudar cortes operacionais; a política de decisão continua externa ao helper.
-
-#### 📈 Avaliação, Métricas e Visualização
-
-- **`metrics_report`**: consolida métricas de classificação, como AUC, Gini, KS, F1, LogLoss e Brier quando aplicáveis.
-  - *Quando usar:* para comparar modelos sob a mesma população, target, unidade e estratégia de corte.
-- **`curves_plotly`**: produz figuras interativas de ROC, Precision-Recall, ganho e KS.
-  - *Quando usar:* na análise de thresholds e na comunicação visual, conferindo se a escala do KS é razão ou percentual.
-- **`explainability_report`**: organiza importância e explicações locais ou globais para modelos suportados.
-  - *Quando usar:* em revisão técnica. Explicabilidade descreve o comportamento do modelo; não demonstra causalidade.
-
-#### 🛡️ Monitoramento e MLOps
-
-- **`performance_monitor`**: compara métricas observadas com limiares e períodos configurados.
-  - *Quando usar:* dentro de uma rotina de monitoramento. A classe calcula quando chamada; não agenda tarefas, não envia alertas e não retreina sozinha.
-- **`drift_detection`**: reúne diagnósticos de mudança de distribuição.
-  - *Quando usar:* para investigar alteração entre referência e período atual. Drift não prova, sozinho, degradação de performance.
-- **`mlflow_run`**: wrapper para abertura e registro governado de runs no MLflow.
-  - *Quando usar:* quando experimento, tags, parâmetros e artefatos foram definidos. O run é um efeito externo intencional.
-
-#### 🔍 Não Supervisionado e Anomalias
-
-- **`clustering_suite`**: compara configurações de clustering com as métricas implementadas.
-  - *Quando usar:* para apoiar seleção de configuração; métricas internas não substituem utilidade de negócio.
-- **`cluster_profiling`**: resume diferenças entre grupos encontrados.
-  - *Quando usar:* para interpretar clusters, evitando converter automaticamente padrões estatísticos em personas definitivas.
-- **`isolation_forest`**: aplica detecção de anomalias e organiza seu perfil.
-  - *Quando usar:* como mecanismo de priorização investigativa. Uma anomalia não é sinônimo de fraude.
-
----
-
-### 2. Categoria: `spark` (Operações Distribuídas em Escala)
-
-*Voltada a operações sobre DataFrames PySpark, mantendo o processamento principal no cluster e declarando as coletas necessárias.*
-
-**Guias do objeto:** [features de data](spark/date_features/README.md),
-[diagnóstico de join](spark/join_diagnostics/README.md),
-[nulos](spark/null_summary/README.md), [PSI/CSI](spark/psi_calculator/README.md),
-[prévia segura](spark/safe_display/README.md), [amostragem](spark/smart_sample/README.md) e
-[junção point-in-time](spark/pit_join/README.md) explicam grão, custo, coletas e
-interpretação antes da execução.
-
-- **`pit_join` (Point-in-Time Join)**: relaciona eventos a registros históricos disponíveis até o instante de decisão.
-  - *Quando usar:* na construção de bases analíticas em que cada entidade possui uma data de referência. Chaves, duplicidades e atraso de publicação precisam ser definidos.
-- **`psi_calculator`**: calcula PSI numérico e CSI categórico com agregações Spark.
-  - *Quando usar:* para comparar distribuições. O resultado final e distribuições agregadas são coletados no driver; linhas completas não são coletadas pelo cálculo numérico.
-- **`null_summary`**: resume nulos e padrões configurados em DataFrames Spark.
-  - *Quando usar:* no perfil inicial, considerando que agregações sobre tabela larga podem exigir leitura ampla.
-- **`smart_sample`**: cria amostra simples ou estratificada segundo os parâmetros fornecidos.
-  - *Quando usar:* para prototipação controlada. Amostra não garante representatividade sem validação do desenho.
-- **`date_features`**: deriva atributos de calendário em PySpark.
-  - *Quando usar:* depois de confirmar timezone, calendário e instante de disponibilidade das novas colunas.
-- **`join_diagnostics`**: mede cobertura, duplicidade, perda e expansão de linhas em joins.
-  - *Quando usar:* antes e depois de cruzamentos relevantes. A API pública é `diagnosticar_join`.
-- **`safe_display`**: limita a quantidade exibida no notebook.
-  - *Quando usar:* na inspeção visual. Limitar exibição protege a interface, mas não torna qualquer transformação anterior barata.
-
----
-
-### 3. Categoria: `display` (Exibição e Tabelas Formatadas)
-
-*Focada na apresentação didática de dados tabulares dentro dos notebooks.*
-
-**Guias do objeto:** [correlação](display/correlation_matrix/README.md),
-[tabela pandas](display/dataframe_styled/README.md) e
-[grade de distribuições](display/distribution_grid/README.md) explicam o conceito,
-as coletas e a interpretação antes da execução.
-
-- **`correlation_matrix`**: devolve mapa de correlação e lista de pares por corte.
-  - *Quando usar:* para investigar associação entre medidas comparáveis; não decide causalidade nem seleção de variáveis.
-
-- **`dataframe_styled`**: aplica formatação e recursos visuais a DataFrames pandas.
-  - *Quando usar:* em relatórios e inspeções com volume compatível com o driver.
-- **`distribution_grid`**: organiza múltiplas distribuições em uma grade compacta.
-  - *Quando usar:* em EDA; limites e amostras devem ser definidos antes da conversão para estruturas locais.
-
----
-
-### 4. Categoria: `visual` (Identidade Visual e Design em Plotly)
-
-*Favorece consistência estética nos gráficos e capítulos de notebook.*
-
-**Guias do objeto:** [índice declarado](visual/index_generator/README.md),
-[cabeçalho de seção](visual/section_header/README.md) e
-[tema Plotly](visual/theme_plotly/README.md). O índice não inspeciona células;
-o tema tem efeitos diferentes quando aplicado à figura ou registrado na sessão.
-
-- **`theme_plotly`**: aplica o tema visual do Hub a figuras ou à sessão, conforme a função chamada.
-  - *Quando usar:* quando o notebook deve adotar a identidade visual do projeto. Alterações de template global são efeitos de sessão, não funções puras.
-- **`section_header`**: renderiza cabeçalhos e descrições em HTML; badges são outro objeto.
-  - *Quando usar:* para dividir notebooks longos em capítulos claros; confirme onde HTML é aceito.
-
----
-
-### 5. Categoria: `constants` (Padrões Brasileiros)
-
-*Funções e constantes de formatação cultural e identidade visual.*
-
-- **`format_br`**: converte números em strings no padrão brasileiro:
-  - Moeda: `1250000.5` ➔ `R$ 1.250.000,50`
-  - Porcentagem: `0.154` ➔ `15,4%`
-  - Inteiro: `15000` ➔ `15.000`
-  - *Quando usar:* ao apresentar resumos, métricas e KPIs. A função de inteiro não acrescenta unidade automaticamente.
-- **`colors` e `styles`**: concentram paletas e convenções visuais do Hub.
-  - *Quando usar:* para evitar cores e estilos divergentes entre notebooks.
-
----
-
-### 6. Categoria: `testing` (Dados Sintéticos e Fixtures)
-
-*Acelera desenvolvimento e testes ao reduzir a dependência de bases externas.*
-
-- **`fixtures`**: geradores de dados sintéticos para cenários tabulares, contratos, transações e séries temporais.
-  - *Quando usar:* em exemplos, regressões e protótipos reproduzíveis. Dados sintéticos exercitam propriedades escolhidas; não representam automaticamente a distribuição real.
-
----
+Para temas, [`visual.tema`](visual/tema/README.md) valida configurações isoladas; `theme_plotly` e variantes `_resolvido` aplicam explicitamente. [`theme_lab`](visual/theme_lab/README.md) permite experimentar, comparar e opcionalmente salvar sessões em pasta autorizada. Carregar um tema não modifica o caminho legado. SHAP/Matplotlib e Kaplan–Meier mantêm limites próprios descritos nos respectivos guias.
 
 ### 📋 Inventário Completo da Biblioteca
 
-O catálogo narrativo acima destaca os objetos mais recorrentes. O mapa abaixo completa a visão da biblioteca, incluindo os componentes especializados que podem ser necessários em séries temporais, survival, ranking, deep learning e apresentação visual.
+São 53 objetos com README: constants 4, display 3, ML 30, Spark 7, testing 1 e visual 8. O inventário inclui o laboratório de autoria; sua presença não significa aprovação visual ou instalação no destino. Os seis índices são a rota navegável para cada objeto.
 
 ```text
 hub_snippets/
@@ -346,10 +166,11 @@ hub_snippets/
 └── visual
     ├── badge              ├── divider
     ├── index_generator    ├── kpi_card
-    ├── section_header     └── theme_plotly
+    ├── section_header     ├── tema
+    ├── theme_lab          └── theme_plotly
 ```
 
-> **Como usar este inventário:** escolha o objeto pelo problema, abra seu `exemplo_<nome>.py` e confirme API, dependências e tipo de retorno no Catálogo de Helpers (`.assistant/MANUAL_TECNICO.md#catalogo-helpers`).
+> **Como usar este inventário:** escolha o objeto pelo problema, abra seu `exemplo_<nome>.py` e confirme API, dependências e tipo de retorno no [Catálogo de Helpers](../MANUAL_TECNICO.md#catalogo-helpers).
 
 ---
 
@@ -401,6 +222,15 @@ if str(assistant_root) not in sys.path:
 ```
 
 Troque `<username>` pelo diretório autorizado ou use a raiz equivalente do seu Git folder. Em compute serverless, outra opção é declarar dependências pelo **Environment** ou pelo ambiente do Git folder, conforme o fluxo adotado.
+
+Confirme dependências no README escolhido e no [inventário opcional](requirements-optional.txt); ele não é lockfile nem deve ser instalado integralmente. Para temas, veja [requirements-temas.txt](requirements-temas.txt). Um teste mínimo sem Spark ou escrita é:
+
+```python
+from hub_snippets.constants.format_br import fmt_pct
+assert fmt_pct(0.5) == "50,0%"
+```
+
+Isso verifica apenas esse import e saída textual. Não executa nem homologa os outros objetos.
 
 ### Passo 3: Importe e execute com a assinatura real
 
@@ -483,13 +313,13 @@ Eles priorizam operações distribuídas, mas algumas rotinas executam ações e
 
 ### 6. Posso propor um novo snippet para a biblioteca?
 
-**Sim.** Use o molde em `.assistant/hub_padroes/` e a skill `@hub-ml-criar-objeto`. Todo novo objeto deve declarar contrato, dependências, efeitos, limites, API pública, exemplo sintético e testes proporcionais ao risco.
+**Sim.** Use o [molde de snippet](../hub_padroes/snippet/template.md) e a skill `@hub-ml-criar-objeto`. Todo novo objeto deve declarar contrato, dependências, efeitos, limites, API pública, exemplo sintético e testes proporcionais ao risco.
 
 ---
 
 ## 🔗 Continue Explorando
 
-- Catálogo completo de helpers: `.assistant/MANUAL_TECNICO.md#catalogo-helpers`
+- [Catálogo completo de helpers](../MANUAL_TECNICO.md#catalogo-helpers)
 - [Hub Scripts](../hub_scripts/README.md)
 - [Agent Skills](../skills/README.md)
 - [Hub Prompts](../hub_prompts/README.md)
@@ -498,6 +328,6 @@ Eles priorizam operações distribuídas, mas algumas rotinas executam ações e
 
 ## Guias locais por objeto
 
-A migração estrutural está concluída: os 52 snippets operacionais possuem README local. Para descobrir recursos, use os seis índices de categoria: [constants](constants/README.md), [display](display/README.md), [ml](ml/README.md), [spark](spark/README.md), [testing](testing/README.md) e [visual](visual/README.md). Cada índice enumera os filhos reais da categoria e aponta para o guia do objeto.
+Para descobrir recursos, use os seis índices de categoria: [constants](constants/README.md), [display](display/README.md), [ml](ml/README.md), [spark](spark/README.md), [testing](testing/README.md) e [visual](visual/README.md). Cada índice enumera os filhos reais da categoria e aponta para o guia do objeto.
 
 O [contrato editorial](../hub_padroes/readme/template_objeto.md) continua obrigatório para novos snippets. Leia o README local antes do notebook de exemplo; o exemplo pode ter efeitos próprios mesmo quando o helper apenas lê. O Manual permanece o inventário integrado e a presença do guia não significa homologação de runtime.

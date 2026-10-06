@@ -57,6 +57,8 @@ Se o MAPE in-sample for 2%, a conclusão correta é “o modelo reproduziu bem a
 
 ## 7. O que você precisa antes de usar?
 
+Defina antes do ajuste uma política de datas únicas ou agregação coerente com o alvo. O wrapper não faz essa escolha. Datas repetidas podem gerar múltiplas correspondências no merge das métricas e ponderação inesperada, mesmo se a biblioteca aceitar o fit.
+
 O DataFrame precisa conter `ds_col` e `y_col`. O wrapper seleciona somente essas duas colunas; qualquer regressora adicional é descartada. Datas precisam ser convertíveis por pandas e o target precisa ser aceito pelo Prophet.
 
 A função não valida explicitamente duplicidade de datas, frequência, nulos, tamanho mínimo, `periods`, `freq`, finitude ou zero no target antes da biblioteca. O MAPE faz divisão direta por `merged["y"]`: targets zero podem produzir infinito ou `NaN`.
@@ -72,6 +74,32 @@ Retorna `(model, forecast, metrics)`.
 `metrics` contém `mape_insample`, `rmse_insample` e `mae_insample`. Todas descrevem o ajuste sobre datas históricas usadas no treino.
 
 ## 9. Como usar este recurso no Hub?
+
+Para avaliar somente futuro, normalize e valide os dados antes do fit. No exemplo abaixo, `treino` e `observado_futuro` são DataFrames já separados pelo protocolo temporal, com colunas `dt_ref` e `saldo`; nenhum valor de `observado_futuro` entra no ajuste:
+
+```python
+import pandas as pd
+from hub_snippets.ml.prophet_wrapper import train_prophet
+from hub_snippets.ml.metrics_report import calculate_regression_metrics
+
+treino = treino.copy()
+observado_futuro = observado_futuro.copy()
+for frame in [treino, observado_futuro]:
+    frame["dt_ref"] = pd.to_datetime(frame["dt_ref"])
+    assert frame["dt_ref"].notna().all() and frame["dt_ref"].is_unique
+cutoff = treino["dt_ref"].max()
+assert (observado_futuro["dt_ref"] > cutoff).all()
+model, forecast, ajuste = train_prophet(treino, ds_col="dt_ref", y_col="saldo",
+                                       periods=6, freq="MS", log_mlflow=False)
+futuro = forecast.loc[forecast["ds"] > cutoff, ["ds", "yhat"]]
+assert futuro["ds"].is_unique
+avaliacao = observado_futuro.merge(futuro, left_on="dt_ref", right_on="ds",
+                                  how="left", validate="one_to_one")
+assert not avaliacao.empty and avaliacao["yhat"].notna().all()
+metricas_futuras = calculate_regression_metrics(avaliacao["saldo"], avaliacao["yhat"])
+```
+
+O alinhamento é por data, não pela posição das linhas. Confira também datas previstas sem observação e a cobertura do horizonte. `ajuste` continua sendo in-sample; `metricas_futuras` é a avaliação separada.
 
 ```python
 from hub_snippets.ml.prophet_wrapper import train_prophet
@@ -106,7 +134,7 @@ O wrapper é univariado: outras colunas são descartadas e não há `add_regress
 
 Com dados mensais, o Prophet também alerta para não prever granularidade mais fina do que a observada e para possíveis problemas de identificabilidade da sazonalidade dentro do mês. Use frequência futura coerente com o histórico.
 
-O notebook histórico contém interpretações fortes sobre número mínimo de ciclos e componentes. A R06 trata essas frases como heurísticas, não como cortes universais garantidos pela API.
+Não há um número universal de ciclos que garanta ajuste adequado. Examine a estabilidade da decomposição e o desempenho fora da amostra na frequência usada.
 
 ## 12. Quais são as alternativas?
 
@@ -128,6 +156,4 @@ Para separar janelas consulte [split_temporal](../split_temporal/README.md); par
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `cae94988cda66a8c61ecebbe6ceed487120a76f2`. Fontes primárias consultadas em 12/09/2026: documentação oficial do Prophet sobre início rápido, diagnósticos, dados não diários, sazonalidades/feriados/regressores e intervalos de incerteza.
-
-Em 12/09/2026 o PyPI lista Prophet `1.4.0`; o repositório oficial informa modo de manutenção a partir dessa versão. O notebook da R06 não fixa versão. Este README não presume publicação no Databricks, homologação em workspace nem auditoria independente.
+Consulte a documentação Prophet da versão instalada sobre diagnósticos, dados não diários, feriados e intervalos de incerteza. O notebook instala prophet sem pin e reinicia o Python; fixe e valide a combinação de versões no ambiente de destino antes de exigir reprodutibilidade.

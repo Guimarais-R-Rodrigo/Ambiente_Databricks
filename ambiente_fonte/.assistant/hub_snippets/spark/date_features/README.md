@@ -13,7 +13,7 @@ Datas carregam informação de calendário que pode ser útil em análise e mode
 | Use quando... | O instante da linha já está definido e esses atributos fazem sentido para a pergunta analítica. |
 | Evite quando... | Você precisa de hora/fuso, dia útil bancário ou um calendário completo que ainda não foi definido. |
 | Precisa de... | DataFrame Spark, nome da coluna de data e, se necessário, lista explícita de datas de feriado do projeto. |
-| Entrega... | O DataFrame original acrescido de nove colunas, opcionalmente prefixadas. |
+| Entrega... | Até nove colunas novas, opcionalmente prefixadas; nomes existentes são substituídos. |
 
 Leia a [implementação](date_features.py), a [fachada](__init__.py) e o [notebook](exemplo_date_features.py). O exemplo usa somente dados sintéticos e não persiste tabela.
 
@@ -75,7 +75,7 @@ Se as colunas de destino já existirem, `withColumn` as substitui silenciosament
 
 ## 8. O que este recurso entrega?
 
-Retorna um DataFrame Spark com as colunas originais e nove colunas adicionais. Não retorna métricas, logs ou dicionário de diagnóstico.
+Retorna um DataFrame Spark com até nove colunas adicionais; colunas de saída já existentes são substituídas. Não retorna métricas, logs ou dicionário de diagnóstico.
 
 `is_feriado_nacional_fixo` e `is_feriado_calendario` respondem perguntas diferentes. A primeira usa a lista local de datas fixas; a segunda usa somente as datas completas fornecidas em `holiday_dates`. Uma linha pode ser verdadeira em uma, em ambas ou em nenhuma.
 
@@ -88,6 +88,7 @@ A importação pública é:
 ```python
 from hub_snippets.spark.date_features import extrair_features_data
 
+df = spark.createDataFrame([("2026-01-01",), ("2026-02-17",)], "dt_referencia string")
 saida = extrair_features_data(
     df,
     "dt_referencia",
@@ -97,6 +98,15 @@ saida = extrair_features_data(
 ```
 
 O [notebook de exemplo](exemplo_date_features.py) usa fixtures sintéticas, exibe as nove colunas e discute a diferença entre feriado fixo e calendário de projeto. Ele não grava dados persistentes.
+
+Para essas duas datas, a conta de calendário esperada é:
+
+| Data | `evento_dia_semana_iso` | Feriado fixo | Feriado do calendário fornecido |
+|---|---:|---|---|
+| 2026-01-01 | 4 | true | false |
+| 2026-02-17 | 2 | false | true |
+
+É uma expectativa didática do contrato local, não homologação de runtime nem calendário oficial completo.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -131,11 +141,11 @@ Antes de aplicar o helper em produção, valide uma amostra representativa da co
 - [Implementação](date_features.py): regras e lista fixa local.
 - [Fachada](__init__.py): exporta `FIXED_NATIONAL_HOLIDAYS_BR`, `extrair_features_data` e `add_date_features`.
 - [Notebook](exemplo_date_features.py): demonstração sintética e leitura didática.
-- [Coleção Spark](../../README.md): catálogo local dos snippets.
+- [Coleção Spark](../README.md): catálogo local dos snippets.
 - [`pit_join`](../pit_join/README.md): quando o problema é disponibilidade histórica, não calendário.
 
 ## 15. Referências
 
-O comportamento descrito foi conferido em `date_features.py`, `__init__.py` e no notebook desta pasta, sobre a base integrada da R04-A. As funções de calendário são APIs PySpark; o contrato local, os nomes e a lista fixa são definidos pelo Hub. A documentação atual do Databricks para `to_date` registra que entrada malformada levanta erro com ANSI habilitado e recomenda `try_cast(... AS DATE)` quando a intenção é retornar `NULL` em vez de falhar.
+A [implementação](date_features.py) define nomes, lista fixa e transformação. A [referência Databricks de `to_date`](https://docs.databricks.com/aws/en/sql/language-manual/functions/to_date), consultada em 06/10/2026, documenta erro para entrada malformada e `try_cast(... AS DATE)` como alternativa explícita quando a política exige `NULL`. Confira ANSI e fuso no ambiente de uso; esta referência não homologa o helper.
 
-Nesta revisão houve leitura estática e testes sintéticos próprios da sprint. Teste local sem PySpark e teste de runtime Spark são registrados separadamente no relatório R04-A; não há publicação Databricks nem auditoria independente implícita.
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

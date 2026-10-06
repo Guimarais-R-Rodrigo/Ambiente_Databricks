@@ -607,7 +607,7 @@ class ManualTecnicoTests(unittest.TestCase):
 
     def test_manual_copies_are_identical(self):
         from project_policy import SAFE_SIMULATED_USERNAME
-        derived = self.repo / "Novo_Ambiente_Simulado/Users" / SAFE_SIMULATED_USERNAME / ".assistant/MANUAL_TECNICO.md"
+        derived = self.repo / ".artifacts/simulado/Users" / SAFE_SIMULATED_USERNAME / ".assistant/MANUAL_TECNICO.md"
         self.assertEqual(self.source.read_bytes(), (self.repo / "MANUAL_TECNICO.md").read_bytes())
         self.assertEqual(self.source.read_bytes(), derived.read_bytes())
         for root in (self.source.parent, derived.parent):

@@ -128,9 +128,9 @@ Exemplo de estrutura:
 ```markdown
 | Métrica | Valor | Status |
 | --- | ---: | :---: |
-| Total de linhas | ... | 🟢 |
-| PK única | ... | 🟡 |
-| Nulos | ... | 🟢 |
+| Total de linhas | [observado ou NÃO CALCULADO] | [critério ou NÃO CLASSIFICADO] |
+| PK única | [evidência ou NÃO VERIFICADA] | [critério ou NÃO CLASSIFICADO] |
+| Nulos | [observado ou NÃO CALCULADO] | [critério ou NÃO CLASSIFICADO] |
 ```
 
 ---
@@ -266,7 +266,7 @@ Use a API legada quando não houver tema explicitamente selecionado; use a rota 
 
 ## 14. Consumidores com limite explícito
 
-- **SHAP/Matplotlib:** o theming V07 não cobre sua aparência interna nem o PNG salvo pelo helper.
+- **SHAP/Matplotlib:** o theming atual não cobre sua aparência interna nem o PNG salvo pelo helper.
 - **Kaplan–Meier:** permanece com a ordem visual legada até existir token que represente sua semântica sem remapeamento silencioso.
 
 Não prometa consistência temática para essas superfícies apenas porque o restante do notebook usa `ResolvedTheme`.

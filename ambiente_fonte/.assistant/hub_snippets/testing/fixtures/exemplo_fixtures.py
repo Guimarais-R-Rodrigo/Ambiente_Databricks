@@ -25,7 +25,7 @@
 # MAGIC | Compute | sessão Spark compatível; conferir runtime e API no destino |
 # MAGIC | Bibliotecas | PySpark e módulos locais; confirme o ambiente gerenciado antes de instalar |
 # MAGIC | Dados | 100% sintéticos, gerados aqui; nenhuma tabela é lida ou escrita |
-# MAGIC | Diferença Free × trabalho | execução deste notebook no destino não revalidada na R03-A |
+# MAGIC | Diferença Free × trabalho | confira runtime e APIs Spark no destino; execução local não homologa o workspace |
 
 # COMMAND ----------
 

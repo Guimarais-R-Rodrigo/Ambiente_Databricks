@@ -1,5 +1,9 @@
 # V14 — Production Readiness e Operação Sustentada do Sistema de Temas
 
+> **Nota administrativa — 06/10/2026.** S0 e S1 estão integradas. S1 foi integrada pela PR #72 em `79f53ba1` (16/09/2026). Os slots `BLOCKED` na matriz permanecem sem owner/backup/autoridade evidenciados. S2–S8 não possuem início comprovado; não há readiness, go-live ou autorização Databricks. Os rótulos candidatos e próximos gates abaixo preservam o registro pré-merge.
+
+## Registro histórico preservado
+
 Status: **S0 aceita, integrada e certificada; S1 — ownership, autoridade e modelo operacional em execução. Candidata S1 ainda não aceita nem integrada.**
 
 Data de abertura da S1: 16/09/2026.

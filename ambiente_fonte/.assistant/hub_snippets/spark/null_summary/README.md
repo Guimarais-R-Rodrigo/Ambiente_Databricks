@@ -79,11 +79,20 @@ A função também imprime `Resumo de nulos calculado com sucesso.`. O status n�
 ```python
 from hub_snippets.spark.null_summary import null_summary
 
-resumo = null_summary(df, threshold_warn=5.0, threshold_fail=20.0)
-display(resumo)
+df = spark.createDataFrame([(None,), (float("nan"),), (1.0,), (2.0,)], "valor double")
+warn, fail = 25.0, 50.0  # política ilustrativa deste caso
+assert 0 <= warn <= fail <= 100  # pré-validação externa
+if not df.columns or not df.take(1):
+    raise ValueError("Base vazia: definir tratamento antes do resumo")
+resumo = null_summary(df, threshold_warn=warn, threshold_fail=fail)
+linha = resumo.first()
+assert linha["count_null"] == 1 and linha["pct_null"] == 25.0
+assert linha["status"] == "🟡"
 ```
 
 O [notebook](exemplo_null_summary.py) usa dados sintéticos, altera o limiar mantendo a base constante e mostra como filtrar `status != '🟢'`. Não grava tabela.
+
+A guarda acima pertence ao consumidor e adiciona uma ação Spark. `NaN` não conta como `NULL`. No exemplo, 25% coincide com o alerta e fica amarelo; com `threshold_fail=25.0`, a mesma taxa fica vermelha porque falha é testada primeiro. Se persistir o resultado em uma operação autorizada, registre também população, período, total e ambos os limiares; esses dados não acompanham automaticamente o retorno.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -99,7 +108,7 @@ Há pelo menos duas ações Spark: a contagem total e a agregação/coleta dos n
 
 ## 12. Quais são as alternativas?
 
-[`quick_profile`](../../../hub_scripts/quick_profile/README.md) produz um perfil mais amplo de uma tabela/view e distingue métricas da base completa e da amostra. [`data_quality_check`](../../../hub_scripts/data_quality_check/data_quality_check.py) lê uma tabela nomeada e acrescenta nulidade, chave candidata e recência opcional, além de status e alertas.
+[`quick_profile`](../../../hub_scripts/quick_profile/README.md) produz um perfil mais amplo de uma tabela/view e distingue métricas da base completa e da amostra. [`data_quality_check`](../../../hub_scripts/data_quality_check/README.md) lê uma tabela nomeada e acrescenta nulidade, chave candidata e recência opcional, além de status e alertas.
 
 Use `null_summary` quando você já tem o DataFrame e quer **somente** nulidade de forma simples. Não trate essas três APIs como equivalentes apenas porque todas mencionam nulos.
 
@@ -115,11 +124,13 @@ Confirme também se strings vazias ou sentinelas precisam de regras separadas. S
 - [Fachada](__init__.py): exporta `null_summary`.
 - [Notebook](exemplo_null_summary.py): demonstração sintética e filtro correto por emoji.
 - [`quick_profile`](../../../hub_scripts/quick_profile/README.md): perfil mais amplo.
-- [`data_quality_check`](../../../hub_scripts/data_quality_check/data_quality_check.py): diagnóstico de tabela nomeada com outras dimensões.
+- [`data_quality_check`](../../../hub_scripts/data_quality_check/README.md): diagnóstico de tabela nomeada com outras dimensões.
 - [Coleção](../../README.md): demais operações Spark.
 
 ## 15. Referências
 
 O contrato foi confrontado com `null_summary.py`, a fachada e o notebook desta pasta, além das implementações locais de `quick_profile` e `data_quality_check` para a comparação de alternativas.
 
-A R04-A caracteriza casos de limiar e execução Spark em testes próprios. Isso não converte os defaults em política de negócio nem implica publicação no Databricks ou revisão independente.
+Os defaults não são política de negócio. Pré-validar e conferir os cortes no seu recorte não implica aprovação geral de qualidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

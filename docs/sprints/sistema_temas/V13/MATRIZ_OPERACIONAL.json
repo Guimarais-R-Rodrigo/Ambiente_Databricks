@@ -9,7 +9,7 @@
     "preflight_stage": "S2_NOT_IMPLEMENTED",
     "remote_mutation_performed_by_s1": false,
     "source_root": "ambiente_fonte/",
-    "derived_root": "Novo_Ambiente_Simulado/",
+    "derived_root": ".artifacts/simulado/",
     "derived_root_editable": false
   },
   "relationships": [

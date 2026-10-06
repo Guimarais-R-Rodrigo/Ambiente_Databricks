@@ -470,12 +470,10 @@ def main(argv=None) -> int:
             runner, evidence, steps, "renderer",
             [sys.executable, "-B", "tools/render_simulado.py", "--write"],
         )
-        _, drift = ser._run_step(
+        ser._run_step(
             runner, evidence, steps, "render_diff",
-            ["git", "status", "--porcelain", "--untracked-files=all", "--", "Novo_Ambiente_Simulado"],
+            [sys.executable, "-B", "tools/render_simulado.py", "--check"],
         )
-        if drift.strip():
-            raise ser.GateFailed("DERIVED_STALE")
         ser._run_step(
             runner, evidence, steps, "readme_snapshot",
             [sys.executable, "-B", "tools/validate_assistant.py", "--conferir-readme"],

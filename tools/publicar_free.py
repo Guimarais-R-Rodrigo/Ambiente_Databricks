@@ -32,13 +32,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from notebook_marker import eh_notebook  # noqa: E402
 from project_policy import (  # noqa: E402
     CORPORATE_RE,
+    SIMULATED_ROOT,
+    simulated_root,
     EXPECTED_HUB_DIRS,
     EXPECTED_SKILL_NAMES,
     normalize_host,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SIMULADO = REPO_ROOT / "Novo_Ambiente_Simulado"
+SIMULADO = simulated_root(REPO_ROOT)
 FONTE = REPO_ROOT / "ambiente_fonte"
 CLI_PROFILE: str | None = None
 
@@ -267,7 +269,8 @@ def _commit_atual() -> str:
 
     Evidência de publicação descreve o produto e seu espelho. Alteração em docs,
     artefato ignorado ou metadado de fim de linha fora desses caminhos não torna
-    o pacote ``dirty``; alteração na fonte ou no espelho, sim.
+    o pacote ``dirty``. A fonte é rastreada; a saída ignorada é validada por
+    paridade exata antes de qualquer CLI remota, nunca certificada por Git.
     """
     try:
         proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
@@ -606,6 +609,7 @@ def cmd_verify_rapido(root: Path, arquivos: list[Path], home: str) -> int:
 
 
 def main() -> int:
+    global SIMULADO
     global CLI_PROFILE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="publica de fato")
@@ -630,7 +634,13 @@ def main() -> int:
         help="origem HTTPS exata do laboratório Free; obrigatória com --execute",
     )
     parser.add_argument("--relatorio", type=Path, help="com --verify: salva evidência JSON local")
+    parser.add_argument("--output-root", type=Path, default=SIMULATED_ROOT)
     args = parser.parse_args()
+    try:
+        SIMULADO = simulated_root(REPO_ROOT, args.output_root)
+    except ValueError as exc:
+        print(f"FAIL {exc}")
+        return 1
     CLI_PROFILE = args.profile
 
     if args.relatorio and not args.verify:
@@ -653,6 +663,11 @@ def main() -> int:
         return 1
 
     root, arquivos = local_tree()
+    from simulado import parity_errors
+    errors = parity_errors(REPO_ROOT, args.output_root, root.name)
+    if errors:
+        print("FAIL fonte/espelho: " + "; ".join(errors))
+        return 1
     home, user, host, profile = resolve_home(
         expected_host=args.expected_host,
         require_explicit_target=args.execute,

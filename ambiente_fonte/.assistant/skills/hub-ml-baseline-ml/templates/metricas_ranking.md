@@ -17,13 +17,12 @@ Reportar performance de modelos Learning-to-Rank com métricas posicionais.
 | MRR | [X.XXX] | [X.XXX] | +[X]% |
 | Precision@5 | [X.XXX] | [X.XXX] | +[X]% |
 
-## Faixas de referência
+## Critério do estudo
 
-| Métrica | Excelente | Bom | Aceitável | Fraco |
-|---|---|---|---|---|
-| NDCG@10 | > 0.85 | 0.70-0.85 | 0.50-0.70 | < 0.50 |
-| MAP@10 | > 0.60 | 0.40-0.60 | 0.25-0.40 | < 0.25 |
-| MRR | > 0.80 | 0.60-0.80 | 0.40-0.60 | < 0.40 |
+Registrar definição de relevância, k, grupos, agregação (peso por query ou item),
+tratamento de queries sem relevantes, baseline e variabilidade. Aceite depende
+do benchmark e critério aprovado pelo responsável, não de faixas universais.
+Reportar apenas métricas calculadas; as demais ficam NÃO CALCULADO/NÃO APLICÁVEL.
 
 ## Comparação de abordagens
 
@@ -37,9 +36,7 @@ Reportar performance de modelos Learning-to-Rank com métricas posicionais.
 
 | Faixa NDCG | N queries | % total | Ação |
 |---|---|---|---|
-| > 0.8 (excelente) | [N] | [X]% | Manter |
-| 0.5 - 0.8 (ok) | [N] | [X]% | Monitorar |
-| < 0.5 (fraco) | [N] | [X]% | Investigar |
+| [faixa definida no estudo] | [N] | [X]% | [recomendação justificada, sem aprovação automática] |
 
 ## Feature importance (top-10)
 
@@ -51,7 +48,8 @@ Reportar performance de modelos Learning-to-Rank com métricas posicionais.
 
 ## Interpretação executiva
 
-"O modelo de ranking posiciona o item mais relevante no top-[k] em [X]%
-dos casos (NDCG@[k] = [X.XX]). Comparado com o baseline de classificação
-reordenada, o ranker dedicado melhora em [X]pp, especialmente para queries
-com [característica]."
+"NDCG@[k] = [X.XX] mede a qualidade da ordenação ponderada pela relevância,
+normalizada pela ordenação ideal. Não representa percentual de acertos.
+Frente ao baseline [definição], a diferença observada foi [delta na escala da
+métrica], com [incerteza]. Hit rate/Precision@k, quando calculados, são relatados
+separadamente com seus denominadores."

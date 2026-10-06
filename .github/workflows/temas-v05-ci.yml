@@ -1,20 +1,8 @@
 name: Visual Lab notebook V05
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v05*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/tema/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/section_header/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/**'
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/**'
-      - 'tools/tests/test_temas_v05*.py'
-      - 'tools/ci_local.py'
-      - 'docs/sprints/sistema_temas/V05/**'
-      - '.github/workflows/temas-v05-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -43,6 +31,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V05 específica e sessões sem SKIP de ipywidgets
         run: |
           python -B tools/tests/test_temas_v05.py --require-ipywidgets -v

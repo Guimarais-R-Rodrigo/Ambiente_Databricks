@@ -13,7 +13,7 @@ abra o [guia do `.assistant`](.assistant/README.md).
 ```mermaid
 flowchart LR
   F["ambiente_fonte/<br/><b>canônico e editável</b><br/>sem identidade"]
-  S["Novo_Ambiente_Simulado/<br/><b>derivado</b><br/>Users/usuario-free"]
+  S[".artifacts/simulado/<br/><b>derivado</b><br/>Users/usuario-free"]
   L["Databricks Free<br/><b>laboratório</b>"]
   W["Workspace do trabalho<br/><b>destino controlado</b>"]
   F -->|"render_simulado.py"| S
@@ -24,7 +24,7 @@ flowchart LR
 | Camada | Finalidade | Pode editar? |
 |---|---|---:|
 | `ambiente_fonte/` | produto neutro e versionado | **sim** |
-| `Novo_Ambiente_Simulado/` | espelho da árvore de workspace | **não** |
+| `.artifacts/simulado/` | espelho da árvore de workspace | **não** |
 | workspace Free | teste operacional | não; recebe publicação |
 | workspace do trabalho | consumo governado | não; recebe pacote aprovado |
 
@@ -43,7 +43,9 @@ ambiente_fonte/
     ├── hub_prompts/              # HUB: formulários de pedido, uso manual
     ├── hub_snippets/             # HUB: biblioteca Python, import manual
     ├── hub_scripts/              # HUB: diagnósticos, execução manual
-    └── hub_padroes/              # HUB: templates e exemplos
+    ├── hub_padroes/              # HUB: templates e exemplos
+    ├── hub_micromodelos/         # HUB: módulo de domínio e contratos
+    └── hub_readmes_visual_assets/ # infraestrutura editorial e licenças
 ```
 
 `NATIVO` identifica estruturas reconhecidas pelo Genie Code. `HUB` identifica
@@ -52,7 +54,7 @@ o conteúdo é nosso, mas usa o mecanismo nativo de Agent Skills.
 
 ## Alterar do começo ao fim
 
-Rode na raiz do repositório:
+Rode na raiz do repositório, com as [dependências Python/Node](../tools/README.md#pré-requisitos-e-efeitos) preparadas. Validação e render são locais. Publicação exige autorização específica de destino e efeito; não é etapa automática de uma edição documental. Antes de renderizar, inventarie extras: `--write` remove toda a árvore derivada.
 
 ```powershell
 # 1. Depois da edição, valide fonte, links, contratos e higiene
@@ -60,17 +62,19 @@ python tools/validate_assistant.py
 
 # 2. Regenere o derivado; sem --write o comando apenas mostra o plano
 python tools/render_simulado.py --write
+python tools/render_simulado.py --check
 
 # 3. Publique e confira o laboratório com destino explícito
 python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
-python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>
 ```
 
 Depois:
 
 1. execute o smoke test quando a mudança tocar Python, Spark ou ML;
 2. execute forward tests quando mudar `name`, `description` ou escopo de skill;
-3. registre a alteração no `CHANGELOG.md`;
+3. preserve evidência datada no owner da tarefa e registre apenas o marco relevante
+   no `CHANGELOG.md`, conforme o [critério editorial](../docs/ai/templates/changelog-entry.md);
 4. faça o commit somente com a evidência pertinente.
 
 O procedimento completo e os critérios de parada estão no
@@ -79,7 +83,7 @@ O procedimento completo e os critérios de parada estão no
 ## Limites
 
 - Não inclua PII, host, e-mail, token, caminho corporativo ou dado real.
-- Não edite `Novo_Ambiente_Simulado/` à mão: o próximo render o recria.
+- Não edite `.artifacts/simulado/` à mão: o próximo render o recria.
 - Não trate `hub_` como interface nativa; prompts e padrões precisam ser
   anexados, e bibliotecas precisam ser importadas.
 - Não generalize um resultado do Free para o trabalho. Runtime, permissões e
@@ -99,5 +103,5 @@ O procedimento completo e os critérios de parada estão no
 
 ## Documentação por objeto
 
-Os 75 objetos operacionais atuais possuem README local. Novos snippets, scripts e prompts usam o [molde 1.0.0](.assistant/hub_padroes/readme/template_objeto.md) e o checklist editorial. Ele complementa os exemplos e o Manual;
+O fechamento histórico R13 cobriu 75/75 objetos operacionais. A cobertura atual é medida pelo validador, incluindo objetos posteriores, sem reabrir o controle histórico. Novos snippets, scripts e prompts usam o [molde 1.0.0](.assistant/hub_padroes/readme/template_objeto.md) e o checklist editorial. Ele complementa os exemplos e o Manual;
 o README local é obrigatório para novos snippets, scripts e prompts; ele não homologa runtime nem publica o workspace.

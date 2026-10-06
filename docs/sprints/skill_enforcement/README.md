@@ -2,6 +2,10 @@
 
 Este diretório concentra o planejamento e as evidências do Skill Enforcement Framework (SEF).
 
+## Política atual do produto
+
+A [policy](../../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) é a autoridade de níveis. Criar Objeto está L3/audit, `stage_specific`, após SER01; a menção L2 abaixo pertence à SE07. A [continuidade SER/B1](../skill_enforcement_rollout/README.md) separa capacidade técnica, comportamento e promoção. DoD incompleto e residual SE07 não foram apagados.
+
 ## Documentos canônicos
 
 1. [PLANO_MESTRE.md](PLANO_MESTRE.md) — arquitetura e sequência original SE00–SE08.
@@ -17,7 +21,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 11. [SE05/README.md](SE05/README.md) — Postflight fail-closed L4, concluída e integrada pela PR #78 no merge `748b455d9b1a0d2f2e8878e65f27b2aabc675a0d`.
 12. [SE05/DESENHO_TECNICO.md](SE05/DESENHO_TECNICO.md) — executor L4, evidence gaps, PostflightV1 e finalizer.
 13. [SE05/TESTES.md](SE05/TESTES.md) — micro-evals, integração e critérios de aceite.
-14. [SE06/README.md](SE06/README.md) — benchmark/adversarial ampliado, sprint corrente na branch `sef/SE06-evals`.
+14. [SE06/README.md](SE06/README.md) — benchmark/adversarial ampliado, histórico encerrado na branch `sef/SE06-evals`.
 15. [SE06/PROTOCOLO.md](SE06/PROTOCOLO.md) — coleta comportamental congelada e separação dos canais de evidência.
 16. [SE06/METRICAS.md](SE06/METRICAS.md) — métricas, calibração e DoD computável.
 17. [SE06/RUNBOOK_FREE.md](SE06/RUNBOOK_FREE.md) — execução dos 25 chats no laboratório Free.
@@ -66,7 +70,7 @@ branch sem PR
 
 Uma PR Draft não deve ser usada como mecanismo de economia de CI, porque workflows transversais podem continuar reagindo a `pull_request/synchronize`.
 
-## Estado atual
+## Estado no fechamento SE08
 
 - SE00: concluída e integrada;
 - SE01: concluída e integrada;

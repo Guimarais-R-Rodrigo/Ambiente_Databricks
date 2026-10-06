@@ -1,91 +1,45 @@
-# Playbook — Ciclo de vida de uma mudança no ecossistema
+# Playbook — ciclo de vida de uma mudança
 
-Procedimento completo para alterar qualquer coisa em `ambiente_fonte/` e levá-la
-até os workspaces. A mesma sequência aparece, em diagrama, no `README.md` da raiz
-e, em forma de comandos, no `ambiente_fonte/README.md` — os três descrevem a
-mesma ordem, e divergir de qualquer um deles é defeito nos três.
+A mudança começa localmente. Editar documentação não autoriza publicar, executar um notebook, iniciar compute ou promover uma policy. O [guia de ferramentas](../../tools/README.md) é dono dos comandos; a [certificação SEF/SER](../../tools/skill_enforcement/README.md#ser--certificação-prospectiva) prevalece nas superfícies que governa.
 
-```mermaid
-flowchart LR
-  E["1. Editar"] --> V["2. Validar"] --> R["3. Renderizar"]
-  R --> P["4. Publicar<br/>--execute + --verify"]
-  P --> T["5. Testar conforme impacto<br/>smoke · forward · prompts"]
-  T --> G["6. Registrar<br/>CHANGELOG + commit"]
-  G --> W["7. Replicar<br/>runbook manual"]
-```
+## 1. Definir escopo e preparar
 
-## 1. Editar
+Confirme HEAD, worktree, arquivos permitidos e efeitos autorizados. Leia `AGENTS.md` e siga o mapa de regras pertinentes em `docs/ai/README.md`. Use as [dependências de manutenção](../../tools/README.md#pré-requisitos-e-efeitos). Registre baseline e falhas preexistentes.
 
-- Edite apenas `ambiente_fonte/` (regra `fonte-de-verdade.md`).
-- Skills: mantenha frontmatter `name`+`description`, imperativo, progressive
-  disclosure (detalhe grande vai para `templates/` da própria skill).
-- Instruções: vigie o limite de 20.000 caracteres.
+## 2. Editar e validar a fonte
 
-## 2. Validar
+Edite o produto em `ambiente_fonte/`; nunca repare o espelho à mão. Manual é autorado na fonte e sua cópia de leitura na raiz precisa continuar idêntica. Rode `python tools/validate_assistant.py`, checks focais e `python tools/ci_local.py --verbose` quando aplicável. Diferencie PASS, FAIL, bloqueado e não executado. Não use saída sob teste como seu próprio oráculo.
 
-```powershell
-python tools/validate_assistant.py
-```
+## 3. Gerar em árvore isolada
 
-Só siga adiante com exit 0. `WARN` de tamanho: avalie progressive disclosure.
+`python tools/render_simulado.py` mostra o plano. Antes de `python tools/render_simulado.py --write`, inventarie extras e confirme que toda a árvore `.artifacts/simulado/` pode ser substituída. Compare todo o pacote e repita os gates após integração. Recursos visuais seguem exclusivamente a [produção v2](../../tools/readme_visuals/README.md#produção-v2--caminho-recomendado).
 
-## 3. Renderizar
+## 4. Revisar, registrar e integrar
 
-```powershell
-python tools/render_simulado.py --write
-```
+Revise o diff contra os contratos e execute verificações proporcionais. Registre comandos, SHA e o que de fato passou na evidência datada da tarefa, com atribuição; a raiz recebe somente marcos relevantes, conforme o [critério editorial](../ai/templates/changelog-entry.md). Não declare validação de ambiente não executada. Commit e push exigem escopo autorizado; merge e publicação são decisões distintas. ADR aceito mantém corpo imutável; mudança arquitetural exige o processo próprio.
 
-## 4. Publicar no Free
+## 5. Validar ambiente somente quando necessário e autorizado
 
-```powershell
-python tools/publicar_free.py            # plano (dry-run)
-python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
-python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
-```
-
-Dry-run por padrão; `--execute` é gate consciente. O `verify` é obrigatório: a
-publicação relata o que enviou, ele confere o que existe — inclusive arquivos
-obsoletos, que `import-dir --overwrite` nunca remove (ADR-0005).
-
-## 5. Testar conforme o impacto
-
-Nem toda mudança exige todos os testes. A classe alterada decide o gate:
-
-| Mudança | Gate antes do commit |
+| Mudança | Evidência adicional pertinente |
 |---|---|
-| helper, Python, Spark ou ML | smoke no runtime Databricks |
-| `name`, `description` ou fronteira de skill | forward tests positivo, negativo e `@menção` |
-| contrato ou comportamento de prompt | resposta real no Genie Code e registro no notebook de exemplo |
-| somente governança fora do produto | validação local; nenhum runtime por reflexo |
+| prosa/navegação | links, contratos, público e derivados locais |
+| API, Spark, ML ou execução | testes focais e runtime alvo autorizado |
+| roteamento de skill | positivo, negativo e seleção explícita observados |
+| briefing | resposta observada com versão/ambiente e limites próprios |
+| autorização/efeitos | certificação do perfil e oráculo independente |
 
-Execute em chat novo quando o gate for conversacional. Falha não vira ajuste de
-`description` ou relaxamento do teste sem antes isolar se o defeito está no
-produto, no instrumento ou na cota.
+Um contrato de enforcement pode exigir gates adicionais. Não inferir autorização remota de um teste local, nem registrar NOT_RUN como PASS.
 
-## 6. Registrar
+## 6. Publicação separada
 
-- Entrada no `CHANGELOG.md` (template `.claude/templates/changelog-entry.md`).
-- Decisão estrutural → ADR; sessão interrompida → handoff.
+Depois de autorizados destino, versão e efeito, siga a [skill de publicação](../../.agents/skills/publicar-free/SKILL.md). O modo de plano (`python tools/publicar_free.py`) não escreve remotamente, mas consulta identidade e destino pela CLI autenticada; não é inteiramente offline. `--execute` escreve. `--verify` compara inventário/tipos; `--verify --conteudo` também compara conteúdo. Confira recibos, ausentes e obsoletos; em falha parcial, inspecione a tentativa anterior antes de qualquer retry. A conferência não homologa comportamento Genie.
 
-O changelog pode ser rascunhado durante o trabalho, mas só é fechado **depois**
-do `--verify` e dos testes pertinentes. A entrada cita contagens e evidência
-real; registrar antes é escrever de memória o número que o comando ainda não
-produziu.
+## 7. Trabalho corporativo
 
-## 7. Replicar no trabalho (fase 4 — runbook)
-
-Geração do ZIP mínimo por `tools/bundle_implantacao.py` e cópia manual para o
-workspace do trabalho, com mapeamento do placeholder para o destino. Procedimento completo no
-[runbook de replicação](replicacao-trabalho.md), com o
-[checklist](checklist-replicacao.md) para marcar durante a execução. Os
-pré-requisitos e guardrails estão em `.claude/skills/replicar-trabalho/`.
+A [replicação no trabalho](replicacao-trabalho.md), seu [checklist](checklist-replicacao.md) e o aceite no destino exigem autorização e evidência próprias. Free não comprova runtime, permissões ou governança corporativa.
 
 ## Fontes
 
-- Diagrama equivalente: [`README.md`](../../README.md) da raiz, seção "Ciclo de
-  contribuição"
-- Comandos na forma copiável: [`ambiente_fonte/README.md`](../../ambiente_fonte/README.md)
-- Camadas e o que é editável: `.claude/rules/fonte-de-verdade.md`
-- Por que a conferência é obrigatória: [ADR-0005](../decisions/ADR-0005-publicacao-propria-no-free.md)
-  e [ADR-0008](../decisions/ADR-0008-criterios-de-conferencia-da-publicacao.md)
-- Passo 7 em detalhe: [runbook de replicação](replicacao-trabalho.md)
+- [Entrada e ciclo de contribuição](../../README.md#ciclo-de-contribuição)
+- [Fonte do produto](../../ambiente_fonte/README.md)
+- [Publicação e conferência](../decisions/ADR-0005-publicacao-propria-no-free.md) / [critério de conteúdo](../decisions/ADR-0008-criterios-de-conferencia-da-publicacao.md)

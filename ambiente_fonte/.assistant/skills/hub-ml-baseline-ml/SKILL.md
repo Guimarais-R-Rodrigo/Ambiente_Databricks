@@ -5,7 +5,7 @@ description: Treina e compara baselines reproduzíveis de machine learning no Da
 
 # Construir baseline de ML
 
-## Rota executável sintética SER09 (candidata)
+## Baseline binário temporal sintético
 
 Para pedido explícito do perfil `BINARY_TEMPORAL_LOCAL_V1`, use
 `input.schema.json` e `scripts/preflight.py::preflight` antes de
@@ -25,9 +25,9 @@ de leakage operacional, calibração futura ou prontidão do modelo. Amostrar
 uma feature condicionalmente ao rótulo em um gerador sintético não é, por
 si só, prova de leakage; avalie disponibilidade e proveniência no uso real.
 
-## Tracking sintético pessoal SER10 (candidato)
+## Tracking sintético pessoal autorizado
 
-Para registrar **o mesmo Pipeline treinado** no perfil SER09, use
+Para registrar **o mesmo Pipeline treinado** no perfil `BINARY_TEMPORAL_LOCAL_V1`, use
 `scripts/run_tracking.py::run_tracking` apenas com autorização externa
 `SER10-AUTH-1` vinculada ao digest exato do request, run_id e experimento
 pessoal novo. O invocador configura `tracking_uri` e `registry_uri` do MLflow
@@ -197,8 +197,6 @@ Fornecer notebook/código reproduzível, contrato, comparação com trivial, tab
 - **Tratar o baseline como entrega final.** Ele é régua: existe para dizer se o
   modelo seguinte vale o custo.
 - **Instalar biblioteca opcional sem fixar versão** onde o inventário manda fixar
-  — `shap`, `umap-learn` e `pmdarima` exigem pin, e as três juntas quebram o
-  `import numpy`.
+  — confira a combinação de `shap`, `umap-learn`, `pmdarima` e NumPy no runtime alvo. Uma incompatibilidade observada historicamente não prova falha universal; use versões compatíveis verificadas, sem atualização especulativa.
 - **Abrir run de MLflow no serverless** sem conferir runtime, backend e
-  autorização. O bloqueio observado no Free em 17/08/2026 é histórico;
-  confirme a configuração do perfil executável antes de prometer tracking.
+  autorização. Confirme a configuração do perfil executável antes de prometer tracking.

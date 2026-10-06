@@ -108,27 +108,4 @@ plot_ks_curve(y, p, title="KS")
 # MAGIC - **Sobre milhões de linhas esperando que `n` limite o custo.** `n` é somente metadado visual; amostre ou agregue antes de trazer vetores grandes ao driver.
 # MAGIC - **Como prova de calibração.** Nenhuma das quatro diz se a probabilidade prevista corresponde à frequência observada.
 # MAGIC
-# MAGIC ## Dívida registrada: a paleta daqui tem seis cores
-# MAGIC
-# MAGIC Este módulo **redeclara** `PALETA_CATEGORICA` em vez de importá-la de
-# MAGIC `hub_snippets.constants.colors`, e o valor **diverge**:
-# MAGIC
-# MAGIC | Onde | Cores |
-# MAGIC |---|---:|
-# MAGIC | `constants.colors` | 10 |
-# MAGIC | `ml.curves_plotly` (aqui) | **6** |
-# MAGIC | `ml.umap_viz`, `ml.vintage_analysis` | 10, idênticas à original |
-# MAGIC
-# MAGIC Duas das três cópias são iguais à original, o que torna esta terceira
-# MAGIC invisível numa inspeção rápida. Como o `__init__.py` reexporta tudo, há
-# MAGIC hoje dois caminhos de import para o mesmo nome com valores diferentes.
-# MAGIC
-# MAGIC **Na prática:** um gráfico com mais de seis séries feito por este módulo
-# MAGIC repete cor a partir da sétima; o mesmo gráfico feito com a paleta de
-# MAGIC `constants` não repete. Se você precisa das dez, importe explicitamente
-# MAGIC de `constants.colors` e passe em `colorway`.
-# MAGIC
-# MAGIC A unificação não foi feita aqui de propósito: trocar a redeclaração por
-# MAGIC import mudaria a aparência de todos os gráficos existentes, e a conversão
-# MAGIC não muda comportamento. É decisão de produto, e precisa de alguém olhando
-# MAGIC os gráficos para dizer se seis ou dez é o certo.
+# MAGIC A família de curvas tem paleta própria de seis cores, preservada nas funções legadas e nas rotas de tema explícito. A paleta categórica geral do Hub tem dez cores. Se criar gráficos adicionais, selecione deliberadamente a paleta apropriada; não trate os dois exports como equivalentes.

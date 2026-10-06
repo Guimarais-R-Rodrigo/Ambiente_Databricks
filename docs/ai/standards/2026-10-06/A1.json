@@ -1,0 +1,10 @@
+{
+  "id": "A1",
+  "url": "https://code.claude.com/docs/en/memory#agentsmd",
+  "title": "How Claude remembers your project",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "Native AGENTS fallback; project/ancestral Claude instruction blockers; version and setting scope caveats; imports and limits.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

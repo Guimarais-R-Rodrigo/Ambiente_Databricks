@@ -1,0 +1,37 @@
+﻿id,status,positive_observed,negative_observed_or_gap
+T01,PASS,Remote refs verified read-only; clean authorized f284 baseline; dedicated branch preserves README work.,Isolated Git guard observed DIRTY_WORKTREE and HEAD_MISMATCH; dependent action was not run. Actual integration baseline was clean and refs verified.
+T02,PASS,Nonempty 691 pairs and protected baseline; new files and tampered baseline rejected.,Mutants in test_ai_controls.py.
+T03,BLOCKED,Codex CLI 0.159.2 detected authenticated; Claude/Gemini/Grok absent.,Missing clients/versions/platforms block native acceptance.
+T04,PASS,215 excerpt-level obligations checked against exact baseline and target anchors by independent executor reviewer.,Critical invariant removal rejected in fixture; semantic review is same-origin A0.
+T05,BLOCKED,AGENTS 72 lines and 4725 bytes.,Native effective context/truncation evidence unavailable.
+T06,PASS,Only explicit single root Claude/Gemini imports; no universal history import.,"Direct, transitive and universal prose mutants rejected."
+T07,PASS,"36 DOCUMENTED claims, dated summary snapshots, official sources and bindings.","Stale, incomplete, date-only, snapshot-drift and unsupported promotion mutants rejected; no native certification."
+T08,PASS,"Neutral contexts separate durable rules, dated observations and current probes; source excerpts are historical evidence.",Existing project hygiene guard rejected a synthetic corporate-identifier context; no real identity used. Independent semantic review rejected legacy authentication assumptions.
+T09,PASS,"Exactly five canonical procedures plus five generated copies, portable frontmatter.","Ghost skill, duplicate keys, blank/invalid descriptions and missing resources rejected."
+T10,PASS,Integrated validator exit0 with zero failures/warnings; output and flags match procedure. Existing owner regressions passed.,No fabricated PASS-per-check or current counts from historical scope.
+T11,BLOCKED,Isolated renderer ran twice after 692-file preflight; 691 payload pairs equal.,Missing authority/extras procedural blocking not demonstrated in native client; static instruction assertions do not close this gate.
+T12,BLOCKED,Publisher owner regressions and command help checked; no remote calls.,Native authorization blocking and actual host identity not tested; remote plan/execute/verify not run.
+T13,PASS,Historical forward 14/42 preserved; new campaigns remain NOT_RUN; runbook and human gates explicit.,Historical fixture/template immutability checked; no fabricated campaign PASS.
+T14,PASS,Deterministic generator executed twice; second changed list empty.,"Edited body, changed metadata and missing resource rejected."
+T15,PASS,Fixed five mappings; ownership and whole-plan preflight; check read-only.,"Traversal, source/destination/ancestor symlinks, foreign outputs, empty map and scan tested."
+T16,BLOCKED,Linux sensitive-case and temporary path with spaces tested; no required symlinks in package.,No Windows executor/PowerShell available; native checkout on Windows BLOCKED.
+T17,BLOCKED,Files and expected root bootstrap are structurally verified.,New native sessions and observed loader diagnostics incomplete.
+T18,BLOCKED,Native precedence cases specified per host.,Root/subdirectory/ancestor native comparison not observed.
+T19,BLOCKED,Exact root shims and static imports verified; no duplicate secondary Claude bootstrap.,Native coexistence/import expansion and mode-specific behavior not observed across required clients.
+T20,BLOCKED,Grok native AGENTS documentation retained; no invented GROK.md or duplicate .grok skills.,Grok absent; grok inspect and behavioral probes BLOCKED.
+T21,BLOCKED,Five source/adapter names and safe positive/negative/prerequisite cases documented.,Actual native skill discovery/activation per client is not proved by static tests.
+T22,BLOCKED,Templates define initial corpus and contamination handling.,"This implementation review is context-full, same-origin A0; no blind/native session claim."
+T23,BLOCKED,Restart/resume/compaction cases specified.,No observed native session lifecycle trial.
+T24,BLOCKED,"No permission fields, settings, credentials or external writes added; independent effects review.",Text and fixtures do not prove client sandbox/approval refusal; native behavioral gate BLOCKED.
+T25,BLOCKED,Four conflict types and stop-dependent-work procedure documented.,Native conflict behavior not exercised.
+T26,PASS,"ADR0001, historical AGENTS template, forward scope and non-executable templates protected; narrow administrative notes preserve old bodies.",Freeze rejects historical/template mutations; no blanket count replacement.
+T27,PASS,Whole tracked/new text scan; exact-line exceptions distinguish history and frozen fact_sources.,"Live legacy, wrong-case, missing anchor/image and stale exception mutants rejected; whole-repo validator checks ordinary links."
+T28,PASS,Original 12 CI stages retained byte-for-byte as stage definitions; two offline stages appended.,60 synthetic positive/mutant tests pass with expected failure reasons; no original tests removed or weakened; no install/network/model calls in gate.
+T29,BLOCKED,Manual context package will bind branch/SHA/file hashes.,No chat upload or retrieved-content trial; consumer settings/accounts unchanged.
+T30,PASS,691 source/mirror pairs and protected bytes frozen against baseline.,"One-side/both-side mutation, added protected file, hash-manifest tampering rejected."
+T31,PASS,"Marker generated by real renderer in isolated copy, only marker copied back; payload identical.",No manual marker edit; destination extras absent in actual preflight.
+T32,PASS,"Baseline12 and integrated14 CI stages PASS; candidate validator exit0, zero failures/warnings.","Existing skips: 11 themes (optional UI/branch-specific GitHub checks), 4 SEF, 7 transition Spark. These cases remain not executed."
+T33,PASS,"Delivery reviewer reconstructed objective/base/tree/branch/scope, four reproduction commands, logs/results, native blockers and owners from repository handoff without executor conversation; all ten artifact links and four logs resolved.","Initial handoff lacked measured SHA/results/commands and was rejected; corrected handoff was rechecked and accepted. Context-full reconstruction, not blind review. Final package restore/upload and native acceptance are separate."
+T34,BLOCKED,No hooks/plugins/MCP/settings/allowed-tools activated by migration.,Claude/Grok effective permissions and compatibility absent; native gate BLOCKED.
+T35,PASS,Actual complete revert/reapply in disposable clone restored exact baseline and candidate trees; unrelated work survived; validators passed both states.,Full tree equality would reject partial restoration; retained unrelated untracked fixture remained unchanged throughout.
+T36,NOT_RUN,No remote GitHub writes performed; manual push package requested.,Remote SHA/CI remain NOT_RUN until user publishes and those refs/checks are verified.

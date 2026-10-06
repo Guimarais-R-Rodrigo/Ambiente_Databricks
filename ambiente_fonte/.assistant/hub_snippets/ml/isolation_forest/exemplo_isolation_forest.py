@@ -6,7 +6,7 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Treina Isolation Forest e oferece uma função separada de perfil. Este notebook exercita o treinamento e a mudança do corte, mas não chama `profile_anomalies`.
 
-# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC Leia o README do objeto antes de executar. As saídas ilustram a fixture; não medem eficácia em produção e não garantem os mesmos valores em outro ambiente.
 # MAGIC
 # COMMAND ----------
 # MAGIC %md
@@ -95,8 +95,8 @@ for c in (0.01, 0.05, 0.10):
 # MAGIC Justifique o corte por evidência ou por um objetivo operacional declarado,
 # MAGIC como capacidade de investigação; não apresente uma política operacional
 # MAGIC como estimativa da prevalência verdadeira. Examine sensibilidade e falsos
-# MAGIC positivos com evidência adicional. As saídas antigas não foram reexecutadas
-# MAGIC para preencher esta revisão documental.
+# MAGIC positivos com evidência adicional. Avalie também os casos não marcados;
+# MAGIC os números desta fixture não estimam a prevalência verdadeira.
 
 # COMMAND ----------
 # MAGIC %md

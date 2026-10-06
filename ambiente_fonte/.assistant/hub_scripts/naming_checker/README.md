@@ -57,6 +57,8 @@ A própria view também gera `databricks-recommended-context` porque seu nome é
 
 ## 7. O que você precisa antes de usar?
 
+Forneça `allowed_table_prefixes` como sequência de strings **não vazias**. O código não rejeita o prefixo `""`, que casa com qualquer nome e faz o check de prefixo passar; isso é uma limitação, não configuração recomendada.
+
 `table_name` precisa ser resolvível por `spark.table`. `max_col_length` deve ser positivo. Se `enforce_prefix=True`, `allowed_table_prefixes` não pode ficar vazio.
 
 A função não valida a política fornecida além disso. Prefixos sobrepostos, vazios ou semanticamente inadequados são responsabilidade do consumidor.
@@ -77,6 +79,10 @@ O retorno é uma lista de dicionários. Cada violação contém:
 Lista vazia significa apenas que nenhuma das regras implementadas encontrou divergência. Não certifica significado, tipos, comentários, ownership ou contratos.
 
 ## 9. Como usar este recurso no Hub?
+
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
+
+Exemplo ilustrativo de violação: `{"object": "NomeLegado", "severity": "warning", "message": "Column is outside the configured lowercase snake_case convention.", "policy": "project-custom"}`.
 
 ```python
 from hub_scripts.naming_checker import naming_checker
@@ -100,6 +106,8 @@ Abra o [exemplo](exemplo_naming_checker.py) para ver a separação entre origem 
 A recomendação de nome completo se baseia na clareza de contexto do namespace. A documentação Databricks recomenda identificadores totalmente qualificados quando workloads interagem com objetos em múltiplos schemas/catálogos; isso não significa que todo nome parcialmente qualificado seja inválido.
 
 ## 11. Limitações, riscos e armadilhas
+
+Erro de acesso/resolução da tabela interrompe a função; violação de convenção devolve uma lista. `max_col_length<=0` e `enforce_prefix=True` sem lista causam `ValueError`, não warnings. Uma exceção governada pode manter coluna legada por compatibilidade, desde que dono, justificativa e consumidores sejam registrados; não há renomeação automática.
 
 A função não valida nome de catálogo/schema nem aplica regex ao nome curto da tabela; o prefixo é a única convenção de tabela além da checagem de três segmentos.
 
@@ -129,6 +137,4 @@ Depois da revisão, documente exceções e dependências antes de qualquer renom
 
 ## 15. Referências
 
-O comportamento específico é sustentado pelos arquivos locais vinculados acima, revisados na R04-B em 12/09/2026. A documentação Databricks de [consulta a tabelas](https://docs.databricks.com/aws/en/query) descreve o namespace de três níveis do Unity Catalog e recomenda identificadores totalmente qualificados em cenários com múltiplos catálogos/schemas. Fonte consultada em 12/09/2026.
-
-As regras de `snake_case`, comprimento e prefixos continuam sendo política deste projeto/organização, não exigência oficial. A validação de runtime da sprint é registrada separadamente; não há auditoria independente ou homologação Databricks.
+Contrato: [implementação](naming_checker.py), [fachada](__init__.py) e [exemplo](exemplo_naming_checker.py). A referência Databricks de [consulta a tabelas](https://docs.databricks.com/aws/en/query), consultada em 12/09/2026, contextualiza nomes qualificados. `snake_case`, comprimento e prefixos são política local, não regra universal do Unity Catalog.

@@ -31,7 +31,7 @@ A pergunta é: “Como mostrar este indicador para que outra pessoa leia a magni
 
 Use na apresentação final de um resumo, legenda, cartão de indicador ou mensagem de notebook. `fmt_n` ajuda quando o espaço é curto e uma aproximação é aceitável; `fmt_int` e `fmt_brl` atendem situações em que o leitor precisa enxergar os dígitos apresentados por inteiro.
 
-Para tabelas pandas já pequenas, a formatação pode ser aplicada à exibição, mantendo os dados originais numéricos. O [componente de tabelas estilizadas](../../display/dataframe_styled/dataframe_styled.py) trata dessa camada de apresentação.
+Para tabelas pandas já pequenas, a formatação pode ser aplicada à exibição, mantendo os dados originais numéricos. O [componente de tabelas estilizadas](../../display/dataframe_styled/README.md) trata dessa camada de apresentação.
 
 ## 4. Quando não usar?
 
@@ -59,6 +59,15 @@ Não há uma política comum para `None`, NaN, infinito ou strings malformadas. 
 
 ## 8. O que este recurso entrega?
 
+Assinaturas públicas (todos os retornos são `str`; `Number` é alias):
+
+- `fmt_int(n: Number)`
+- `fmt_pct(v: float, casas: int=1, input_scale: Literal['ratio', 'percent']='ratio')`
+- `fmt_brl(v: float)`
+- `fmt_dec(v: float, casas: int=4)`
+- `fmt_delta(v: float, unidade: str='pp')`
+- `fmt_n(n: Number, sufixo: bool=True)`
+
 | Chamada | Texto produzido |
 |---|---|
 | `fmt_int(3375674)` | `3.375.674` |
@@ -70,7 +79,7 @@ Não há uma política comum para `None`, NaN, infinito ou strings malformadas. 
 | `fmt_delta(0.0005, "bps")` | `+5 bps` |
 | `fmt_n(3375674)` | `3,4M` |
 
-Esses casos são verificáveis pelo código mínimo e pelos testes locais da R02. São saídas textuais, não valores destinados a nova aritmética. Pontos-base (*basis points*, `bps`) representam centésimos de ponto percentual; um ponto percentual corresponde a 0.01 na escala de fração.
+São saídas textuais, não valores destinados a nova aritmética. Pontos-base (*basis points*, `bps`) representam centésimos de ponto percentual; um ponto percentual corresponde a 0.01 na escala de fração.
 
 ## 9. Como usar este recurso no Hub?
 
@@ -91,7 +100,18 @@ assert fmt_delta(0.0005, "bps") == "+5 bps"
 assert fmt_n(3375674) == "3,4M"
 ```
 
-O bloco foi executado localmente nesta sprint, com a raiz do Hub adicionada ao caminho Python. O [notebook](exemplo_format_br.py) expande a explicação das escalas; sua execução no Databricks não foi presumida a partir desse teste local. Não é necessário alterar `locale` nem escrever tabela para usar o helper.
+O [notebook](exemplo_format_br.py) expande a explicação das escalas; sua execução no Databricks não foi presumida a partir desse teste local. Não é necessário alterar `locale` nem escrever tabela para usar o helper.
+
+Política de ausência explícita do consumidor, para escalar numérico:
+
+```python
+from math import isfinite
+valor = None
+texto = "NÃO INFORMADO" if valor is None or not isfinite(valor) else fmt_dec(valor)
+assert texto == "NÃO INFORMADO"
+```
+
+Essa pré-validação é externa ao helper; não converte ausência, NaN ou infinito em zero. Strings e tipos não numéricos exigem tratamento próprio.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -105,13 +125,13 @@ Em `fmt_n`, `sufixo=True` abrevia com `k`, `M` e `B`. Com `False`, remove a abre
 
 Os formatadores não validam a plausibilidade da métrica. Percentuais acima de 100% podem ser corretos para algumas grandezas e errados para outras; a regra pertence ao indicador. Uma string bem apresentada não resolve unidade incorreta.
 
-Na execução local da R02, `fmt_int(9007199254740993)` produziu `9.007.199.254.740.992`, perdendo uma unidade. `fmt_n` sem sufixo teve o mesmo resultado. Esse limite foi documentado, não corrigido no código nesta sprint. Para precisão integral, preserve o inteiro e use uma representação sem conversão para ponto flutuante. A [especificação de formatação do Python](https://docs.python.org/3/library/string.html#format-specification-mini-language) explica os tipos de apresentação.
+Como caso de perda de precisão, `fmt_int(9007199254740993)` produz `9.007.199.254.740.992`, perdendo uma unidade. `fmt_n` sem sufixo teve o mesmo resultado. Para precisão integral, preserve o inteiro e use uma representação sem conversão para ponto flutuante. A [especificação de formatação do Python](https://docs.python.org/3/library/string.html#format-specification-mini-language) explica os tipos de apresentação.
 
 Perto das fronteiras de abreviação, o arredondamento pode gerar `1000,0k` em vez de trocar automaticamente para `1,0M`. `fmt_brl` também não implementa uma política contábil completa ou conversão cambial: acrescentar `R$` não muda a moeda de origem. Valores já calculados com erros numéricos não são recuperados pela apresentação decimal.
 
 ## 12. Quais são as alternativas?
 
-Formatação nativa de Python pode atender um texto isolado; este módulo facilita consistência entre notebooks. Para um DataFrame pandas pequeno, [dataframe_styled](../../display/dataframe_styled/dataframe_styled.py) organiza a exibição. Para grandes tabelas Spark, mantenha os dados numéricos e escolha uma camada de apresentação apropriada; não colete toda a base apenas para formatar valores.
+Formatação nativa de Python pode atender um texto isolado; este módulo facilita consistência entre notebooks. Para um DataFrame pandas pequeno, [dataframe_styled](../../display/dataframe_styled/README.md) organiza a exibição. Para grandes tabelas Spark, mantenha os dados numéricos e escolha uma camada de apresentação apropriada; não colete toda a base apenas para formatar valores.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -125,6 +145,8 @@ A [implementação](format_br.py) define regras e arredondamento; a [fachada](__
 
 ## 15. Referências
 
-Contrato e exemplos conferidos no código da base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. A referência externa pertinente é a [documentação oficial de Decimal](https://docs.python.org/3/library/decimal.html), consultada em 12/09/2026, para `quantize` e `ROUND_HALF_UP`. As convenções de saída do Hub são definidas pelo próprio módulo.
+O [código local](format_br.py) define as regras de apresentação. A referência externa pertinente é a [documentação oficial de Decimal](https://docs.python.org/3/library/decimal.html), consultada em 12/09/2026, para `quantize` e `ROUND_HALF_UP`. As convenções de saída do Hub são definidas pelo próprio módulo.
 
-Revisão R02 pelo próprio autor, com execução do bloco Python acima e casos de borda em Python 3.13.5. Isso não é uma execução do notebook Databricks. Revisão independente e aceite humano do piloto têm estados próprios no relatório da sprint.
+Asserções de strings em Python não comprovam o preparo e a renderização do notebook Databricks. Confira o destino separadamente.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R02.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

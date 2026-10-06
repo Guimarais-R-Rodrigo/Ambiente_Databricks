@@ -2,13 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 <!-- sistema-temas-v07: consumidores -->
-> **Atualização V07 — estado atual.** `PerformanceMonitor.plot_timeline(metric)`
-> continua legado. `plot_timeline_resolvido(metric, theme)` reutiliza exatamente
-> o mesmo histórico, baseline e thresholds e altera apenas aparência:
-> `brand.primary` para a série, `text.secondary` para baseline,
-> `semantic.warning` para warning e `semantic.negative` para critical. A rota
-> temática não altera `should_retrain`, não recalibra a política e não autoriza
-> retreino automático.
+Use monitor.plot_timeline(metric) para a aparência legada ou monitor.plot_timeline_resolvido(metric, theme) para um ResolvedTheme notebook/light. As duas rotas usam o mesmo histórico, baseline e thresholds. A apresentação não muda a política nem autoriza retreino.
 
 Este objeto mantém um histórico em memória de métricas de modelo e compara deterioração contra uma política declarada. Ele produz evidência para investigação; não agenda execução, não persiste dados, não envia alertas e não autoriza mudanças de modelo automaticamente.
 
@@ -20,7 +14,7 @@ Este objeto mantém um histórico em memória de métricas de modelo e compara d
 | Para que serve? | Padronizar warning/critical e acompanhar persistência de deterioração. |
 | Use quando... | Baseline, escala, periodicidade e política foram definidos. |
 | Evite quando... | Você precisa de scheduler, persistência, target ainda imaturo ou decisão automática. |
-| Precisa de... | Python; Plotly apenas para timeline. |
+| Precisa de... | Python e Plotly já no import, via `theme_plotly`. |
 | Entrega... | Histórico, status, recomendação de investigação, Markdown e figura opcional. |
 
 Consulte a [implementação](performance_monitor.py), a [fachada](__init__.py) e o [notebook](exemplo_performance_monitor.py).
@@ -39,13 +33,13 @@ Use quando o target já maturou e as métricas periódicas são comparáveis ao 
 
 ## 4. Quando não usar?
 
-Não use thresholds de exemplo sem calibração. Não use com target ainda não realizado. O método legado `should_retrain()` retorna orientação de investigação e mantém `automatic_retrain_authorized=False`; não é ordem automática.
+Não use thresholds de exemplo sem calibração. Não use com target ainda não realizado. O método `should_retrain()` retorna orientação de investigação. Com histórico, inclui `automatic_retrain_authorized=False`; sem histórico, retorna `NO_EVIDENCE` sem essa chave. Nenhum formato é ordem automática.
 
 ## 5. Como funciona, intuitivamente?
 
 Para métricas `higher`, deterioração é `baseline - atual`; para `lower`, `atual - baseline`. O delta pode ser absoluto ou relativo. Cada período recebe status verde, amarelo ou vermelho.
 
-A recomendação considera métricas críticas no último período e sequência recente de períodos com alerta.
+A recomendação considera métricas críticas na última entrada de `add_period` e a sequência recente de entradas com alerta, na ordem de inserção. Ela não reconstrói um calendário.
 
 ## 6. Exemplo de situação
 
@@ -53,13 +47,47 @@ Uma AUC baseline de 0,78 é acompanhada mensalmente. Uma política calibrada def
 
 ## 7. O que você precisa antes de usar?
 
+Plotly é dependência transitiva no import de `theme_plotly`, mesmo para usar apenas histórico em memória. Antes de `add_period`, o consumidor deve normalizar e ordenar períodos, garantir unicidade e definir a política para lacunas de calendário. A classe não ordena, deduplica nem detecta lacunas: repetir o mesmo período pode contar como mais um alerta consecutivo. “Consecutivo” significa entradas sucessivas recebidas, não meses consecutivos comprovados.
+
 Baseline não vazio, numérico e finito. A política precisa cobrir todas as métricas monitoradas; `warning < critical`; direção deve ser `higher`/`lower`; delta `absolute`/`relative`. Delta relativo não é aceito para baseline zero.
 
 ## 8. O que este recurso entrega?
 
+Os dois formatos de `should_retrain()` são:
+
+- Sem histórico: `{"decision": "NO_EVIDENCE", "reason": "No monitoring periods were supplied."}`.
+- Com histórico: `decision` (`NO_TRIGGER` ou `INVESTIGATE_RETRAINING_CANDIDATE`), `automatic_retrain_authorized=False`, `critical_metrics`, `consecutive_alert_periods`, `required_next_steps` e `policy_source`.
+
+Leia a chave opcional com `resultado.get("automatic_retrain_authorized", False)`. Sua ausência não é autorização; `NO_EVIDENCE` registra ausência de períodos, não saúde do modelo.
+
 `history`, `get_current_status()`, `should_retrain()`, `generate_report()` e `plot_timeline()`. `EXAMPLE_THRESHOLDS` é apenas política ilustrativa.
 
 ## 9. Como usar este recurso no Hub?
+
+Tradução apenas das métricas cobertas pela política, exigindo AUC explicitamente:
+
+```python
+from hub_snippets.ml.performance_monitor import PerformanceMonitor, selecionar_metricas_do_relatorio
+policy = {"auc": {"warning": 0.03, "critical": 0.05,
+                  "direction": "higher", "delta": "absolute"}}
+monitor = PerformanceMonitor({"auc": 0.78}, policy=policy)
+# relatorio_metricas é a saída de calculate_binary_metrics na janela realizada.
+selecionadas = selecionar_metricas_do_relatorio(
+    relatorio_metricas, politica=policy, metricas_obrigatorias=["auc"],
+)
+# Depois de validar período, unicidade, cronologia e maturação do target:
+monitor.add_period("2026-09", selecionadas, n_predictions=12000)
+resultado = monitor.should_retrain()
+assert resultado.get("automatic_retrain_authorized", False) is False
+```
+
+Com `theme` resolvido para notebook/light pela [rota de tema](../../visual/tema/README.md):
+
+```python
+fig = monitor.plot_timeline_resolvido("auc", theme)
+```
+
+A figura conserva histórico, baseline e thresholds; não persiste métricas nem promove uma decisão de retreino.
 
 ```python
 from hub_snippets.ml.performance_monitor import PerformanceMonitor
@@ -97,4 +125,4 @@ A [implementação](performance_monitor.py) contém política, tradução e moni
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da R09. Os thresholds são política local, não defaults de Databricks, MLflow ou scikit-learn. Para as figuras, consulte a documentação oficial do Plotly.
+Os thresholds pertencem à política do consumidor; não são defaults institucionais. Confirme escala, direção e modo de delta de cada métrica. Use Plotly para a visualização, observando que nesta versão ele também é importado transitivamente ao carregar o módulo.

@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico |
+# MAGIC | Compute | sessão Spark/PySpark e acesso ao schema; o exemplo cria view temporária |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | apenas metadados: o script lê o schema, nunca as linhas |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | confirme resolução de nomes e permissões; não há compatibilidade universal presumida |
 
 # COMMAND ----------
 

@@ -47,8 +47,13 @@ Documentar características, diferenças e acionabilidade de clusters identifica
 
 | Teste | Resultado | Aceitável? |
 |---|---|---|
-| Bootstrap 80% (10 runs) | Concordância [X]% | [✅/❌] (limiar: 70%) |
+| Reamostragem [fração, N repetições, seed] | Concordância [X]% ou NÃO CALCULADO | [limiar aprovado e justificativa do estudo] |
 | Sensibilidade ao k±1 | Silhouette Δ = [X] | [✅/❌] |
+
+Registrar população, variabilidade entre repetições e método de alinhamento dos
+rótulos dos clusters (rótulos numéricos podem permutar). Não comparar rótulos crus
+como se fossem classes fixas. Silhouette e estabilidade dependem da geometria,
+distância, ruído e uso; a ação por segmento exige decisão própria.
 
 ## Interpretação executiva
 

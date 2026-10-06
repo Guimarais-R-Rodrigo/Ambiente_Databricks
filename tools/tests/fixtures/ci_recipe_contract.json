@@ -1,0 +1,664 @@
+{
+  "baseline_commit": "126a2e125cca2251527f187a58696243414c6859",
+  "allowed_migrations": [
+    "rendered output root .artifacts/simulado",
+    "git diff gate -> exact --check",
+    "full suites -> fail-closed common DAG"
+  ],
+  "recipes": {
+    "ci.yml": {
+      "job_id": "validar",
+      "check_name": "validar",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python tools/ci_local.py"
+      ],
+      "artifacts": [],
+      "env": {},
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "name": "Configurar Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12",
+            "cache": "pip",
+            "cache-dependency-path": "tools/requirements-dev.txt"
+          }
+        },
+        {
+          "name": "Configurar Node",
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v10-ci.yml": {
+      "job_id": "databricks-app-v10",
+      "check_name": "databricks-app-v10",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v10.py -v",
+        "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/temas_v10_app.py --output .artifacts/v10-app",
+        "python -B tools/temas_v10_app.py --verify .artifacts/v10-app",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V10 implementa autoria e persistência do App; não faz deploy, aprovação, promoção, ativação ou publicação Databricks.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v12-ci.yml": {
+      "job_id": "homologacao-v12",
+      "check_name": "homologacao-v12",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v12.py -v",
+        "python -B tools/tests/test_temas_v12_evidencia_real.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "set -euo pipefail\nif [[ \"$GITHUB_EVENT_NAME\" == \"pull_request\" && \"$GITHUB_HEAD_REF\" != codex/temas-v12* ]]; then\n  echo \"applicable=false\" >> \"$GITHUB_OUTPUT\"\n  echo \"V12_SCOPE=NOT_APPLICABLE\"\nelse\n  echo \"applicable=true\" >> \"$GITHUB_OUTPUT\"\n  echo \"V12_SCOPE=APPLICABLE\"\nfi\n",
+        "set -euo pipefail\ngit rev-parse --verify origin/main >/dev/null\ngit diff --name-only origin/main...HEAD > \"$RUNNER_TEMP/v12_alterados.txt\"\ngit diff --unified=0 origin/main...HEAD -- README.md CHANGELOG.md docs/sprints/README.md docs/sprints/sistema_temas/README.md > \"$RUNNER_TEMP/v12_compartilhados.diff\"\npython - <<'PY'\nimport os\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, \"tools\")\nfrom temas_v12_homologacao import linhas_adicionadas, scan_hygiene\n\nPROPRIOS = (\n    \"tools/temas_v12_homologacao.py\",\n    \"tools/tests/test_temas_v12.py\",\n    \"tools/tests/test_temas_v12_evidencia_real.py\",\n    \".github/workflows/temas-v12-ci.yml\",\n)\nCOMPARTILHADOS = (\n    \"README.md\",\n    \"CHANGELOG.md\",\n    \"docs/sprints/README.md\",\n    \"docs/sprints/sistema_temas/README.md\",\n)\nPREFIXO_V12 = \"docs/sprints/sistema_temas/V12/\"\n\ntemp = Path(os.environ[\"RUNNER_TEMP\"])\nalterados = [c for c in temp.joinpath(\"v12_alterados.txt\").read_text(encoding=\"utf-8\").splitlines() if c]\nprint(\"Arquivos V12 alterados:\")\nfor caminho in alterados:\n    print(\"  \" + caminho)\n\nfora = [c for c in alterados if not (c in PROPRIOS or c in COMPARTILHADOS or c.startswith(PREFIXO_V12))]\nfor caminho in fora:\n    print(\"V12_SCOPE_FAIL: \" + caminho)\nif fora:\n    raise SystemExit(1)\n\n# Caminhos que a candidata criou: varredura integral do conteúdo.\nintegrais = [c for c in alterados if c in PROPRIOS or c.startswith(PREFIXO_V12)]\nachados = []\nfor caminho in integrais:\n    arquivo = Path(caminho)\n    if arquivo.is_file():\n        achados += scan_hygiene(caminho, arquivo.read_text(encoding=\"utf-8\", errors=\"replace\"))\n\n# Documentos compartilhados: somente o que esta candidata adicionou.\n# Varrer o arquivo inteiro transformaria dívida histórica da main em\n# reprovação desta PR, que é outro problema e outro gate.\ndiff = temp.joinpath(\"v12_compartilhados.diff\").read_text(encoding=\"utf-8\", errors=\"replace\")\nadicionados = linhas_adicionadas(diff)\nfor caminho, conteudo in sorted(adicionados.items()):\n    achados += scan_hygiene(caminho + \" (linhas adicionadas)\", conteudo)\n\nprint(\"higiene : %d caminho(s) integrais, %d documento(s) compartilhado(s) pelo diff\" % (len(integrais), len(adicionados)))\nfor codigo, origem, numero in achados:\n    print(\"%s: %s:%d\" % (codigo, origem, numero))\nif achados:\n    print(\"V12_HYGIENE_FAIL\")\n    raise SystemExit(1)\nprint(\"V12_SCOPE=PASS\")\nprint(\"V12_REMOTE_MUTATION=0\")\nPY\n"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v00-ci.yml": {
+      "job_id": "testar-v00",
+      "check_name": "testar-v00",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "python -B tools/tests/test_inventario_visual.py",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/tests/test_baseline_visual_runner.py"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12",
+            "cache": "pip",
+            "cache-dependency-path": "tools/requirements-dev.txt"
+          }
+        }
+      ]
+    },
+    "micromodelos-mm01-ci.yml": {
+      "job_id": "validar-mm01",
+      "check_name": "validar-mm01",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "python -B -m unittest discover -s tools/tests -p 'test_micromodelo*.py' -v\npython -B tools/tests/test_aceite_micromodelos_trabalho.py -v\n",
+        "python -B tools/validate_assistant.py --root ambiente_fonte",
+        "echo 'Os testes Micromodelos validam contratos e ensaio sintético do produto extraído; não acessam Databricks, Unity Catalog, MLflow, ACLs, dados reais ou publicação externa.'"
+      ],
+      "artifacts": [],
+      "env": {},
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "name": "Configurar Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12",
+            "cache": "pip",
+            "cache-dependency-path": "tools/requirements-dev.txt"
+          }
+        }
+      ]
+    },
+    "temas-v14-ci.yml": {
+      "job_id": "readiness-v14",
+      "check_name": "readiness-v14",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v14_s0.py -v",
+        "python -B tools/temas_v14_ownership.py --check\npython -B tools/tests/test_temas_v14_s1.py -v\n",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "set -euo pipefail\necho \"V14_S0_NETWORK=0\"\necho \"V14_S0_REMOTE_MUTATION=0\"\necho \"V14_S0_DATABRICKS_MUTATION=0\"\necho \"V14_S1_NETWORK=0\"\necho \"V14_S1_REMOTE_MUTATION=0\"\necho \"V14_S1_DATABRICKS_MUTATION=0\"\necho \"V14_S1_PRODUCTION_READINESS_DECLARED=0\"\necho \"V14_S1_GO_LIVE_DECISION=0\"\necho \"V14_S2_NOT_STARTED=1\"\n"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-24.04",
+      "setup": [
+        {
+          "name": "Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "name": "Node",
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v09-ci.yml": {
+      "job_id": "kit-temas-v09",
+      "check_name": "kit-temas-v09",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v09.py -v",
+        "python -B tools/tests/test_transicao_trabalho.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/kit_transicao_trabalho.py --output .artifacts/v09-kit",
+        "python -B tools/temas_v09_transicao.py --kit-dir .artifacts/v09-kit",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V09 integra o Sistema de Temas ao kit offline; não publica, ativa ou promove tema no Databricks.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v05-ci.yml": {
+      "job_id": "visual-lab-v05",
+      "check_name": "visual-lab-v05",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v05.py --require-ipywidgets -v\npython -B tools/tests/test_temas_v05_sessions.py -v\n",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V05 mantém regressão cumulativa V01–V06; o preparo Node existe apenas para os testes V06 e não homologa browser/runtime Databricks, acessibilidade, publicação, ACL real ou UAT.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v04-ci.yml": {
+      "job_id": "html-v04",
+      "check_name": "html-v04",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v04.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V04 mantém regressão cumulativa V01–V06; o preparo Node existe apenas para os testes V06 e não publica nem homologa Databricks, acessibilidade ou UX visual.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v07-ci.yml": {
+      "job_id": "consumidores-v07",
+      "check_name": "consumidores-v07",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B -m unittest discover -s tools/tests -p 'test_temas_v07*.py' -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V07 integra consumidores runtime e HTML Plotly local; não publica Databricks, não homologa PNG/PDF/PPTX/browser e mantém SHAP/Kaplan como exceções explícitas.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v01-ci.yml": {
+      "job_id": "contrato",
+      "check_name": "contrato",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt",
+        "python -B tools/temas_v01_contract.py",
+        "python -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12",
+            "cache": "pip",
+            "cache-dependency-path": "tools/requirements-dev.txt\ntools/requirements-temas-dev.txt\n"
+          }
+        }
+      ]
+    },
+    "temas-v02-ci.yml": {
+      "job_id": "nucleo",
+      "check_name": "nucleo",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "set -euo pipefail\npython -B tools/temas_v02_check.py\npython -B tools/temas_v01_contract.py\npython -B tools/tests/test_temas_v02.py\n",
+        "python -B ambiente_fonte/.assistant/hub_snippets/visual/tema/exemplo_tema.py"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        }
+      ]
+    },
+    "temas-v03-ci.yml": {
+      "job_id": "plotly-v03",
+      "check_name": "plotly-v03",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt",
+        "set -euo pipefail\npython -B tools/tests/test_temas_v03.py\npython -B tools/tests/test_visual_legado_v00.py\n",
+        "set -euo pipefail\npython -B tools/tests/test_temas_v02.py\npython -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v\n",
+        "echo 'V03 valida adaptador Plotly offline; não publica nem homologa Databricks/Spark.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        }
+      ]
+    },
+    "kit-transicao-trabalho.yml": {
+      "job_id": "preparar",
+      "check_name": "preparar",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt 'pyspark==4.0.1'",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python tools/ci_local.py --verbose",
+        "python -B tools/tests/test_temas_v09.py -v",
+        "python tools/tests/test_transicao_trabalho.py --spark -v",
+        "python tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho",
+        "python -B tools/temas_v09_transicao.py --kit-dir .artifacts/kit-trabalho"
+      ],
+      "artifacts": [
+        {
+          "name": "kit-transicao-trabalho",
+          "path": ".artifacts/kit-trabalho/",
+          "retention-days": 14,
+          "if-no-files-found": "error"
+        }
+      ],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "SPARK_LOCAL_IP": "127.0.0.1"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.11",
+            "cache": "pip",
+            "cache-dependency-path": "tools/requirements-dev.txt"
+          }
+        },
+        {
+          "uses": "actions/setup-java@v4",
+          "with": {
+            "distribution": "temurin",
+            "java-version": "17"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "skill-enforcement-se01.yml": {
+      "job_id": "se01",
+      "check_name": "se01",
+      "commands": [
+        "python -B tools/skill_enforcement/validate_contracts.py",
+        "python -B tools/tests/test_skill_enforcement_se01.py",
+        "python tools/validate_assistant.py",
+        "python tools/render_simulado.py --write",
+        "python tools/render_simulado.py --check",
+        "python tools/validate_assistant.py --conferir-readme"
+      ],
+      "artifacts": [
+        {
+          "name": "se01-skill-renderizado",
+          "path": ".artifacts/simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/",
+          "if-no-files-found": "error",
+          "retention-days": 7
+        }
+      ],
+      "env": {},
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "name": "Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.11"
+          }
+        }
+      ]
+    },
+    "temas-v08-ci.yml": {
+      "job_id": "transversal-v08",
+      "check_name": "transversal-v08",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v08.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_fonte/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n",
+        "echo 'V08 integra skills, padrões e Manual ao Sistema de Temas; não altera runtime, não publica Databricks e não homologa browser/acessibilidade.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000",
+        "V08_BASE_SHA": "1b6632194f4b25afc09960c27b069c16df365ee6"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "skill-enforcement-se02.yml": {
+      "job_id": "se02",
+      "check_name": "se02",
+      "commands": [
+        "python -B tools/skill_enforcement/certify_local.py --profile se02 --evidence-dir \"$RUNNER_TEMP/sef-certification\""
+      ],
+      "artifacts": [
+        {
+          "name": "se02-certification-evidence",
+          "path": "${{ runner.temp }}/sef-certification/",
+          "if-no-files-found": "error",
+          "retention-days": 14
+        },
+        {
+          "name": "se02-preflight-renderizado",
+          "path": ".artifacts/simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/\n.artifacts/simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/\n",
+          "if-no-files-found": "error",
+          "retention-days": 7
+        }
+      ],
+      "env": {},
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "name": "Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.11"
+          }
+        }
+      ]
+    },
+    "temas-v13-ci.yml": {
+      "job_id": "contrato-operacional-v13",
+      "check_name": "contrato-operacional-v13",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v13_s1.py -v",
+        "python -B tools/temas_v13_operacional.py",
+        "python -B tools/tests/test_temas_v13_s2.py -v",
+        "python -B tools/tests/test_temas_v13_s3.py -v",
+        "python -B tools/tests/test_temas_v13_s4.py -v",
+        "python -B tools/tests/test_temas_v13_s5.py -v",
+        "python -B tools/tests/test_temas_v13_s6.py -v",
+        "python -B tools/tests/test_temas_v13_s7.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "set -euo pipefail\necho \"V13_S1_REMOTE_MUTATION=0\"\n",
+        "set -euo pipefail\necho \"V13_S2_NETWORK=0\"\necho \"V13_S2_REMOTE_MUTATION=0\"\n",
+        "set -euo pipefail\necho \"V13_S3_NETWORK=0\"\necho \"V13_S3_REMOTE_MUTATION=0\"\necho \"V13_S3_LOCAL_DRY_RUN_ONLY=1\"\n# Historical S3 checkpoint assertion: V13_S4_NOT_STARTED=1\n",
+        "set -euo pipefail\necho \"V13_S4_NETWORK=0\"\necho \"V13_S4_REMOTE_MUTATION=0\"\necho \"V13_S4_DIAGNOSIS_READ_ONLY=1\"\n# Historical S4 checkpoint assertion: V13_S5_NOT_STARTED=1\n",
+        "set -euo pipefail\necho \"V13_S5_NETWORK=0\"\necho \"V13_S5_REMOTE_MUTATION=0\"\necho \"V13_S5_CONTRAST_PREFLIGHT_LOCAL=1\"\n# Historical S5 checkpoint assertion: V13_S6_NOT_STARTED=1\n",
+        "set -euo pipefail\necho \"V13_S6_NETWORK=0\"\necho \"V13_S6_REMOTE_MUTATION=0\"\necho \"V13_S6_IMPLICIT_PUBLICATION=0\"\necho \"V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5\"\necho \"V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3\"\n# Historical S6 checkpoint assertion: V13_S7_NOT_STARTED=1\n",
+        "set -euo pipefail\necho \"V13_S7_NETWORK=0\"\necho \"V13_S7_REMOTE_MUTATION=0\"\necho \"V13_S7_DATABRICKS_MUTATION=0\"\necho \"V13_S7_HUMAN_VALIDATION=PASS\"\necho \"V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION\"\necho \"V13_V14_NOT_STARTED=1\"\n"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-24.04",
+      "setup": [
+        {
+          "name": "Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "name": "Node",
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v11-ci.yml": {
+      "job_id": "aibi-v11",
+      "check_name": "aibi-v11",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v11.py -v",
+        "python - <<'PY'\nfrom pathlib import Path\npath = Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')\ncompile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V11 compilada em memória')\nPY\n",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V11 projeta temas para capacidades AI/BI sem chamar Databricks, publicar dashboards, alterar workspace theme ou prometer propagação automática.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    },
+    "temas-v06-ci.yml": {
+      "job_id": "assets-v06",
+      "check_name": "assets-v06",
+      "commands": [
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\n",
+        "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
+        "python -B tools/tests/test_temas_v06.py -v",
+        "python -B tools/tests/test_visual_legado_v00.py",
+        "python -B tools/validate_assistant.py --conferir-readme",
+        "echo 'V06 gera e verifica variantes candidatas locais a partir de ResolvedTheme; não aprova, não publica no Databricks e não homologa browser, acessibilidade ou UAT.'"
+      ],
+      "artifacts": [],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "SOURCE_DATE_EPOCH": "1700000000"
+      },
+      "runner": "ubuntu-latest",
+      "setup": [
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "uses": "actions/setup-node@v4",
+          "with": {
+            "node-version": "22"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico; o script não usa Spark |
+# MAGIC | Compute | helper: Python e filesystem; este preparo também usa Spark para current_user() |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum. Ele lê **arquivos**, não tabelas |
 # MAGIC | Escrita | três arquivos temporários em `/tmp` do driver, removidos ao final |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | confirme acesso ao arquivo e a /tmp; os três nomes temporários são sobrescritos/removidos pelo exemplo |
 
 # COMMAND ----------
 

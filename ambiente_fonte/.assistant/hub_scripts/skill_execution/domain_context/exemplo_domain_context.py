@@ -15,7 +15,7 @@ print(result)
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Saída observada em Python local — 24/09/2026
-# MAGIC Esta transcrição corresponde à execução sintética deste exemplo. Não certifica Databricks nem Windows.
+# MAGIC A saída valida apenas metadados e mantém `join_executed=False`; nenhuma fonte é consultada.
 # MAGIC ```text
 # MAGIC {'schema_version': 'SER-TEMPORAL-CONTEXT-1', 'pit': 'APPLICABLE', 'decision_at': '2026-01-10T00:00:00+00:00', 'reason': None, 'temporal': {'reference_column': 'reference_at', 'availability_column': 'available_at', 'lag_kind': 'CONSTANT', 'lag_days': 1, 'boundary': 'LE', 'timezone': 'UTC', 'tie_break': 'REJECT', 'bitemporal': False}, 'join_executed': False}
 # MAGIC ```

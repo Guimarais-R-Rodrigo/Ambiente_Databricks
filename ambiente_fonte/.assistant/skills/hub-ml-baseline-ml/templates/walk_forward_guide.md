@@ -1,86 +1,50 @@
 # Template: Guia de Walk-Forward Validation
 
-> **[N folds]** folds | **[Win train]** janela treino | **[Win test]** janela teste | **[Métrica média]** resultado
-
-
 ## Uso
-Referência para implementação de validação temporal correta.
+Planejar validação temporal que reproduza informação disponível em cada origem
+de previsão. Para uso futuro, não substituir por split aleatório.
 
-## Por que walk-forward é obrigatório
+## Escolhas do estudo
+- Frequência e `period_unit`: [unidade de calendário]
+- Histórico mínimo de treino: [períodos e justificativa]
+- Horizonte de teste, passo e gap: [contrato, atraso e disponibilidade]
+- Entidades, períodos ausentes e custo por fold: [verificações]
+- Métrica primária, baseline, agregação e incerteza: [definições]
 
-Em séries temporais, **random split é proibido** porque:
-1. Contamina treino com informação futura (leakage temporal)
-2. Superestima performance (modelo "vê" padrões que não existiriam em produção)
-3. Não simula o cenário real de previsão
+Janela expansiva amplia treino a cada fold. Janela deslizante mantém extensão
+fixa e exige rota que a suporte; não é opção do helper abaixo. Valores como
+12 meses de treino ou 1 de teste são escolhas ilustrativas, não obrigação.
 
-## Tipos de walk-forward
+## API canônica
+Consultar [`walk_forward_cv`](../../../hub_snippets/ml/walk_forward/README.md).
+Assinatura efetiva: `walk_forward_cv(df, date_col, target_col, model_fn,
+min_train_periods=12, test_periods=1, step=1, gap=0, *, period_unit="M")`.
 
-### Expanding window (padrão recomendado)
+- Executa janela expansiva e devolve lista de dicionários com métricas e
+  `fold`, `train_end`, `test_start`, `n_train`, `n_test`.
+- `model_fn(train_df, test_df)` deve ajustar modelo/preprocessamento somente
+  no treino e retornar um dicionário de métricas do teste; confirmar esse
+  contrato antes de autorizar execução. O helper chama a função em cada fold.
+- Períodos são buckets de calendário observados. Meses/dias ausentes não são
+  preenchidos: gap e horizonte contam esses buckets, não garantem duração
+  corrida. Conferir datas efetivas, frequência e ausência de períodos.
+- Pouco histórico pode produzir lista vazia. Isso é ausência de folds, não
+  validação aprovada. Sobreposição dos testes afeta dependência das métricas.
+
+Pseudocódigo conceitual, não implementação alternativa:
 ```text
-Fold 1: Treino=[1..12]  → Teste=[13..14]
-Fold 2: Treino=[1..14]  → Teste=[15..16]
-Fold 3: Treino=[1..16]  → Teste=[17..18]
-...
-```
-- Treino cresce a cada fold (mais dados)
-- Simula produção com retreino periódico
-
-### Sliding window (dados com regime change)
-```text
-Fold 1: Treino=[1..12]   → Teste=[13..14]
-Fold 2: Treino=[3..14]   → Teste=[15..16]
-Fold 3: Treino=[5..16]   → Teste=[17..18]
-...
-```
-- Treino tem tamanho fixo (janela deslizante)
-- Útil quando dados antigos não são mais representativos
-
-## Parâmetros de configuração
-
-| Parâmetro | Descrição | Valor típico |
-|---|---|---|
-| min_train_size | Mínimo de pontos para treinar | 2× período sazonal |
-| test_size | Tamanho de cada fold de teste | 1 período (ou horizonte) |
-| step_size | Quanto avançar entre folds | = test_size |
-| n_folds | Número de folds | 6-12 (depende do histórico) |
-| gap | Períodos de gap entre treino e teste | 0-1 (anti-leakage) |
-
-## Código de referência
-
-```python
-def walk_forward_split(df, date_col, min_train, test_size, step=None, gap=0):
-    dates = sorted(df[date_col].unique())
-    step = step or test_size
-    splits = []
-    
-    for i in range(min_train, len(dates) - test_size - gap + 1, step):
-        train_dates = dates[:i]
-        test_dates = dates[i + gap:i + gap + test_size]
-        
-        train_mask = df[date_col].isin(train_dates)
-        test_mask = df[date_col].isin(test_dates)
-        
-        splits.append((train_mask, test_mask))
-    
-    return splits
+confirmar entradas, calendário e contrato de cada fold
+configurar callback autorizado que ajusta só no treino e avalia no teste
+usar walk_forward_cv com parâmetros confirmados
+conferir folds reais e reportar resultados observados e limites
 ```
 
-## Reporte de performance
+## Relato de performance
 
-Reportar métricas **por fold** E **agregada**:
-- Média ± desvio entre folds
-- Tendência (performance está melhorando ou piorando ao longo do tempo?)
-- Pior fold (worst case)
+| Fold | Treino/fim | Teste/início e fim conferidos | N | Métrica/baseline | Estado e evidência |
+|---|---|---|---|---|---|
+| [id] | [datas] | [datas] | [treino/teste] | [valores ou NÃO CALCULADO] | [NÃO EXECUTADO/parcial/executado] |
 
----
-
-#### 📊 Resultado por fold
-
-| Fold | Período treino | Período teste | Métrica | Status |
-|---|---|---|---|---|
-| 1 | [range] | [range] | [X] | 🟢 / 🟡 / 🔴 |
-| 2 | [range] | [range] | [X] | 🟢 / 🟡 / 🔴 |
-
-#### 🔍 Interpretação
-- Estabilidade: [desvio entre folds] → [estável/instável]
-- Tendência: [melhorando/piorando/flat]
+Reportar média e dispersão, pior fold e tendência quando existirem resultados.
+Desvio entre folds não é automaticamente intervalo de confiança. Sem execução,
+entregar plano; resultado parcial preserva falhas e não vira aprovação do modelo.

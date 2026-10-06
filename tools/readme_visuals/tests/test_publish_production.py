@@ -27,8 +27,13 @@ class VisualReleaseFixture(unittest.TestCase):
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(f"# {relative}\n", encoding="utf-8", newline="\n")
         asset = self.root / publisher.ASSET_REL
-        (asset / "qa").mkdir(parents=True)
-        (asset / "qa" / "validation.json").write_text(
+        asset.mkdir(parents=True, exist_ok=True)
+        self.qa = Path(self.temp.name) / "qa"
+        self.qa.mkdir()
+        self.qa_patch = mock.patch.object(publisher, "QA_ROOT", self.qa)
+        self.qa_patch.start()
+        self.addCleanup(self.qa_patch.stop)
+        (self.qa / "validation.json").write_text(
             json.dumps({"status": "passed", "scope": "all"}) + "\n",
             encoding="utf-8",
             newline="\n",
@@ -97,7 +102,7 @@ class ScopeTests(VisualReleaseFixture):
             self.records()
 
     def test_incomplete_visual_qa_blocks_release(self) -> None:
-        report = self.root / publisher.ASSET_REL / "qa" / "validation.json"
+        report = self.qa / "validation.json"
         report.write_text(
             json.dumps({"status": "failed", "scope": "all"}), encoding="utf-8"
         )

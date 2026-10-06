@@ -1,5 +1,7 @@
 # V13 — S3: release, instalação, atualização e rollback
 
+> Nota administrativa de 06/10/2026: as duas referências históricas a `databricks_app/DEPLOY_ROLLBACK.md` abaixo preservam o inventário desta entrega. O runbook administrativo vigente foi realocado para [Deploy e rollback do App](../../../guias/temas/DEPLOY_ROLLBACK_APP.md). Esta realocação documental não altera evidências nem autoriza deploy.
+
 Status: **candidata S3**.
 
 Baseline de abertura: merge certificado da S2 na `main`,

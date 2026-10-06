@@ -1,0 +1,1674 @@
+{
+  "schema_version": "1.0",
+  "source_commit": "126a2e125cca2251527f187a58696243414c6859",
+  "source_path": "CHANGELOG.md",
+  "snapshot_path": "docs/historico/changelog/2026-08-13_a_2026-10-06.md",
+  "original_sha256": "f2ce1cb816ff02e4f68e71379f77c7552b8452fcbc0dcd8048af9e7b57ddee1e",
+  "snapshot_sha256": "1369e890eda968fd18f1a605ffe187fc4d0ea04e6940e6420744765a96ddcfd2",
+  "original_bytes": 306701,
+  "snapshot_bytes": 306703,
+  "original_lines": 4501,
+  "snapshot_lines": 4501,
+  "entries_count": 198,
+  "order": "original, including the R09 entry after 2026-08-13; never sorted by date",
+  "rebases": [
+    {
+      "old_href": "docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md",
+      "new_href": "../../sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md",
+      "occurrences": 1,
+      "line": 153
+    },
+    {
+      "old_href": "docs/handoffs/2026-09-21_se07-auditoria-storage-cleanup.md",
+      "new_href": "../../handoffs/2026-09-21_se07-auditoria-storage-cleanup.md",
+      "occurrences": 1,
+      "line": 1045
+    }
+  ],
+  "migrated_exception_count": 11,
+  "historical_exception_total": 98,
+  "migrated_exceptions": [
+    {
+      "line": 2377,
+      "line_sha256": "69b65f61cd7e79e70f3bbae9d0f93acae2d2694ff7daa4e43adc89df8cb4628c",
+      "legacy_source_sha256": "7b07205e7f1e209b5dd8317b83b4d58aa196798fd8e04b7d6aefb5096d3d6db6"
+    },
+    {
+      "line": 2468,
+      "line_sha256": "3c8e9ada1eb8c5ce9bc5c8f7f7d8c09a0df77647d050b370980a3f4957b8fe16",
+      "legacy_source_sha256": "1744b4cd6a3ceff62f37b63b0f38067be6f754821d723fd443985923bf4ea949"
+    },
+    {
+      "line": 2745,
+      "line_sha256": "622ea8e9dcfca6d2aefa0338084b37261a80ad2ae87b927adb3dec204b1e57fd",
+      "legacy_source_sha256": "55358f8c0bff7994b6ada15f114b111baea665071b7de7ad340cde0fd1bd2193"
+    },
+    {
+      "line": 3467,
+      "line_sha256": "b01da005e0b249679661013ba2b10bc099385eda95faf59d55de4671ec5d8f96",
+      "legacy_source_sha256": "55358f8c0bff7994b6ada15f114b111baea665071b7de7ad340cde0fd1bd2193"
+    },
+    {
+      "line": 3548,
+      "line_sha256": "2a4c9fdef961bb848e98d19de232a82deeb6f8182bd3c3174145cace8ac2d9f3",
+      "legacy_source_sha256": "55358f8c0bff7994b6ada15f114b111baea665071b7de7ad340cde0fd1bd2193"
+    },
+    {
+      "line": 3690,
+      "line_sha256": "5ed6fe5eeb8bce1a72ba90c80eb98edabfcb110e5b9078f7e0a64b3f6db98223",
+      "legacy_source_sha256": "317ae893ef4add3af4928b72cae8408ac42a97cd487729dcf157d6ed0dbe44d2"
+    },
+    {
+      "line": 3767,
+      "line_sha256": "285e9e9c159068589c3cf0eff8e0cc830700e970209ac21ed2a92ba1461ab2a4",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85"
+    },
+    {
+      "line": 4219,
+      "line_sha256": "3b49e0c37b5690223a60e3d2803f5611e213e11f649ad5648b60d986ae63e320",
+      "legacy_source_sha256": "61ce213437a6c6af69246fef2ffa9d15d068b9285956f5520f52e623c00e8328"
+    },
+    {
+      "line": 4340,
+      "line_sha256": "c2ba68417544be39d7c3ac2f44defff37acc9efaf2e0227721d4762bc8e3024e",
+      "legacy_source_sha256": "55358f8c0bff7994b6ada15f114b111baea665071b7de7ad340cde0fd1bd2193"
+    },
+    {
+      "line": 4373,
+      "line_sha256": "5f6888731981645392d15697ce6e06717506da37ba3f97401b4045ba29faf795",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85"
+    },
+    {
+      "line": 4479,
+      "line_sha256": "eb132f0944e6dd63322aae88a6c952fccefae8f24f05447f09f30b55ed37952b",
+      "legacy_source_sha256": "7b07205e7f1e209b5dd8317b83b4d58aa196798fd8e04b7d6aefb5096d3d6db6"
+    }
+  ],
+  "other_exceptions_sha256": "bd74775c5763ec0c269e3ff444365b968399fc4dbf775dee8d9c36fe74def7c2",
+  "entries": [
+    {
+      "id": "C001",
+      "title": "2026-10-06 — Arquitetura neutra de instruções de IA",
+      "line_start": 3,
+      "line_end": 11,
+      "original_sha256": "5c44ad586447c84548ad9ba28b5f6bd98ee0bff35aa3a6a96288b9303b217d5f",
+      "snapshot_sha256": "5c44ad586447c84548ad9ba28b5f6bd98ee0bff35aa3a6a96288b9303b217d5f"
+    },
+    {
+      "id": "C002",
+      "title": "2026-10-06 — Readequação documental: entradas e percurso de uso",
+      "line_start": 12,
+      "line_end": 23,
+      "original_sha256": "42a2d8f67886c525984ab5243c6feb41bb894cc98f6e9598218fa7c5f3b62d62",
+      "snapshot_sha256": "42a2d8f67886c525984ab5243c6feb41bb894cc98f6e9598218fa7c5f3b62d62"
+    },
+    {
+      "id": "C003",
+      "title": "2026-10-01 — Integração do aceite técnico B1 A",
+      "line_start": 24,
+      "line_end": 31,
+      "original_sha256": "a12c8596264920a61dd94af14a7da3070d060ddf889dca022334ea96014fe891",
+      "snapshot_sha256": "a12c8596264920a61dd94af14a7da3070d060ddf889dca022334ea96014fe891"
+    },
+    {
+      "id": "C004",
+      "title": "2026-10-01 — Aceite humano do escopo A da B1",
+      "line_start": 32,
+      "line_end": 38,
+      "original_sha256": "f1cbea3f5f2e2a9f7f6bcf49998f865374b0109dabc347916efa4000d7db2bc3",
+      "snapshot_sha256": "f1cbea3f5f2e2a9f7f6bcf49998f865374b0109dabc347916efa4000d7db2bc3"
+    },
+    {
+      "id": "C005",
+      "title": "2026-10-01 — Reconciliação de Baseline e aceite técnico B1",
+      "line_start": 39,
+      "line_end": 49,
+      "original_sha256": "4cc8e26cc56e7c8a33fa3a3d209cca75b1a8390f89b20bb949766153d0c9dc1a",
+      "snapshot_sha256": "4cc8e26cc56e7c8a33fa3a3d209cca75b1a8390f89b20bb949766153d0c9dc1a"
+    },
+    {
+      "id": "C006",
+      "title": "2026-10-01 — Gates B1 e efeitos sintéticos após o PR #121",
+      "line_start": 50,
+      "line_end": 63,
+      "original_sha256": "5d41af2ec746641270da19d49be9c0ac3f34e3eb95f813fd6ee54ee4f5945e1c",
+      "snapshot_sha256": "5d41af2ec746641270da19d49be9c0ac3f34e3eb95f813fd6ee54ee4f5945e1c"
+    },
+    {
+      "id": "C007",
+      "title": "2026-10-01 — Auditoria causal das lacunas B1 remanescentes",
+      "line_start": 64,
+      "line_end": 72,
+      "original_sha256": "c617abc584bc85659a037b8ee94a9cd3f3eecb6885a669710e2906184014bf8d",
+      "snapshot_sha256": "c617abc584bc85659a037b8ee94a9cd3f3eecb6885a669710e2906184014bf8d"
+    },
+    {
+      "id": "C008",
+      "title": "2026-10-01 — Consolidação local dos retestes B1",
+      "line_start": 73,
+      "line_end": 79,
+      "original_sha256": "382aa4bb69e8aba0849b6562fa6df00090973f90f093568381e6ab4fab2889e4",
+      "snapshot_sha256": "382aa4bb69e8aba0849b6562fa6df00090973f90f093568381e6ab4fab2889e4"
+    },
+    {
+      "id": "C009",
+      "title": "2026-10-01 — Reteste focal de Safra na Genie",
+      "line_start": 80,
+      "line_end": 89,
+      "original_sha256": "bac3c4387764d766e7ebd12c9cd7eb42603ff25afa305b26cd71deebf2923e5d",
+      "snapshot_sha256": "bac3c4387764d766e7ebd12c9cd7eb42603ff25afa305b26cd71deebf2923e5d"
+    },
+    {
+      "id": "C010",
+      "title": "2026-10-01 — Reteste focal de Pipeline Builder na Genie",
+      "line_start": 90,
+      "line_end": 100,
+      "original_sha256": "0273ebc231b7dbcbd79ac3c34c40c874c8ca3e7d4086b5c4e9e1c254061a83d0",
+      "snapshot_sha256": "0273ebc231b7dbcbd79ac3c34c40c874c8ca3e7d4086b5c4e9e1c254061a83d0"
+    },
+    {
+      "id": "C011",
+      "title": "2026-09-30 — Safra: denominador fixo em célula incompleta",
+      "line_start": 101,
+      "line_end": 117,
+      "original_sha256": "4a11ea67a9c37e7427f2c804d6451adab856f7906ed71df55fedefbb117cbfb9",
+      "snapshot_sha256": "4a11ea67a9c37e7427f2c804d6451adab856f7906ed71df55fedefbb117cbfb9"
+    },
+    {
+      "id": "C012",
+      "title": "2026-09-30 — Estado de Micromodelos após integração Git",
+      "line_start": 118,
+      "line_end": 121,
+      "original_sha256": "ea7d2a9432e55452f931bad639baf4c62121d07b6aef82f845654e0c4e2a5f50",
+      "snapshot_sha256": "ea7d2a9432e55452f931bad639baf4c62121d07b6aef82f845654e0c4e2a5f50"
+    },
+    {
+      "id": "C013",
+      "title": "2026-09-30 — Reconciliação local de Micromodelos após B1",
+      "line_start": 122,
+      "line_end": 134,
+      "original_sha256": "bd8ee8c4050a565e97c6f96342994611f307e7c89d5ca56492f3bd3f9d3e4ccb",
+      "snapshot_sha256": "bd8ee8c4050a565e97c6f96342994611f307e7c89d5ca56492f3bd3f9d3e4ccb"
+    },
+    {
+      "id": "C014",
+      "title": "2026-09-30 — B1: autorização de integração do pacote isolado",
+      "line_start": 135,
+      "line_end": 142,
+      "original_sha256": "49eb5cc7546023d3fcc6f7d2e34978f3a82f89ccf188e85b3996e14ebea65e05",
+      "snapshot_sha256": "49eb5cc7546023d3fcc6f7d2e34978f3a82f89ccf188e85b3996e14ebea65e05"
+    },
+    {
+      "id": "C015",
+      "title": "2026-09-30 — B1: pacote de skills isolado do controller",
+      "line_start": 143,
+      "line_end": 156,
+      "original_sha256": "64051fdedb69fa50f85746db91f567932503437bffea996ed6d35d5cb2fedcba",
+      "snapshot_sha256": "aa0d4cbeb10e91fabbfa7db0036627012d6aee00518524a97781aed80157b64e"
+    },
+    {
+      "id": "C016",
+      "title": "2026-09-30 — Módulo Micromodelos integrado ao produto",
+      "line_start": 157,
+      "line_end": 171,
+      "original_sha256": "25534bf34cc3051790eca243505a58e3c7cc7be44ca56ac6675f18041d9964da",
+      "snapshot_sha256": "25534bf34cc3051790eca243505a58e3c7cc7be44ca56ac6675f18041d9964da"
+    },
+    {
+      "id": "C017",
+      "title": "2026-09-30 — Completude e exemplo didático de Micromodelos",
+      "line_start": 172,
+      "line_end": 175,
+      "original_sha256": "8db9b823c8bca104da38e7ac15769d205bb738c0ffc869e721058f4f86b81c36",
+      "snapshot_sha256": "8db9b823c8bca104da38e7ac15769d205bb738c0ffc869e721058f4f86b81c36"
+    },
+    {
+      "id": "C018",
+      "title": "2026-09-29 — Plano de integração de Micromodelos ao Hub",
+      "line_start": 176,
+      "line_end": 181,
+      "original_sha256": "8ff6b026e7531be22409f843eba64c94b233abd58471f4e92b0eaa4b710c52f8",
+      "snapshot_sha256": "8ff6b026e7531be22409f843eba64c94b233abd58471f4e92b0eaa4b710c52f8"
+    },
+    {
+      "id": "C019",
+      "title": "2026-09-29 — Entrega local antes da transferência de Micromodelos",
+      "line_start": 182,
+      "line_end": 188,
+      "original_sha256": "e7cbfe391c7a75326992d0dd5db238c6a7f08d41080f36c1b5cafb8887e16435",
+      "snapshot_sha256": "e7cbfe391c7a75326992d0dd5db238c6a7f08d41080f36c1b5cafb8887e16435"
+    },
+    {
+      "id": "C020",
+      "title": "2026-09-29 — Correção do snapshot README após reativação do CI",
+      "line_start": 189,
+      "line_end": 193,
+      "original_sha256": "f20a2b2fa7e63aef1e3bf64ad29a91be855ea6dfd61152ac28788c79a5372559",
+      "snapshot_sha256": "f20a2b2fa7e63aef1e3bf64ad29a91be855ea6dfd61152ac28788c79a5372559"
+    },
+    {
+      "id": "C021",
+      "title": "2026-09-29 — Preparação do piloto E2 de Micromodelos",
+      "line_start": 194,
+      "line_end": 198,
+      "original_sha256": "5d6ac700a68470a2e62d405588c835614e6e650a3cf40ea8773962d0bba6bdd9",
+      "snapshot_sha256": "5d6ac700a68470a2e62d405588c835614e6e650a3cf40ea8773962d0bba6bdd9"
+    },
+    {
+      "id": "C022",
+      "title": "2026-09-29 — Aceite do laboratório sintético de Micromodelos",
+      "line_start": 199,
+      "line_end": 202,
+      "original_sha256": "7de824acc187787381a58cb2b7659db782351509215f2f220d464a0d152b619c",
+      "snapshot_sha256": "7de824acc187787381a58cb2b7659db782351509215f2f220d464a0d152b619c"
+    },
+    {
+      "id": "C023",
+      "title": "2026-09-29 — Reexecução E1 do kit revisado de Micromodelos",
+      "line_start": 203,
+      "line_end": 206,
+      "original_sha256": "72b9d03527112e33dfc06c08e36a625507d9eb2e259f4872e1c9f4fb211712ac",
+      "snapshot_sha256": "72b9d03527112e33dfc06c08e36a625507d9eb2e259f4872e1c9f4fb211712ac"
+    },
+    {
+      "id": "C024",
+      "title": "2026-09-29 — Revisão paralela do laboratório de Micromodelos",
+      "line_start": 207,
+      "line_end": 210,
+      "original_sha256": "7c6f7982b9d3e6ea36ed2cd9fae2d085e82c5e083c85d6f5d97419bb7eb01fdc",
+      "snapshot_sha256": "7c6f7982b9d3e6ea36ed2cd9fae2d085e82c5e083c85d6f5d97419bb7eb01fdc"
+    },
+    {
+      "id": "C025",
+      "title": "2026-09-29 — Plano de paralelização do laboratório",
+      "line_start": 211,
+      "line_end": 214,
+      "original_sha256": "fe7c0060d815c1d5598a5e1824b6cd0ecf09054492851849c374244fb51f7ce2",
+      "snapshot_sha256": "fe7c0060d815c1d5598a5e1824b6cd0ecf09054492851849c374244fb51f7ce2"
+    },
+    {
+      "id": "C026",
+      "title": "2026-09-29 — Smoke local MM04 sem GitHub Actions",
+      "line_start": 215,
+      "line_end": 218,
+      "original_sha256": "fef0446ce13a24827ba3885aaad45cd40c1080a3806aef24c69064f9533e9818",
+      "snapshot_sha256": "fef0446ce13a24827ba3885aaad45cd40c1080a3806aef24c69064f9533e9818"
+    },
+    {
+      "id": "C027",
+      "title": "2026-09-29 — Reconciliação B1 e pré-gates MM04",
+      "line_start": 219,
+      "line_end": 229,
+      "original_sha256": "7aaf9da1f8a51f2c953e4edfb54a5dffb54027de570b7fc4a9107e1cd2557c45",
+      "snapshot_sha256": "7aaf9da1f8a51f2c953e4edfb54a5dffb54027de570b7fc4a9107e1cd2557c45"
+    },
+    {
+      "id": "C028",
+      "title": "2026-09-29 — Avaliação dos casos Genie MM04",
+      "line_start": 230,
+      "line_end": 237,
+      "original_sha256": "904b5d8aa7c658337f8a44ab88030f63b41cb854f08587c2e2bd590794829764",
+      "snapshot_sha256": "904b5d8aa7c658337f8a44ab88030f63b41cb854f08587c2e2bd590794829764"
+    },
+    {
+      "id": "C029",
+      "title": "2026-09-29 — MLflow E1 e skill MM04 no Free",
+      "line_start": 238,
+      "line_end": 243,
+      "original_sha256": "adc931998d650d7cb84e11ffb5ecb188cf6ff23e17213515115a382d03e3b725",
+      "snapshot_sha256": "adc931998d650d7cb84e11ffb5ecb188cf6ff23e17213515115a382d03e3b725"
+    },
+    {
+      "id": "C030",
+      "title": "2026-09-29 — E1 sintético executado via Databricks CLI",
+      "line_start": 244,
+      "line_end": 250,
+      "original_sha256": "31a7ca57684ee4e2f6325f9abfc8a06ea79c6c4c6c1959a8f2d40df1b0bd017a",
+      "snapshot_sha256": "31a7ca57684ee4e2f6325f9abfc8a06ea79c6c4c6c1959a8f2d40df1b0bd017a"
+    },
+    {
+      "id": "C031",
+      "title": "2026-09-29 — Candidata E0 de micromodelos e kit E1 preparado",
+      "line_start": 251,
+      "line_end": 257,
+      "original_sha256": "f12db0dfa8f7093b2ab3554a1816425e6f3c45a266ef044eb1d43ae01b0a819f",
+      "snapshot_sha256": "f12db0dfa8f7093b2ab3554a1816425e6f3c45a266ef044eb1d43ae01b0a819f"
+    },
+    {
+      "id": "C032",
+      "title": "2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS",
+      "line_start": 258,
+      "line_end": 283,
+      "original_sha256": "2de5bbe1a961898e3e58e2583bf91216da044fdaba0966e01d2e66c57c27a172",
+      "snapshot_sha256": "2de5bbe1a961898e3e58e2583bf91216da044fdaba0966e01d2e66c57c27a172"
+    },
+    {
+      "id": "C033",
+      "title": "2026-09-24 — SER B0: SHARE sanitization V2 após LOCAL_QUALIFIED",
+      "line_start": 284,
+      "line_end": 309,
+      "original_sha256": "ca422d4914933f9fbe537eba5186ab4a064b9017a9db8ec044f50fba328c0af6",
+      "snapshot_sha256": "ca422d4914933f9fbe537eba5186ab4a064b9017a9db8ec044f50fba328c0af6"
+    },
+    {
+      "id": "C034",
+      "title": "2026-09-24 — SER B0: metateste documental desacoplado da implementação de host qualification",
+      "line_start": 310,
+      "line_end": 326,
+      "original_sha256": "cbafeae7e26bcc92508eb924d9600301157867bdd52e1cfa41821ebbc32580d6",
+      "snapshot_sha256": "cbafeae7e26bcc92508eb924d9600301157867bdd52e1cfa41821ebbc32580d6"
+    },
+    {
+      "id": "C035",
+      "title": "2026-09-24 — SER B0: mecanismo PASS e qualificação ambiental executável",
+      "line_start": 327,
+      "line_end": 350,
+      "original_sha256": "d332afddfadbe0a8226c0780483c35251f9b8c1a2f515b10d30e19ee307c8aee",
+      "snapshot_sha256": "d332afddfadbe0a8226c0780483c35251f9b8c1a2f515b10d30e19ee307c8aee"
+    },
+    {
+      "id": "C036",
+      "title": "2026-09-24 — SER B0: regressão adversarial de higiene corrigida no source de testes",
+      "line_start": 351,
+      "line_end": 368,
+      "original_sha256": "762dc1baada48b1e27c9b52ce638b471c31368ce26824f6c13ff4bb843b97dd1",
+      "snapshot_sha256": "762dc1baada48b1e27c9b52ce638b471c31368ce26824f6c13ff4bb843b97dd1"
+    },
+    {
+      "id": "C037",
+      "title": "2026-09-24 — SER B0: higiene documental antecipada antes do freeze",
+      "line_start": 369,
+      "line_end": 388,
+      "original_sha256": "e96b6ac8ba21d8dea18af6bad1737691e43298d88579a6d0e948f85b431bdb41",
+      "snapshot_sha256": "e96b6ac8ba21d8dea18af6bad1737691e43298d88579a6d0e948f85b431bdb41"
+    },
+    {
+      "id": "C038",
+      "title": "2026-09-24 — SER B0: coverage sob ambiente sanitizado do release",
+      "line_start": 389,
+      "line_end": 409,
+      "original_sha256": "3c073dfff540cadc75d041f11e8ee226db655aaae8e4037811d7a0fc23f2bbd1",
+      "snapshot_sha256": "3c073dfff540cadc75d041f11e8ee226db655aaae8e4037811d7a0fc23f2bbd1"
+    },
+    {
+      "id": "C039",
+      "title": "2026-09-24 — SER B0: corrigido ambiente sanitizado do release",
+      "line_start": 410,
+      "line_end": 428,
+      "original_sha256": "9ea03d80239dc08628107f39e6ada03c5e00fa779b8c5bf7947feebb6a678baf",
+      "snapshot_sha256": "9ea03d80239dc08628107f39e6ada03c5e00fa779b8c5bf7947feebb6a678baf"
+    },
+    {
+      "id": "C040",
+      "title": "2026-09-24 — SER B0: cobertura portátil em console Windows",
+      "line_start": 429,
+      "line_end": 445,
+      "original_sha256": "c73ea4c4a090fdbf538aadd3490601708c5cec26ec0ee83dd2c5715bb029af75",
+      "snapshot_sha256": "c73ea4c4a090fdbf538aadd3490601708c5cec26ec0ee83dd2c5715bb029af75"
+    },
+    {
+      "id": "C041",
+      "title": "2026-09-24 — SER B0: corretiva da primeira rodada real de metatestes",
+      "line_start": 446,
+      "line_end": 463,
+      "original_sha256": "52bffe20e5486a3cf3ccaf9efa7a26c2257e26bd6a8ab6e65d0bb2dae0bcb397",
+      "snapshot_sha256": "52bffe20e5486a3cf3ccaf9efa7a26c2257e26bd6a8ab6e65d0bb2dae0bcb397"
+    },
+    {
+      "id": "C042",
+      "title": "2026-09-24 — SER B0: worktree dedicado para qualificação local",
+      "line_start": 464,
+      "line_end": 476,
+      "original_sha256": "3c22ff0308bd02895fdc236a6cc8172c443866b5e8d7d437a278b9bea629a027",
+      "snapshot_sha256": "3c22ff0308bd02895fdc236a6cc8172c443866b5e8d7d437a278b9bea629a027"
+    },
+    {
+      "id": "C043",
+      "title": "2026-09-24 — SER B0: fechamento repo-side e handoff local",
+      "line_start": 477,
+      "line_end": 490,
+      "original_sha256": "2da810785e1a2c6a236525f8200703a75c33ee2389d695a5e015184bfbd68f9a",
+      "snapshot_sha256": "2da810785e1a2c6a236525f8200703a75c33ee2389d695a5e015184bfbd68f9a"
+    },
+    {
+      "id": "C044",
+      "title": "2026-09-24 — SER B0: convergência da corretiva V3 após auditoria independente",
+      "line_start": 491,
+      "line_end": 512,
+      "original_sha256": "adda3a4481afb0370cba0fc7e020e7e8b687bdff17c89ac7360df7cdca35b287",
+      "snapshot_sha256": "adda3a4481afb0370cba0fc7e020e7e8b687bdff17c89ac7360df7cdca35b287"
+    },
+    {
+      "id": "C045",
+      "title": "2026-09-24 — SER B0: corretiva pós-revisão independente",
+      "line_start": 513,
+      "line_end": 536,
+      "original_sha256": "605854eb409d00c91cbb69e3360e94d13bd72665441b814393aa04342bd7727d",
+      "snapshot_sha256": "605854eb409d00c91cbb69e3360e94d13bd72665441b814393aa04342bd7727d"
+    },
+    {
+      "id": "C046",
+      "title": "2026-09-24 — SER B0: candidata do framework de execução paralela governada",
+      "line_start": 537,
+      "line_end": 556,
+      "original_sha256": "2ab8967ff715c62dc827be8fc71e80cc3c16a02dedb321254355f1c53f19561b",
+      "snapshot_sha256": "2ab8967ff715c62dc827be8fc71e80cc3c16a02dedb321254355f1c53f19561b"
+    },
+    {
+      "id": "C047",
+      "title": "2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2",
+      "line_start": 557,
+      "line_end": 563,
+      "original_sha256": "1187c3df8641e1660061888a35269b970bedb1f66250da2d3bf7e35a29912909",
+      "snapshot_sha256": "1187c3df8641e1660061888a35269b970bedb1f66250da2d3bf7e35a29912909"
+    },
+    {
+      "id": "C048",
+      "title": "2026-09-23 — SER01 promoção R2: hardening do certifier pós-policy",
+      "line_start": 564,
+      "line_end": 576,
+      "original_sha256": "8bab9826156e2a6559364aff32c546b36a0deb380ddc0abbf3b01a9e23d029a8",
+      "snapshot_sha256": "8bab9826156e2a6559364aff32c546b36a0deb380ddc0abbf3b01a9e23d029a8"
+    },
+    {
+      "id": "C049",
+      "title": "2026-09-23 — SER01: candidata formal de promoção L2→L3",
+      "line_start": 577,
+      "line_end": 588,
+      "original_sha256": "b7e35caf161cf058fcf301a0522932a8de3e4e32c9de650c0da9f869e81016d5",
+      "snapshot_sha256": "b7e35caf161cf058fcf301a0522932a8de3e4e32c9de650c0da9f869e81016d5"
+    },
+    {
+      "id": "C050",
+      "title": "2026-09-23 — SER01 A4-FREE R2: corrigidos prechecks da autoria",
+      "line_start": 589,
+      "line_end": 604,
+      "original_sha256": "75396f7ab540de17f194e16560003d459c425a63dbf3490f5ff62ea1d225ee83",
+      "snapshot_sha256": "75396f7ab540de17f194e16560003d459c425a63dbf3490f5ff62ea1d225ee83"
+    },
+    {
+      "id": "C051",
+      "title": "2026-09-23 — SER01 A4: correção documental da montagem de autoria",
+      "line_start": 605,
+      "line_end": 614,
+      "original_sha256": "f32161d80177fc859b99275b3764f5b66cd3b923a29c34cef8538888460182fc",
+      "snapshot_sha256": "f32161d80177fc859b99275b3764f5b66cd3b923a29c34cef8538888460182fc"
+    },
+    {
+      "id": "C052",
+      "title": "2026-09-23 — SER01 A3 encerrada; A4 Free/Genie preparada",
+      "line_start": 615,
+      "line_end": 630,
+      "original_sha256": "6ee05f8dc4d92551cd7c38e2f3cae4041bc41d9dfb97239653e71fb513e53daa",
+      "snapshot_sha256": "6ee05f8dc4d92551cd7c38e2f3cae4041bc41d9dfb97239653e71fb513e53daa"
+    },
+    {
+      "id": "C053",
+      "title": "2026-09-23 — SER01 A3-R3: retomada após o hotfix MM03 (PR #111)",
+      "line_start": 631,
+      "line_end": 636,
+      "original_sha256": "64c7cb54bb2d67f49270119897686f6fbdc3e84df992378f5fefb065b0b957f4",
+      "snapshot_sha256": "64c7cb54bb2d67f49270119897686f6fbdc3e84df992378f5fefb065b0b957f4"
+    },
+    {
+      "id": "C054",
+      "title": "2026-09-23 — SER01 A3-R2 certificada localmente e reconciliação A3-R3 com a MM03",
+      "line_start": 637,
+      "line_end": 643,
+      "original_sha256": "3ca97c486fd8e934b614ce8f28a7dcbec32b4c2b9a520e1c0cc31388a29cd001",
+      "snapshot_sha256": "3ca97c486fd8e934b614ce8f28a7dcbec32b4c2b9a520e1c0cc31388a29cd001"
+    },
+    {
+      "id": "C055",
+      "title": "2026-09-23 — SER01 A3-R2: preparação da recertificação prospectiva",
+      "line_start": 644,
+      "line_end": 650,
+      "original_sha256": "9292c0f5f6ebff279223ebc0319070f14cd35b03a8f2d1b023b4f37e90bf72a3",
+      "snapshot_sha256": "9292c0f5f6ebff279223ebc0319070f14cd35b03a8f2d1b023b4f37e90bf72a3"
+    },
+    {
+      "id": "C056",
+      "title": "2026-09-23 — SER01 A3-R2: corrigida identidade duplicada dos probes Git",
+      "line_start": 651,
+      "line_end": 662,
+      "original_sha256": "9d671de7a22ac76502acb89b49ec51d21468a4590e95d1deb653684d78f16738",
+      "snapshot_sha256": "9d671de7a22ac76502acb89b49ec51d21468a4590e95d1deb653684d78f16738"
+    },
+    {
+      "id": "C057",
+      "title": "2026-09-23 — SER01 A3: hardening semântico do verifier SER-CERT-1",
+      "line_start": 663,
+      "line_end": 669,
+      "original_sha256": "4bcd6c780205f2caeb2ca0b3bc50a999c0f01ed7f8e4a3c964482eafe211dbdb",
+      "snapshot_sha256": "4bcd6c780205f2caeb2ca0b3bc50a999c0f01ed7f8e4a3c964482eafe211dbdb"
+    },
+    {
+      "id": "C058",
+      "title": "2026-09-23 — SER01 A1 encerrada; A2 liga object_validation à skill publicada",
+      "line_start": 670,
+      "line_end": 684,
+      "original_sha256": "b53ae21a896606580794ea627c3fb68438341cddee9e0d74f85debbf9c9d4481",
+      "snapshot_sha256": "b53ae21a896606580794ea627c3fb68438341cddee9e0d74f85debbf9c9d4481"
+    },
+    {
+      "id": "C059",
+      "title": "2026-09-23 — SER01 A1-LAB R3 verde local e reconciliação R4 com a MM02",
+      "line_start": 685,
+      "line_end": 691,
+      "original_sha256": "c04be1378d354483baf2f9b9ac046996b09e37c30b3165fdf83d0a2f024935a4",
+      "snapshot_sha256": "c04be1378d354483baf2f9b9ac046996b09e37c30b3165fdf83d0a2f024935a4"
+    },
+    {
+      "id": "C060",
+      "title": "2026-09-23 — SER01 A1-LAB R2 reprovada e corretiva do stdout de api_publica",
+      "line_start": 692,
+      "line_end": 702,
+      "original_sha256": "179aebd0fd4297716c9a8222789d7e2acba58072a41d2223a8083be3b1ad46bb",
+      "snapshot_sha256": "179aebd0fd4297716c9a8222789d7e2acba58072a41d2223a8083be3b1ad46bb"
+    },
+    {
+      "id": "C061",
+      "title": "2026-09-23 — SER01 A1-LAB R1 reprovada e corretiva da fixture positiva",
+      "line_start": 703,
+      "line_end": 712,
+      "original_sha256": "247292d0d519ce420a9ad336bb1c4aee7c62e10a9b2b1fdf489341e8585fda75",
+      "snapshot_sha256": "247292d0d519ce420a9ad336bb1c4aee7c62e10a9b2b1fdf489341e8585fda75"
+    },
+    {
+      "id": "C062",
+      "title": "2026-09-23 — SER01 A1: validação repo-side pré-promoção de criar-objeto",
+      "line_start": 713,
+      "line_end": 724,
+      "original_sha256": "603baa6a33560b2b4f6dcaf60356139d3e630ab9d27dbe1e3d0f4b932e02a5f9",
+      "snapshot_sha256": "603baa6a33560b2b4f6dcaf60356139d3e630ab9d27dbe1e3d0f4b932e02a5f9"
+    },
+    {
+      "id": "C063",
+      "title": "2026-09-23 — manutenção MM03: falso positivo de identificador corporativo",
+      "line_start": 725,
+      "line_end": 735,
+      "original_sha256": "150f92ca53c1cbb6423f9c3a1b8e7d164ff58ed5cf625d8228e2ba77564d38a7",
+      "snapshot_sha256": "150f92ca53c1cbb6423f9c3a1b8e7d164ff58ed5cf625d8228e2ba77564d38a7"
+    },
+    {
+      "id": "C064",
+      "title": "2026-09-23 — MM03: núcleo de descoberta metadata-only",
+      "line_start": 736,
+      "line_end": 756,
+      "original_sha256": "ee088dddbc7c46df557cdc3d268013f21b49741c8ab82d0e8375b70304ef6e1a",
+      "snapshot_sha256": "ee088dddbc7c46df557cdc3d268013f21b49741c8ab82d0e8375b70304ef6e1a"
+    },
+    {
+      "id": "C065",
+      "title": "2026-09-23 — MM02: spec fingerprint iniciado",
+      "line_start": 757,
+      "line_end": 772,
+      "original_sha256": "43571ff1844cdaf859d02d968cca9820b27aba8877ab2935f90b119d7131b477",
+      "snapshot_sha256": "43571ff1844cdaf859d02d968cca9820b27aba8877ab2935f90b119d7131b477"
+    },
+    {
+      "id": "C066",
+      "title": "2026-09-23 — Micromodelos: revisão pós-MM01 e reconciliação SEF/PSEF/SER",
+      "line_start": 773,
+      "line_end": 791,
+      "original_sha256": "9568adac4672b4f238e452f11a2960a4da01c00a76dbe4fc420856b5fa071c7f",
+      "snapshot_sha256": "9568adac4672b4f238e452f11a2960a4da01c00a76dbe4fc420856b5fa071c7f"
+    },
+    {
+      "id": "C067",
+      "title": "2026-09-23 — A07: streams temporários Win32 com delete sharing",
+      "line_start": 792,
+      "line_end": 806,
+      "original_sha256": "8322c77bb40405dc00764b6af7d077aecd49aa69592d528e58071e2f8fb6612f",
+      "snapshot_sha256": "8322c77bb40405dc00764b6af7d077aecd49aa69592d528e58071e2f8fb6612f"
+    },
+    {
+      "id": "C068",
+      "title": "2026-09-23 — SER00 A07-R2: corretiva test-only do oráculo de storage",
+      "line_start": 807,
+      "line_end": 821,
+      "original_sha256": "7f356029ce81921f0acccd221f770d933cef180ef500b98a11a4f01e22f25038",
+      "snapshot_sha256": "7f356029ce81921f0acccd221f770d933cef180ef500b98a11a4f01e22f25038"
+    },
+    {
+      "id": "C069",
+      "title": "2026-09-22 — SER00: baseline e plano candidato do Skill Enforcement Rollout",
+      "line_start": 822,
+      "line_end": 834,
+      "original_sha256": "c6f0c7357a19188f44402dbfb8c5e7827f16dcf936e07e3600baca43bfbc977d",
+      "snapshot_sha256": "c6f0c7357a19188f44402dbfb8c5e7827f16dcf936e07e3600baca43bfbc977d"
+    },
+    {
+      "id": "C070",
+      "title": "2026-09-22 — SE08: integração, gate Free e fechamento",
+      "line_start": 835,
+      "line_end": 855,
+      "original_sha256": "dc2bc15394faec614c33079e571db0471e4fa316e8beba7cf334c1d3900f3144",
+      "snapshot_sha256": "dc2bc15394faec614c33079e571db0471e4fa316e8beba7cf334c1d3900f3144"
+    },
+    {
+      "id": "C071",
+      "title": "2026-09-22 — SE08 R5: amostra prioritária no instante pós-WinError32",
+      "line_start": 856,
+      "line_end": 870,
+      "original_sha256": "bf16828b4aa31463a453b65a290090084f24dc37eaf486feda0ee59d25f13a4e",
+      "snapshot_sha256": "bf16828b4aa31463a453b65a290090084f24dc37eaf486feda0ee59d25f13a4e"
+    },
+    {
+      "id": "C072",
+      "title": "2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo",
+      "line_start": 871,
+      "line_end": 886,
+      "original_sha256": "e79d53e6c7703153dd4abccccbf0e153b4700db47d1dd57e19d102d0d3e69185",
+      "snapshot_sha256": "e79d53e6c7703153dd4abccccbf0e153b4700db47d1dd57e19d102d0d3e69185"
+    },
+    {
+      "id": "C073",
+      "title": "2026-09-22 — SE08 R3: observabilidade do WinError32 no boundary real",
+      "line_start": 887,
+      "line_end": 903,
+      "original_sha256": "faf8dcb014fb19ed06c7e9a8b92b217c8b1efb23302b4e97e43adefcfd3df46e",
+      "snapshot_sha256": "faf8dcb014fb19ed06c7e9a8b92b217c8b1efb23302b4e97e43adefcfd3df46e"
+    },
+    {
+      "id": "C074",
+      "title": "2026-09-22 — SE08 R2: hardening repo-side antes da nova campanha Windows",
+      "line_start": 904,
+      "line_end": 931,
+      "original_sha256": "2382bff038a2897ffaa967253e6876f9d75ddcd3aa81c63745082403e1a0226f",
+      "snapshot_sha256": "2382bff038a2897ffaa967253e6876f9d75ddcd3aa81c63745082403e1a0226f"
+    },
+    {
+      "id": "C075",
+      "title": "2026-09-22 — SE08: integração local da corretiva Windows/CI (Codex)",
+      "line_start": 932,
+      "line_end": 935,
+      "original_sha256": "679180e5bd7f4bad3ccdae1916759f454ddc7421e26b93abb2ae5d60e6d25ddd",
+      "snapshot_sha256": "679180e5bd7f4bad3ccdae1916759f454ddc7421e26b93abb2ae5d60e6d25ddd"
+    },
+    {
+      "id": "C076",
+      "title": "2026-09-22 — SE08: materialização local do derivado (Codex)",
+      "line_start": 936,
+      "line_end": 941,
+      "original_sha256": "a7cb14d108ed1271e3c62048a0ca60f1115c40cedb5da158adbddd635ba11262",
+      "snapshot_sha256": "a7cb14d108ed1271e3c62048a0ca60f1115c40cedb5da158adbddd635ba11262"
+    },
+    {
+      "id": "C077",
+      "title": "2026-09-22 — SE08: fixture sintética compatível com a guarda de identidade",
+      "line_start": 942,
+      "line_end": 947,
+      "original_sha256": "b55e5eb7d0007faf06ce44bc3571ddb522f4314369c7c44367af5adacebbfcfa",
+      "snapshot_sha256": "b55e5eb7d0007faf06ce44bc3571ddb522f4314369c7c44367af5adacebbfcfa"
+    },
+    {
+      "id": "C078",
+      "title": "2026-09-22 — SE08: consolidação repo-side para operação permanente",
+      "line_start": 948,
+      "line_end": 973,
+      "original_sha256": "ec6aa04dacb712680dbfe0186e484deafc8ecc09d553606608d4cc86fe951f9f",
+      "snapshot_sha256": "ec6aa04dacb712680dbfe0186e484deafc8ecc09d553606608d4cc86fe951f9f"
+    },
+    {
+      "id": "C079",
+      "title": "2026-09-21 — SE07: hotfix pós-merge para policy com UTF-8 inválido",
+      "line_start": 974,
+      "line_end": 985,
+      "original_sha256": "d2182530dade4b0617e33229b2df9f2ea45eaae34264ee5997dfd22f23d532e1",
+      "snapshot_sha256": "d2182530dade4b0617e33229b2df9f2ea45eaae34264ee5997dfd22f23d532e1"
+    },
+    {
+      "id": "C080",
+      "title": "2026-09-21 — SE07: hotfix pós-merge para policy ilegível",
+      "line_start": 986,
+      "line_end": 997,
+      "original_sha256": "20c305106dcfe8eb0fd1165b01f517f81338a08b08c49646b9a15bca9ba39085",
+      "snapshot_sha256": "20c305106dcfe8eb0fd1165b01f517f81338a08b08c49646b9a15bca9ba39085"
+    },
+    {
+      "id": "C081",
+      "title": "2026-09-21 — SE07: encerramento humano com residual conhecido",
+      "line_start": 998,
+      "line_end": 1006,
+      "original_sha256": "f2a759d7224e28faed2589bb19e1deb2f3f7134958635622f8e34b1d57a182c0",
+      "snapshot_sha256": "f2a759d7224e28faed2589bb19e1deb2f3f7134958635622f8e34b1d57a182c0"
+    },
+    {
+      "id": "C082",
+      "title": "2026-09-21 — SE07: PG-01, prontidão da fixture de timeout",
+      "line_start": 1007,
+      "line_end": 1017,
+      "original_sha256": "59279c3b543e48c90d4ddd48b0e90b17b3c7e6fa535a411de1ddca5b312f10dc",
+      "snapshot_sha256": "59279c3b543e48c90d4ddd48b0e90b17b3c7e6fa535a411de1ddca5b312f10dc"
+    },
+    {
+      "id": "C083",
+      "title": "2026-09-21 — SE07: aceite humano da corretiva de cleanup",
+      "line_start": 1018,
+      "line_end": 1024,
+      "original_sha256": "c1a693854f4c09a1734e8082da1f30ec06015c959c51e8942861612fec4fb71e",
+      "snapshot_sha256": "c1a693854f4c09a1734e8082da1f30ec06015c959c51e8942861612fec4fb71e"
+    },
+    {
+      "id": "C084",
+      "title": "2026-09-21 — SE07: decisão humana sobre o piloto README",
+      "line_start": 1025,
+      "line_end": 1030,
+      "original_sha256": "11e73521804086a907c3f5d3d1154e85f4aae809b81d8ae9694ef83719b93e0a",
+      "snapshot_sha256": "11e73521804086a907c3f5d3d1154e85f4aae809b81d8ae9694ef83719b93e0a"
+    },
+    {
+      "id": "C085",
+      "title": "2026-09-21 — SE07: corretiva de cleanup após auditoria (ChatGPT)",
+      "line_start": 1031,
+      "line_end": 1046,
+      "original_sha256": "279a2b28d217e2ec5d8112e0de8f1271a9d004764b14bacd1f4cc9f0b3ef63f6",
+      "snapshot_sha256": "58c5551ab75914bb04d006c80812dbe143778fc87fabd668bee2328b5b5bd22e"
+    },
+    {
+      "id": "C086",
+      "title": "2026-09-21 — SE07: piloto estreito README L3 (Codex)",
+      "line_start": 1047,
+      "line_end": 1059,
+      "original_sha256": "a47057b9677b04df0c924fdf0231e0b019cb559f43b08eda5b52c8f47dc144a7",
+      "snapshot_sha256": "a47057b9677b04df0c924fdf0231e0b019cb559f43b08eda5b52c8f47dc144a7"
+    },
+    {
+      "id": "C087",
+      "title": "2026-09-21 — SE07: corretiva SUP-F04-01/02/03 (Codex)",
+      "line_start": 1060,
+      "line_end": 1070,
+      "original_sha256": "111490c44a7489d7ec87f3a6c6ba236fc86486b8c245b19ffb3a62fdf1408536",
+      "snapshot_sha256": "111490c44a7489d7ec87f3a6c6ba236fc86486b8c245b19ffb3a62fdf1408536"
+    },
+    {
+      "id": "C088",
+      "title": "2026-09-21 — SE07: F-04/D10 e proposta D2/D9 (Codex)",
+      "line_start": 1071,
+      "line_end": 1087,
+      "original_sha256": "032247170a8197c95a21edc730c26244b1928c1d6ed7388c9e97e45b7f4f6039",
+      "snapshot_sha256": "032247170a8197c95a21edc730c26244b1928c1d6ed7388c9e97e45b7f4f6039"
+    },
+    {
+      "id": "C089",
+      "title": "2026-09-21 — SE07: aceite F-03 e reconciliação E-01/E-02 (Codex)",
+      "line_start": 1088,
+      "line_end": 1098,
+      "original_sha256": "5be91f4bc15293cb4bb1ca7005623ea87145d6dbf156724de75c027cf000c9f8",
+      "snapshot_sha256": "5be91f4bc15293cb4bb1ca7005623ea87145d6dbf156724de75c027cf000c9f8"
+    },
+    {
+      "id": "C090",
+      "title": "2026-09-21 — SE07 F-03/D6: adapter canônico da auditoria (Codex)",
+      "line_start": 1099,
+      "line_end": 1110,
+      "original_sha256": "cffcf9ef07d1162ab03ec6e849add0f3e25cb55926349eada25f99d945ed1b38",
+      "snapshot_sha256": "cffcf9ef07d1162ab03ec6e849add0f3e25cb55926349eada25f99d945ed1b38"
+    },
+    {
+      "id": "C091",
+      "title": "2026-09-20 — SE07 R1-C: confirmação residual do preflight L2 (Codex)",
+      "line_start": 1111,
+      "line_end": 1121,
+      "original_sha256": "fada12816c43fe55bae9b929711430ba5a6d3d5e95c433365cf512c12c5b524b",
+      "snapshot_sha256": "fada12816c43fe55bae9b929711430ba5a6d3d5e95c433365cf512c12c5b524b"
+    },
+    {
+      "id": "C092",
+      "title": "2026-09-20 — SE07 R1-C: correção pós-auditoria da R1 (Codex)",
+      "line_start": 1122,
+      "line_end": 1133,
+      "original_sha256": "3e4cb8cfad3ccc6fa024f67a5dc1c1c664a844f4c3d9f2f3ad1c13a3cb7dd585",
+      "snapshot_sha256": "3e4cb8cfad3ccc6fa024f67a5dc1c1c664a844f4c3d9f2f3ad1c13a3cb7dd585"
+    },
+    {
+      "id": "C093",
+      "title": "2026-09-20 — SE07 R1: estabilização delimitada de criar-objeto L2 (Codex)",
+      "line_start": 1134,
+      "line_end": 1151,
+      "original_sha256": "b1f2190ffd091122b7ab410c18a4b9970cf84deac891668a14339c4b5e28e414",
+      "snapshot_sha256": "b1f2190ffd091122b7ab410c18a4b9970cf84deac891668a14339c4b5e28e414"
+    },
+    {
+      "id": "C094",
+      "title": "2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)",
+      "line_start": 1152,
+      "line_end": 1170,
+      "original_sha256": "349537789cf2c9b5d69af3d6fae05c03b574a22db3afa04b340f085f9671aa62",
+      "snapshot_sha256": "349537789cf2c9b5d69af3d6fae05c03b574a22db3afa04b340f085f9671aa62"
+    },
+    {
+      "id": "C095",
+      "title": "2026-09-16 — SE01: contrato verificável e capability experiment (ChatGPT)",
+      "line_start": 1171,
+      "line_end": 1197,
+      "original_sha256": "05623edce4b8aee18f548a74c4d2134920e3fb2376362825a9a4884280435aee",
+      "snapshot_sha256": "05623edce4b8aee18f548a74c4d2134920e3fb2376362825a9a4884280435aee"
+    },
+    {
+      "id": "C096",
+      "title": "2026-09-14 — MM01: contrato canônico de micromodelos — fechamento técnico pré-merge (ChatGPT)",
+      "line_start": 1198,
+      "line_end": 1225,
+      "original_sha256": "11cdb4854683ff6d50680df26f38e6959c7605dba6f1d97b46a1a47fe5c63fac",
+      "snapshot_sha256": "11cdb4854683ff6d50680df26f38e6959c7605dba6f1d97b46a1a47fe5c63fac"
+    },
+    {
+      "id": "C097",
+      "title": "2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)",
+      "line_start": 1226,
+      "line_end": 1247,
+      "original_sha256": "d05bb2b336884b948e110aae3638748dc0d05ef249befcbac49132c88b07478b",
+      "snapshot_sha256": "d05bb2b336884b948e110aae3638748dc0d05ef249befcbac49132c88b07478b"
+    },
+    {
+      "id": "C098",
+      "title": "2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)",
+      "line_start": 1248,
+      "line_end": 1273,
+      "original_sha256": "956dcc3ed7a8ef1126786349417e7d72d85dc654ae566f3d2408576b68e23f34",
+      "snapshot_sha256": "956dcc3ed7a8ef1126786349417e7d72d85dc654ae566f3d2408576b68e23f34"
+    },
+    {
+      "id": "C099",
+      "title": "2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)",
+      "line_start": 1274,
+      "line_end": 1297,
+      "original_sha256": "e757d8c62bc11369550163c5ab10b7ad0c793ebcecceb24134c4e0842d339f8a",
+      "snapshot_sha256": "e757d8c62bc11369550163c5ab10b7ad0c793ebcecceb24134c4e0842d339f8a"
+    },
+    {
+      "id": "C100",
+      "title": "2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)",
+      "line_start": 1298,
+      "line_end": 1316,
+      "original_sha256": "f109028a2c69be5161fee7dd0285c8ad0aefce05903af149f06a85956079e21e",
+      "snapshot_sha256": "f109028a2c69be5161fee7dd0285c8ad0aefce05903af149f06a85956079e21e"
+    },
+    {
+      "id": "C101",
+      "title": "2026-09-14 — V05: fechamento técnico do Visual Lab em candidata (Codex)",
+      "line_start": 1317,
+      "line_end": 1337,
+      "original_sha256": "df790b102974592660f7de3785e8aa18fbc3a0aa9ddb4a6bfa5a4740a9752a11",
+      "snapshot_sha256": "df790b102974592660f7de3785e8aa18fbc3a0aa9ddb4a6bfa5a4740a9752a11"
+    },
+    {
+      "id": "C102",
+      "title": "2026-09-13 — D05: reconciliação documental do Sistema de Temas (ChatGPT)",
+      "line_start": 1338,
+      "line_end": 1344,
+      "original_sha256": "34bdd1bcca12199b609f90cb1b47626fece994a02ae28a1515c5d6d5cf9c8505",
+      "snapshot_sha256": "34bdd1bcca12199b609f90cb1b47626fece994a02ae28a1515c5d6d5cf9c8505"
+    },
+    {
+      "id": "C103",
+      "title": "2026-09-14 — pós-R13 D01–D04 (ChatGPT)",
+      "line_start": 1345,
+      "line_end": 1349,
+      "original_sha256": "1a0551be8618e8cfc5328a58577a1e0e5fc7e655144482e679465568afbf0e19",
+      "snapshot_sha256": "1a0551be8618e8cfc5328a58577a1e0e5fc7e655144482e679465568afbf0e19"
+    },
+    {
+      "id": "C104",
+      "title": "2026-09-13 — R13: integração e encerramento da iniciativa de READMEs (ChatGPT)",
+      "line_start": 1350,
+      "line_end": 1355,
+      "original_sha256": "b2489cbde28cd2629c773c35f509cbc57e447e0c01a5656df64b6853488f06ae",
+      "snapshot_sha256": "b2489cbde28cd2629c773c35f509cbc57e447e0c01a5656df64b6853488f06ae"
+    },
+    {
+      "id": "C105",
+      "title": "2026-09-13 — R13: auditoria final da iniciativa de READMEs (ChatGPT)",
+      "line_start": 1356,
+      "line_end": 1363,
+      "original_sha256": "e7c6ddbc0aa61162b02c5ab58448c18401285c085b86e5794c104bcca0408d79",
+      "snapshot_sha256": "e7c6ddbc0aa61162b02c5ab58448c18401285c085b86e5794c104bcca0408d79"
+    },
+    {
+      "id": "C106",
+      "title": "2026-09-13 — R12: índices de categoria e navegação (ChatGPT)",
+      "line_start": 1364,
+      "line_end": 1371,
+      "original_sha256": "46038cb6cf2494a8e3fe5c48f4b86b375b398f3e61b031ad2bdc86f2a0fb8ff8",
+      "snapshot_sha256": "46038cb6cf2494a8e3fe5c48f4b86b375b398f3e61b031ad2bdc86f2a0fb8ff8"
+    },
+    {
+      "id": "C107",
+      "title": "2026-09-13 — R11: fechamento da migração de READMEs (ChatGPT)",
+      "line_start": 1372,
+      "line_end": 1378,
+      "original_sha256": "4a46d3a33b0ee31d8e830d981b30227e7148f27ff64a315f7fd94a637bb26b20",
+      "snapshot_sha256": "4a46d3a33b0ee31d8e830d981b30227e7148f27ff64a315f7fd94a637bb26b20"
+    },
+    {
+      "id": "C108",
+      "title": "2026-09-13 — R10: READMEs de Hub Prompts (ChatGPT)",
+      "line_start": 1379,
+      "line_end": 1385,
+      "original_sha256": "74d9b076ba208de9493e7ecf45e16576d183e623ee244f046b743e507463a523",
+      "snapshot_sha256": "74d9b076ba208de9493e7ecf45e16576d183e623ee244f046b743e507463a523"
+    },
+    {
+      "id": "C109",
+      "title": "2026-09-12 — R08: READMEs de clusters, anomalias e explicabilidade (ChatGPT)",
+      "line_start": 1386,
+      "line_end": 1393,
+      "original_sha256": "99c1e2e42eab63f7a08cf56a8cb5e42ca33ddf39b28a83654d2a0155b01dacf4",
+      "snapshot_sha256": "99c1e2e42eab63f7a08cf56a8cb5e42ca33ddf39b28a83654d2a0155b01dacf4"
+    },
+    {
+      "id": "C110",
+      "title": "2026-09-13 — R08: fechamento de compatibilidade (ChatGPT)",
+      "line_start": 1394,
+      "line_end": 1404,
+      "original_sha256": "41ad01ee36a2bbbf5a3801a0da67aeb7466da2e4d272a8f3a480f90579592928",
+      "snapshot_sha256": "41ad01ee36a2bbbf5a3801a0da67aeb7466da2e4d272a8f3a480f90579592928"
+    },
+    {
+      "id": "C111",
+      "title": "2026-09-12 — V04: componentes HTML e tabelas opt-in (Codex)",
+      "line_start": 1405,
+      "line_end": 1427,
+      "original_sha256": "4f54dbc1ebf672a1155a4b0f2bf7ec29b196b5662d471f8f76cd70e1d7bd2ad6",
+      "snapshot_sha256": "4f54dbc1ebf672a1155a4b0f2bf7ec29b196b5662d471f8f76cd70e1d7bd2ad6"
+    },
+    {
+      "id": "C112",
+      "title": "2026-09-12 — R07: READMEs de score, vintage e sobrevivência (ChatGPT)",
+      "line_start": 1428,
+      "line_end": 1435,
+      "original_sha256": "87fe2739bf63542282c8b3fb73cc1c27842bcf2bfdf81b87f69b7b769ef91a3b",
+      "snapshot_sha256": "87fe2739bf63542282c8b3fb73cc1c27842bcf2bfdf81b87f69b7b769ef91a3b"
+    },
+    {
+      "id": "C113",
+      "title": "2026-09-12 — R06: READMEs de séries e validação temporal (ChatGPT)",
+      "line_start": 1436,
+      "line_end": 1443,
+      "original_sha256": "93bf19bc19b308fe5cf0c3c55b557983ed2ee87b4f0c43067461690201efaa5e",
+      "snapshot_sha256": "93bf19bc19b308fe5cf0c3c55b557983ed2ee87b4f0c43067461690201efaa5e"
+    },
+    {
+      "id": "C114",
+      "title": "2026-09-12 — R05: READMEs de modelos tabulares (ChatGPT)",
+      "line_start": 1444,
+      "line_end": 1451,
+      "original_sha256": "3c593b8bba5ffa8e103882bfe4ee53594f9678edfd4922d3b42bf670483dcaab",
+      "snapshot_sha256": "3c593b8bba5ffa8e103882bfe4ee53594f9678edfd4922d3b42bf670483dcaab"
+    },
+    {
+      "id": "C115",
+      "title": "2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)",
+      "line_start": 1452,
+      "line_end": 1459,
+      "original_sha256": "fbf1ac6ae99f9eabb2382f732d5c5ed08596f48378746b27c547db9d5ec307ff",
+      "snapshot_sha256": "fbf1ac6ae99f9eabb2382f732d5c5ed08596f48378746b27c547db9d5ec307ff"
+    },
+    {
+      "id": "C116",
+      "title": "2026-09-12 — V03: adaptador Plotly opt-in (Codex)",
+      "line_start": 1460,
+      "line_end": 1489,
+      "original_sha256": "5ce653a89b17109b0c8b2cda02e2793653ee9c5a485e55e3ab9c359d4415a15d",
+      "snapshot_sha256": "5ce653a89b17109b0c8b2cda02e2793653ee9c5a485e55e3ab9c359d4415a15d"
+    },
+    {
+      "id": "C117",
+      "title": "2026-09-12 — R04-A: seis guias de operações Spark (ChatGPT)",
+      "line_start": 1490,
+      "line_end": 1520,
+      "original_sha256": "e7332eb65474d49d09f28739071b343ef25d54c5d5b0aad0e3c24a7793c7d870",
+      "snapshot_sha256": "e7332eb65474d49d09f28739071b343ef25d54c5d5b0aad0e3c24a7793c7d870"
+    },
+    {
+      "id": "C118",
+      "title": "2026-09-12 — V02: aceite e integração Git concluídos (Codex)",
+      "line_start": 1521,
+      "line_end": 1532,
+      "original_sha256": "37a9e122207263c261e7e80aaae06822f3649eb61b86d279e9a275bfeb318227",
+      "snapshot_sha256": "37a9e122207263c261e7e80aaae06822f3649eb61b86d279e9a275bfeb318227"
+    },
+    {
+      "id": "C119",
+      "title": "2026-09-12 — V02: alinhamento documental da candidata remota (Codex)",
+      "line_start": 1533,
+      "line_end": 1550,
+      "original_sha256": "9f9dfeb9539ffddb16e78d2f8c0baf250c5ec7181e9666b36c5aa06c05602ef3",
+      "snapshot_sha256": "9f9dfeb9539ffddb16e78d2f8c0baf250c5ec7181e9666b36c5aa06c05602ef3"
+    },
+    {
+      "id": "C120",
+      "title": "2026-09-12 — V02: conciliação com R03-A/R03-B integrada (Codex)",
+      "line_start": 1551,
+      "line_end": 1567,
+      "original_sha256": "7d4376fd054e2a29a21e7bfa240dee239c8fd10a88d101be7187b96a6b44592f",
+      "snapshot_sha256": "7d4376fd054e2a29a21e7bfa240dee239c8fd10a88d101be7187b96a6b44592f"
+    },
+    {
+      "id": "C121",
+      "title": "2026-09-12 — V02: núcleo de temas e contrato promovido (Codex)",
+      "line_start": 1568,
+      "line_end": 1592,
+      "original_sha256": "b9706329286387aa8e69922242a94b1c18d0273dfd482bee94e9ee05dad5d2ae",
+      "snapshot_sha256": "b9706329286387aa8e69922242a94b1c18d0273dfd482bee94e9ee05dad5d2ae"
+    },
+    {
+      "id": "C122",
+      "title": "2026-09-12 — R03-I: reconciliação READMEs com V01 integrada (ChatGPT)",
+      "line_start": 1593,
+      "line_end": 1604,
+      "original_sha256": "0a19c724d42a9b215f90c89dccc1e966ec8c7893a3e41b5bdc0a88a376433238",
+      "snapshot_sha256": "0a19c724d42a9b215f90c89dccc1e966ec8c7893a3e41b5bdc0a88a376433238"
+    },
+    {
+      "id": "C123",
+      "title": "2026-09-12 — R03-B: seis guias de display e navegação (ChatGPT)",
+      "line_start": 1605,
+      "line_end": 1634,
+      "original_sha256": "306fbfb0d4413af802b7af32c3a6723ec2784307d0fd03c1542cd5da15c79f91",
+      "snapshot_sha256": "306fbfb0d4413af802b7af32c3a6723ec2784307d0fd03c1542cd5da15c79f91"
+    },
+    {
+      "id": "C124",
+      "title": "2026-09-12 — R03-A: preservação da V00 integrada em paralelo (ChatGPT)",
+      "line_start": 1635,
+      "line_end": 1642,
+      "original_sha256": "1a2b663134b598b5f65377d4e3c01bbfbed0f2a2b7691d2944f7f5f09abcb8ff",
+      "snapshot_sha256": "1a2b663134b598b5f65377d4e3c01bbfbed0f2a2b7691d2944f7f5f09abcb8ff"
+    },
+    {
+      "id": "C125",
+      "title": "2026-09-12 — Aceite, versão 1.0.0 e lote R03-A (ChatGPT)",
+      "line_start": 1643,
+      "line_end": 1671,
+      "original_sha256": "41b717338fe04aa348b8ec989412dfc59a1ce465428bbfb4e2c3f6a41ba17f01",
+      "snapshot_sha256": "41b717338fe04aa348b8ec989412dfc59a1ce465428bbfb4e2c3f6a41ba17f01"
+    },
+    {
+      "id": "C126",
+      "title": "2026-09-12 — V01: alinhamento das entradas após integração (Codex)",
+      "line_start": 1672,
+      "line_end": 1689,
+      "original_sha256": "03c286058e38570e1060c3484b0be7ba69d4a6ba931960bc7478a9318aaa6fdf",
+      "snapshot_sha256": "03c286058e38570e1060c3484b0be7ba69d4a6ba931960bc7478a9318aaa6fdf"
+    },
+    {
+      "id": "C127",
+      "title": "2026-09-12 — V01: aceite explícito e revalidação para integração (Codex)",
+      "line_start": 1690,
+      "line_end": 1703,
+      "original_sha256": "0a232ef98f50181ad69e1ee27e68f85a68ccd8bc02784f079e01b6f317836145",
+      "snapshot_sha256": "0a232ef98f50181ad69e1ee27e68f85a68ccd8bc02784f079e01b6f317836145"
+    },
+    {
+      "id": "C128",
+      "title": "2026-09-12 — V01: contrato e experiência sobre a V00 integrada (Codex)",
+      "line_start": 1704,
+      "line_end": 1721,
+      "original_sha256": "24f2e13df327ebb42fc67453d00087bb7d6a0eb19a3dc2903571ef69e1ca07ef",
+      "snapshot_sha256": "24f2e13df327ebb42fc67453d00087bb7d6a0eb19a3dc2903571ef69e1ca07ef"
+    },
+    {
+      "id": "C129",
+      "title": "2026-09-12 — V00: reconciliação e aceite de integração Git (Codex)",
+      "line_start": 1722,
+      "line_end": 1734,
+      "original_sha256": "9f7b413b3a13e3177548cbb0fb9b034a719b0bb0fe1ece415f6f6f6a3ab68331",
+      "snapshot_sha256": "9f7b413b3a13e3177548cbb0fb9b034a719b0bb0fe1ece415f6f6f6a3ab68331"
+    },
+    {
+      "id": "C130",
+      "title": "2026-09-12 — R02-I: composição candidata READMEs + Concierge (ChatGPT)",
+      "line_start": 1735,
+      "line_end": 1766,
+      "original_sha256": "b26de368f40e740006057fd27aabbc3bf6a163bfb61d54363de5e5021dbe54ad",
+      "snapshot_sha256": "b26de368f40e740006057fd27aabbc3bf6a163bfb61d54363de5e5021dbe54ad"
+    },
+    {
+      "id": "C131",
+      "title": "2026-09-12 — R02: fechamento editorial e diagnóstico de integração (ChatGPT)",
+      "line_start": 1767,
+      "line_end": 1800,
+      "original_sha256": "e116b4f097ec9ae886dfc87d649e74976ae774e3d3f91b7b4617786cf3e507e2",
+      "snapshot_sha256": "e116b4f097ec9ae886dfc87d649e74976ae774e3d3f91b7b4617786cf3e507e2"
+    },
+    {
+      "id": "C132",
+      "title": "2026-09-12 — R02: seis READMEs piloto e revisão documental (ChatGPT)",
+      "line_start": 1801,
+      "line_end": 1834,
+      "original_sha256": "c5cece198ad04a9a86192c9af3bfe9836ceb59ba6b0ed652eb17be86c97019a8",
+      "snapshot_sha256": "c5cece198ad04a9a86192c9af3bfe9836ceb59ba6b0ed652eb17be86c97019a8"
+    },
+    {
+      "id": "C133",
+      "title": "2026-09-12 — R01: READMEs de objeto, fundação candidata (Codex)",
+      "line_start": 1835,
+      "line_end": 1868,
+      "original_sha256": "d96d1bebf6cee9d04271607cf431c328eda3e76a6cdbc489054e4f788e3143e4",
+      "snapshot_sha256": "d96d1bebf6cee9d04271607cf431c328eda3e76a6cdbc489054e4f788e3143e4"
+    },
+    {
+      "id": "C134",
+      "title": "2026-09-12 — V00 candidata do Sistema de Temas (Codex)",
+      "line_start": 1869,
+      "line_end": 1887,
+      "original_sha256": "a3c4ca89d59dad35a6787452edab6f0c7bf92a179ba64d7cea0e39b86a6284a4",
+      "snapshot_sha256": "a3c4ca89d59dad35a6787452edab6f0c7bf92a179ba64d7cea0e39b86a6284a4"
+    },
+    {
+      "id": "C135",
+      "title": "2026-09-12 — Concierge integrado ao produto (Codex)",
+      "line_start": 1888,
+      "line_end": 1921,
+      "original_sha256": "7421ac910d07c749a622dc01b37fa1c3575bb9d91d551730e8ebb7b12653b611",
+      "snapshot_sha256": "7421ac910d07c749a622dc01b37fa1c3575bb9d91d551730e8ebb7b12653b611"
+    },
+    {
+      "id": "C136",
+      "title": "2026-09-11 — Kit de transição e aceite gradual no trabalho (Codex)",
+      "line_start": 1922,
+      "line_end": 1942,
+      "original_sha256": "b00e310365eacda74679584e2c55f600ece5c180a942ffa6f3bed7ca9f020d50",
+      "snapshot_sha256": "b00e310365eacda74679584e2c55f600ece5c180a942ffa6f3bed7ca9f020d50"
+    },
+    {
+      "id": "C137",
+      "title": "2026-09-11 — Assistant Instructions integradas ao Hub (Codex)",
+      "line_start": 1943,
+      "line_end": 1966,
+      "original_sha256": "2ed2e3fa1ebfa5bd437c6fcc93032f5e73d360c4f38d19e55738833d5707d53e",
+      "snapshot_sha256": "2ed2e3fa1ebfa5bd437c6fcc93032f5e73d360c4f38d19e55738833d5707d53e"
+    },
+    {
+      "id": "C138",
+      "title": "2026-09-11 — Manual Técnico unificado; apresentação vigente preservada (Codex)",
+      "line_start": 1967,
+      "line_end": 1995,
+      "original_sha256": "26ea02e7071716be45604b905d239c6ad7747822918bf1ef348e50869842d3e3",
+      "snapshot_sha256": "26ea02e7071716be45604b905d239c6ad7747822918bf1ef348e50869842d3e3"
+    },
+    {
+      "id": "C139",
+      "title": "2026-09-11 — Limpeza de pastas acessórias; simulado eleito (OpenCode)",
+      "line_start": 1996,
+      "line_end": 2011,
+      "original_sha256": "2ef8cf46570795379d392d78bcaf2b26fad9b7d023d717e5498bda79cb971eb7",
+      "snapshot_sha256": "2ef8cf46570795379d392d78bcaf2b26fad9b7d023d717e5498bda79cb971eb7"
+    },
+    {
+      "id": "C140",
+      "title": "2026-09-11 — Imagens nos rascunhos originais e paridade de disposição (Codex)",
+      "line_start": 2012,
+      "line_end": 2034,
+      "original_sha256": "281746c7550b797b018f778f79dc049f7a09c7a1d787b6eb244142495998908c",
+      "snapshot_sha256": "281746c7550b797b018f778f79dc049f7a09c7a1d787b6eb244142495998908c"
+    },
+    {
+      "id": "C141",
+      "title": "2026-09-11 — Correção dos READMEs candidatos após auditoria (ChatGPT)",
+      "line_start": 2035,
+      "line_end": 2061,
+      "original_sha256": "f5b30a6883248394fc763a2e61f93c308dfc26632b2c853c4e5017e5b088708b",
+      "snapshot_sha256": "f5b30a6883248394fc763a2e61f93c308dfc26632b2c853c4e5017e5b088708b"
+    },
+    {
+      "id": "C142",
+      "title": "2026-09-11 — Rascunhos dos READMEs a partir dos templates (OpenCode)",
+      "line_start": 2062,
+      "line_end": 2069,
+      "original_sha256": "04bc65b54c792d0f31943616590480f6f06d46402a9584e9d527e2046b6f2ef0",
+      "snapshot_sha256": "04bc65b54c792d0f31943616590480f6f06d46402a9584e9d527e2046b6f2ef0"
+    },
+    {
+      "id": "C143",
+      "title": "2026-09-11 — Templates editoriais para aprofundar os READMEs (Codex)",
+      "line_start": 2070,
+      "line_end": 2088,
+      "original_sha256": "64995b0d1061b18362489d7aa67188be50e0ae2d3ceeea89813ad3ce6e55bcd4",
+      "snapshot_sha256": "64995b0d1061b18362489d7aa67188be50e0ae2d3ceeea89813ad3ce6e55bcd4"
+    },
+    {
+      "id": "C144",
+      "title": "2026-09-11 — Conferência remota da camada visual e do produto (OpenCode)",
+      "line_start": 2089,
+      "line_end": 2103,
+      "original_sha256": "6946b776bff21376a660d12cd50a5a8b1c5e62af754c2587006cb56fa6908d20",
+      "snapshot_sha256": "6946b776bff21376a660d12cd50a5a8b1c5e62af754c2587006cb56fa6908d20"
+    },
+    {
+      "id": "C145",
+      "title": "2026-09-11 — Guias de retomada, transferência e homologação (Codex)",
+      "line_start": 2104,
+      "line_end": 2128,
+      "original_sha256": "b6b0ef8d3fb6f050257590575693651b6c021259f6784d9af9f08c2437beaa87",
+      "snapshot_sha256": "b6b0ef8d3fb6f050257590575693651b6c021259f6784d9af9f08c2437beaa87"
+    },
+    {
+      "id": "C146",
+      "title": "2026-09-11 — Integração da evolução visual v2 (Codex)",
+      "line_start": 2129,
+      "line_end": 2172,
+      "original_sha256": "1103a33395ddb96847ded26ff1932a9b9e43b7dd3536321fa043080be61230b3",
+      "snapshot_sha256": "1103a33395ddb96847ded26ff1932a9b9e43b7dd3536321fa043080be61230b3"
+    },
+    {
+      "id": "C147",
+      "title": "2026-09-10 — Propostas de cabeçalhos CRM e Squad (Codex)",
+      "line_start": 2173,
+      "line_end": 2198,
+      "original_sha256": "8ce859f8c134f977f96413590c67b2f61c03cfb9971ca9bce80c762bb85fdea4",
+      "snapshot_sha256": "8ce859f8c134f977f96413590c67b2f61c03cfb9971ca9bce80c762bb85fdea4"
+    },
+    {
+      "id": "C148",
+      "title": "2026-09-10 — Sprint 0 da evolução visual (Codex)",
+      "line_start": 2199,
+      "line_end": 2226,
+      "original_sha256": "e12b406b22813aa10c382ddfbdb86d8a725bb343f7f3f189a5760647ba74c94b",
+      "snapshot_sha256": "e12b406b22813aa10c382ddfbdb86d8a725bb343f7f3f189a5760647ba74c94b"
+    },
+    {
+      "id": "C149",
+      "title": "2026-09-10 — Variantes visuais dos READMEs para avaliação (Codex)",
+      "line_start": 2227,
+      "line_end": 2269,
+      "original_sha256": "3dc6d8090b6d17aaec84d63e65850a532643e9d467173dea85cb80d9333c612c",
+      "snapshot_sha256": "3dc6d8090b6d17aaec84d63e65850a532643e9d467173dea85cb80d9333c612c"
+    },
+    {
+      "id": "C150",
+      "title": "2026-09-09 — Reformulação didática e promoção dos READMEs do ecossistema (Gemini)",
+      "line_start": 2270,
+      "line_end": 2281,
+      "original_sha256": "17a9f6e4a8b9740dcf1437a8a486aa5cc9d6174327e065fa173722510e8058a4",
+      "snapshot_sha256": "17a9f6e4a8b9740dcf1437a8a486aa5cc9d6174327e065fa173722510e8058a4"
+    },
+    {
+      "id": "C151",
+      "title": "2026-09-09 — Fechamento das inconsistências residuais (Codex)",
+      "line_start": 2282,
+      "line_end": 2310,
+      "original_sha256": "fbf97966129c056b11e920e7f038e8158df41fa2e151fe90ce8c383b6c4b473d",
+      "snapshot_sha256": "fbf97966129c056b11e920e7f038e8158df41fa2e151fe90ce8c383b6c4b473d"
+    },
+    {
+      "id": "C152",
+      "title": "2026-09-09 — Correções da revisão e retomada no PC (Codex)",
+      "line_start": 2311,
+      "line_end": 2321,
+      "original_sha256": "10a21d8e92eb060798c4611cd7a2c3ba2e9f77c98c115112a4c01796d94478a2",
+      "snapshot_sha256": "10a21d8e92eb060798c4611cd7a2c3ba2e9f77c98c115112a4c01796d94478a2"
+    },
+    {
+      "id": "C153",
+      "title": "2026-09-09 — Revisão da implantação do plano (Codex)",
+      "line_start": 2322,
+      "line_end": 2327,
+      "original_sha256": "0895e066880483f1866888c7026c0752d48eddbd675127b0162fabf2ac1973ec",
+      "snapshot_sha256": "0895e066880483f1866888c7026c0752d48eddbd675127b0162fabf2ac1973ec"
+    },
+    {
+      "id": "C154",
+      "title": "2026-09-09 — Handoff da rodada registrado",
+      "line_start": 2328,
+      "line_end": 2340,
+      "original_sha256": "385fbefb1a0bb2a8ba75d5a397f53bba3b0c16b5a662c391c1bcad81921525d2",
+      "snapshot_sha256": "385fbefb1a0bb2a8ba75d5a397f53bba3b0c16b5a662c391c1bcad81921525d2"
+    },
+    {
+      "id": "C155",
+      "title": "2026-09-08 — Plano consolidado, após contraditório de três LLMs",
+      "line_start": 2341,
+      "line_end": 2420,
+      "original_sha256": "a807021d6e78018d4db26781bf136c6ed0c9f9191e89bdc380890fddd310c5c1",
+      "snapshot_sha256": "a807021d6e78018d4db26781bf136c6ed0c9f9191e89bdc380890fddd310c5c1"
+    },
+    {
+      "id": "C156",
+      "title": "2026-08-29 — Correções após auditoria externa dos READMEs",
+      "line_start": 2421,
+      "line_end": 2452,
+      "original_sha256": "0ce5278a33ce165e9ce19aa3c37beba205c6f134ae40cc976b1bca13c5b90baa",
+      "snapshot_sha256": "0ce5278a33ce165e9ce19aa3c37beba205c6f134ae40cc976b1bca13c5b90baa"
+    },
+    {
+      "id": "C157",
+      "title": "2026-08-29 — Redesenho editorial da etapa 6",
+      "line_start": 2453,
+      "line_end": 2491,
+      "original_sha256": "cc25d289d7c843bedb9394df8625c40c8e42d7b46a959f4bce78a4ca932bf70c",
+      "snapshot_sha256": "cc25d289d7c843bedb9394df8625c40c8e42d7b46a959f4bce78a4ca932bf70c"
+    },
+    {
+      "id": "C158",
+      "title": "2026-08-29 — Checkpoint, publicação e smoke pós-auditoria",
+      "line_start": 2492,
+      "line_end": 2514,
+      "original_sha256": "d450f83c658ff6e7ea0fb7bcb668069a7d63ae29a2fe131d1808aff2f1e1dd24",
+      "snapshot_sha256": "d450f83c658ff6e7ea0fb7bcb668069a7d63ae29a2fe131d1808aff2f1e1dd24"
+    },
+    {
+      "id": "C159",
+      "title": "2026-08-20 — Auditoria de segunda origem com execução",
+      "line_start": 2515,
+      "line_end": 2566,
+      "original_sha256": "92a579efaffc1f14eefcc64c5f739cf9a2986b4a4a0f6768009238be30045761",
+      "snapshot_sha256": "92a579efaffc1f14eefcc64c5f739cf9a2986b4a4a0f6768009238be30045761"
+    },
+    {
+      "id": "C160",
+      "title": "2026-08-19 — Bateria funcional de `ml`, e a costura que ninguém tinha exercitado",
+      "line_start": 2567,
+      "line_end": 2620,
+      "original_sha256": "37360889948d6789e8bb91a6329c9beecf61bf1918df013568bed86b9340991a",
+      "snapshot_sha256": "37360889948d6789e8bb91a6329c9beecf61bf1918df013568bed86b9340991a"
+    },
+    {
+      "id": "C161",
+      "title": "2026-08-19 — Auditoria de segunda origem: a regra de idioma contra a biblioteca",
+      "line_start": 2621,
+      "line_end": 2684,
+      "original_sha256": "a641558b555bf69d992dd91aa3e424a0ffcfaf3044614915bcf2af88a84287ae",
+      "snapshot_sha256": "a641558b555bf69d992dd91aa3e424a0ffcfaf3044614915bcf2af88a84287ae"
+    },
+    {
+      "id": "C162",
+      "title": "2026-08-19 — Empacotador para auditoria de contexto longo",
+      "line_start": 2685,
+      "line_end": 2704,
+      "original_sha256": "fd760246b31e4d42bbfda75ba50da67b1351df2bab0962d8b68e595b51c1e4f0",
+      "snapshot_sha256": "fd760246b31e4d42bbfda75ba50da67b1351df2bab0962d8b68e595b51c1e4f0"
+    },
+    {
+      "id": "C163",
+      "title": "2026-08-18 — A norma vira instrumento, e as 13 skills ficam completas",
+      "line_start": 2705,
+      "line_end": 2760,
+      "original_sha256": "5549d51d0c1ec8ede45ca5c468298b04d00daa7f3f8be1899e5eac6e6d832539",
+      "snapshot_sha256": "5549d51d0c1ec8ede45ca5c468298b04d00daa7f3f8be1899e5eac6e6d832539"
+    },
+    {
+      "id": "C164",
+      "title": "2026-08-18 — As duas dívidas nomeadas fecham, e o validador zera",
+      "line_start": 2761,
+      "line_end": 2814,
+      "original_sha256": "2b24d67bb318632a39fdc2d6d25df2976e2849b8e12a9c6640d517fb0ac12d80",
+      "snapshot_sha256": "2b24d67bb318632a39fdc2d6d25df2976e2849b8e12a9c6640d517fb0ac12d80"
+    },
+    {
+      "id": "C165",
+      "title": "2026-08-18 — Auditoria de consistência e didática: 18 achados, e uma sigla que atravessou a quarentena",
+      "line_start": 2815,
+      "line_end": 2900,
+      "original_sha256": "d212c868852254c634de666af4caabe8d34619df9d055843c244e068dfb7d9aa",
+      "snapshot_sha256": "d212c868852254c634de666af4caabe8d34619df9d055843c244e068dfb7d9aa"
+    },
+    {
+      "id": "C166",
+      "title": "2026-08-17 — Auditoria final do conjunto: 18 achados, e a classe que doze rodadas não viram",
+      "line_start": 2901,
+      "line_end": 2969,
+      "original_sha256": "07d7f8bf0f1afc15e5b2e6990373349b7b60b211d6fd81c6b60a301485c6f960",
+      "snapshot_sha256": "07d7f8bf0f1afc15e5b2e6990373349b7b60b211d6fd81c6b60a301485c6f960"
+    },
+    {
+      "id": "C167",
+      "title": "2026-08-17 — Sprint 12: fechamento, com dois ADRs e três guardas",
+      "line_start": 2970,
+      "line_end": 3013,
+      "original_sha256": "1bf04f9c81a94da22e8d308aa33528c017f27f598a057b0a38b85d6de5eebf08",
+      "snapshot_sha256": "1bf04f9c81a94da22e8d308aa33528c017f27f598a057b0a38b85d6de5eebf08"
+    },
+    {
+      "id": "C168",
+      "title": "2026-08-17 — Sprint 5: os 16 prompts ganham notebook, com a parte 3 declarada em branco",
+      "line_start": 3014,
+      "line_end": 3054,
+      "original_sha256": "c843cba2396214596bc0c3928dd95e18c996dcf1ea1e93e4c0fb8c427ce1cffd",
+      "snapshot_sha256": "c843cba2396214596bc0c3928dd95e18c996dcf1ea1e93e4c0fb8c427ce1cffd"
+    },
+    {
+      "id": "C169",
+      "title": "2026-08-17 — auditoria da Sprint 11: 19 achados, e a skill que não cumpria o próprio molde",
+      "line_start": 3055,
+      "line_end": 3119,
+      "original_sha256": "44974b1fcb9eed8b217b87c8510e37e07d2eb2e73c27350cbcb8786ed975bc73",
+      "snapshot_sha256": "44974b1fcb9eed8b217b87c8510e37e07d2eb2e73c27350cbcb8786ed975bc73"
+    },
+    {
+      "id": "C170",
+      "title": "2026-08-17 — Sprint 11: a skill que cria objeto do Hub",
+      "line_start": 3120,
+      "line_end": 3155,
+      "original_sha256": "c8af4e1eb345f12b6fca8b4b010b50e60cfee47baf8b8c79d7573984ed951273",
+      "snapshot_sha256": "c8af4e1eb345f12b6fca8b4b010b50e60cfee47baf8b8c79d7573984ed951273"
+    },
+    {
+      "id": "C171",
+      "title": "2026-08-17 — auditoria da Sprint 10: 12 achados, e o defeito que se repetiu",
+      "line_start": 3156,
+      "line_end": 3210,
+      "original_sha256": "3f318959f83b94b59a5d5759d7da59a1a03e4a8804a19a557f61d0c29850ac26",
+      "snapshot_sha256": "3f318959f83b94b59a5d5759d7da59a1a03e4a8804a19a557f61d0c29850ac26"
+    },
+    {
+      "id": "C172",
+      "title": "2026-08-17 — Sprint 10: os dois READMEs de topo, e o glossário absorvido",
+      "line_start": 3211,
+      "line_end": 3249,
+      "original_sha256": "b27ddab3fcb38055b723ada30617c85e3ffc5b21bdc737530db904293cd743d9",
+      "snapshot_sha256": "b27ddab3fcb38055b723ada30617c85e3ffc5b21bdc737530db904293cd743d9"
+    },
+    {
+      "id": "C173",
+      "title": "2026-08-17 — auditoria da Sprint 9: 13 achados, e o HTML que ninguém lia",
+      "line_start": 3250,
+      "line_end": 3312,
+      "original_sha256": "d14f65f1a72ac0e79a2bf8e33392f76820a90063b9f58c75ab1e9aad56cb1182",
+      "snapshot_sha256": "d14f65f1a72ac0e79a2bf8e33392f76820a90063b9f58c75ab1e9aad56cb1182"
+    },
+    {
+      "id": "C174",
+      "title": "2026-08-17 — Sprint 9: a biblioteca inteira convertida",
+      "line_start": 3313,
+      "line_end": 3353,
+      "original_sha256": "e74b03af188862d9ae6cd8b3397c9040240ee57ea3360c18a20181be3f70f2ed",
+      "snapshot_sha256": "e74b03af188862d9ae6cd8b3397c9040240ee57ea3360c18a20181be3f70f2ed"
+    },
+    {
+      "id": "C175",
+      "title": "2026-08-17 — auditoria da Sprint 8: 13 achados, e uma correção que estava no lugar errado",
+      "line_start": 3354,
+      "line_end": 3416,
+      "original_sha256": "23dbae41c6ade1e7df3b823c24a3fed963f91008ee8d3e75fa9082cf0ef4ccfd",
+      "snapshot_sha256": "23dbae41c6ade1e7df3b823c24a3fed963f91008ee8d3e75fa9082cf0ef4ccfd"
+    },
+    {
+      "id": "C176",
+      "title": "2026-08-17 — Sprint 8: `ml` inteira convertida, e os 14 demonstram",
+      "line_start": 3417,
+      "line_end": 3454,
+      "original_sha256": "ca534d463b9a5e37e7e15c100bd1d9460b75eb700cd106071e742dfe73ff4b0c",
+      "snapshot_sha256": "ca534d463b9a5e37e7e15c100bd1d9460b75eb700cd106071e742dfe73ff4b0c"
+    },
+    {
+      "id": "C177",
+      "title": "2026-08-17 — as 14 dependências opcionais instalam e rodam no Free",
+      "line_start": 3455,
+      "line_end": 3497,
+      "original_sha256": "4c754f1961f4cf5caac3c138b6c97ea199c90eace37ba07f6ba2d08320107955",
+      "snapshot_sha256": "4c754f1961f4cf5caac3c138b6c97ea199c90eace37ba07f6ba2d08320107955"
+    },
+    {
+      "id": "C178",
+      "title": "2026-08-17 — auditoria da Sprint 7: 12 achados e duas guardas novas",
+      "line_start": 3498,
+      "line_end": 3552,
+      "original_sha256": "aedc95f38ae6f2a60c0a394ad728769e81374882c643d4679dac198c695cc0c1",
+      "snapshot_sha256": "aedc95f38ae6f2a60c0a394ad728769e81374882c643d4679dac198c695cc0c1"
+    },
+    {
+      "id": "C179",
+      "title": "2026-08-17 — reestruturação para Hub: Sprints 0 a 7",
+      "line_start": 3553,
+      "line_end": 3628,
+      "original_sha256": "c3e69d4499c2d39669e739f53c2893167dfd3e0e9b83ccc27e8545c14079b3cb",
+      "snapshot_sha256": "c3e69d4499c2d39669e739f53c2893167dfd3e0e9b83ccc27e8545c14079b3cb"
+    },
+    {
+      "id": "C180",
+      "title": "2026-08-15 — segunda auditoria da documentação e 25 correções",
+      "line_start": 3629,
+      "line_end": 3770,
+      "original_sha256": "c95cf4359d80c975bc57cf8c5b93bb5c3485c37359b04ba6301121d1d09c3cc5",
+      "snapshot_sha256": "c95cf4359d80c975bc57cf8c5b93bb5c3485c37359b04ba6301121d1d09c3cc5"
+    },
+    {
+      "id": "C181",
+      "title": "2026-08-14 — auditoria da documentação e 22 correções",
+      "line_start": 3771,
+      "line_end": 3850,
+      "original_sha256": "57e9b2c002f0c2978e1c409843b4a8eb65cd50ad0f08d89dca33635b6964e361",
+      "snapshot_sha256": "57e9b2c002f0c2978e1c409843b4a8eb65cd50ad0f08d89dca33635b6964e361"
+    },
+    {
+      "id": "C182",
+      "title": "2026-08-14 — auditoria da biblioteca e 13 correções",
+      "line_start": 3851,
+      "line_end": 3909,
+      "original_sha256": "34fe4aa2c3b6d0a0b24e0948b1c6782578755c6cdaf945feb418971dd341f967",
+      "snapshot_sha256": "34fe4aa2c3b6d0a0b24e0948b1c6782578755c6cdaf945feb418971dd341f967"
+    },
+    {
+      "id": "C183",
+      "title": "2026-08-14 — reformulação das instruções pessoais",
+      "line_start": 3910,
+      "line_end": 3957,
+      "original_sha256": "6328dd28b50bf0b93f6cfc8dfea21b9a6e9387c95cc05c0f33c1b5d21121e0db",
+      "snapshot_sha256": "6328dd28b50bf0b93f6cfc8dfea21b9a6e9387c95cc05c0f33c1b5d21121e0db"
+    },
+    {
+      "id": "C184",
+      "title": "2026-08-14 — material didático, notebooks 03 e 04",
+      "line_start": 3958,
+      "line_end": 3983,
+      "original_sha256": "19e743e543393c95bb8aea75f86003afe73a9e683f6bd455b9e2c37225a333e8",
+      "snapshot_sha256": "19e743e543393c95bb8aea75f86003afe73a9e683f6bd455b9e2c37225a333e8"
+    },
+    {
+      "id": "C185",
+      "title": "2026-08-14 — material didático da biblioteca",
+      "line_start": 3984,
+      "line_end": 4020,
+      "original_sha256": "0218c74befcc00b5923b8c77754c30ab7df89416f0ca2d33c70d4294d8d3478c",
+      "snapshot_sha256": "0218c74befcc00b5923b8c77754c30ab7df89416f0ca2d33c70d4294d8d3478c"
+    },
+    {
+      "id": "C186",
+      "title": "2026-08-14 — biblioteca, fecho do sprint 0",
+      "line_start": 4021,
+      "line_end": 4052,
+      "original_sha256": "db5ffdcbd7c8d3805bb1a4fadfe3c5a1c6cf9edcf57c7d74b22dd9df75195956",
+      "snapshot_sha256": "db5ffdcbd7c8d3805bb1a4fadfe3c5a1c6cf9edcf57c7d74b22dd9df75195956"
+    },
+    {
+      "id": "C187",
+      "title": "2026-08-14 — biblioteca, endurecimento do pit_join",
+      "line_start": 4053,
+      "line_end": 4084,
+      "original_sha256": "5f26cf9b41825ebdd8cf0200554f3c419920ee171d72a9a03f80f0bd1344b701",
+      "snapshot_sha256": "5f26cf9b41825ebdd8cf0200554f3c419920ee171d72a9a03f80f0bd1344b701"
+    },
+    {
+      "id": "C188",
+      "title": "2026-08-14 — biblioteca, sprints 4 a 6",
+      "line_start": 4085,
+      "line_end": 4115,
+      "original_sha256": "dd7fca2e2a76dca1af60a0900dd4c311d79f9e921143d3149ce59d4e4e94c25d",
+      "snapshot_sha256": "dd7fca2e2a76dca1af60a0900dd4c311d79f9e921143d3149ce59d4e4e94c25d"
+    },
+    {
+      "id": "C189",
+      "title": "2026-08-14 — biblioteca, sprints 0 a 3",
+      "line_start": 4116,
+      "line_end": 4157,
+      "original_sha256": "b0559ba06acd1b2ec189f1d3a894bdae3eefe995dd26cc31db39ad6484ee7fc3",
+      "snapshot_sha256": "b0559ba06acd1b2ec189f1d3a894bdae3eefe995dd26cc31db39ad6484ee7fc3"
+    },
+    {
+      "id": "C190",
+      "title": "2026-08-14 — documentação, sprint 6 de 6",
+      "line_start": 4158,
+      "line_end": 4183,
+      "original_sha256": "9a1b9ca10b04547fb85006faef05b1af88769adaa2421c967f9184e1039756ed",
+      "snapshot_sha256": "9a1b9ca10b04547fb85006faef05b1af88769adaa2421c967f9184e1039756ed"
+    },
+    {
+      "id": "C191",
+      "title": "2026-08-14 — documentação, sprint 5 de 6",
+      "line_start": 4184,
+      "line_end": 4209,
+      "original_sha256": "6e67d67d249be14f9e4b72aa214d74dcc982fdfc31007c1d6c03a88f85b64e44",
+      "snapshot_sha256": "6e67d67d249be14f9e4b72aa214d74dcc982fdfc31007c1d6c03a88f85b64e44"
+    },
+    {
+      "id": "C192",
+      "title": "2026-08-14 — documentação, sprint 4 de 6",
+      "line_start": 4210,
+      "line_end": 4232,
+      "original_sha256": "a4d84294c3917e1d6725ba8bce79eec87466cc3ef7e038fc57fb6c7eb88ba08e",
+      "snapshot_sha256": "a4d84294c3917e1d6725ba8bce79eec87466cc3ef7e038fc57fb6c7eb88ba08e"
+    },
+    {
+      "id": "C193",
+      "title": "2026-08-14 — documentação, sprint 3 de 6",
+      "line_start": 4233,
+      "line_end": 4262,
+      "original_sha256": "1e079a81879493c4e1e01a05c5297177c7c575a4d3c7c6700ee0cb0ca2eb955c",
+      "snapshot_sha256": "1e079a81879493c4e1e01a05c5297177c7c575a4d3c7c6700ee0cb0ca2eb955c"
+    },
+    {
+      "id": "C194",
+      "title": "2026-08-14 — documentação, sprint 2 de 6",
+      "line_start": 4263,
+      "line_end": 4282,
+      "original_sha256": "658311083ae428b795cc3fb9877be35349dade6a76781388321f46338c8aa82e",
+      "snapshot_sha256": "658311083ae428b795cc3fb9877be35349dade6a76781388321f46338c8aa82e"
+    },
+    {
+      "id": "C195",
+      "title": "2026-08-14 — documentação, sprint 1 de 6",
+      "line_start": 4283,
+      "line_end": 4296,
+      "original_sha256": "25844f1c324fe5460e9c13f911f09d76f9a97eb9b062617b1dc7fb5204e2502f",
+      "snapshot_sha256": "25844f1c324fe5460e9c13f911f09d76f9a97eb9b062617b1dc7fb5204e2502f"
+    },
+    {
+      "id": "C196",
+      "title": "2026-08-14",
+      "line_start": 4297,
+      "line_end": 4427,
+      "original_sha256": "27aa176400c7607c8b9f35b932b595429a4a4167297ef41383eb6d7b3f89d288",
+      "snapshot_sha256": "27aa176400c7607c8b9f35b932b595429a4a4167297ef41383eb6d7b3f89d288"
+    },
+    {
+      "id": "C197",
+      "title": "2026-08-13",
+      "line_start": 4428,
+      "line_end": 4491,
+      "original_sha256": "4db271b57a275132b1f67aed241f5d135c6450e667cfb590a928f1c7740878aa",
+      "snapshot_sha256": "4db271b57a275132b1f67aed241f5d135c6450e667cfb590a928f1c7740878aa"
+    },
+    {
+      "id": "C198",
+      "title": "2026-09-13 — R09: recuperação de preservação (ChatGPT)",
+      "line_start": 4492,
+      "line_end": 4501,
+      "original_sha256": "50926d79b306961e45b6656095b27971ed9fa18067523bfcdf2344c128ac1e98",
+      "snapshot_sha256": "50926d79b306961e45b6656095b27971ed9fa18067523bfcdf2344c128ac1e98"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "X8",
+  "url": "https://docs.x.ai/developers/tools/function-calling",
+  "title": "Function Calling",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "API application executes function calls; skill directory orchestration is a host concern.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

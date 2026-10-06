@@ -101,7 +101,7 @@ ao objetivo e ao volume de dados.
 
 1. **Agregar antes de plotar**, sempre que possível.
 2. **Para grandes volumes**, amostrar com seed fixa para reprodutibilidade.
-3. **Gráficos do relatório executivo**: usar Plotly por interatividade.
+3. **Gráficos do relatório executivo**: usar Plotly quando a interatividade ajudar e a rota estiver disponível.
 4. **Gráficos de inspeção rápida**: visualizações nativas + display são
    suficientes.
 5. **Acessibilidade**: títulos, legendas e eixos claros; paleta com
@@ -113,12 +113,13 @@ ao objetivo e ao volume de dados.
 
 ## Notas sobre disponibilidade de bibliotecas
 
-- ¹ **Seaborn**: não vem pré-instalado em todos os Databricks Runtimes.
-  Antes de usar, verifique com `import seaborn` ou instale com
-  `%pip install seaborn`. Prefira **Plotly** (sempre disponível) quando
-  a visualização equivalente existir. Use Seaborn apenas quando o gráfico
-  específico não tiver equivalente prático em Plotly (ex.: pair plot com
-  regressão automática).
-- **Matplotlib**: disponível em todos os runtimes Databricks por padrão.
-- **Plotly**: disponível em todos os runtimes Databricks por padrão.
-  Preferência para relatórios por ser interativo.
+- **Seaborn, Matplotlib e Plotly**: confirmar presença e versão no Environment,
+  runtime e compute aprovados. Nenhuma biblioteca é presumida disponível em
+  todos os ambientes; import estático no exemplo não comprova instalação.
+- Se faltar dependência, registrar a lacuna e usar somente o mecanismo de
+  instalação permitido, com autorização e pins exigidos pelo projeto. Não
+  instalar automaticamente por copiar esta matriz.
+- Preferir Plotly quando a interatividade ajudar e a biblioteca estiver
+  disponível; escolher tabela ou outra visualização suportada quando bastar.
+- SHAP/Matplotlib e Kaplan–Meier mantêm as limitações temáticas documentadas
+  no [guia visual](estilo_visual_eda.md).

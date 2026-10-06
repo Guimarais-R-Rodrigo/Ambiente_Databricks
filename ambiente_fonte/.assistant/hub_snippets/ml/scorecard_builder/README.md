@@ -67,6 +67,19 @@ Esse arredondamento implica que a soma das contribuições discretizadas pode di
 
 ## 9. Como usar este recurso no Hub?
 
+Se `tabela` é a saída Spark agregada de WOE, faça a ponte com cardinalidade controlada. `limite_faixas` é ilustrativo e precisa caber no driver:
+
+```python
+feature = "faixa_renda"
+limite_faixas = 100
+assert 0 < tabela.count() <= limite_faixas  # ação Spark
+ponte = (tabela.select(feature, "woe").toPandas()
+         .rename(columns={feature: "faixa"})[["faixa", "woe"]])
+woe_tables = {feature: ponte}
+```
+
+Colete somente a tabela agregada, nunca a base de contratos. Coeficientes e intercepto precisam vir do modelo compatível com essas mesmas faixas/WOE.
+
 ```python
 from hub_snippets.ml.scorecard_builder import build_scorecard
 
@@ -96,7 +109,7 @@ O helper não valida monotonicidade de WOE, qualidade do binning, estabilidade, 
 
 A divisão do intercepto igualmente entre features é uma decomposição de apresentação: a soma preserva o termo total antes do arredondamento, mas a alocação do intercepto por feature não tem interpretação causal.
 
-O notebook histórico diz que pontos tornam a decisão “auditável por quem não lê código”. A tabela ajuda na rastreabilidade, mas auditabilidade real também exige regras de binning, versão, origem dos dados, política, testes e trilha de aprovação.
+A tabela facilita rastreabilidade, mas um scorecard auditável também exige binning versionado, origem dos dados, política, testes e trilha de aprovação.
 
 ## 12. Quais são as alternativas?
 
@@ -105,6 +118,28 @@ O notebook histórico diz que pontos tornam a decisão “auditável por quem n�
 Quando a necessidade principal é probabilidade calibrada e não uma escala de pontos, consumir a probabilidade do modelo validado pode ser mais direto.
 
 ## 13. Como saber se o resultado faz sentido?
+
+Conta independente com uma feature e uma faixa, somente em memória:
+
+```python
+import math
+import numpy as np
+import pandas as pd
+from hub_snippets.ml.scorecard_builder import build_scorecard
+
+coef, woe, intercept = 0.5, 0.4, -math.log(50)
+card = build_scorecard(np.array([coef]), intercept, ["renda_woe"],
+    {"renda_woe": pd.DataFrame({"faixa": ["A"], "woe": [woe]})},
+    pdo=20, base_score=600, base_odds=50, event_is_bad=True)
+factor = 20 / math.log(2)
+offset = 600 - factor * math.log(50)
+logit = intercept + coef * woe
+pontos_continuos = offset - factor * logit
+assert math.isclose(pontos_continuos, 594.2292198364441, abs_tol=1e-9)
+assert card.iloc[0]["pontos"] == round(pontos_continuos, 0) == 594.0
+```
+
+Na referência `logit=-ln(50)` de `P(mau)`, as odds **bom:mau=50:1** correspondem a 600 pontos. O acréscimo de `0.2` ao logit do mau reduz o score na conta acima. Com várias features, selecione uma faixa por feature e some os pontos; o arredondamento de cada parcela pode diferir da transformação contínua. Pontos não aprovam clientes nem substituem política/validação.
 
 Escolha combinações de faixas conhecidas e compare a soma dos pontos com a transformação contínua do logit do mesmo caso, aceitando apenas a diferença esperada de arredondamento. Confirme que aumentar o risco move o score na direção prevista.
 
@@ -118,6 +153,4 @@ O próximo passo operacional é versionar também binning/aplicação de faixas 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. A transformação usa a relação log-odds da regressão logística e a convenção local de PDO/base score/base odds codificada no helper. Não existe neste README alegação de que essa parametrização seja uma exigência regulatória universal.
-
-Este README não presume homologação do scorecard, publicação no Databricks nem auditoria independente.
+A transformação de pontos usa a convenção local de PDO, score base e odds favoráveis. Registre esses parâmetros, a orientação do evento e o binning junto ao modelo. A escala não representa exigência regulatória universal nem homologação de scorecard.

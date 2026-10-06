@@ -55,6 +55,8 @@ Imagine um problema fictício de propensão com 40 mil observações históricas
 
 ## 7. O que você precisa antes de usar?
 
+Para a rota binária com AUC, confirme **ambas as classes 0 e 1 no treino e na validação** antes de consumir compute. A checagem local não garante as duas classes na validação; uma única classe pode chegar ao fit e produzir erro ou AUC indefinida depois, conforme a versão. Essa é uma pré-condição de uso, não uma validação adicional já implementada.
+
 `X_train` e `X_val` precisam ter o mesmo significado e ordem de features; `y_train` e `y_val` precisam estar alinhados às linhas. O wrapper converte apenas os targets para NumPy e não valida formato, finitude ou número de colunas de `X`: erros desse tipo podem surgir depois dentro do LightGBM.
 
 Em classificação, o treino precisa ter ao menos duas classes e a validação não pode introduzir classe ausente no treino. A função não exige explicitamente que o caso binário tenha exatamente duas classes; confirme a codificação antes da chamada. Em multiclasse, `num_class` é inicialmente derivado das classes de treino.
@@ -74,6 +76,29 @@ O retorno é `(model, metrics)`.
 `overfit_gap` não possui limiar universal neste helper. Um valor pequeno ou grande precisa ser interpretado com variabilidade, desenho da validação, tamanho amostral e custo da decisão.
 
 ## 9. Como usar este recurso no Hub?
+
+Outros modos, com as mesmas matrizes preparadas e targets 1-D alinhados; os nomes abaixo distinguem os rótulos de cada tarefa:
+
+```python
+from hub_snippets.ml.train_lgbm import train_lightgbm_baseline
+
+# y_train_multi/y_val_multi: classes inteiras 0, 1, 2; todas vistas no treino.
+modelo_multi, m_multi = train_lightgbm_baseline(
+    X_train, y_train_multi, X_val, y_val_multi,
+    task="multiclass", log_mlflow=False,
+)
+# m_multi: log_loss_train, log_loss_val, accuracy_val, overfit_gap.
+# y_train_reg/y_val_reg: valores numéricos contínuos 1-D, na mesma unidade.
+modelo_reg, m_reg = train_lightgbm_baseline(
+    X_train, y_train_reg, X_val, y_val_reg,
+    task="regression", log_mlflow=False,
+)
+# m_reg: rmse_train, rmse_val, overfit_gap.
+```
+
+Estas chamadas são alternativas de tarefa, não uma instrução para converter o target existente em três problemas distintos.
+
+`log_mlflow=False` desliga apenas as chamadas explícitas de registro deste wrapper. Não desativa autologging já configurado na sessão nem garante ausência de logs/caches da biblioteca. Confira o estado da sessão e o destino antes de treinar.
 
 Depois de tornar a raiz `.assistant` disponível ao Python:
 
@@ -105,11 +130,11 @@ O helper não valida leakage, grão, disponibilidade temporal, pesos, desbalance
 
 Os `params_override` podem separar a configuração de treino do contrato de métricas. Por exemplo, alterar `objective` sem alterar `task` não muda a rotina de avaliação. O mesmo vale para sobrescrever `num_class` no multiclasse.
 
-O notebook histórico exibe um bloco abreviado dos defaults e uma interpretação de `subsample=0.8` como aleatoriedade de linhas. A fonte de verdade atual é `DEFAULT_PARAMS_*` na implementação; como `subsample_freq` não é definido, não trate aquela frase histórica como descrição do comportamento atual.
+Use DEFAULT_PARAMS_* e model.get_params() para conhecer a configuração enviada. subsample=0.8 não ativa sozinho bagging de linhas: o wrapper não define subsample_freq.
 
 ## 12. Quais são as alternativas?
 
-[train_xgboost](../train_xgboost/README.md) fornece outra referência de árvores impulsionadas. [train_catboost](../train_catboost/train_catboost.py) é especialmente relevante quando há variáveis categóricas que se pretende tratar nativamente. [optuna_lgbm](../optuna_lgbm/optuna_lgbm.py) pesquisa hiperparâmetros depois que um baseline e um protocolo de validação já existem.
+[train_xgboost](../train_xgboost/README.md) fornece outra referência de árvores impulsionadas. [train_catboost](../train_catboost/README.md) é especialmente relevante quando há variáveis categóricas que se pretende tratar nativamente. [optuna_lgbm](../optuna_lgbm/README.md) pesquisa hiperparâmetros depois que um baseline e um protocolo de validação já existem.
 
 Modelos lineares podem ser uma referência mais simples e interpretável em muitos problemas. O objetivo desta função não é declarar LightGBM vencedor universal, e sim tornar uma comparação explícita.
 
@@ -127,6 +152,8 @@ Depois do baseline, fixe o protocolo de comparação antes de ajustar hiperparâ
 
 ## 15. Referências
 
-O contrato específico foi conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. Fontes primárias consultadas em 12/09/2026: [API `LGBMClassifier`](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMClassifier.html), incluindo `subsample_freq=0`, e [callback de early stopping](https://lightgbm.readthedocs.io/en/v4.6.0/pythonapi/lightgbm.early_stopping.html). O comportamento local dos defaults vem do código do Hub, não dessas páginas.
+[Evidência histórica de execução e limites](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R05.md): registro de 12/09/2026, de manutenção. Não representa uma execução nova nem certificação do ambiente de destino.
 
-A evidência de runtime desta R05 será registrada no relatório da sprint; este README não presume publicação no Databricks, homologação em qualquer workspace nem revisão independente.
+Consulte LGBMClassifier e o callback de early stopping da versão LightGBM instalada. Registre os parâmetros efetivos e reserve teste independente; a validação usada para escolher a quantidade de árvores não é teste final.
+
+Referências primárias de conceito/API: [API `LGBMClassifier`](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMClassifier.html), [callback de early stopping](https://lightgbm.readthedocs.io/en/v4.6.0/pythonapi/lightgbm.early_stopping.html).

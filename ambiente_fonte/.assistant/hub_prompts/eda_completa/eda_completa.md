@@ -3,10 +3,10 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Adicione tabelas, notebook e definições
 > com **Add context** ou `@`. Skill recomendada: `@hub-ml-eda-profissional`.
 
-Antes de pedir código, veja os helpers que a skill recomendada declara: boa
-parte do que este formulário pede já tem implementação verificada, e usá-la
-evita que a lógica seja reescrita a cada conversa. Mapa completo em
-[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
+Antes de executar, siga a [skill selecionada](../../skills/hub-ml-eda-profissional/SKILL.md),
+a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) e o contrato
+da rota suportada. Helpers são componentes dessa rota, não um bypass. O
+[Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers) é o catálogo integrado.
 
 ## Como preencher
 
@@ -29,6 +29,10 @@ existirem no problema.
 | `{{FOCO}}` | Priorize perguntas e riscos. | Direciona profundidade e gráficos. | qualidade e viés por canal |
 | `{{RESTRICOES}}` | Liste compute, prazo, PII e bibliotecas. | Previne custo e exposição indevidos. | serverless; sem valores identificáveis |
 | `{{NOTEBOOK_RELATORIO_OU_CODIGO}}` | Escolha o artefato final e formato. | Evita uma entrega inutilizável. | notebook + resumo executivo |
+
+## Rota de execução
+
+Quando `hub-ml-eda-profissional` for selecionada para executar a EDA protegida, siga a [rota canônica](../../skills/hub-ml-eda-profissional/SKILL.md): `run_enforced` coleta evidência e emite Receipt; depois o handoff deve ser finalizado por `finalize_or_raise`. Exija Postflight `PASS` e `completion.authorized=true` antes de declarar conclusão. `PENDING_POSTFLIGHT` é transitório, não sucesso. Rapidez reduz profundidade opcional; não dispensa gates nem autoriza helper/SQL manual como bypass. Campos essenciais ausentes permanecem pendentes, sem inventar chave ou dados. Consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json).
 
 ## Prompt pronto para colar
 

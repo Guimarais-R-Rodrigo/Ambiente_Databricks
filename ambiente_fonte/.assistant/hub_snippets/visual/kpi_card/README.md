@@ -8,7 +8,7 @@
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Duas funções de apresentação de indicadores. |
+| O que é? | Três funções em dois formatos: HTML legado/temático e Markdown. |
 | Para que serve? | Mostrar um resumo legível antes dos detalhes. |
 | Use quando... | As métricas já têm significado, unidade e período definidos. |
 | Evite quando... | O cartão esconderia limitações ou substituiria a análise. |
@@ -59,6 +59,14 @@ Forneça um dicionário com rótulos textuais únicos e valores pequenos, já fo
 
 A importação utiliza Python e cores do Hub. Para HTML, é necessário um destino compatível; o notebook existente usa `displayHTML` e prepara o caminho com Spark. Ele não lê nem grava tabelas de negócio. Não inclua dados pessoais apenas porque o retorno será um cartão.
 
+APIs públicas (retorno `str`; `theme` é um `ResolvedTheme` de contexto `notebook` nas variantes resolvidas):
+
+- `kpi_card_html(metricas: Dict[str, Any])`
+- `kpi_card_markdown(metricas: Dict[str, Any])`
+- `kpi_card_html_resolvido(metricas: Dict[str, Any], theme: ResolvedTheme)`
+
+A geração legada usa Python e o Hub. As rotas resolvidas revalidam o tema e exigem as [dependências de validação](../../requirements-temas.txt), sem instalação automática.
+
 ## 8. O que este recurso entrega?
 
 `kpi_card_html` devolve a sequência de cartões HTML, sem moldura de relatório. `kpi_card_markdown` devolve uma única linha Markdown. Nenhuma função acrescenta unidade, arredonda valores ou atribui status.
@@ -77,7 +85,7 @@ print(kpi_card_markdown(metricas))
 
 Saída portátil conferida: `> **1.000** Linhas | **92,8%** Cobertura`. Os números foram fornecidos pelo exemplo. A chamada não mede cobertura nem materializa uma tabela.
 
-### Caminho V04 — KPI HTML com tema explícito
+### Tema explícito — KPI HTML com tema explícito
 
 ```python
 from hub_snippets.visual.kpi_card import kpi_card_html_resolvido
@@ -87,7 +95,16 @@ tema = load_reference_theme("notebook")
 html = kpi_card_html_resolvido({"Linhas": "1.000"}, tema)
 ```
 
-A V04 não tematiza `kpi_card_markdown`: Markdown permanece textual. O tema controla somente a apresentação HTML do card; valores, ordem, unidades e contexto continuam responsabilidade do chamador.
+O tema não se aplica a `kpi_card_markdown`: Markdown permanece textual. O tema controla somente a apresentação HTML do card; valores, ordem, unidades e contexto continuam responsabilidade do chamador.
+
+Formate a unidade antes do cartão, mantendo o número para cálculo:
+
+```python
+from hub_snippets.constants.format_br import fmt_int, fmt_pct
+metricas = {"Linhas": fmt_int(1000), "Cobertura": fmt_pct(0.928)}
+texto = kpi_card_markdown(metricas)
+assert "92,8%" in texto
+```
 
 ## 10. Decisões e configurações que mais importam
 
@@ -99,13 +116,13 @@ Para padrão brasileiro, considere [format_br](../../constants/format_br/README.
 
 O HTML escapa caracteres especiais, mas não anonimiza nem julga o conteúdo. A versão Markdown escapa apenas `|`: caracteres como `*`, quebras de linha e marcação HTML podem continuar alterando a apresentação no destino. Use rótulos controlados e confira o renderizador antes de transportar texto externo.
 
-A conversão de chaves para string pode descartar uma entrada Markdown se, por exemplo, o dicionário tiver as chaves `1` e `"1"`. Essa limitação foi reproduzida; a recomendação é usar rótulos textuais únicos desde a entrada. Na V04, `kpi_card_html_resolvido` obtém o CSS de `constants.styles`; `kpi_card_html` continua no caminho legado e não muda por carregar um tema.
+A conversão de chaves para string pode descartar uma entrada Markdown se, por exemplo, o dicionário tiver as chaves `1` e `"1"`. Essa limitação foi reproduzida; a recomendação é usar rótulos textuais únicos desde a entrada. Na rota resolvida, `kpi_card_html_resolvido` obtém o CSS de `constants.styles`; `kpi_card_html` continua no caminho legado e não muda por carregar um tema.
 
 ## 12. Quais são as alternativas?
 
 Uma tabela é preferível para muitos indicadores, unidades heterogêneas ou comparações por período. Texto comum pode comunicar uma única métrica com menos estrutura.
 
-[badge](../badge/README.md) oferece estados e faixas, mas exige revisar o significado dos cortes. [dataframe_styled](../../display/dataframe_styled/dataframe_styled.py) é uma opção para tabelas pandas com apresentação mais detalhada. A escolha depende do conteúdo, não de um formato universalmente superior.
+[badge](../badge/README.md) oferece estados e faixas, mas exige revisar o significado dos cortes. [dataframe_styled](../../display/dataframe_styled/README.md) é uma opção para tabelas pandas com apresentação mais detalhada. A escolha depende do conteúdo, não de um formato universalmente superior.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -121,4 +138,6 @@ Confira ainda se todas as entradas aparecem, se texto vazio ou `None` tem interp
 
 A [implementação](kpi_card.py) sustenta a transformação e suas limitações. [Python — html.escape](https://docs.python.org/3/library/html.html#html.escape) explica o tratamento do HTML. [Databricks — HTML](https://docs.databricks.com/aws/en/notebooks/notebook-media#include-html) sustenta a rota de renderização em notebooks. Consulta em 12/09/2026.
 
-Revisão R03-A: testes portáteis de texto, ordem, escape, entrada vazia e colisão de chaves. Não houve alteração de CSS, cálculo de indicadores reais, execução no Databricks ou auditoria independente.
+A [implementação](kpi_card.py) e a [fachada](__init__.py) delimitam o contrato. Confira conteúdo, escape e aparência no destino: gerar uma string não homologa a interface nem acessibilidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

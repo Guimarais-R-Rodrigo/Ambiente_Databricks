@@ -6,10 +6,6 @@ A produção operacional começa somente depois do aceite do contrato e do pilot
 
 ## Estado e próxima ação
 
-Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 em
-2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
-[registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
-
 O contrato vigente é **1.0.0**. A R13 foi aceita e integrada pelo PR nº 33 no commit `b0e953cc`, encerrando a iniciativa R00–R13 em **75/75 operacionais, 3/3 exemplares e 0 pendências**, com seis índices funcionais de `hub_snippets` e auditoria final local aprovada.
 
 Consulte o [relatório R13](RELATORIO_R13.md), a [matriz de auditoria](MATRIZ_AUDITORIA_R13.md), os [achados](ACHADOS_R13.md) e as evidências em `evidencias_r13/`. O encerramento é documental e local: não equivale a auditoria independente, publicação no workspace ou homologação Databricks/Genie Code.
@@ -49,6 +45,8 @@ registros abaixo permanecem históricos e não devem ser reescritos para refleti
 estado atual.
 
 ## Registros históricos preservados
+
+Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 em 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
 ### Conciliação durante a R03-A
 

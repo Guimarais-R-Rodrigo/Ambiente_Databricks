@@ -2,14 +2,16 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-Briefing para pipeline de dados com lakeflow quando apropriado. O prompt organiza o pedido, mas não executa a tarefa sozinho.
+Briefing para pipeline de dados com Lakeflow quando apropriado. O prompt organiza o pedido, mas não executa a tarefa sozinho.
+
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
 
 ## Visão rápida
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Briefing para pipeline de dados com lakeflow quando apropriado. |
-| Para que serve? | Explicitar fontes, destino, modo, chaves, schema, qualidade, slo e ambientes. |
+| O que é? | Briefing para pipeline de dados com Lakeflow quando apropriado. |
+| Para que serve? | Explicitar fontes, destino, modo, chaves, schema, qualidade, SLO e ambientes. |
 | Use quando... | Contratos e reprocessamento podem ser descritos. |
 | Evite quando... | Origem ainda está incorreta ou ambiente alvo indefinido. |
 | Precisa de... | Objetivo, fontes, destinos, modo, chaves, schema, regras, slo e ambientes. |
@@ -19,7 +21,7 @@ Comece pelo [briefing original](pipeline.md) e leia o [notebook de exemplo](exem
 
 ## 1. O que é?
 
-Briefing para pipeline de dados com lakeflow quando apropriado. O arquivo `pipeline.md` é a fonte do formulário e do contrato de saída.
+Briefing para pipeline de dados com Lakeflow quando apropriado. O arquivo `pipeline.md` é a fonte do formulário e do contrato de saída.
 
 ## 2. Que problema este recurso resolve?
 
@@ -27,7 +29,7 @@ Automatizar transformação sem idempotência, schema e recuperação apenas rep
 
 ## 3. Quando faz sentido usar?
 
-Use quando contratos e reprocessamento podem ser descritos. Explicitar fontes, destino, modo, chaves, schema, qualidade, slo e ambientes.
+Use quando contratos e reprocessamento podem ser descritos. Explicitar fontes, destino, modo, chaves, schema, qualidade, SLO e ambientes.
 
 ## 4. Quando não usar?
 
@@ -39,7 +41,7 @@ Comece pelos contratos e chegada; desenhe estado, deduplicação, late data e qu
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, período e unidade de análise explícitos.
+Desenhar uma carga incremental com chave e sequência declaradas, repetição da mesma carga e chegada de coluna nova. Pedir arquitetura e código com casos de replay e schema incompatível. O notebook atual só prepara uma tabela sintética; não cria pipeline nem prova MERGE ou reprocessamento.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +49,13 @@ Tenha objetivo, fontes, destinos, modo, chaves, schema, regras, SLO e ambientes.
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi apenas proposto, executado ou validado.
+Solicita arquitetura proporcional; contratos de input/output e chaves; qualidade, watermark/CDC quando aplicáveis; árvore e configuração; testes; plano de deploy, rollback, observabilidade e custo. Bronze/silver/gold, streaming e bundle são escolhas justificadas, não etapas obrigatórias em qualquer projeto.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [pipeline.md](pipeline.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_pipeline.py) demonstra o preenchimento. O exemplo sobrescreve `workspace.default.hub_exemplo_clientes`; ele não cria pipeline real.
+Leia e preencha [pipeline.md](pipeline.md) antes de decidir sobre o preparo. Siga a [skill correspondente](../../skills/hub-ml-pipeline-builder/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. Spec local, runner Spark/Delta e efeitos persistentes são rotas distintas; o efeito exige destino confirmado, autorização e evidência de execução/readback/limpeza. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing. O aceite de um perfil sintético não autoriza deploy no trabalho.
+
+O [notebook](exemplo_pipeline.py) sobrescreve `workspace.default.hub_exemplo_clientes`, sem criar pipeline real. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,11 +67,11 @@ Streaming sem necessidade, deploy no catálogo errado e reprocessamento não ide
 
 ## 12. Quais são as alternativas?
 
-Para qualidade use `data_quality`; para organizar projeto novo use `novo_projeto`.
+Use [Qualidade](../data_quality/README.md) para regras de dados ou [Novo Projeto](../novo_projeto/README.md) para organizar objetivo e responsáveis.
 
 ## 13. Como saber se o resultado faz sentido?
 
-Teste duplicata, atraso, reprocessamento, schema novo, falha parcial e parametrização por ambiente. Separe fatos observados, hipóteses e recomendações.
+Defina o resultado esperado por caso: replay não duplica; falha parcial preserva estado verificável; schema incompatível bloqueia a carga; destino e ambiente são explícitos. Se persistência ou limpeza não puderem ser conferidas, registre `UNKNOWN`; retry não prova retroativamente o efeito anterior.
 
 ## 14. Arquivos relacionados e próximos passos
 
@@ -75,4 +79,4 @@ O [briefing](pipeline.md), o [notebook](exemplo_pipeline.py) e o [catálogo](../
 
 ## 15. Referências
 
-A descrição foi confrontada com [pipeline.md](pipeline.md) e [exemplo_pipeline.py](exemplo_pipeline.py) na base R11. Para comportamento de plataforma, consulte a documentação oficial atual do Databricks antes de operar em produção.
+O [briefing](pipeline.md) define os campos e a entrega; o [notebook](exemplo_pipeline.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

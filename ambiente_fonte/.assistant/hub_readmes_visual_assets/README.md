@@ -17,12 +17,10 @@ hub_readmes_visual_assets/
 ├── CONTEUDO_FIGURAS.md
 ├── headers/                  # identidade compartilhada por README e notebook
 │   ├── README.md
-│   ├── src/                  # arte-base raster + texto e camada tipográfica
 │   └── png/                  # CRM e Squad, prontos para uso
 ├── specs/                    # contratos semânticos, microcopy e geração por tema
 ├── visual_system/
 ├── licenses/                 # Inter e Lucide
-├── qa/                       # verificações e metadados de composição
 └── readmes/
     ├── raiz/
     ├── assistant/
@@ -40,9 +38,11 @@ Dentro de cada conjunto:
 O código de composição é a fonte editável dos novos diagramas. As cinco
 assinaturas aprovadas têm SVGs congelados, usados como entrada com hashes de
 preservação. Alterações nesses casos exigem revisão explícita da assinatura,
-não edição casual do arquivo. Em `headers/src/`, o fundo
-original é raster, não vetor; `copy.json` contém o texto editável e os SVGs
-tipográficos são apenas uma camada da composição.
+não edição casual do arquivo. Os insumos dos cabeçalhos ficam em
+`tools/readme_visuals/assets/headers/src/` no repositório de manutenção: o fundo
+original é raster, `copy.json` contém o texto editável e os SVGs tipográficos
+são uma camada da composição. QA e metadados de composição ficam em
+`tools/readme_visuals/qa/`; nenhum desses diretórios integra a instalação.
 
 ## Cabeçalhos reutilizáveis
 
@@ -56,47 +56,15 @@ Markdown. Não copie esses PNGs para cada notebook: referencie a localização
 compartilhada. O [guia de cabeçalhos](headers/README.md) contém exemplos e os
 cuidados com caminhos relativos e acessibilidade.
 
-## Geração candidata por tema — V06
+## Consumo e solicitação de mudança
 
-A V06 acrescenta uma rota de manutenção **separada do pacote ativo**. Um
-`theme_id` canônico é resolvido pelo núcleo `hub_snippets.visual.tema`; somente
-depois disso o compositor v2 recebe os tokens validados. A geração vai para
-`.artifacts/visual-v2/theme-variants/` e nunca substitui automaticamente os PNGs
-deste diretório.
+Use os PNGs canônicos compartilhados; não crie cópias por notebook. Para mudar aparência, encaminhe a proposta ao mantenedor. Variante gerada continua candidata até revisão; não substitui automaticamente um asset aprovado. Assets congelados mantêm seus hashes e o [contrato de variantes](specs/theme_generation.yaml).
 
-O contrato está em [specs/theme_generation.yaml](specs/theme_generation.yaml).
-Assets congelados continuam protegidos por hash e não são recoloridos. Quando um
-asset paramétrico muda de bytes, a saída é marcada `variant_review_required` e
-precisa de nova revisão antes de qualquer promoção.
+A geração e suas dependências pertencem ao [guia externo de manutenção do compositor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/ai-architecture-20261006/tools/readme_visuals/README.md), executado no checkout autorizado: revisar diff → validar → gerar o derivado. Gerar não publica por inferência.
 
-Para o operador comum do Hub, nada muda: continue consumindo os PNGs canônicos.
-A rota V06 é uma ferramenta de manutenção local; gerar uma variante não significa
-aprovar, publicar ou instalar um tema no Databricks.
+## Ler as figuras por finalidade
 
-## Como manter
-
-A partir da raiz do repositório de autoria, com as dependências fixadas instaladas:
-
-```powershell
-node tools/readme_visuals/headers.mjs
-node tools/readme_visuals/production.mjs --family all
-node tools/readme_visuals/validate_production.mjs
-python tools/validate_assistant.py
-python tools/render_simulado.py --write
-```
-
-Os layouts ficam em `tools/readme_visuals/archetypes/`, apoiados por
-`tools/readme_visuals/lib.mjs`. Os cinco PNGs de assinatura e os dois cabeçalhos
-aprovados são preservados por hashes. Os contratos delimitam finalidade,
-limites, legenda e consumidor; o [índice textual das figuras](CONTEUDO_FIGURAS.md)
-permite conferir o conteúdo renderizado sem depender de OCR.
-
-O manifesto lista os ativos vigentes, não os históricos. As versões anteriores
-permanecem no histórico Git e no baseline de avaliação, fora deste pacote ativo.
-No workspace, consuma os PNGs; a autoria e os gates pertencem ao repositório.
-
-`tools/render_readme_visuals.mjs` e o renderer da Sprint 0 são ferramentas da
-rodada anterior; não use esses comandos para regenerar o pacote v2.
+O [equivalente textual das figuras](CONTEUDO_FIGURAS.md) preserva o que está nos pixels. Mapas, arquitetura de uso, catálogo e percursos de objetos ajudam o usuário. A seção [raiz.03_ciclo_de_vida](CONTEUDO_FIGURAS.md#raiz03_ciclo_de_vida) descreve o fluxo histórico de manutenção da figura; não é instrução para publicar depois de toda análise. O procedimento atual de autoria fica no repositório, separado do consumo. Não altere a transcrição para esconder que uma figura histórica descreve outro momento.
 
 ## Qualidade editorial
 

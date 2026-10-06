@@ -1,5 +1,9 @@
 # MM00 — Baseline e arquitetura
 
+> **Nota administrativa — 06/10/2026.** MM00 integrada pela PR #43 em `36e89515`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_fonte/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
+
+## Registro histórico preservado
+
 ## Objetivo
 
 Registrar o estado real do repositório e congelar as fronteiras da iniciativa antes de qualquer implementação funcional.

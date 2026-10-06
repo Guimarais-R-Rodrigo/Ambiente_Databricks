@@ -1,9 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Conferir temas — exemplo sintético V02
-# MAGIC Leia o [guia do objeto](README.md) antes de executar. Sem instalação,
-# MAGIC consultas, tabelas, gráficos ou arquivos gravados. Validação exige as
-# MAGIC bibliotecas declaradas. Esta candidata não é homologação de Databricks.
+# MAGIC # Conferir temas — exemplo sintético
+# MAGIC Leia o [guia do objeto](README.md) antes de executar. Sem instalação, consultas, tabelas, gráficos ou arquivos gravados. A validação exige as bibliotecas declaradas e não homologa Databricks.
 
 # COMMAND ----------
 from pathlib import Path

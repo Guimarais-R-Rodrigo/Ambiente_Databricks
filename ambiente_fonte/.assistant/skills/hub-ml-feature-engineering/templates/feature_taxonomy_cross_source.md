@@ -1,14 +1,14 @@
-<!-- Template: taxonomia de features cross-source — Modo B (skill hub-ml-feature-engineering) -->
+<!-- Template: features de múltiplas fontes (skill hub-ml-feature-engineering) -->
 
-# 🧬 Família 8 — Features Cross-Source (Interações Inter-Fonte)
+# Features de múltiplas fontes (interações inter-fonte)
 
-> Esta família só existe no **Modo B** (input vindo do Cross-EDA).
-> São features que combinam variáveis de fontes DIFERENTES, impossíveis
-> de criar com uma fonte isolada.
+> Candidatas que combinam variáveis de fontes diferentes. Podem partir de
+> Cross-EDA verificado ou de fontes com contratos estabelecidos. Os exemplos
+> abaixo são ilustrativos; não confirmam disponibilidade, risco ou sinal.
 
 ## Subtipos
 
-### 8.1 Razões cross-source
+### 1. Razões cross-source
 Features que dividem uma métrica de uma fonte por outra de fonte diferente.
 
 | feature_name | definição | fonte_numerador | fonte_denominador | janela |
@@ -17,15 +17,15 @@ Features que dividem uma métrica de uma fonte por outra de fonte diferente.
 | `feat_uso_sobre_limite` | Utilização crédito / limite aprovado | [fonte_transacoes] | [fonte_credito] | 30d |
 | `feat_ticket_vs_mediana_segmento` | Ticket médio / mediana do segmento | [fonte_transacoes] | [fonte_segmentacao] | 90d |
 
-### 8.2 Diferenças cross-source
+### 2. Diferenças cross-source
 Medir divergência entre mesma métrica em fontes diferentes, ou entre métrica e benchmark.
 
 | feature_name | definição | fonte_A | fonte_B | interpretação |
 |---|---|---|---|---|
-| `feat_delta_renda_declarada_vs_estimada` | Renda cadastro - renda estimada por modelo | [cadastro] | [bureau] | Divergência indica inconsistência |
+| `feat_delta_renda_declarada_vs_estimada` | Renda cadastro - renda estimada por modelo | [cadastro] | [bureau] | Divergência é hipótese a investigar; fontes podem medir conceitos distintos |
 | `feat_saldo_vs_media_coorte` | Saldo - média do coorte temporal | [saldos] | [agregado_coorte] | Posição relativa |
 
-### 8.3 Flags de presença/ausência cross-source
+### 3. Flags de presença/ausência cross-source
 Indicadores binários sobre a existência (ou não) de dados em determinada fonte.
 
 | feature_name | definição | fonte | interpretação |
@@ -34,7 +34,7 @@ Indicadores binários sobre a existência (ou não) de dados em determinada font
 | `feat_flag_tem_transacao_30d` | 1 se cliente transacionou nos últimos 30d | [transacoes] | Proxy de atividade |
 | `feat_qtd_fontes_com_dados` | Contagem de fontes com dado para este cliente | [todas] | Proxy de completude |
 
-### 8.4 Combinações temporais cross-source
+### 4. Combinações temporais cross-source
 Features que combinam informação temporal de fontes com frequências diferentes.
 
 | feature_name | definição | fonte_rapida | fonte_lenta | janela |
@@ -45,13 +45,17 @@ Features que combinam informação temporal de fontes com frequências diferente
 ## Validação anti-leakage
 
 Para toda feature cross-source, verificar:
-- [ ] Ambas as fontes existiam no ponto de referência temporal
+- [ ] Valores das duas fontes estavam disponíveis até cutoff conforme event_time, available_at e fronteira declarada
 - [ ] Nenhuma fonte contém informação pós-evento
 - [ ] O join entre fontes não introduz leakage (fonte B não é resultado do target)
 - [ ] Missingness na fonte B não é proxy do target
 
-## Quando NÃO criar features cross-source
+## Quando bloquear ou investigar
 
-- Coverage da fonte secundária < 50% (feature terá mais nulos que valores)
-- Fontes com temporalidade incompatível (uma é D-0, outra é M-1)
-- PSI cross-source acima do limite aprovado (mesma variável medida de forma diferente em cada fonte)
+- Bloquear uso sem autorização ou com informação disponível apenas após a decisão.
+- Investigar cobertura por segmento/período e efeito na população; cobertura
+  abaixo de 50% não é veto universal nem a taxa de nulos dos atributos.
+- Frequências D-0 e M-1 podem ser compatíveis se semântica, atraso e alinhamento
+  point-in-time forem válidos; registrar limites e método de join do caso.
+- PSI acima do limite aprovado pede investigação de população, bins e semântica;
+  o índice isolado não prova que a variável foi medida de forma diferente.

@@ -1,5 +1,9 @@
 # V05 — Visual Lab em notebook
 
+> **Nota administrativa — 06/10/2026.** A integração vigente é a PR #37; a PR #26 e candidatas anteriores são históricas/supersedidas. Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 ## Estado desta sprint
 
 **CANDIDATA EM FECHAMENTO; SEM ACEITE OU MERGE.** A V05 está sendo reconciliada na branch `codex/temas-v05-fechamento-r13-20260913`, baseada na `main` pós-D05 (`24ffce298ed543755eb15d5d7c553d02ce15e73e`). A PR histórica #26 e as branches anteriores permanecem preservadas como evidência; elas não representam a candidata corrente.

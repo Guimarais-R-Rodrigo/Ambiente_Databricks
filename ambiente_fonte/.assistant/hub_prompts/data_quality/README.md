@@ -47,13 +47,13 @@ Preencha os campos de [data_quality.md](data_quality.md), especialmente granular
 
 ## 8. O que este recurso entrega?
 
-O prompt solicita scorecard por dimensão, catálogo de regras, evidências, severidade, código proposto quando pedido, lacunas e plano de implantação. Esses itens são pedidos à interação; não são resultados garantidos pelo arquivo.
+Solicita quatro grupos verificáveis: scorecard por dimensão com resultado/limite/evidência/severidade; catálogo de regras com proprietário sugerido; código proposto em bloco separado; riscos, lacunas e plano de implantação. Distinga regra vigente de proposta e código proposto de executado. Dimensão não testada permanece não observada, nunca conforme.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [data_quality.md](data_quality.md), preencha o formulário e selecione o recurso real. O briefing recomenda `@hub-ml-eda-profissional`.
+Preencha [data_quality.md](data_quality.md) e selecione o recurso real. Quando `hub-ml-eda-profissional` for selecionada para executar a EDA protegida, siga a [rota canônica](../../skills/hub-ml-eda-profissional/SKILL.md): `run_enforced` coleta evidência e emite Receipt; depois o handoff deve ser finalizado por `finalize_or_raise`. Exija Postflight `PASS` e `completion.authorized=true` antes de declarar conclusão. `PENDING_POSTFLIGHT` é transitório, não sucesso. Rapidez reduz profundidade opcional; não dispensa gates nem autoriza helper/SQL manual como bypass. Campos essenciais ausentes permanecem pendentes, sem inventar chave ou dados. Consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json).
 
-O [notebook](exemplo_data_quality.py) cria `workspace.default.hub_exemplo_clientes_dup` usando `mode("overwrite")`. A fixture introduz duplicidade proposital. Executar a Parte 1 pode substituir uma tabela existente com esse nome; estudar o prompt não executa essa escrita.
+O [exemplo](exemplo_data_quality.py) sobrescreve `workspace.default.hub_exemplo_clientes_dup` com `mode("overwrite")`. A duplicidade é sintética e deve ser conferida na chave declarada. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -65,7 +65,7 @@ Uma taxa pode usar o denominador errado, uma amostra pode esconder falhas raras 
 
 ## 12. Quais são as alternativas?
 
-Para exploração inicial, use [eda_rapida](../eda_rapida/README.md) ou [eda_completa](../eda_completa/eda_completa.md). Para duas versões da mesma fonte, use [comparar_tabelas](../comparar_tabelas/README.md). Um check determinístico simples também pode ser implementado diretamente em SQL ou PySpark.
+Para exploração, use [EDA rápida](../eda_rapida/README.md) ou [EDA completa](../eda_completa/README.md). Para versões de uma fonte, use [Comparar Tabelas](../comparar_tabelas/README.md). [data_quality_check](../../hub_scripts/data_quality_check/README.md) oferece diagnóstico determinístico isolado de nulos, chave e freshness; seu escopo é menor que o catálogo de regras deste prompt e não substitui uma EDA protegida selecionada.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -77,6 +77,6 @@ O [briefing](data_quality.md) é o ponto de uso; o [notebook](exemplo_data_quali
 
 ## 15. Referências
 
-A descrição local foi confrontada com [data_quality.md](data_quality.md) e [exemplo_data_quality.py](exemplo_data_quality.py). Esta revisão foi estática.
+O [briefing](data_quality.md) define os campos e a entrega; o [notebook](exemplo_data_quality.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
 
-A documentação oficial [Manage data quality with pipeline expectations](https://docs.databricks.com/aws/en/ldp/expectations), consultada em 13/09/2026, descreve expectations e suas políticas de tratamento no Lakeflow. Ela sustenta a capacidade de plataforma, não valida regras específicas deste prompt.
+Para a etapa opcional de regras de pipeline, consulte [Manage data quality with pipeline expectations](https://docs.databricks.com/aws/en/ldp/expectations). A referência de plataforma não valida os limites ou as regras específicos deste briefing.

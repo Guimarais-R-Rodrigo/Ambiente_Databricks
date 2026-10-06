@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import copy
+import types
 import hashlib
 import json
 import os
@@ -276,6 +278,7 @@ class CorrectiveRegressionTests(unittest.TestCase):
 
     def test_coverage_has_no_empty_method_map(self):
         payload=coverage.inventory()
+        self.assertEqual("PASS",payload["status"],payload.get("issues"))
         rows=[*payload["se08"],*payload["ci_non_sef"],*payload["ser01"]]
         details=[
             {"step_id":row["step_id"],"mapping_status":row["mapping_status"],"collection_errors":row.get("collection_errors",[])}
@@ -413,9 +416,20 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         self.assertEqual(0,completed.returncode,stderr)
         payload=json.loads(stdout)
         self.assertEqual("PASS",payload["status"],payload.get("issues"))
-        self.assertEqual(21,payload["counts"]["se08"])
-        self.assertEqual(9,payload["counts"]["ci_non_sef"])
-        self.assertEqual(5,payload["counts"]["ser01"])
+        cfg=json.loads(coverage.REGISTRY.read_text(encoding="utf-8"))
+        for section, expected in (
+            ("se08", set(cfg["step_policy"])),
+            ("ci_non_sef", set(cfg["ci_step_policy"])),
+            ("ser01", {group["group_id"] for group in cfg["ser01_groups"]}),
+        ):
+            actual=[row["step_id"] for row in payload[section]]
+            self.assertTrue(actual, section)
+            self.assertEqual(expected, set(actual), section)
+            self.assertEqual(len(actual), len(set(actual)), section)
+        ci={row["step_id"]:row for row in payload["ci_non_sef"]}
+        self.assertEqual("COMMAND_ONLY",ci["ci:ai-controles"]["mapping_status"])
+        self.assertEqual("MAPPED",ci["ci:ai-regressoes"]["mapping_status"])
+        self.assertTrue(ci["ci:ai-regressoes"]["test_methods"])
 
     def test_windows_supervisor_assigns_before_child_release(self):
         source=Path(process.__file__).read_text(encoding="utf-8")
@@ -564,5 +578,251 @@ class IndependentAuditRegressionTests(unittest.TestCase):
             raise AssertionError(args)
         with mock.patch.object(round_identity,"_git",side_effect=fake_git):
             self.assertIn("ROUND_HEAD_CHANGED",round_identity.assert_round_start_current(row))
+
+class CoverageIdentityTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="b0 coverage ")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.path = self.root / "tools/tests/test_cases.py"
+        self.path.parent.mkdir(parents=True)
+        self.path.write_text(
+            "import unittest\nclass Checks(unittest.TestCase):\n"
+            " def test_one(self): pass\n def test_two(self): pass\n",
+            encoding="utf-8",
+        )
+        (self.root / "tools/check.py").write_text("print('local')\n", encoding="utf-8")
+        self.argv = [sys.executable, "-B", "tools/tests/test_cases.py", "-v"]
+        self.steps = [
+            ("sef", "profile", [sys.executable, "tools/check.py"]),
+            ("tests", "regression", self.argv),
+            ("command", "guard", [sys.executable, "tools/check.py"]),
+        ]
+        self.profile = [("suite", self.argv)]
+        self.cfg = {
+            "schema_version": coverage.REGISTRY_SCHEMA,
+            "step_policy": {"suite": "CURRENT_INVARIANT"},
+            "ci_step_policy": {
+                "ci:tests": {"classification": "CURRENT_INVARIANT", "mapping_mode": "unittest"},
+                "ci:command": {"classification": "CURRENT_INVARIANT", "mapping_mode": "command"},
+            },
+            "method_overrides": {},
+            "retired_method_overrides": {},
+            "command_only_steps": ["ci:command"],
+            "ser01_groups": [{"group_id": name, "path": "tools/tests/test_cases.py"} for name in sorted(coverage.SER01_GROUP_IDS)],
+        }
+        self.registry = self.root / "coverage.json"
+
+    def inventory(self):
+        self.registry.write_text(json.dumps(self.cfg), encoding="utf-8")
+        with mock.patch.object(coverage, "ROOT", self.root), mock.patch.object(coverage, "REGISTRY", self.registry), mock.patch.object(
+            coverage, "_load", side_effect=[
+                types.SimpleNamespace(PROFILE_STEPS={"se08": self.profile}),
+                types.SimpleNamespace(ETAPAS=self.steps),
+            ],
+        ):
+            return coverage.inventory()
+
+    def assert_issue(self, expected):
+        result = self.inventory()
+        self.assertEqual("FAIL", result["status"])
+        self.assertIn(expected, result["issues"])
+        return result
+
+    def test_valid_inventory_collects_actual_nonempty_methods(self):
+        result = self.inventory()
+        self.assertEqual("PASS", result["status"], result["issues"])
+        self.assertEqual(2, result["counts"]["unique_methods"])
+        rows = {row["step_id"]: row for row in result["ci_non_sef"]}
+        self.assertEqual("MAPPED", rows["ci:tests"]["mapping_status"])
+        self.assertEqual(2, len(rows["ci:tests"]["test_methods"]))
+        self.assertEqual("COMMAND_ONLY", rows["ci:command"]["mapping_status"])
+        self.assertFalse(rows["ci:command"]["test_methods"])
+        self.assertTrue(all(item["classification"] == "CURRENT_INVARIANT" for row in result["ser01"] for item in row["test_methods"]))
+
+    def test_omitted_step_fails(self):
+        self.steps = [step for step in self.steps if step[0] != "tests"]
+        self.assert_issue("CI_NON_SEF_STEP_MISSING:ci:tests")
+
+    def test_extra_step_fails(self):
+        self.steps.append(("extra", "unexpected", self.argv))
+        self.assert_issue("CI_NON_SEF_STEP_UNEXPECTED:ci:extra")
+
+    def test_replacement_with_same_count_fails_both_identities(self):
+        self.steps[1] = ("replacement", "substitute", self.argv)
+        result = self.assert_issue("CI_NON_SEF_STEP_MISSING:ci:tests")
+        self.assertIn("CI_NON_SEF_STEP_UNEXPECTED:ci:replacement", result["issues"])
+
+    def test_duplicate_step_fails_even_with_nonempty_collection(self):
+        self.steps.append(self.steps[1])
+        self.assert_issue("CI_NON_SEF_STEP_DUPLICATE:ci:tests")
+
+    def test_duplicate_sef_cannot_hide_behind_exclusion(self):
+        self.steps.append(self.steps[0])
+        self.assert_issue("CI_SEF_STEP_NOT_UNIQUE")
+
+    def test_non_sef_discovery_empty_fails(self):
+        self.steps = self.steps[:1]
+        self.assert_issue("CI_NON_SEF_DISCOVERY_EMPTY")
+
+    def test_omitted_se08_step_fails_identity_contract(self):
+        self.profile = []
+        self.assert_issue("SE08_STEP_MISSING:suite")
+
+    def test_extra_se08_step_fails_identity_contract(self):
+        self.profile.append(("extra", self.argv))
+        self.assert_issue("SE08_STEP_UNEXPECTED:extra")
+
+    def test_duplicate_ser_group_fails(self):
+        self.cfg["ser01_groups"].append(copy.deepcopy(self.cfg["ser01_groups"][0]))
+        self.assert_issue("SER01_STEP_DUPLICATE:" + self.cfg["ser01_groups"][0]["group_id"])
+
+    def test_ser_group_omission_cannot_weaken_previous_five_group_guard(self):
+        omitted = self.cfg["ser01_groups"].pop()["group_id"]
+        self.assert_issue("SER01_STEP_MISSING:" + omitted)
+
+    def test_ser_group_same_count_replacement_is_rejected(self):
+        omitted = self.cfg["ser01_groups"][0]["group_id"]
+        self.cfg["ser01_groups"][0]["group_id"] = "other"
+        result = self.assert_issue("SER01_STEP_MISSING:" + omitted)
+        self.assertIn("SER01_STEP_UNEXPECTED:other", result["issues"])
+
+    def test_empty_suite_is_not_coverage(self):
+        self.path.write_text("import unittest\n", encoding="utf-8")
+        self.assert_issue("METHOD_MAP_INCOMPLETE:ci:tests:EMPTY_METHOD_MAP")
+
+    def test_ast_only_methods_are_not_coverage(self):
+        self.path.write_text("class NotATest:\n def test_one(self): pass\n", encoding="utf-8")
+        result = self.assert_issue("METHOD_MAP_INCOMPLETE:ci:tests:EMPTY_METHOD_MAP")
+        row = next(row for row in result["ci_non_sef"] if row["step_id"] == "ci:tests")
+        self.assertIn("AST_TEST_NOT_COLLECTED:tools/tests/test_cases.py::NotATest.test_one", row["collection_errors"])
+
+    def test_partial_collection_cannot_hide_uncollected_ast_method(self):
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write("class NotATest:\n def test_uncollected(self): pass\n")
+        result = self.assert_issue("METHOD_MAP_INCOMPLETE:ci:tests:COLLECTION_ERROR")
+        row = next(row for row in result["ci_non_sef"] if row["step_id"] == "ci:tests")
+        self.assertEqual(2, len(row["test_methods"]))
+        self.assertIn("AST_TEST_NOT_COLLECTED:tools/tests/test_cases.py::NotATest.test_uncollected", row["collection_errors"])
+
+    def test_load_tests_filter_cannot_hide_real_test(self):
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write("def load_tests(loader, tests, pattern):\n return unittest.TestSuite([Checks('test_one')])\n")
+        self.assert_issue("METHOD_MAP_INCOMPLETE:ci:tests:COLLECTION_ERROR")
+
+    def test_duplicate_test_ids_fail(self):
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write("def load_tests(loader, tests, pattern):\n return unittest.TestSuite([Checks('test_one'), Checks('test_one'), Checks('test_two')])\n")
+        self.assert_issue("DUPLICATE_TEST_ID:ci:tests:tools/tests/test_cases.py::Checks.test_one")
+
+    def test_named_unittest_selector_does_not_require_unselected_sibling(self):
+        self.steps[1] = ("tests", "one", [sys.executable, "-m", "unittest", "tools.tests.test_cases.Checks.test_one"])
+        result = self.inventory()
+        self.assertEqual("PASS", result["status"], result["issues"])
+        row = next(row for row in result["ci_non_sef"] if row["step_id"] == "ci:tests")
+        self.assertEqual(1, len(row["test_methods"]))
+
+    def test_missing_command_target_is_not_valid_command_only(self):
+        (self.root / "tools/check.py").unlink()
+        self.assert_issue("METHOD_MAP_INCOMPLETE:ci:command:MISSING")
+
+    def test_classification_cannot_be_omitted(self):
+        self.cfg["ci_step_policy"]["ci:tests"].pop("classification")
+        self.assert_issue("CI_STEP_POLICY_SCHEMA_INVALID:ci:tests")
+
+    def test_command_classification_must_match_command_only_registry(self):
+        self.cfg["command_only_steps"] = []
+        self.assert_issue("CI_COMMAND_ONLY_POLICY_MISMATCH")
+
+    def test_unknown_command_only_id_is_not_silently_ignored(self):
+        self.cfg["command_only_steps"].append("unknown_se08_step")
+        self.assert_issue("COMMAND_ONLY_STEP_NOT_OBSERVED:unknown_se08_step")
+
+    def test_malformed_registry_fails_closed(self):
+        self.cfg["ci_step_policy"]["ci:tests"]["mapping_mode"] = []
+        self.assert_issue("CI_STEP_POLICY_CLASSIFICATION_INVALID:ci:tests")
+
+    def test_old_schema_requires_explicit_migration(self):
+        self.cfg["schema_version"] = "SER-PARALLEL-COVERAGE-3"
+        self.assert_issue("COVERAGE_REGISTRY_SCHEMA_INVALID")
+
+    def test_invalid_python_is_structured_collection_failure(self):
+        self.path.write_text("def invalid(:\n", encoding="utf-8")
+        result = self.assert_issue("METHOD_MAP_INCOMPLETE:ci:tests:COLLECTION_ERROR")
+        row = next(row for row in result["ci_non_sef"] if row["step_id"] == "ci:tests")
+        self.assertIn("AST_COLLECTION_ERROR:SyntaxError", row["collection_errors"])
+
+    def test_duplicate_json_id_is_not_silently_overwritten(self):
+        self.registry.write_text('{"schema_version":"ignored","schema_version":"duplicate"}', encoding="utf-8")
+        with mock.patch.object(coverage, "REGISTRY", self.registry):
+            result = coverage.inventory()
+        self.assertEqual("FAIL", result["status"])
+        self.assertEqual(["COVERAGE_REGISTRY_UNREADABLE:ValueError"], result["issues"])
+
+    def retired_record(self, successor):
+        return {
+            "override": {"classification": "HISTORICAL_TEMPORAL", "historical_sha": "a" * 40, "reason": "previous assertion", "successor_ids": [successor]},
+            "retirement_sha": "b" * 40, "reason": "explicit renamed invariant", "successor_ids": [successor],
+        }
+
+    def test_retired_override_preserved_with_collectible_current_successor(self):
+        successor = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"]["old::Checks.test_previous"] = self.retired_record(successor)
+        result = self.inventory()
+        self.assertEqual("PASS", result["status"], result["issues"])
+        self.assertIn("old::Checks.test_previous", result["retired_temporal_overrides"])
+
+    def test_retired_override_missing_successor_is_not_a_blanket_exemption(self):
+        self.cfg["retired_method_overrides"]["old"] = self.retired_record("missing")
+        self.assert_issue("RETIRED_SUCCESSOR_NOT_OBSERVED:old:missing")
+
+    def test_retired_override_cannot_hide_still_collected_test(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"][method] = self.retired_record(method)
+        self.assert_issue("RETIRED_OVERRIDE_OBSERVED:" + method)
+
+    def test_unretired_stale_override_still_fails(self):
+        self.cfg["method_overrides"]["old"] = self.retired_record("tools/tests/test_cases.py::Checks.test_one")["override"]
+        self.assert_issue("TEMPORAL_OVERRIDE_NOT_OBSERVED:old")
+
+    def replaced_assertion_record(self, method):
+        record = self.retired_record(method)
+        with mock.patch.object(coverage, "ROOT", self.root):
+            digest = coverage.method_ast_digest(method)
+        return {**record, "retirement_kind": "assertions_replaced", "historical_method_ast_sha256": "c" * 64, "current_method_ast_sha256": digest}
+
+    def test_same_id_updated_assertion_is_current_not_historical(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"][method] = self.replaced_assertion_record(method)
+        result = self.inventory()
+        self.assertEqual("PASS", result["status"], result["issues"])
+        found = [item for row in result["se08"] for item in row["test_methods"] if item["test_id"] == method]
+        self.assertEqual([{"test_id": method, "classification": "CURRENT_INVARIANT"}], found)
+        self.assertEqual("HISTORICAL_TEMPORAL", result["retired_temporal_overrides"][method]["override"]["classification"])
+
+    def test_same_id_current_assertion_drift_is_detected(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"][method] = self.replaced_assertion_record(method)
+        self.path.write_text(self.path.read_text().replace("def test_one(self): pass", "def test_one(self): self.assertTrue(True)"), encoding="utf-8")
+        self.assert_issue("RETIRED_OVERRIDE_CURRENT_AST_MISMATCH:" + method)
+
+    def test_same_id_retirement_requires_hashes_and_successor(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        record = self.replaced_assertion_record(method)
+        record["current_method_ast_sha256"] = "not-a-hash"
+        self.cfg["retired_method_overrides"][method] = record
+        self.assert_issue("RETIRED_OVERRIDE_AST_HASH_INVALID:" + method + ":current_method_ast_sha256")
+        record["current_method_ast_sha256"] = "a" * 64
+        record["successor_ids"] = ["different"]
+        self.assert_issue("RETIRED_OVERRIDE_SAME_ID_SUCCESSOR_REQUIRED:" + method)
+
+    def test_assertion_ast_ignores_comments_but_not_semantics(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        with mock.patch.object(coverage, "ROOT", self.root):
+            original = coverage.method_ast_digest(method)
+            self.path.write_text("# harmless location change\n" + self.path.read_text(), encoding="utf-8")
+            self.assertEqual(original, coverage.method_ast_digest(method))
+
+
 
 if __name__=="__main__": unittest.main()

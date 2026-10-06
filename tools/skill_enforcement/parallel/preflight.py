@@ -3,6 +3,7 @@ import json
 from .contract import (CAMPAIGN_SCHEMA_VERSION, COMMAND_RECORD_SCHEMA_VERSION, RESULT_SCHEMA_VERSION, TASK_SCHEMA_VERSION, validate_campaign)
 from .process import ROOT
 from .registry import load_registry
+from .coverage import registry_issues
 from tools.project_policy import CORPORATE_RE, PERSONAL_RE
 PARALLEL=ROOT/"tools/skill_enforcement/parallel"; PLAN=ROOT/"docs/sprints/skill_enforcement_rollout/PARALELO"
 
@@ -37,7 +38,7 @@ def run():
  try: load_registry()
  except Exception as exc: issues.append(f"COMMAND_REGISTRY_INVALID:{type(exc).__name__}:{exc}")
  cfg=parsed.get(PARALLEL/"coverage_registry.json")
- if not isinstance(cfg,dict) or cfg.get("schema_version")!="SER-PARALLEL-COVERAGE-3": issues.append("COVERAGE_REGISTRY_SCHEMA_INVALID")
+ issues.extend(registry_issues(cfg))
  schema_contracts=[
   (PARALLEL/"schemas/campaign.schema.json","schema_version",CAMPAIGN_SCHEMA_VERSION),
   (PARALLEL/"schemas/task.schema.json","task_schema",TASK_SCHEMA_VERSION),

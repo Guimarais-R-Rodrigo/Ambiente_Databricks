@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "common": [
+    {"path": "AGENTS.md", "reason": "Invariantes, autorização e rotas comuns de manutenção"},
+    {"path": "docs/ai/task-context.md", "reason": "Contrato do recorte, limites e ampliação da consulta"}
+  ],
+  "tasks": {
+    "alterar-objeto": {
+      "description": "Localizar o contrato para alterar um objeto do Hub; acrescentar explicitamente o objeto e seus testes",
+      "files": [
+        {"path": "docs/ai/rules/fontes-e-derivados.md", "reason": "Fonte editável e fronteiras de geração/publicação"},
+        {"path": "docs/ai/rules/documentacao.md", "reason": "Contrato editorial e preservação de evidência"},
+        {"path": "ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md", "reason": "Estrutura canônica do README de objeto"},
+        {"path": "ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md", "reason": "Critérios editoriais do objeto"},
+        {"path": "tools/readme_objeto_contract.py", "reason": "Owner executável do contrato e ratchet"}
+      ],
+      "exclusions": [
+        "Esta entrada não seleciona um objeto por inferência; implementação, README, exemplo e testes afetados devem ser incluídos explicitamente.",
+        "Manual completo, outros objetos, espelhos e histórico ficam fora desta rota inicial; a seleção não comprova cobertura de dependências."
+      ],
+      "expand": [
+        "Repita --include com os paths exatos do README, implementação, exemplo e testes do objeto em ambiente_fonte/ e tools/tests/.",
+        "Consulte a seção pertinente do Manual canônico; se necessário, inclua ambiente_fonte/.assistant/MANUAL_TECNICO.md explicitamente.",
+        "Para comparação entre domínios ou história integral, gere outro bundle com --mode canonical; security acrescenta hashes e full inclui camadas textuais omitidas."
+      ]
+    },
+    "preparar-entrega": {
+      "description": "Preparar o contexto de uma entrega pessoal, sem executar publicação ou replicação",
+      "files": [
+        {"path": ".agents/skills/replicar-trabalho/SKILL.md", "reason": "Procedimento de preparação e limites de autoridade"},
+        {"path": "docs/ai/rules/fontes-e-derivados.md", "reason": "Identidade da fonte, derivados e efeitos autorizados"},
+        {"path": "docs/playbooks/replicacao-trabalho.md", "reason": "Runbook vigente de pacote, staging e aceite"},
+        {"path": "docs/playbooks/checklist-replicacao.md", "reason": "Gates humanos e técnicos da entrega"},
+        {"path": "tools/bundle_implantacao.py", "reason": "Contrato do manifesto do payload"},
+        {"path": "tools/kit_transicao_trabalho.py", "reason": "Composição do kit de produto e aceite"},
+        {"path": "tools/tests/test_transicao_trabalho.py", "reason": "Regressões da preparação do kit"}
+      ],
+      "exclusions": [
+        "Não inclui uma release gerada, credenciais, dados corporativos, resultados remotos nem o payload inteiro.",
+        "Gates e testes presentes no contexto não foram executados pelo bundler; preparo não autoriza publicação ou replicação."
+      ],
+      "expand": [
+        "Confira separadamente o manifesto SHA-256 da release escolhida; saídas ignoradas em .artifacts/ não são inputs deste bundler.",
+        "Acrescente owners de gates afetados com --include PATH; consulte cronologia apenas para a dúvida concreta.",
+        "Use --mode canonical para o corpus amplo, --mode security para o manifesto amplo ou --mode full para todas as camadas textuais enumeradas pelo Git."
+      ]
+    },
+    "instrucoes-ia": {
+      "description": "Mudar instruções de manutenção e verificar compatibilidade e controles pertinentes",
+      "files": [
+        {"path": "docs/ai/README.md", "reason": "Rotas e owners da camada de manutenção"},
+        {"path": "docs/ai/compatibility.md", "reason": "Separação de capacidade documentada, observada e suportada"},
+        {"path": "docs/ai/rules/colaboracao.md", "reason": "Autoridade, independência e critérios de conclusão"},
+        {"path": ".agents/skills/README.md", "reason": "Catálogo canônico das skills do mantenedor"},
+        {"path": "tools/ai_controls.py", "reason": "Owner executável dos controles de instrução"},
+        {"path": "tools/tests/test_ai_controls.py", "reason": "Regressões e mutantes dos controles"}
+      ],
+      "exclusions": [
+        "O control-map integral, snapshots, adaptadores gerados e cronologia não são carregados automaticamente.",
+        "A rota não certifica carregamento em clientes nativos nem substitui os registros e testes dos controles afetados."
+      ],
+      "expand": [
+        "Consulte docs/ai/control-map.json pelos IDs/owners afetados; --include docs/ai/control-map.json inclui o arquivo completo quando a investigação exigir.",
+        "Acrescente cada skill/regra afetada com --include PATH e consulte docs/ai/standards/registry.json e docs/ai/native-test-protocol.md quando pertinentes.",
+        "Gere --mode canonical, security ou full quando for necessária revisão integral entre documentos."
+      ]
+    },
+    "investigar-regressao": {
+      "description": "Localizar classes de falha e owners antes de selecionar uma regressão e sua evidência histórica",
+      "files": [
+        {"path": "docs/auditoria/README.md", "reason": "Índice de classes de defeito e guardas"},
+        {"path": "docs/testes/README.md", "reason": "Alcance das provas e testes disponíveis"},
+        {"path": "docs/decisions/README.md", "reason": "Índice único das decisões arquiteturais"},
+        {"path": "docs/ai/context/projeto.md", "reason": "Owners vivos e direção da investigação"},
+        {"path": "docs/historico/README.md", "reason": "Localizadores do histórico preservado"}
+      ],
+      "exclusions": [
+        "A rota inicial não inclui automaticamente todos os testes, ADRs, campanhas ou a cronologia integral.",
+        "Uma investigação precisa acrescentar a guarda, o teste e a evidência específicos; resultado antigo vale somente para seu SHA e ambiente."
+      ],
+      "expand": [
+        "Escolha a classe no índice de auditorias e acrescente teste/guarda/ADR/campanha com --include PATH, repetindo a opção para cada arquivo.",
+        "Recupere a falha pelo índice histórico e pelo commit da campanha; não substitua FAIL/BLOCKED por resultado posterior.",
+        "Para auditoria comparativa integral, gere --mode canonical; security também inventaria hashes e full inclui camadas textuais omitidas."
+      ]
+    }
+  }
+}

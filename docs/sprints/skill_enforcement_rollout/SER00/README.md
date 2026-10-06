@@ -1,5 +1,9 @@
 # SER00 — reconciliação e freeze candidato
 
+> **Nota administrativa — 06/10/2026.** SER00 integrada pela PR #101 em `dedde074`. A baseline 14/14 e os rótulos candidatos abaixo pertencem à fotografia de 22/09/2026. Consulte o [estado SER](../README.md) para continuidade; não use a baseline como policy atual.
+
+## Registro histórico preservado
+
 Base: `11851e137dd7793b351ac08fc211c0be90005dee`. Branch: `ser/SER00-rollout-baseline`.
 
 Escopo desta rodada: leitura do GitHub, inventário 14/14, revisão de targets, 24 superfícies, mapeamento de recursos, dependências e planejamento. Nenhum runner, contrato de produto ou perfil de certificação foi implementado.

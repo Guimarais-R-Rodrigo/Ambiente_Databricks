@@ -1,5 +1,9 @@
 # V03 — integração explícita do núcleo com Plotly
 
+> **Nota administrativa — 06/10/2026.** V03 integrada pela PR #16 em `b83a7cde`. Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 > **ACEITA POR RODRIGO · INTEGRAÇÃO GIT AUTORIZADA · 12/09/2026.** A V02 está aceita e integrada. A V03 acrescenta uma rota opt-in para Plotly e preserva os gráficos existentes por padrão. O PR #16 registra a efetivação do merge; este texto, isoladamente, não prova integração nem publicação.
 
 ## Para quem nunca entrou no Hub

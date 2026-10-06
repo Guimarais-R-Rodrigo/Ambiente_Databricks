@@ -1,5 +1,9 @@
 # SE04 — Execution Receipt formal
 
+> **Nota administrativa — 06/10/2026.** SE04 integrada pela PR #77 em `d74b2fcb`. As pendências de abertura de PR, certificação e merge abaixo descrevem candidatas anteriores. [História SEF](../README.md) e [operação atual SER](../../skill_enforcement_rollout/README.md) distinguem o fechamento histórico da policy vigente. Esta nota não reclassifica resultados nem amplia o escopo certificado.
+
+## Registro histórico preservado
+
 ## Estado
 
 **IMPLEMENTAÇÃO FUNCIONAL CONSTRUÍDA; certificação local e homologação determinística no Databricks Free observadas com PASS. Release candidate ainda depende da recertificação final do HEAD documental e da abertura controlada da PR.**

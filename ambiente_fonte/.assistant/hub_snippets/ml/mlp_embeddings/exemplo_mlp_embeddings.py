@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # `mlp_embeddings` — embedding para categórica que árvore não resolve bem
+# MAGIC # `mlp_embeddings` — comparar representações aprendidas para categorias
 # MAGIC
 # MAGIC **O problema.** Categóricas com muitos níveis podem tornar one-hot muito largo. Uma embedding oferece outra hipótese: aprender vetores densos por nível e ajustar essa representação junto com a tarefa.
 # MAGIC
@@ -48,15 +48,7 @@ from hub_snippets.ml.mlp_embeddings import EmbeddingMLP, train_embedding_mlp
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## Por que `log_mlflow=False` em tudo
-# MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
-# MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
+# MAGIC Este exemplo passa log_mlflow=False para desativar apenas o registro explícito do helper. Antes de habilitar tracking, confirme dependência, experimento, permissões, configuração do runtime e autologging da sessão. Uma falha numa configuração de serverless não determina o suporte em outras configurações.
 
 # COMMAND ----------
 # MAGIC %md

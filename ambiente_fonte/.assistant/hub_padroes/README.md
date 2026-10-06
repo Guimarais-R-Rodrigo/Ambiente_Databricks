@@ -27,9 +27,7 @@ A política transversal de enforcement por skill está em [skill_enforcement/REA
 
 ## Sistema de Temas
 
-O [padrão de identidade visual](identidade_visual/README.md) é o contrato transversal; não é um sétimo tipo de objeto. `ResolvedTheme` é a representação validada. V03/V04 integram consumidores Plotly/HTML, V05 fornece o Visual Lab opt-in, V06 conecta geração editorial e V07 amplia os consumidores runtime e formatos exercitados.
-
-Templates e skills podem orientar composição, mas não redeclaram tokens ou paletas. Para um objeto visual configurável novo, use o contrato central e a rota `_resolvido` aplicável. Não há tema global automático, migração silenciosa de notebooks ou publicação implícita.
+Para recursos com aparência configurável, use o contrato central de identidade visual e um ResolvedTheme validado. Templates não redeclaram tokens ou paletas. Consulte o [contrato central](identidade_visual/README.md), o [Visual Lab](../hub_snippets/visual/theme_lab/README.md), o [App de autoria](identidade_visual/databricks_app/README.md) e a [ponte AI/BI](identidade_visual/aibi/README.md). Não há ativação global ou publicação implícita.
 
 ## Fluxo recomendado
 
@@ -46,7 +44,7 @@ Com o Genie Code:
 ```text
 @hub-ml-criar-objeto
 
-Crie um {{TIPO}} para {{OBJETIVO}} usando @hub_padroes/{{TIPO}}/template.
+Crie um {{TIPO}} para {{OBJETIVO}} usando o arquivo exato de template que anexei.
 Primeiro confirme nome, público, entradas, saída, limites e exemplo de uso.
 Não escreva arquivos até eu aprovar o plano.
 ```
@@ -59,7 +57,7 @@ Sem Genie Code, copie o template e siga seu checklist.
 |---|---|
 | explica uma coleção ou fluxo | README |
 | oferece função importável dentro de outro código | snippet |
-| executa diagnóstico orientado a um recurso | script |
+| executa tarefa com entradas, saídas e efeitos próprios, como inspeção, transformação ou governança | script |
 | estrutura um pedido para o chat | prompt |
 | ensina ao agente um workflow especializado | skill |
 | demonstra execução e interpretação | notebook |
@@ -97,13 +95,4 @@ Todo objeto precisa deixar explícitos:
 
 ## README de objeto — contrato vigente 1.0.0
 
-O template genérico `readme/template.md` atende guias agregadores. Para pastas
-operacionais de snippet, script ou prompt, use o
-[molde de objeto](readme/template_objeto.md) e o
-[checklist editorial](readme/checklist_objeto.md). A transição terminou com
-75/75 objetos operacionais, 3/3 exemplares e zero pendências.
-
-Todo novo objeto desses três tipos deve nascer com README local no mesmo
-contrato. O guia explica conceito, adequação, requisitos, efeitos e
-interpretação; código, fachada ou briefing continuam definindo o comportamento
-técnico. Não reabra dispensas nem replique o catálogo integrado do Manual.
+O [template agregador](readme/template.md) atende coleções e percursos. Todo novo snippet, script ou prompt operacional inclui README local no contrato editorial 1.0.0. Use o molde de objeto e o checklist editorial; eles explicam conceito, requisitos, efeitos e interpretação sem substituir o contrato técnico. Use o [molde de objeto](readme/template_objeto.md) e o [checklist editorial](readme/checklist_objeto.md); índices e licenças não herdam as quinze seções.

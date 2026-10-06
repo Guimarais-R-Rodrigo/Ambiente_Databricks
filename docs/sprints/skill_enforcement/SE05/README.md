@@ -1,5 +1,9 @@
 # SE05 — Postflight fail-closed
 
+> **Nota administrativa — 06/10/2026.** SE05 integrada pela PR #78 em `748b455d`. As pendências de abertura de PR, certificação e merge abaixo descrevem candidatas anteriores. [História SEF](../README.md) e [operação atual SER](../../skill_enforcement_rollout/README.md) distinguem o fechamento histórico da policy vigente. Esta nota não reclassifica resultados nem amplia o escopo certificado.
+
+## Registro histórico preservado
+
 ## Estado
 
 **IMPLEMENTAÇÃO FUNCIONAL HOMOLOGADA LOCALMENTE E NO DATABRICKS FREE; release candidate documental em preparação.**

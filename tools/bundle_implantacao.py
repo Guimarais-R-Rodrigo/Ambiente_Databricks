@@ -16,14 +16,14 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from project_policy import SAFE_SIMULATED_USERNAME, EXPECTED_HUB_DIRS, EXPECTED_SKILL_NAMES, LEGACY_MANAGED_SKILL_NAMES
+from project_policy import SIMULATED_ROOT, simulated_root, SAFE_SIMULATED_USERNAME, EXPECTED_HUB_DIRS, EXPECTED_SKILL_NAMES, LEGACY_MANAGED_SKILL_NAMES
 from notebook_marker import eh_notebook
 from publicar_free import conferir_fonte_espelho
 from temas_v09_transicao import validate_theme_inventory
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SOURCE = REPO_ROOT / "Novo_Ambiente_Simulado" / "Users" / SAFE_SIMULATED_USERNAME
+SOURCE = simulated_root(REPO_ROOT) / "Users" / SAFE_SIMULATED_USERNAME
 
 # A área de domínio precisa viajar no próprio Hub, com contratos e execução.
 MICROMODELOS_REQUIRED = frozenset({
@@ -45,6 +45,7 @@ MICROMODELOS_REQUIRED = frozenset({
 
 
 def main() -> int:
+    global SOURCE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help="ZIP de saída")
     parser.add_argument(
@@ -52,7 +53,18 @@ def main() -> int:
         action="store_true",
         help="gera pacote de revisão mesmo com fonte/derivado não commitados",
     )
+    parser.add_argument("--output-root", type=Path, default=SIMULATED_ROOT)
     args = parser.parse_args()
+    try:
+        SOURCE = simulated_root(REPO_ROOT, args.output_root) / "Users" / SAFE_SIMULATED_USERNAME
+    except ValueError as exc:
+        print(f"FAIL {exc}")
+        return 1
+    from simulado import parity_errors
+    errors = parity_errors(REPO_ROOT, args.output_root)
+    if errors:
+        print("FAIL pacote recusado: " + "; ".join(errors))
+        return 1
 
     if not SOURCE.is_dir():
         print("FAIL simulado sanitizado ausente; rode tools/render_simulado.py --write")
@@ -80,7 +92,7 @@ def main() -> int:
     commit = commit_proc.stdout.strip()
 
     status_proc = subprocess.run(
-        ["git", "status", "--porcelain", "--", "ambiente_fonte", "Novo_Ambiente_Simulado"],
+        ["git", "status", "--porcelain", "--", "ambiente_fonte"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,

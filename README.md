@@ -6,15 +6,22 @@
 
 > **Procedência.** Agent Skills e instruções são mecanismos reconhecidos pela Genie Code. Pastas `hub_*` e skills `hub-*` são implementações e convenções deste projeto; não são produtos institucionais da Databricks.
 
+**Manutenção por IA:** [contrato e rotas de trabalho](docs/ai/README.md), com [compatibilidade e gates pendentes](docs/ai/compatibility.md).
+
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
 **B1:** [escopo A de perfis sintéticos](docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) aceito em 2026-10-01; orquestração Genie, promoção de policy e homologação integral permanecem separadas.
 
-**Micromodelos:** o contrato L1 estático foi integrado no B1; o módulo de domínio da [candidata MM04–MM13-LAB](docs/sprints/micromodelos/README.md) está em reconciliação local, sem promoção de policy nem homologação corporativa.
+**Micromodelos:** o [módulo de domínio](ambiente_fonte/.assistant/hub_micromodelos/README.md) foi integrado pela PR #119 (`63601e09`, 30/09/2026). A skill continua L1/audit; integração, prova sintética e leitura de metadados não equivalem a homologação corporativa. Consulte os [limites e evidências](docs/sprints/micromodelos/PLANO_INTEGRACAO_HUB_MICROMODELOS.md).
 
 ---
 
 ## 🧭 Por onde começar
+
+- **Usar o Hub:** [instalação e primeiro uso](ambiente_fonte/.assistant/README.md).
+- **Manter:** [contrato e rotas](AGENTS.md) → [ferramentas e gates](tools/README.md).
+- **Preparar uma entrega:** [replicação e limites](.agents/skills/replicar-trabalho/SKILL.md) → [runbook](docs/playbooks/replicacao-trabalho.md).
+- **Investigar uma regressão:** [classes de defeito e guardas](docs/auditoria/README.md#classes-de-defeito-que-viraram-guardas) → teste/prova da frente.
 
 | Objetivo | Abra |
 |---|---|
@@ -23,11 +30,18 @@
 | usar funções/classes reutilizáveis | [Hub Snippets](ambiente_fonte/.assistant/hub_snippets/README.md) |
 | usar utilitários técnicos | [Hub Scripts](ambiente_fonte/.assistant/hub_scripts/README.md) |
 | escolher uma Agent Skill | [Skills](ambiente_fonte/.assistant/skills/README.md) |
+| descobrir ou combinar recursos do Hub | [Concierge canônico](ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md) |
 | preencher um briefing | [Hub Prompts](ambiente_fonte/.assistant/hub_prompts/README.md) |
 | criar ou manter objetos do Hub | [Hub Padrões](ambiente_fonte/.assistant/hub_padroes/README.md) |
+| consultar nível e superfícies protegidas | [Policy vigente](ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) |
+| verificar escopo técnico aceito e limites Genie | [Evidência B1](docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) |
 | acompanhar sprints e histórico | [Índice de sprints](docs/sprints/README.md) |
 
+<a id="o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho"></a>
+
 ## 🌟 O que é este ecossistema
+
+![Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
 Projetos de Machine Learning em Big Data exigem decisões recorrentes sobre grão, tempo, amostragem, leakage, métricas, visualização, monitoramento e governança. Sem o contexto do projeto, um assistente pode propor fórmulas, bibliotecas ou convenções diferentes das usadas pela equipe.
 
@@ -41,6 +55,8 @@ O ecossistema `.assistant` organiza esse contexto em camadas separadas:
 
 A pasta `hub_readmes_visual_assets/` é infraestrutura editorial para diagramas e cabeçalhos. Ela não é um sexto componente funcional nem fornece contexto automaticamente à Genie Code.
 
+<a id="arquitetura-completa-do-ecossistema"></a>
+
 ## 🏛️ Arquitetura e responsabilidade
 
 ![Corte arquitetural entre fonte versionada, workspace, contexto da Genie Code, notebook e runtime.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
@@ -53,37 +69,26 @@ A separação principal é entre **contexto** e **execução**:
 - a existência de um arquivo dentro de `.assistant` não o coloca automaticamente no `sys.path`;
 - publicar, executar, revisar e promover são gates distintos.
 
-`ambiente_fonte/` é a fonte editável. `Novo_Ambiente_Simulado/` é uma representação derivada e deve permanecer sincronizada por ferramenta/gates, não por edição manual concorrente.
+`ambiente_fonte/` é a fonte editável. `.artifacts/simulado/` é uma representação derivada e deve permanecer sincronizada por ferramenta/gates, não por edição manual concorrente.
 
 ## 🎨 Sistema de Temas
 
-V00–V13 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`, preservando estados honestos distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** rastreado na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**. Esses estados não são intercambiáveis.
+O Hub oferece configuração validada, aplicação explícita em consumidores compatíveis,
+Visual Lab, autoria de propostas no App e projeção controlada para AI/BI.
+`ResolvedTheme` é a fonte de verdade; aparência não altera cálculo, amostragem ou
+critérios de decisão. Temas são opt-in. SHAP/Matplotlib e Kaplan–Meier mantêm
+limites próprios; validar, salvar, importar, aprovar e publicar são ações distintas.
 
-O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. S0–S6 foram integradas pelas PRs #59–#65. A **S7 — handoff operacional e fechamento** foi aceita e integrada pela PR #66 no merge `62e9404851d6a7902371bd5b6531a113d521311c`; os **15/15 workflows de `push`** desse SHA concluíram em `success`. A homologação humana S7 está registrada como `HUMAN-01 = PASS`, com participante sanitizado `Tester`, duração de 5 minutos, zero ajuda, zero erros de interpretação e H1–H6 em PASS. Esse resultado é formativo: não constitui production readiness, não autoriza Databricks e não fecha #57. A [auditoria pós-merge V13](docs/sprints/sistema_temas/V13/AUDITORIA_POS_MERGE.md) registra a certificação e o drift documental dos índices vivos encontrado após o merge.
-
-A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
-
-Regras atuais:
-
-- `ResolvedTheme` continua sendo a fonte configurável de verdade;
-- consumidores visuais usam rotas explícitas `_resolvido` quando suportadas;
-- aparência não pode alterar cálculo, amostragem, embedding, política de monitoramento ou métricas;
-- o template EDA não mantém paleta ou dicionário de tema paralelos;
-- o kit V09 exige `theme_contract` v1 com nove caminhos canônicos protegidos por hash;
-- transporte é obrigatório, ativação continua `manual_opt_in` e publicação continua `not_performed`;
-- a V10 não implementa `context="app"`; o App gerencia propostas `notebook` existentes;
-- a V11 não implementa `context="aibi"`, não chama SDK/REST/CLI Databricks e não publica dashboard;
-- a V12 não converte CI em homologação de ambiente ou UAT e falha fechado sem autorização, identidade, classificação de dados, evidência ou rollback aplicável;
-- o PASS real `V12-AIBI-01` cobre somente import de tema em dashboard draft de teste, e `SEC-01` cobre somente identidade/permissão efetiva observadas; workspace theme, ACL, deploy de App e `Publish` continuam não autorizados;
-- tema do workspace e tema local do dashboard têm escopos distintos; reaplicação de workspace theme em dashboard existente é manual, não propagação universal;
-- SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
-- nada disso publica automaticamente no Databricks.
-
-Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram em `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
-
-Estado corrente: [V13](docs/sprints/sistema_temas/V13/README.md) está encerrada no Git e sua [auditoria pós-merge](docs/sprints/sistema_temas/V13/AUDITORIA_POS_MERGE.md) preserva os limites e dívidas transferíveis. O [Plano Mestre V14](docs/sprints/sistema_temas/V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`. A **S0 V14 foi aceita e integrada pela PR #71** no merge `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`; os **16/16 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora na **S1 — ownership, autoridade e modelo operacional**, documentada no [README V14](docs/sprints/sistema_temas/V14/README.md), na [matriz de ownership](docs/sprints/sistema_temas/V14/MATRIZ_OWNERSHIP.json), no [runbook S1](docs/sprints/sistema_temas/V14/S1_MODELO_OPERACIONAL.md) e no [checkpoint S1](docs/sprints/sistema_temas/V14/CHECKPOINT_S1.md). A S1 mantém owner/backup/autoridade não evidenciados em `BLOCKED`; **S2–S8 não foram iniciadas**, nenhuma decisão de production readiness/go-live foi tomada e nenhuma autorização Databricks decorre da S1. O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md).
+Para usar, siga o [guia operacional de temas](ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
+Para manter, consulte o [estado de Temas](docs/sprints/sistema_temas/README.md):
+V00–V13 e V14 S0/S1 estão integradas. O plano V14 foi integrado pela PR #70; S0 pela PR #71 em `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`. A integração de S1 pela PR #72 (`79f53ba1`)
+não preenche os slots `BLOCKED`, não encerra `A11-01 = FAIL` e não decide go-live.
+S2–S8 não possuem início comprovado. As evidências de AI/BI draft não autorizam
+workspace theme, ACL, deploy de App ou Publish.
 
 ## 🔄 Como o contexto chega à Genie Code
+
+![Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
 
 1. Você descreve a demanda, anexa os recursos necessários e pode selecionar uma skill com `@hub-ml-*`.
 2. As instruções aplicáveis e a skill orientam método, riscos, recursos e formato.
@@ -97,7 +102,7 @@ Não existe uma leitura automática única de toda a pasta `.assistant`. A ativa
 | Camada | Papel | Regra |
 |---|---|---|
 | `ambiente_fonte/` | fonte do produto | editar aqui |
-| `Novo_Ambiente_Simulado/` | derivado de verificação | manter equivalente à fonte |
+| `.artifacts/simulado/` | derivado de verificação | manter equivalente à fonte |
 | `tools/` | testes, gates e automação | executar antes de promover |
 | `docs/` | decisões e evidências | registrar escopo e limites |
 | workspace | cópia operacional | validar separadamente antes de uso |
@@ -113,9 +118,9 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 15 · 15/15 com as 5 seções estruturais
 skill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy
 prompts            : 18 · 174 campos com guia e contrato humano
-helpers citados    : 102 caminhos verificados
-markdown / links   : 245 arquivos / 1542 links relativos
-notebooks / links  : 84 notebooks / 104 links relativos
+helpers citados    : 101 caminhos verificados
+markdown / links   : 244 arquivos / 1881 links relativos
+notebooks / links  : 84 notebooks / 108 links relativos
 readmes de objeto  : 79/79 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
 forma da pasta     : 61 conferidas (o módulo tem o nome da pasta)
@@ -125,14 +130,24 @@ saída colada       : 83 notebooks com bloco real, 0 sem
 idioma da docstring: 63 módulos, 0 com docstring em inglês
 normas do molde    : 78 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 290 arquivos
-instrucoes         : 12626/20000 caracteres
-repo (identidade)  : 2216 arquivos varridos no repositório editável/derivado
-repo (links)       : 2871 links fora da raiz analisada
+python (AST)       : 289 arquivos
+instrucoes         : 12624/20000 caracteres
+repo (identidade)  : 1697 arquivos varridos no repositório editável/derivado
+repo (links)       : 1846 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
+
+<a id="ciclo-de-vida-do-projeto"></a>
+
+## Ciclo de contribuição
+
+![Pista de promoção com sete gates e retornos de correção para a etapa de edição.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
+
+A figura registra o ciclo histórico; o [procedimento corrente](docs/playbooks/ciclo-de-vida.md) e os [gates de manutenção](tools/README.md) são as referências operacionais vigentes.
+
+Edite a fonte, execute os gates proporcionais, gere o derivado em uma árvore isolada e registre a evidência. O [ciclo de vida](docs/playbooks/ciclo-de-vida.md) separa esse trabalho local de publicação e homologação autorizadas. A lista executável dos checks e seus pré-requisitos fica em [tools](tools/README.md).
 
 ## ❓ Perguntas frequentes
 
@@ -150,4 +165,4 @@ APROVADO: 0 falha(s), 0 aviso(s)
 
 ## 🔗 Continuidade e histórico
 
-O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).
+Os [marcos do projeto](CHANGELOG.md), as [decisões](docs/decisions/README.md) e o [histórico integral](docs/historico/changelog/README.md) têm rotas próprias. O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).

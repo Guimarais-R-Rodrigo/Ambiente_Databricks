@@ -79,6 +79,27 @@ Neste wrapper, use `contamination` numérico no intervalo `(0, 0.5]`, compatíve
 
 ## 9. Como usar este recurso no Hub?
 
+Treino e perfil na mesma ordem, com registro explícito desligado:
+
+```python
+from hub_snippets.ml.isolation_forest import train_isolation_forest, profile_anomalies
+features = ["f1", "f2"]
+base = df.copy()  # features numéricas, finitas e já preparadas
+out = train_isolation_forest(base, features, contamination=0.01, log_mlflow=False)
+perfil = profile_anomalies(base, features, out["scores"], out["labels"])
+```
+
+Para pontuar um lote futuro sem novo fit:
+
+```python
+X_novo = df_novo[features].to_numpy()
+X_preparado = out["scaler"].transform(X_novo) if out["scaler"] is not None else X_novo
+scores_novos = out["model"].decision_function(X_preparado)
+labels_novos = out["model"].predict(X_preparado)
+```
+
+Não recalcule o scaler nem chame o treinador apenas para pontuar o lote novo. O perfil depende da base que recebe para suas médias/desvios; perfilar um lote novo muda essa referência descritiva, embora o modelo permaneça fixo.
+
 Com a raiz `.assistant` visível ao Python, use os exports da [fachada](__init__.py): `train_isolation_forest` e `profile_anomalies`. O [notebook](exemplo_isolation_forest.py) demonstra o treino e a sensibilidade ao corte com dados sintéticos; ele importa a função de perfil, mas não a chama. Não confunda importação com demonstração de todas as funções.
 
 O helper treina e pontua localmente; não distribui o ajuste no Spark. Nas chamadas do notebook, o registro explícito é desligado. Na função, o padrão é `log_mlflow=True`, que registra parâmetros e métricas e pode afetar um run existente ou a configuração de tracking. O wrapper não gerencia explicitamente esse ciclo nem salva o modelo por `log_model`.
@@ -103,9 +124,9 @@ A matriz e suas transformações precisam caber na memória local. Valores const
 
 ## 12. Quais são as alternativas?
 
-Regras de qualidade são preferíveis quando o erro é conhecido. Um modelo supervisionado, como [XGBoost](../train_xgboost/README.md), atende a uma pergunta diferente quando há resposta rotulada. O [autoencoder do Hub](../autoencoder_anomaly/autoencoder_anomaly.py) é outra hipótese de modelagem de anomalias e exige conhecer suas próprias premissas e dependências.
+Regras de qualidade são preferíveis quando o erro é conhecido. Um modelo supervisionado, como [XGBoost](../train_xgboost/README.md), atende a uma pergunta diferente quando há resposta rotulada. O [autoencoder do Hub](../autoencoder_anomaly/README.md) é outra hipótese de modelagem de anomalias e exige conhecer suas próprias premissas e dependências.
 
-Para comparar distribuições de períodos, [drift_detection](../drift_detection/drift_detection.py) é mais próximo da pergunta do que marcar observações individuais. Não confunda essas duas escalas de análise.
+Para comparar distribuições de períodos, [drift_detection](../drift_detection/README.md) é mais próximo da pergunta do que marcar observações individuais. Não confunda essas duas escalas de análise.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -119,6 +140,6 @@ A [implementação](isolation_forest.py) contém treino, cálculo das pontuaçõ
 
 ## 15. Referências
 
-Comportamento conferido na implementação da base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. Para conceito e score, foram consultados em 12/09/2026 o [guia de outliers](https://scikit-learn.org/stable/modules/outlier_detection.html) e a [API IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html); para efeitos da sessão, a [documentação de autologging](https://docs.databricks.com/aws/en/mlflow/databricks-autologging).
+[Execução histórica identificada (12/09/2026)](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982): testes de treino, perfil e empates com dependências reais e logging explícito desligado. Não é teste de tracking remoto nem homologação Databricks.
 
-A redação inicial e a revisão de fechamento R02 são autorrevisões, não auditorias independentes. Em 12/09/2026, a [execução suplementar da R02](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982) aprovou testes de treino, perfil e empates com scikit-learn e MLflow reais, sem habilitar o logging do helper. Esse resultado é evidência histórica identificada: o ambiente local do fechamento continua sem MLflow e não repete esses testes usando um módulo falso. Não houve teste de tracking remoto ou homologação Databricks. Saídas históricas do notebook não são novas execuções desta documentação.
+As definições de score e labels seguem a API IsolationForest do scikit-learn. Para reproduzir um resultado, registre as versões, features, população e preparação. MLflow é obrigatório no import deste helper; log_mlflow=False desliga apenas seu registro explícito. Consulte a evidência de teste vinculada para conhecer o ambiente e o escopo já exercitado.

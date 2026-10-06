@@ -1,22 +1,8 @@
 name: Componentes HTML e tabelas V04
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v04*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_snippets/constants/styles/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/badge/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/divider/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/section_header/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/index_generator/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/tema/**'
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/**'
-      - 'tools/tests/test_temas_v04.py'
-      - 'tools/ci_local.py'
-      - 'docs/sprints/sistema_temas/V04/**'
-      - '.github/workflows/temas-v04-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -43,6 +29,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V04 específica
         run: python -B tools/tests/test_temas_v04.py -v
       - name: Regressões de temas V01–V06

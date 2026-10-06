@@ -2,14 +2,12 @@
 
 ## Antes de começar
 
-O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados; V08 alinha orientação transversal; V09 protege o transporte no kit; e V10 integra a superfície Databricks App `authoring_only`. Nenhuma dessas camadas troca o caminho legado por padrão.
-Seu notebook atual continua igual. Para usar o pacote no workspace de trabalho, a revisão integrada ainda precisa ser instalada/publicada pelo procedimento autorizado e homologada no destino. Não publique arquivos por conta própria para experimentar uma cor.
+Escolha sua tarefa: validar uma proposta no núcleo, aplicar em um consumidor, experimentar no laboratório, usar o App autorizado ou preparar um candidato AI/BI. Carregar uma configuração não troca o caminho legado nem modifica um notebook automaticamente.
 
-A V11 está em candidata separada. Ela acrescenta uma ponte local/fail-closed entre um `ResolvedTheme` notebook e capacidades de tema de dashboards AI/BI. A ponte não altera `theme.schema.json`, não torna `context="aibi"` válido, não chama Databricks e não publica dashboard.
+Use somente o pacote instalado pelo procedimento autorizado e conferido no destino. Não publique arquivos por conta própria para experimentar uma cor. A ponte AI/BI trabalha localmente, não chama Databricks, não publica dashboard e não torna `context="aibi"` válido.
 
-Quem só precisa acompanhar a entrega pode ler a seção “Interpretar a saída” abaixo.
 Quem vai executar precisa de Python, do pacote completo `.assistant` e das bibliotecas
-indicadas em `hub_snippets/requirements-temas.txt`. A política do seu ambiente é
+indicadas em [requirements-temas.txt](../../hub_snippets/requirements-temas.txt). A política do seu ambiente é
 que determina se uma instalação é permitida; uma mensagem de biblioteca ausente
 não autoriza instalar por fora dela.
 
@@ -17,7 +15,6 @@ não autoriza instalar por fora dela.
 
 1. Na pasta do Hub recebida do mantenedor, abra
    `hub_snippets/visual/tema/exemplo_tema.py` como notebook ou arquivo Python.
-   No repositório, essa pasta fica sob `ambiente_fonte/.assistant/`.
 2. Leia a célula de preparação. Se a localização não for descoberta, preencha
    `HUB_ROOT` com o caminho da própria pasta `.assistant`, copiado da interface
    do seu ambiente. Não informe o caminho de uma tabela ou de um arquivo JSON.
@@ -44,7 +41,7 @@ se a paleta é bonita, acessível ou autorizada. Compare-o somente entre versõe
 compatíveis do protocolo descrito no [contrato](README.md).
 
 Não confunda `export_theme` com salvar: ele devolve bytes em memória. Salvar em
-uma pasta, compartilhar, aprovar e publicar são ações distintas. V05 pode persistir sessão/proposta em pasta autorizada e V06 pode gerar variantes editoriais candidatas, mas nenhuma dessas ações equivale a aprovar ou publicar um tema. Publicação e homologação no workspace continuam gates separados.
+uma pasta, compartilhar, aprovar e publicar são ações distintas. O laboratório pode persistir sessão/proposta em pasta autorizada e a geração editorial pode produzir variantes candidatas, mas nenhuma dessas ações equivale a aprovar ou publicar um tema. Publicação e homologação no workspace continuam gates separados.
 
 ## Carregar um arquivo da sua pasta autorizada
 
@@ -59,9 +56,9 @@ a rotina do seu ambiente. Nenhum resultado analítico nem padrão compartilhado
 precisa ser restaurado, porque este núcleo não os modifica. Uma cópia editável
 é obtida com `to_dict()`, não alterando os dados internos do resultado.
 
-## Usar a rota V04 em um componente HTML
+## Aplicar tema em um componente HTML
 
-A V04 é opt-in. Resolva/carregue primeiro um tema notebook íntegro; depois passe-o à função `_resolvido` do componente. Exemplo:
+A aplicação é opt-in. Resolva/carregue primeiro um tema notebook íntegro; depois passe-o à função `_resolvido` do componente. Exemplo:
 
 ```python
 from hub_snippets.visual.tema import load_reference_theme
@@ -77,45 +74,43 @@ html = section_header_html_resolvido(
 
 A referência mantém a aparência histórica. Outras configurações completas podem mudar somente propriedades cobertas pelo contrato. Não passe dicionário cru, não edite `_values` e não use a função como folha de estilo global. `dark` e `high_contrast` são materializáveis no HTML quando válidos, porém isso não constitui homologação visual ou de acessibilidade.
 
-Para voltar ao comportamento anterior, use a função sem `_resolvido`; não é necessário limpar um tema global porque a V04 não cria um.
+Para voltar ao comportamento anterior, use a função sem `_resolvido`; não é necessário limpar um tema global porque essa rota não cria um.
 
-## Usar o Visual Lab V05
+## Experimentar no Visual Lab
 
 Para editar/comparar uma proposta sem mudar o padrão da equipe, abra `hub_snippets.visual.theme_lab`. Ele parte de configuração notebook validada, aplica alterações de forma atômica e compara Atual/Proposta com dados sintéticos. Salvar uma sessão preserva trabalho; não publica nem aprova o tema.
 
-## Usar consumidores V07
+## Aplicar nos consumidores disponíveis
 
 Quando um consumidor documentar uma rota `_resolvido`, carregue primeiro um `ResolvedTheme` íntegro e passe-o explicitamente. Exemplos incluem `plot_correlation_resolvido`, `plot_distributions_resolvido`, curvas de ML, timeline de monitoramento, UMAP e safras. A rota temática muda somente propriedades visuais cobertas; dados, agregações, amostragem, métricas e thresholds permanecem os mesmos.
 
 SHAP/Matplotlib e Kaplan–Meier continuam exceções explícitas ao theming atual. Não assuma suporte apenas porque outras figuras do notebook usam um tema.
 
-## Geração editorial V06
+## Material editorial
 
 A geração orientada por tema recebe um derivado controlado do `ResolvedTheme` e produz candidatos fora do pacote visual ativo. Gerar um asset não o promove. Preserve hashes/recursos congelados e siga o fluxo de revisão antes de qualquer substituição.
 
-## Usar o Databricks App V10 integrado
+## Usar o App de autoria
 
-O [guia de primeiro uso do App](databricks_app/GUIA_PRIMEIRO_USO.md) explica a superfície V10. Ela reaproveita o Visual Lab para escolher uma base, ajustar, comparar, salvar e reabrir a própria sessão.
+O [guia de primeiro uso do App](databricks_app/GUIA_PRIMEIRO_USO.md) explica a interface. Ela reaproveita o Visual Lab para escolher uma base, ajustar, comparar, salvar e reabrir a própria sessão.
 
 A superfície é `authoring_only`: não existe botão para aprovar, publicar, promover ou apagar histórico. O modo de desenvolvimento local não substitui autenticação Databricks. Um deploy real continua exigindo autorização separada, recurso `theme_storage` apontando para Unity Catalog Volume e permissões reais no workspace.
 
-A presença dos arquivos V10 no Git não prova deploy. Headers reais, UC Volume real, browser, acessibilidade, concorrência multiusuário e UAT continuam não homologados.
+Antes de usar, o responsável precisa confirmar identidade encaminhada, acesso ao Volume e funcionamento da interface nesse destino. A presença dos arquivos não comprova essas condições.
 
-## Usar a ponte AI/BI V11 candidata
+## Preparar um candidato AI/BI
 
-Para entender o fluxo de AI/BI, abra o [guia de primeiro uso V11](aibi/GUIA_PRIMEIRO_USO.md). A ponte recebe somente um `ResolvedTheme` `notebook` íntegro e produz uma projeção auditável dos 48 tokens: traduzidos, aproximados ou não suportados.
+Para entender o fluxo de AI/BI, abra o [guia de primeiro uso AI/BI](aibi/GUIA_PRIMEIRO_USO.md). A ponte recebe somente um `ResolvedTheme` `notebook` íntegro e produz uma projeção auditável dos 48 tokens: traduzidos, aproximados ou não suportados.
 
-A projeção `hub-aibi-theme-projection` **não é** o JSON nativo aceito pelo botão `Import theme`. Como o schema completo desse arquivo não está publicado nas fontes oficiais verificadas, a V11 não inventa campos. Um candidato nativo só pode ser criado sobre um export real, com SHA-256 fixado e JSON Pointers revisados para campos já existentes; aproximações nunca são aplicadas automaticamente.
+A projeção `hub-aibi-theme-projection` **não é** o JSON nativo aceito pelo botão `Import theme`. Como o schema completo desse arquivo não está publicado nas fontes oficiais verificadas, a ponte não inventa campos. Um candidato nativo só pode ser criado sobre um export real, com SHA-256 fixado e JSON Pointers revisados para campos já existentes; aproximações nunca são aplicadas automaticamente.
 
-O tema do workspace e o tema local do dashboard também não são intercambiáveis. Gerenciar o tema do workspace exige administrador; um dashboard existente recebe snapshot ao aplicar o workspace theme e mudanças futuras não se propagam automaticamente. Publicar dashboard permanece ação separada e não é implementada pela V11.
+O tema do workspace e o tema local do dashboard também não são intercambiáveis. Gerenciar o tema do workspace exige administrador; um dashboard existente recebe snapshot ao aplicar o workspace theme e mudanças futuras não se propagam automaticamente. Publicar dashboard permanece ação separada e não é implementada pela ponte.
 
 ## Para pedir ajuda
 
 Informe ao mantenedor o código do erro, a etapa executada e a versão do pacote.
 Não envie dados de clientes, credenciais, paths corporativos ou conteúdo integral
 sensível. O guia de erros indica o significado sem repetir o valor recebido.
-A execução da demonstração foi verificada em Python/CI conforme o checkpoint;
-Databricks, Windows, acessibilidade e teste com iniciante precisam de evidência
-própria antes de serem declarados homologados.
+Testes Python não comprovam interface Databricks, acessibilidade ou experiência de uso no seu ambiente; registre a condição efetivamente observada.
 
 [Voltar ao padrão](README.md) · [Abrir o exemplo](../../hub_snippets/visual/tema/exemplo_tema.py)

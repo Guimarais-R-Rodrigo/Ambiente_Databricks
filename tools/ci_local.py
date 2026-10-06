@@ -106,12 +106,12 @@ ETAPAS = [
     (
         "biblioteca",
         "regressões de hub_snippets",
-        [sys.executable, "ambiente_fonte/.assistant/hub_snippets/tests/test_core.py"],
+        [sys.executable, "tools/tests/runtime/test_core.py"],
     ),
     (
         "ferramentas",
         "guardas de tools/",
-        [sys.executable, "tools/tests/test_tool_guards.py"],
+        [sys.executable, "-B", "-m", "unittest", "tools.tests.test_tool_guards", "tools.tests.test_bundle_para_auditoria", "-v"],
     ),
     (
         "transicao",
@@ -147,6 +147,16 @@ ETAPAS = [
         "concierge-integracao",
         "integração canônica, contratos declarados e espelho",
         [sys.executable, "tools/tests/test_concierge_integracao.py", "-v"],
+    ),
+    (
+        "ai-controles",
+        "contratos offline das instruções do mantenedor",
+        [sys.executable, "-B", "tools/ai_controls.py", "--check"],
+    ),
+    (
+        "ai-regressoes",
+        "regressões e mutantes das instruções do mantenedor",
+        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_ai_*.py", "-v"],
     ),
 ]
 

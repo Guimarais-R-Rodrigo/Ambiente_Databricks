@@ -10,6 +10,10 @@ quem mantém ou aprova mudanças começa aqui.
 
 | Sua pergunta | Documento dono |
 |---|---|
+| “Como mantenho o projeto?” | [Rotas IA](ai/README.md) e [ferramentas](../tools/README.md) |
+| “Como preparo uma entrega?” | [Replicação](../.agents/skills/replicar-trabalho/SKILL.md) e [runbook](playbooks/replicacao-trabalho.md) |
+| “Qual regressão já foi encontrada?” | [Classes de defeito e guardas](auditoria/README.md#classes-de-defeito-que-viraram-guardas) |
+| “O que mudou de modo relevante?” | [Marcos](../CHANGELOG.md); [cronologia integral arquivada](historico/changelog/README.md) |
 | “Qual decisão arquitetural está valendo?” | [ADRs](decisions/README.md) |
 | “Que riscos outra IA encontrou?” | [Auditorias](auditoria/README.md) |
 | “O que foi realmente testado?” | [Testes](testes/README.md) |
@@ -33,11 +37,11 @@ Os documentos têm naturezas diferentes:
 
 | Natureza | Pode ser reescrita? | Como evolui |
 |---|---:|---|
-| Guia operacional | sim | edição normal + `CHANGELOG.md` |
+| Guia operacional | sim | edição + evidência; marco relevante no `CHANGELOG.md` |
 | ADR aceito | não, salvo errata factual anexada | novo ADR supersede o anterior |
 | Auditoria ou resultado de teste | não | nova rodada, com nova data |
-| Handoff | não depois de entregue | novo handoff ou changelog fecha o assunto |
-| Relatório de sprint | não | correções ficam no changelog e na evidência posterior |
+| Handoff | não depois de entregue | novo handoff/evidência fecha o assunto |
+| Relatório de sprint | não | correções ficam na evidência posterior, com marco se relevante |
 
 Por isso um resultado antigo pode contradizer o estado atual sem estar “errado”:
 ele registra o runtime e a data em que foi observado. Para decidir hoje, use o
@@ -47,18 +51,18 @@ resumo vigente em [testes](testes/README.md) e abra o JSON ou a rodada citada.
 
 A iniciativa R00–R13 de READMEs por objeto foi encerrada em 14/09/2026 com 75/75 objetos operacionais, 3/3 exemplares, zero pendências e auditoria final local `A0_light`. Esse fechamento não publica nem homologa Databricks/Genie Code.
 
-## Última evidência Databricks real registrada
+## Estado e evidências por frente
 
-Em 29/08/2026, validação local, publicação no Free e smoke no Spark 4.2.0 estavam
-aprovados. Os testes conversacionais do Genie Code continuavam parcialmente
-pendentes por cota. Consulte a
-[execução das etapas 1 a 5](testes/2026-08-29_execucao-etapas-1-a-5.md) para o
-checkpoint técnico e a
-[etapa 6](testes/2026-08-29_etapa-6-redesenho-documental.md) para o redesenho
-publicado depois dele.
+- [Micromodelos](sprints/micromodelos/README.md): módulo integrado pela PR #119 (`63601e09`, 30/09/2026); o [plano de integração](sprints/micromodelos/PLANO_INTEGRACAO_HUB_MICROMODELOS.md) registra readback 691/691 daquela release. Não é homologação corporativa.
+- [SER/B1](sprints/skill_enforcement_rollout/README.md): escopo técnico A aceito e integrado pela PR #122 (`43dac176`, 01/10/2026); orquestração Genie parcial e promoção de policy separadas.
+- [Temas](sprints/sistema_temas/README.md): V00–V13 e V14 S0/S1 integradas; FAIL e slots BLOCKED permanecem. Os PASS ambientais cobrem somente os casos nomeados.
+- [Testes por canal](testes/README.md): distingue contrato, runtime, transporte, comportamento, UAT e autorização. Não há uma homologação global obtida pela soma de campanhas.
 
-Volte ao [README raiz](../README.md) para o ciclo de contribuição.
+A [execução de 29/08](testes/2026-08-29_execucao-etapas-1-a-5.md) e o [redesenho posterior](testes/2026-08-29_etapa-6-redesenho-documental.md) continuam evidências históricas, não a última execução de todas as frentes.
 
-## Sistema de Temas — estado vigente no Git
+Volte ao [README raiz](../README.md#ciclo-de-contribuição) para o ciclo de contribuição.
 
-[V00–V04 estão aceitas e integradas no Git](sprints/sistema_temas/README.md). A D05 reconcilia somente documentação viva e não é a sprint funcional V05. Continuam separados: publicação no Databricks, homologação visual/runtime, auditoria independente e avaliação com usuário iniciante.
+## Instruções de manutenção por IA
+
+O contrato canônico está em [AGENTS.md](../AGENTS.md). O [guia de manutenção](ai/README.md)
+reúne fontes neutras, cinco skills do mantenedor, integrações e limites de compatibilidade.

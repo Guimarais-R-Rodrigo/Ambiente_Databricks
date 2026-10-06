@@ -53,11 +53,11 @@ visualização / diagnóstico.]
 
 ## 6. Analogia didática
 
-[Analogia com banking, CRM, carteira, campanha, jornada, etc.]
+[Analogia adequada ao público, somente quando ajudar; caso contrário NÃO APLICÁVEL.]
 
 ## 7. Exemplo mínimo
 
-[Identificar dados fictícios e resultados esperados. O exemplo não é saída observada do bloco nem preenche valores desconhecidos do caso real.]
+[Se um exemplo ajudar, identificar dados fictícios e resultados esperados. O exemplo não é saída observada do bloco nem preenche valores desconhecidos do caso real. Não inventar exemplo para seção não aplicável.]
 
 ```python
 # Exemplo autocontido demonstrando a lógica isoladamente

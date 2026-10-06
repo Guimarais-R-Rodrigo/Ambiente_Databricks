@@ -1,5 +1,9 @@
 # V04 — componentes HTML, estilos compartilhados e tabelas
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 ## Estado desta sprint
 
 **ACEITA E INTEGRADA NO GIT.** A V04 foi iniciada na `main`

@@ -1,5 +1,9 @@
 # V12 — homologação de jornadas com pessoas e ambiente
 
+> **Nota administrativa — 06/10/2026.** V12 integrada pela PR #54 em `a6309a4d`. `A11-01=FAIL` e os três bloqueios de autorização continuam preservados. Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 ## Estado de fechamento
 
 A V12 está em **candidata de fechamento pré-aceite**. Todos os casos V12 possuem agora estado explícito, sem transformar CI em evidência humana, sem transformar bloqueio de autorização em PASS e sem reabrir a arquitetura V11.

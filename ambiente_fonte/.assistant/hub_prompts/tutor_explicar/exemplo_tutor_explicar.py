@@ -4,9 +4,9 @@
 # MAGIC
 # MAGIC 📘 Guia local: [`README.md`](./README.md)
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Aqui somente o preparo
+# MAGIC executa código. O briefing é texto para a interação autorizada, e a
+# MAGIC resposta real deve ser registrada com evidência; continua pendente neste exemplo.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -20,11 +20,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | Spark para resolver current_user() e acesso de leitura ao arquivo publicado |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum; o insumo é um módulo Python já publicado |
 # MAGIC | Escrita | **não** — apenas lê o código selecionado |
-# MAGIC | Diferença Free × trabalho | ajuste somente o caminho do módulo publicado |
+# MAGIC | Diferença Free × trabalho | confirme caminho, permissão e versão do módulo; acesso no Free não prova acesso corporativo |
 
 # COMMAND ----------
 # MAGIC %md
@@ -51,7 +51,7 @@ print("\n".join(codigo.splitlines()[:20]))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** O alvo é o módulo do join point-in-time — escolhido porque a lógica é curta e a **razão** dela não é óbvia. É o caso em que uma explicação linha a linha ajuda pouco e uma explicação do porquê ajuda muito.
+# MAGIC **Como ler.** O preparo lê o módulo, mas imprime apenas as 20 primeiras linhas. Para explicar o arquivo inteiro, anexe o conteúdo integral autorizado; esta impressão não prova que o chat o recebeu. O objetivo é entender a razão do atraso de publicação.
 
 # COMMAND ----------
 # MAGIC %md
@@ -77,7 +77,7 @@ print("\n".join(codigo.splitlines()[:20]))
 # MAGIC - Objetivo prático: entender por que a janela do join precisa do atraso de publicação, e o que aconteceria sem ele
 # MAGIC - Ambiente/compute/runtime: Databricks Free, serverless; confirme a versão efetiva do Spark antes de depender de comportamento específico
 # MAGIC - Contexto de negócio: CRM bancário; a decisão é abordar ou não um cliente numa campanha
-# MAGIC - Restrições: use analogia de negócio quando ajudar; não me dê a resposta pronta antes da explicação
+# MAGIC - Restrições: comece com uma resposta conceitual curta; explique o raciocínio antes de uma adaptação pronta; use analogia quando ajudar, sem executar ou alterar recursos
 # MAGIC
 # MAGIC MÉTODO
 # MAGIC 1. Confirme o objeto anexado e destaque pré-requisitos ou versão que afetam a resposta.
@@ -112,9 +112,9 @@ print("\n".join(codigo.splitlines()[:20]))
 # MAGIC
 # MAGIC O que falta   : colar aqui a resposta que o Genie Code deu ao prompt
 # MAGIC                 da Parte 2, num chat novo, com a base da Parte 1 criada.
-# MAGIC Por que não   : prompt produz resposta de assistente, e nenhum job
-# MAGIC                 reproduz isso. Resposta inventada é pior que resposta
-# MAGIC                 nenhuma — ensina que o assistente faz algo que ele não faz.
+# MAGIC Evidência    : nenhuma resposta desta interação foi registrada e revisada.
+# MAGIC                Não invente conteúdo para completar o exemplo. O preparo
+# MAGIC                não prova execução nem conclusão canônica da skill.
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
@@ -123,9 +123,9 @@ print("\n".join(codigo.splitlines()[:20]))
 # MAGIC 1. Rode a Parte 1 deste notebook — ela não cria tabela; apenas lê o módulo Python selecionado.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre contexto e skill selecionados com evidência disponível.
+# MAGIC    Relato do assistente não comprova sozinho leitura, importação, chamada
+# MAGIC    ou conclusão; confira os artefatos exigidos pela rota da skill.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC

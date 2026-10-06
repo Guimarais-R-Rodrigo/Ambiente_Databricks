@@ -4,6 +4,8 @@
 
 Este recurso é um briefing para pedir uma análise exploratória completa, reprodutível e orientada a uma decisão. Ele organiza contexto de negócio, grão, chave, tempo, target, período, volume, foco, restrições e formato de entrega. O prompt não executa a EDA sozinho.
 
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -47,13 +49,11 @@ Preencha [eda_completa.md](eda_completa.md) com recurso, contexto, granularidade
 
 ## 8. O que este recurso entrega?
 
-O contrato solicita resumo executivo, inventário de qualidade, notebook ou código organizado, tabelas/gráficos contextualizados, conclusões ligadas a evidências, limitações e backlog priorizado. O arquivo apenas solicita esses elementos; a interação real é que pode produzi-los.
+Confira a entrega solicitada: inventário de qualidade com evidência e severidade; código parametrizado e organização reproduzível; cada gráfico com base, unidade e período; achados referenciados; limitações e pendências. A execução deve sustentar cada número. Notebook extenso ou visualmente cuidado não autoriza conclusão sem finalização canônica.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [eda_completa.md](eda_completa.md), preencha o briefing e selecione a fonte real. O prompt recomenda `@hub-ml-eda-profissional`.
-
-O [notebook](exemplo_eda_completa.py) cria `workspace.default.hub_exemplo_clientes` com `mode("overwrite")` usando dados sintéticos. Executar a Parte 1 pode substituir uma tabela existente com esse nome. A Parte 3 permanece dependente de uma conversa real com Genie Code.
+Preencha [eda_completa.md](eda_completa.md), selecione a fonte e leia o [exemplo](exemplo_eda_completa.py). Quando `hub-ml-eda-profissional` for selecionada para executar a EDA protegida, siga a [rota canônica](../../skills/hub-ml-eda-profissional/SKILL.md): `run_enforced` coleta evidência e emite Receipt; depois o handoff deve ser finalizado por `finalize_or_raise`. Exija Postflight `PASS` e `completion.authorized=true` antes de declarar conclusão. `PENDING_POSTFLIGHT` é transitório, não sucesso. Rapidez reduz profundidade opcional; não dispensa gates nem autoriza helper/SQL manual como bypass. Campos essenciais ausentes permanecem pendentes, sem inventar chave ou dados. Consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json). O preparo sintético sobrescreve `workspace.default.hub_exemplo_clientes`; a Parte 3 permanece **NÃO EXECUTADO**, mesmo que existam runners no produto.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -65,7 +65,7 @@ EDA não demonstra causalidade, não garante ausência de leakage e não substit
 
 ## 12. Quais são as alternativas?
 
-Para primeiro diagnóstico, use [eda_rapida](../eda_rapida/README.md). Para qualidade formal, use [data_quality](../data_quality/data_quality.md). Para combinar várias fontes antes de modelar, use [cross_eda](../cross_eda/README.md).
+Para primeiro diagnóstico, use [eda_rapida](../eda_rapida/README.md). Para qualidade formal, use [data_quality](../data_quality/README.md). Para combinar várias fontes antes de modelar, use [cross_eda](../cross_eda/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -77,6 +77,6 @@ O [briefing](eda_completa.md) contém o formulário; o [notebook](exemplo_eda_co
 
 ## 15. Referências
 
-A descrição local foi confrontada com [eda_completa.md](eda_completa.md) e [exemplo_eda_completa.py](exemplo_eda_completa.py). Esta revisão foi estática e não executou o notebook nem uma interação do Genie Code.
+O [briefing](eda_completa.md) define os campos e a entrega; o [notebook](exemplo_eda_completa.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
 
-Para seleção de recursos no Genie Code, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code), consultada em 13/09/2026.
+Para anexos e seleção de recursos, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). O contrato de execução protegido continua sendo o da skill vinculada acima.
