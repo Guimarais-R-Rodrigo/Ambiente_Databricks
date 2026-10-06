@@ -17,12 +17,10 @@ hub_readmes_visual_assets/
 ├── CONTEUDO_FIGURAS.md
 ├── headers/                  # identidade compartilhada por README e notebook
 │   ├── README.md
-│   ├── src/                  # arte-base raster + texto e camada tipográfica
 │   └── png/                  # CRM e Squad, prontos para uso
 ├── specs/                    # contratos semânticos, microcopy e geração por tema
 ├── visual_system/
 ├── licenses/                 # Inter e Lucide
-├── qa/                       # verificações e metadados de composição
 └── readmes/
     ├── raiz/
     ├── assistant/
@@ -40,9 +38,11 @@ Dentro de cada conjunto:
 O código de composição é a fonte editável dos novos diagramas. As cinco
 assinaturas aprovadas têm SVGs congelados, usados como entrada com hashes de
 preservação. Alterações nesses casos exigem revisão explícita da assinatura,
-não edição casual do arquivo. Em `headers/src/`, o fundo
-original é raster, não vetor; `copy.json` contém o texto editável e os SVGs
-tipográficos são apenas uma camada da composição.
+não edição casual do arquivo. Os insumos dos cabeçalhos ficam em
+`tools/readme_visuals/assets/headers/src/` no repositório de manutenção: o fundo
+original é raster, `copy.json` contém o texto editável e os SVGs tipográficos
+são uma camada da composição. QA e metadados de composição ficam em
+`tools/readme_visuals/qa/`; nenhum desses diretórios integra a instalação.
 
 ## Cabeçalhos reutilizáveis
 
@@ -60,7 +60,7 @@ cuidados com caminhos relativos e acessibilidade.
 
 Use os PNGs canônicos compartilhados; não crie cópias por notebook. Para mudar aparência, encaminhe a proposta ao mantenedor. Variante gerada continua candidata até revisão; não substitui automaticamente um asset aprovado. Assets congelados mantêm seus hashes e o [contrato de variantes](specs/theme_generation.yaml).
 
-A geração e suas dependências pertencem ao [guia externo de manutenção do compositor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/readme-readequacao-20261006/tools/readme_visuals/README.md), executado no checkout autorizado: revisar diff → validar → gerar o derivado. Gerar não publica por inferência.
+A geração e suas dependências pertencem ao [guia externo de manutenção do compositor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/ai-architecture-20261006/tools/readme_visuals/README.md), executado no checkout autorizado: revisar diff → validar → gerar o derivado. Gerar não publica por inferência.
 
 ## Ler as figuras por finalidade
 

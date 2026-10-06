@@ -95,7 +95,7 @@ A biblioteca é dividida em seis categorias funcionais, agrupadas pela natureza 
 | [`constants`](constants/README.md) | padrões brasileiros, cores e estilos compartilhados |
 | [`testing`](testing/README.md) | dados sintéticos e fixtures |
 
-Cada categoria possui um índice local que lista todos os objetos diretamente nela e aponta para o README de cada recurso. `hub_snippets/tests/` permanece fora desse mapa porque é infraestrutura interna de regressão, não uma categoria de uso.
+Cada categoria possui um índice local que lista todos os objetos diretamente nela e aponta para o README de cada recurso. A suíte interna fica em `tools/tests/runtime/` no repositório de manutenção, fora do pacote de instalação e deste mapa de uso.
 
 ---
 

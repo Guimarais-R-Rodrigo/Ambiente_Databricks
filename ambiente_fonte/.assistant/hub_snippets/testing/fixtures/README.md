@@ -139,6 +139,6 @@ Repita com os mesmos parâmetros e compare linhas ordenadas; teste também outra
 
 A [implementação](fixtures.py) sustenta esquema, parâmetros e limites descritos. [Python — random](https://docs.python.org/3/library/random.html#notes-on-reproducibility) delimita reprodutibilidade. [Spark — createDataFrame](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html) explica a criação do DataFrame a partir das entradas aceitas. Fontes consultadas em 12/09/2026; “latest” não identifica a versão do runtime testado.
 
-Os [testes internos de contrato](../../tests/test_core.py) são evidência técnica, não API de geração nem homologação de carteira ou Databricks. Registre seed, parâmetros e versões ao conferir uma execução.
+Os [testes internos de contrato](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks) são evidência técnica, não API de geração nem homologação de carteira ou Databricks. Registre seed, parâmetros e versões ao conferir uma execução.
 
 [Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

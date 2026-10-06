@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import YAML from 'yaml';
-import {ROOT,OUT,ASSET,TOOL,tokens,readYaml,sha,write,newCanvas} from './lib.mjs';
+import {ROOT,OUT,ASSET,TOOL,QA,tokens,readYaml,sha,write,newCanvas} from './lib.mjs';
 
 const family=process.argv[process.argv.indexOf('--family')+1];
 if(!['top','snippets','scripts','skills','prompts','all'].includes(family)) throw new Error('Use --family top|snippets|scripts|skills|prompts|all');
@@ -14,7 +14,7 @@ const map={};
 for(const [moduleName,families] of [['top',['raiz','assistant']],['snippets',['snippets']],['scripts',['scripts']],['methods',['skills','prompts']]]){
   if(selected.some(f=>families.includes(f))) Object.assign(map,(await import(`./archetypes/${moduleName}.mjs`)).renderers);
 }
-const metadataDir=path.join(ASSET,'qa/figures');
+const metadataDir=path.join(QA,'figures');
 const produced=[];
 for(const c of contracts.filter(c=>selected.includes(c.id.split('.')[0]))){
   const [group,name]=c.id.split('.');
@@ -52,7 +52,8 @@ if(metadata.length===contracts.length){
   const inputs=[];
   const assetPrefix=path.relative(ROOT,ASSET).split(path.sep).join('/');
   const inputPaths=['tools/readme_visuals/production.mjs','tools/readme_visuals/validate_production.mjs','tools/readme_visuals/lib.mjs','tools/readme_visuals/headers.mjs','tools/readme_visuals/archetypes/top.mjs','tools/readme_visuals/archetypes/snippets.mjs','tools/readme_visuals/archetypes/scripts.mjs','tools/readme_visuals/archetypes/methods.mjs','tools/readme_visuals/package.json','tools/readme_visuals/pnpm-lock.yaml',
-    ...['specs/visual_contracts.yaml','specs/approved_signatures.json','specs/approved_headers.json','specs/editorial_corrections.json','specs/prototype_copy.yaml','visual_system/tokens.yaml','visual_system/semantic_roles.yaml','visual_system/archetypes.yaml','headers/src/copy.json','headers/src/fundo_tecnologico_original.png'].map(p=>`${assetPrefix}/${p}`),
+    'tools/readme_visuals/assets/headers/src/copy.json','tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png',
+    ...['specs/visual_contracts.yaml','specs/approved_signatures.json','specs/approved_headers.json','specs/editorial_corrections.json','specs/prototype_copy.yaml','visual_system/tokens.yaml','visual_system/semantic_roles.yaml','visual_system/archetypes.yaml'].map(p=>`${assetPrefix}/${p}`),
     ...[400,600,700,800].map(w=>`tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-${w}-normal.woff`),
     ...[...new Set(metadata.flatMap(m=>m.icons))].sort().map(i=>`tools/readme_visuals/node_modules/lucide-static/icons/${i}.svg`)];
   for(const rel of inputPaths){

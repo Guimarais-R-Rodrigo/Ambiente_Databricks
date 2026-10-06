@@ -23,7 +23,7 @@ Use para exemplos reproduzíveis, testes de contrato e cenários controlados ant
 |---|---|---|
 | [`fixtures`](fixtures/README.md) | dados sintéticos com propósito de teste | [guia local](fixtures/README.md) |
 
-Os [testes internos](../tests/test_core.py) são infraestrutura de regressão, não novos objetos nem API pública.
+Os [testes internos](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks) são infraestrutura de regressão, não novos objetos nem API pública.
 
 | Gerador de `fixtures` | Caso de uso |
 |---|---|
@@ -36,7 +36,7 @@ A geração monta listas **localmente em Python**, antes do DataFrame Spark. Par
 
 ## Cuidados da categoria
 
-Fixtures não representam distribuição real nem homologam comportamento em produção. Não confunda esta categoria com `hub_snippets/tests/`, que é a suíte interna de regressão.
+Fixtures não representam distribuição real nem homologam comportamento em produção. A suíte do mantenedor fica em `tools/tests/runtime/` no repositório e não é distribuída com o produto.
 
 Um resultado local ou sintético não equivale a homologação no Databricks Runtime do destino. Permissões, volume, versão e regras de negócio continuam externos ao índice.
 

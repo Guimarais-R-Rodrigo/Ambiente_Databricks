@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 
-ASSISTANT_ROOT = Path(__file__).resolve().parents[2]
+ASSISTANT_ROOT = Path(__file__).resolve().parents[3] / "ambiente_fonte" / ".assistant"
 sys.path.insert(0, str(ASSISTANT_ROOT))
 
 from hub_snippets.constants.format_br import fmt_brl, fmt_pct

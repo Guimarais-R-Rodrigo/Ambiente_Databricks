@@ -85,10 +85,12 @@ def main():
             try:
                 modules = root / 'tools/readme_visuals/node_modules'
                 if modules.is_dir():
-                    (sandbox / 'tools/readme_visuals/node_modules').symlink_to(modules, target_is_directory=True)
-                result, visual_text = executar(['node', 'tools/readme_visuals/validate_production.mjs'], sandbox, out, 'assets_v2_' + label, root, base)
+                    shutil.copytree(modules, sandbox / 'tools/readme_visuals/node_modules')
+                result, visual_text = executar(['node', 'tools/readme_visuals/validate_production.mjs', '--historical-freeze'], sandbox, out, 'assets_v2_' + label, root, base)
                 resultados.append(result)
-                report = sandbox / 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
+                report = sandbox / 'tools/readme_visuals/qa/validation.json'
+                if not report.exists():
+                    report = sandbox / 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
                 # Usar apenas relatório emitido agora; o arquivo já versionado não
                 # comprova execução desta rodada. Um crash sem regravação não passa.
                 diff = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=normal'], cwd=sandbox, text=True)
@@ -111,7 +113,9 @@ def main():
                 for family in ('top', 'snippets', 'scripts', 'skills', 'prompts'):
                     family_result, _ = executar(['node', 'tools/readme_visuals/validate_production.mjs', '--family', family], sandbox, out, 'figuras_' + label + '_' + family, root, base)
                     resultados.append(family_result)
-                    family_path = sandbox / ('ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_' + family + '.json')
+                    family_path = sandbox / ('tools/readme_visuals/qa/sprint_' + family + '.json')
+                    if not family_path.exists():
+                        family_path = sandbox / ('ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_' + family + '.json')
                     if family_result['codigo'] == 0 and family_path.is_file():
                         family_report = json.loads(family_path.read_text(encoding='utf-8'))
                         family_result['verificacoes_visuais'] = family_report.get('checks')

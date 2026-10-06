@@ -2,8 +2,9 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import sharp from 'sharp';
-import {ROOT,OUT,ASSET,TOOL,tokens,readYaml,sha,write} from './lib.mjs';
+import {ROOT,OUT,ASSET,TOOL,QA,tokens,readYaml,sha,write} from './lib.mjs';
 
+const historicalFreeze=process.argv.includes('--historical-freeze');
 const family=process.argv[process.argv.indexOf('--family')+1];
 const partial=['top','snippets','scripts','skills','prompts'].includes(family);
 const selected=family==='top'?['raiz','assistant']:partial?[family]:null;
@@ -17,7 +18,7 @@ const readmes=['README.md',...['','hub_snippets/','hub_scripts/','skills/','hub_
 const editorial=JSON.parse(await fs.readFile(path.join(ASSET,'specs/editorial_corrections.json'),'utf8'));
 for(const c of editorial.corrections)check(sha(await fs.readFile(path.join(ROOT,c.source)))===c.source_sha256,`Fonte da correção factual: ${c.source}`);
 for(const c of contracts.filter(c=>!selected||selected.includes(c.id.split('.')[0]))){
-  const m=JSON.parse(await fs.readFile(path.join(ASSET,'qa/figures',`${c.id}.json`),'utf8'));
+  const m=JSON.parse(await fs.readFile(path.join(QA,'figures',`${c.id}.json`),'utf8'));
   const png=await fs.readFile(path.join(ASSET,m.published)),svg=await fs.readFile(path.join(ASSET,m.source));
   check(sha(png)===m.sha256,`${c.id}: hash PNG`);check(sha(svg)===m.svg_sha256,`${c.id}: hash SVG`);
   const meta=await sharp(png).metadata();check(meta.width===m.width&&meta.height===m.height,`${c.id}: dimensões`);
@@ -53,6 +54,7 @@ if(!partial){
   const referencedDiagrams=new Set();
   for(const file of readmes){
     const md=await fs.readFile(path.join(ROOT,file),'utf8');
+    if(historicalFreeze){
     const baseline=execFileSync('git',['show',`f5461d8:${file}`],{cwd:ROOT,maxBuffer:10*1024*1024}).toString('utf8');
     const heads=s=>[...s.matchAll(/^#{1,6} .+$/gm)].map(m=>m[0]);
     let pos=-1;for(const h of heads(baseline)){const i=heads(md).indexOf(h,pos+1);check(i>=0,`${file}: preservar tópico ${h}`);pos=i;}
@@ -61,6 +63,7 @@ if(!partial){
       const correction=editorial.corrections.find(c=>c.file===file&&c.old_sha256===sha(b));
       const valid=correction?blocks(md).some(n=>sha(n)===correction.new_sha256):blocks(md).includes(b);
       check(valid,`${file}: ${correction?'correção factual exata e rastreada':'exemplo Python/SQL preservado'}`);
+    }
     }
     check(!/ADR[- ]?0*\d+/i.test(md),`${file}: sem códigos de decisões`);
     check(!/```mermaid/.test(md),`${file}: PNG em vez de Mermaid`);
@@ -88,13 +91,16 @@ if(!partial){
   check(headerOccurrences===6,'6 ocorrências do único cabeçalho CRM');
   check(referencedDiagrams.size===21,'Todos os 21 diagramas ativos usados nos READMEs');
   // Runtime, skill definitions and prompt templates must remain byte-for-byte unchanged.
+  if(historicalFreeze){
   const baseFiles=execFileSync('git',['ls-tree','-r','--name-only','f5461d8','ambiente_fonte'],{cwd:ROOT}).toString().trim().split('\n');
   for(const file of baseFiles.filter(f=>!readmes.includes(f)&&!f.includes('hub_readmes_visual_assets/'))){
     const old=execFileSync('git',['show',`f5461d8:${file}`],{cwd:ROOT,maxBuffer:10*1024*1024});
-    check(sha(old)===sha(await fs.readFile(path.join(ROOT,file))),`contrato/runtime preservado: ${file}`);
+    const current=await fs.readFile(path.join(ROOT,file)).catch(error=>{if(error.code==='ENOENT')return null;throw error;});
+    check(current!==null&&sha(old)===sha(current),`contrato/runtime preservado: ${file}`);
   }
 }
-const report={status:errors.length?'failed':'passed',scope:partial?family:'all',checks:checks.length,failures:errors,measurements,
+}
+const report={historical_freeze:historicalFreeze,status:errors.length?'failed':'passed',scope:partial?family:'all',checks:checks.length,failures:errors,measurements,
   limits:['A geometria automatizada não cobre todas as curvas e silhuetas; revisão visual independente complementa os checks.','Não é homologação de runtime nem teste conversacional da Genie Code.']};
-await write(path.join(ASSET,'qa',partial?`sprint_${family}.json`:'validation.json'),JSON.stringify(report,null,2)+'\n');
+await write(path.join(QA,partial?`sprint_${family}.json`:'validation.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));process.exitCode=errors.length?1:0;

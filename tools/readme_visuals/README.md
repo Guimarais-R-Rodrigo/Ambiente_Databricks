@@ -47,10 +47,19 @@ módulos `archetypes/top.mjs`, `snippets.mjs`, `scripts.mjs` e `methods.mjs`.
 Para mudar uma assinatura, criar e aprovar a revisão antes de atualizar seu
 registro; não relaxar o hash para fazer uma alteração passar.
 
-Os cabeçalhos usam `headers/src/copy.json` e o original raster preservado.
+Os cabeçalhos usam `assets/headers/src/copy.json` e o original raster preservado
+neste diretório de manutenção.
 `headers.mjs` gera os dois PNGs com tipografia determinística. O registro de
 aprovação fica em `specs/approved_headers.json`. O código de autoria fica aqui;
-as fontes e PNGs necessários à distribuição ficam na arquitetura do produto.
+os PNGs e os cinco SVGs protegidos por runtime ficam no produto, com licenças.
+QA e metadados de composição ficam em `qa/`, fora do payload. O manifesto
+identifica insumos com paths relativos ao repositório; paths publicados
+continuam relativos à árvore de assets.
+
+O validador padrão confere o contrato visual corrente. `--historical-freeze`
+acrescenta a comparação editorial/runtime com `f5461d8`, exclusiva da campanha
+antiga; uma migração estrutural posterior não satisfaz esse freeze. Seu estado
+não é transportado como aprovação da release corrente.
 
 `--retire-legacy` é uma operação de migração: remove somente pares antigos
 ausentes do novo manifesto e idênticos ao baseline íntegro da Sprint 0. Não é

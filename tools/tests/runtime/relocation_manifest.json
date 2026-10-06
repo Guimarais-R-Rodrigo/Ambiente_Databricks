@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "source_commit": "126a2e125cca2251527f187a58696243414c6859",
+  "scope": "approved project package-boundary migration; no runtime resource removal",
+  "files": [
+    {
+      "source": "ambiente_fonte/.assistant/hub_snippets/tests/test_core.py",
+      "destination": "tools/tests/runtime/test_core.py",
+      "role": "maintainer regression suite; case bodies preserved",
+      "source_sha256": "b48baa202b292fb2070b8bbb207d0bbb0a1e27ec2e73b3398b9d67b094ce8491",
+      "bytes": 24852
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/assistant.01_escolha_ponto_de_partida.json",
+      "destination": "tools/readme_visuals/qa/figures/assistant.01_escolha_ponto_de_partida.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "9327cd1e2ec10208520cdb1ecb811f1fb48b3b1fc075812072e52e4a602d1694",
+      "bytes": 4634
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/assistant.02_arquitetura_de_uso.json",
+      "destination": "tools/readme_visuals/qa/figures/assistant.02_arquitetura_de_uso.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "58a9b556425bfca37644790c3032e59899496577457d2f3eb642be8c6d39fa38",
+      "bytes": 5502
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/assistant.03_contexto_e_execucao.json",
+      "destination": "tools/readme_visuals/qa/figures/assistant.03_contexto_e_execucao.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "e008e25b38bf0e83a51d51e5bf9f7604053c5bae333ac61c450247502d9e1ac7",
+      "bytes": 4436
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/prompts.01_mapa_familias.json",
+      "destination": "tools/readme_visuals/qa/figures/prompts.01_mapa_familias.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "680ea9a1f0caaea938271fd52b1bb8bcdbb528674a65f3b25dfeb5eadba0bd2d",
+      "bytes": 7362
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/prompts.02_fluxo_operacional.json",
+      "destination": "tools/readme_visuals/qa/figures/prompts.02_fluxo_operacional.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "2c6769fde345ec415c91973fe8e10d2fcdb3583b3ad93ef5fc83d128a987ddaf",
+      "bytes": 6844
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/prompts.03_anatomia_briefing.json",
+      "destination": "tools/readme_visuals/qa/figures/prompts.03_anatomia_briefing.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "7ebd3a3af711e37e5eb7af4104eeefc83b85f7df2f0a23aea17fc20fd65db6a5",
+      "bytes": 7281
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/raiz.01_mapa_ecossistema.json",
+      "destination": "tools/readme_visuals/qa/figures/raiz.01_mapa_ecossistema.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "995ca2b13cdd21aad55cf196858d6d01f3d84552faeb7cb714b0201d2805fd1d",
+      "bytes": 6002
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/raiz.02_arquitetura_ecossistema.json",
+      "destination": "tools/readme_visuals/qa/figures/raiz.02_arquitetura_ecossistema.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "1eed10033d4c5573cebe67d7933a1acdab8f6ef8bf38991c35913584b37d8c4b",
+      "bytes": 5821
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/raiz.03_ciclo_de_vida.json",
+      "destination": "tools/readme_visuals/qa/figures/raiz.03_ciclo_de_vida.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "40b73687f826373bd988e76c2799f0eb7b14e14db43c121b0b524bf731348b09",
+      "bytes": 6020
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/scripts.01_anatomia_pasta.json",
+      "destination": "tools/readme_visuals/qa/figures/scripts.01_anatomia_pasta.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "e388083a64d36226e083ec9e2a33f0bb77c9d311b9724aab38bed2a6592d455d",
+      "bytes": 5301
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/scripts.02_catalogo_diagnosticos.json",
+      "destination": "tools/readme_visuals/qa/figures/scripts.02_catalogo_diagnosticos.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "3642e5994217b8af09a23b7ce3931b2e7c385e72650e1af6ac5cc3e6c95c40cb",
+      "bytes": 6610
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/scripts.03_panorama_retornos.json",
+      "destination": "tools/readme_visuals/qa/figures/scripts.03_panorama_retornos.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "65da7fac7720139de82b117e949f518b9454e6bdf2c839ed08f2e713306da063",
+      "bytes": 7573
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/scripts.04_diagnostico_vs_enforcement.json",
+      "destination": "tools/readme_visuals/qa/figures/scripts.04_diagnostico_vs_enforcement.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "f5b28faa0cb71e381eabacc27ebe9227834e858b77fa99fade5dcc1002932b9a",
+      "bytes": 6127
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/scripts.05_veredito_data_quality.json",
+      "destination": "tools/readme_visuals/qa/figures/scripts.05_veredito_data_quality.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "16d6477f7c7a2bf138117f670bf917447f92c417200d1b66529ff2024e0896ce",
+      "bytes": 7124
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/skills.01_descoberta_e_selecao.json",
+      "destination": "tools/readme_visuals/qa/figures/skills.01_descoberta_e_selecao.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "56048e8333c1bf53ff6db9512afc82c3bf9870a20102eb2053d203690f2c7b46",
+      "bytes": 4550
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/skills.02_skill_helpers_runtime.json",
+      "destination": "tools/readme_visuals/qa/figures/skills.02_skill_helpers_runtime.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "8e9b2fb4e90d93da40a5a5b38a25e6d6ace30e1dce6caf7ebfddf5f9be2b0082",
+      "bytes": 5593
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/skills.03_anatomia_skill.json",
+      "destination": "tools/readme_visuals/qa/figures/skills.03_anatomia_skill.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "95dcafdf5cfc2ae9486b96ce7bb9df3c99288db8a1968c421892ca30451d7e1e",
+      "bytes": 5472
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/snippets.01_anatomia_pasta.json",
+      "destination": "tools/readme_visuals/qa/figures/snippets.01_anatomia_pasta.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "6ace4340ec8d92787ea7100bef5199bf3847728f86fb80f96a11aa5608c9753e",
+      "bytes": 5851
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/snippets.02_mapa_categorias.json",
+      "destination": "tools/readme_visuals/qa/figures/snippets.02_mapa_categorias.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "811c3c0bca1f9dbed41c7cad4c6dc706282f6648f7b8501aed4e24ae55b26f02",
+      "bytes": 5190
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/snippets.03_fluxo_operacional.json",
+      "destination": "tools/readme_visuals/qa/figures/snippets.03_fluxo_operacional.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "c0300b16d8cce606bb0db79b9e3d4f2c4788aa1e4fd94e3cf5d517b650eb571e",
+      "bytes": 5368
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/snippets.04_contrato_de_reuso.json",
+      "destination": "tools/readme_visuals/qa/figures/snippets.04_contrato_de_reuso.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "2ddda63abc8c5600f290e66c14798463cc3cd3fca8bef157149c0d1a44b8347c",
+      "bytes": 5327
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_prompts.json",
+      "destination": "tools/readme_visuals/qa/sprint_prompts.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "e0a3eff43a41d990e16bb26b79b763548dded85f171b0763d806227cd5af0ac4",
+      "bytes": 713
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_scripts.json",
+      "destination": "tools/readme_visuals/qa/sprint_scripts.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "c07f1649303a6dba702c09f1208a12a65d48393a67a570834168072fdbba3440",
+      "bytes": 991
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_skills.json",
+      "destination": "tools/readme_visuals/qa/sprint_skills.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "b95c7ba734bee504b317345a0fee5ad03f32664c0d8fab8f93e42b1713154c7f",
+      "bytes": 718
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_snippets.json",
+      "destination": "tools/readme_visuals/qa/sprint_snippets.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "fbcc969ac6bcebb82ee337b6171acec75e9b59f9be273a734f080b9f32259deb",
+      "bytes": 848
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_top.json",
+      "destination": "tools/readme_visuals/qa/sprint_top.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "215d41b4895cc8a62b62dcea495bb948cf0d5412083b57a7090272d6ac0c99c5",
+      "bytes": 1109
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json",
+      "destination": "tools/readme_visuals/qa/validation.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "a0ad29ae95a06d48242d27a7d0577292bb72440ed77b7dabd6702508b50e08fe",
+      "bytes": 3064
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/qa/cabecalho_crm_720.png",
+      "destination": "tools/readme_visuals/qa/headers/cabecalho_crm_720.png",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "285293f92bf286a090f87a53c95ddf3fd8861e80684a062b2e9dd00d54701de4",
+      "bytes": 127734
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/qa/cabecalho_crm_960.png",
+      "destination": "tools/readme_visuals/qa/headers/cabecalho_crm_960.png",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "bde81ab502695364de1898880cecc4491a3eafc951de0db170743aff11741358",
+      "bytes": 218710
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/qa/cabecalho_squad_720.png",
+      "destination": "tools/readme_visuals/qa/headers/cabecalho_squad_720.png",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "ca3b84a6b1b4069d1a07b1b49fb5be7164a5d7f0761d8511f93057b7f04d4b00",
+      "bytes": 134521
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/qa/cabecalho_squad_960.png",
+      "destination": "tools/readme_visuals/qa/headers/cabecalho_squad_960.png",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "78f2e459bc5bb72ef34a8f2aec4b1ea9da5dede14037457749b6f03d2fd416fe",
+      "bytes": 227757
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/qa/validation.json",
+      "destination": "tools/readme_visuals/qa/headers/validation.json",
+      "role": "visual QA evidence/metadata",
+      "source_sha256": "7e347a43e96f7298727502226fc4a1c30f6d3cb59515ee8f1b2feb4c25efe9a1",
+      "bytes": 2308
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/PROMPT_FUNDO.md",
+      "destination": "tools/readme_visuals/assets/headers/src/PROMPT_FUNDO.md",
+      "role": "header authoring input",
+      "source_sha256": "023a7a1cfa263ccb0ceb1afbded7694e0e73ac502d3db91e62340fe7f9eca9c4",
+      "bytes": 2961
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/cabecalho_crm_tipografia.svg",
+      "destination": "tools/readme_visuals/assets/headers/src/cabecalho_crm_tipografia.svg",
+      "role": "header authoring input",
+      "source_sha256": "f648eb8dfa8c560e5b2c8df0727ea47a7eaefb9cc127982f882d0e6d090a37e9",
+      "bytes": 15782
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/cabecalho_squad_tipografia.svg",
+      "destination": "tools/readme_visuals/assets/headers/src/cabecalho_squad_tipografia.svg",
+      "role": "header authoring input",
+      "source_sha256": "58ad30fcdb1e12185b9a5cb6e47d8a1b317183acd1e7210ff5a0abefbbc8079b",
+      "bytes": 16535
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/copy.json",
+      "destination": "tools/readme_visuals/assets/headers/src/copy.json",
+      "role": "header authoring input",
+      "source_sha256": "8a1c883b85cdac846aa7159de5aac83f85766cab663dfae21462704ec6d36c7c",
+      "bytes": 1107
+    },
+    {
+      "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/fundo_tecnologico_original.png",
+      "destination": "tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png",
+      "role": "header authoring input",
+      "source_sha256": "4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71",
+      "bytes": 1438221
+    }
+  ]
+}
