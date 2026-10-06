@@ -351,7 +351,7 @@ A validação de runtime da R04-B é registrada após execução. Revisão do pr
 
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/skill_execution/README.md).
 
-`````text
+````text
 - [skill_execution.py](skill_execution.py): preflight L2.
 - [receipt/__init__.py](receipt/__init__.py): Receipt SE04.
 - [postflight/__init__.py](postflight/__init__.py): Postflight SE05.
@@ -385,14 +385,14 @@ A SE07 adiciona um registry publicado para as 14 skills:
 
 Consulta:
 
-~~~python
+```python
 from hub_scripts.skill_execution import get_skill_enforcement_policy
 
 policy = get_skill_enforcement_policy("hub-ml-auditoria-skills")
-~~~
+```
 
 `current_level` é evidence-based. `target_level` é roadmap. A API é somente leitura e não executa helpers, não cria Receipt e não promove uma skill de nível.
-```
+````
 
 ## ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/README.md
 

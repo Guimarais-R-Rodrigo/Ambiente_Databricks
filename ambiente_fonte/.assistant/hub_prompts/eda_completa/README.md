@@ -78,3 +78,5 @@ O [briefing](eda_completa.md) contém o formulário; o [notebook](exemplo_eda_co
 ## 15. Referências
 
 O [briefing](eda_completa.md) define os campos e a entrega; o [notebook](exemplo_eda_completa.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Para anexos e seleção de recursos, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). O contrato de execução protegido continua sendo o da skill vinculada acima.

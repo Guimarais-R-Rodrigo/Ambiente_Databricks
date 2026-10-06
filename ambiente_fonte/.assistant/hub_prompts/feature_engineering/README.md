@@ -78,3 +78,5 @@ O [briefing](feature_engineering.md) é o ponto de uso; o [notebook](exemplo_fea
 ## 15. Referências
 
 O [briefing](feature_engineering.md) define os campos e a entrega; o [notebook](exemplo_feature_engineering.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Referências de plataforma: [Databricks Feature Store](https://docs.databricks.com/aws/en/machine-learning/feature-store) e [Point-in-time feature joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series). Consulte-as para os recursos nativos pertinentes; a disponibilidade e a execução do caso ainda precisam de evidência.

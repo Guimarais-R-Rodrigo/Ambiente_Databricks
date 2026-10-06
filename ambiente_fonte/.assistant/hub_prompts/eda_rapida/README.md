@@ -112,3 +112,5 @@ Depois do primeiro perfil, transforme os achados em checagens concretas, mantend
 ## 15. Referências
 
 O [briefing](eda_rapida.md) define os campos e a entrega; o [notebook](exemplo_eda_rapida.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Referências de contexto e execução da plataforma: [navegação do Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code) e [modo agente](https://docs.databricks.com/aws/en/genie-code/agent-mode). Essas páginas não homologam o briefing customizado nem substituem a rota da skill.

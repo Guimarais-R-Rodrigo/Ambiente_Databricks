@@ -78,3 +78,5 @@ O [briefing](cross_eda.md) é o ponto de uso; o [notebook](exemplo_cross_eda.py)
 ## 15. Referências
 
 O [briefing](cross_eda.md) define os campos e a entrega; o [notebook](exemplo_cross_eda.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Referências de plataforma: [seleção de recursos no Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code) e [Point-in-time feature joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series). Elas fundamentam contexto e temporalidade; não demonstram execução deste cenário.

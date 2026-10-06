@@ -100,3 +100,5 @@ Depois da comparação, transforme divergências materiais em testes reproduzív
 ## 15. Referências
 
 O [briefing](comparar_tabelas.md) define a comparação e o [exemplo](exemplo_comparar_tabelas.py) mostra o cenário sintético. Preserve população, chaves, nulos, timezone, denominadores e tolerâncias. A resposta só se torna evidência quando realmente registrada.
+
+Seleção de recursos: [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). A referência explica contexto da plataforma; não homologa este briefing customizado.

@@ -78,3 +78,5 @@ O [briefing](data_quality.md) é o ponto de uso; o [notebook](exemplo_data_quali
 ## 15. Referências
 
 O [briefing](data_quality.md) define os campos e a entrega; o [notebook](exemplo_data_quality.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Para a etapa opcional de regras de pipeline, consulte [Manage data quality with pipeline expectations](https://docs.databricks.com/aws/en/ldp/expectations). A referência de plataforma não valida os limites ou as regras específicos deste briefing.

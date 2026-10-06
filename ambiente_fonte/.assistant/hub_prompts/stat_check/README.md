@@ -80,3 +80,5 @@ O [briefing](stat_check.md) contém o formulário; o [notebook](exemplo_stat_che
 ## 15. Referências
 
 O [briefing](stat_check.md) define os campos e a entrega; o [notebook](exemplo_stat_check.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
+
+Para anexar dataset e desenho de análise, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). Selecionar contexto não comprova adequação estatística ou execução.
