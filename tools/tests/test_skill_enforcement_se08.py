@@ -105,7 +105,12 @@ class SE08OperationalTests(unittest.TestCase):
         for text in (template, skills_readme, policy_readme, manual):
             self.assertIn("current_level", text)
             self.assertIn("target_level", text)
-        self.assertIn("--profile se08", manual)
+        # Maintenance command belongs to the maintainer owner, not the user Manual.
+        maintainer = (ROOT/"tools"/"skill_enforcement"/"README.md").read_text(encoding="utf-8")
+        self.assertIn("--profile se08", maintainer)
+        self.assertNotIn("--profile se08", manual)
+        with self.assertRaises(AssertionError):
+            self.assertIn("--profile se08", maintainer.replace("--profile se08", "REMOVED"))
         self.assertEqual(manual, root_manual)
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)

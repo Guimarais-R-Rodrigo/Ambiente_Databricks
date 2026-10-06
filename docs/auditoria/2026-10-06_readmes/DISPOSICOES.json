@@ -2610,7 +2610,7 @@
         "final_path": "ambiente_fonte/.assistant/hub_padroes/prompt/template.md",
         "line_start": 76,
         "line_end": 79,
-        "quote": "tem um bloco específico para prompt.\n\nVerifique também os requisitos específicos deste tipo: \n"
+        "quote": "tem um bloco específico para prompt.\n\nVerifique também os requisitos específicos deste tipo:\n"
       }
     ],
     "verification": [
@@ -2622,7 +2622,7 @@
     "evidence_method": "Explicit source-range and before/after provenance; no token-ranked selection.",
     "source_artifact": "coverage_assistant_non_readme.json",
     "source_pointer": "/files/9/proposed_text_or_plan",
-    "final_blob_sha1": "cf5859e09111b00c00bab4fd7e58e79b11d0f564"
+    "final_blob_sha1": "17d2466830d63b72bb954dc2d5e2d7899e5a3427"
   },
   {
     "finding_id": "S2-0024",
@@ -2853,7 +2853,7 @@
         "final_path": "ambiente_fonte/.assistant/hub_padroes/skill/template.md",
         "line_start": 105,
         "line_end": 108,
-        "quote": "tem um bloco específico para skill.\n\nVerifique também os requisitos específicos deste tipo: \n"
+        "quote": "tem um bloco específico para skill.\n\nVerifique também os requisitos específicos deste tipo:\n"
       }
     ],
     "verification": [
@@ -2865,7 +2865,7 @@
     "evidence_method": "Explicit source-range and before/after provenance; no token-ranked selection.",
     "source_artifact": "coverage_assistant_non_readme.json",
     "source_pointer": "/files/16/proposed_text_or_plan",
-    "final_blob_sha1": "298150a5531dbfb82728395d3094f9ed4fc03c0b"
+    "final_blob_sha1": "043d71301c99d8a4c94b6d0deda7be01845ccb2c"
   },
   {
     "finding_id": "S2-0031",

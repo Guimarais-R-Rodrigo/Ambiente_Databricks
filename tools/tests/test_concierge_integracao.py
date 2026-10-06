@@ -49,7 +49,16 @@ class ConciergeIntegrationTests(unittest.TestCase):
         self.assertEqual((HUB / 'MANUAL_TECNICO.md').read_bytes(), (ROOT / 'MANUAL_TECNICO.md').read_bytes())
         self.assertEqual(text.count('| `hub-ml-concierge` |'), 1)
         self.assertIn('### 28.5. Concierge:', text)
-        self.assertIn('publicação e testes conversacionais pendentes', text)
+        # Availability and observed evidence replace a stale release-status snapshot.
+        required = (
+            'Recursos presentes no Git podem ainda não estar publicados no workspace.',
+            'A descoberta termina em recomendação ou passagem de contexto.',
+            'a falta de acesso deve ser declarada e não autoriza execução implícita',
+        )
+        for term in required:
+            self.assertIn(term.casefold(), text.casefold())
+            with self.assertRaises(AssertionError):
+                self.assertIn(term.casefold(), text.casefold().replace(term.casefold(), 'REMOVED'))
 
     def test_declared_helper_paths_exist_without_importing(self) -> None:
         text = (SKILL / 'SKILL.md').read_text(encoding='utf-8')

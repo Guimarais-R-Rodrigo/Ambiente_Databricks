@@ -483,7 +483,7 @@
     "delivery_role": "espelho",
     "closure_gate": "S8 igualdade do pacote completo e S9 revisão integrada",
     "final_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/prompt/template.md",
-    "final_git_blob_sha1": "cf5859e09111b00c00bab4fd7e58e79b11d0f564",
+    "final_git_blob_sha1": "17d2466830d63b72bb954dc2d5e2d7899e5a3427",
     "disposition": "DERIVADO_GERADO_E_CONFERIDO"
   },
   {
@@ -597,7 +597,7 @@
     "delivery_role": "espelho",
     "closure_gate": "S8 igualdade do pacote completo e S9 revisão integrada",
     "final_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill/template.md",
-    "final_git_blob_sha1": "298150a5531dbfb82728395d3094f9ed4fc03c0b",
+    "final_git_blob_sha1": "043d71301c99d8a4c94b6d0deda7be01845ccb2c",
     "disposition": "DERIVADO_GERADO_E_CONFERIDO"
   },
   {
@@ -5844,7 +5844,7 @@
     "delivery_role": "autoria",
     "closure_gate": "S8 igualdade do pacote completo e S9 revisão integrada",
     "final_path": "ambiente_fonte/.assistant/hub_padroes/prompt/template.md",
-    "final_git_blob_sha1": "cf5859e09111b00c00bab4fd7e58e79b11d0f564",
+    "final_git_blob_sha1": "17d2466830d63b72bb954dc2d5e2d7899e5a3427",
     "disposition": "FONTE_REVISADA_OU_PRESERVADA"
   },
   {
@@ -5958,7 +5958,7 @@
     "delivery_role": "autoria",
     "closure_gate": "S8 igualdade do pacote completo e S9 revisão integrada",
     "final_path": "ambiente_fonte/.assistant/hub_padroes/skill/template.md",
-    "final_git_blob_sha1": "298150a5531dbfb82728395d3094f9ed4fc03c0b",
+    "final_git_blob_sha1": "043d71301c99d8a4c94b6d0deda7be01845ccb2c",
     "disposition": "FONTE_REVISADA_OU_PRESERVADA"
   },
   {

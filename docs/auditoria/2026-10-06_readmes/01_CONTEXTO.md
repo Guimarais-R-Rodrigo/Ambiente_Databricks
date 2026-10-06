@@ -35,3 +35,6 @@ Cinco verificações antigas em `test_temas_v08.py` exigiam rótulos de sprint n
 | Índice de padrões contém V07 | fonte central, Visual Lab e nenhuma ativação/publicação implícita |
 
 As negativas contra estados obsoletos permaneceram. Mutantes que removem cada capacidade/limite exigido reprovam. O revisor independente executou oito testes focais, todos PASS. Testes funcionais, snapshot V01 e saída histórica de `dictionary(schema)` permanecem preservados.
+
+
+Duas assertivas documentais adicionais foram reconciliadas na integração: o comando de certificação `--profile se08` deve existir no guia do mantenedor e permanecer fora do Manual de uso; a ressalva do Concierge confere instalação/observação e ausência de execução implícita, em lugar de repetir uma pendência de setembro como estado eterno. A remoção de cada proteção ainda reprova o teste. Os demais checks de policy, promoção, cópias e contratos permanecem intactos.

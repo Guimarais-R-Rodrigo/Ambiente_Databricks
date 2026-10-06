@@ -75,7 +75,7 @@ O checklist é **um só para os seis tipos**, e mora em
 Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
 tem um bloco específico para prompt.
 
-Verifique também os requisitos específicos deste tipo: 
+Verifique também os requisitos específicos deste tipo:
 
 ```text
 [ ] o cabeçalho declara a skill recomendada ou as rotas possíveis
