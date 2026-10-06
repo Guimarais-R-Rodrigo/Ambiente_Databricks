@@ -3,7 +3,10 @@ from __future__ import annotations
 import ast
 import copy
 import json
+import os
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -29,6 +32,41 @@ class V13S1ContractTests(unittest.TestCase):
     def assert_invalid(self, data: dict):
         with self.assertRaises(contract.OperationalContractError):
             contract.validate_matrix(data)
+
+    def test_package_imports_in_fresh_process_without_pythonpath(self):
+        # A descoberta agregada altera sys.path; não pode preparar o import da S2.
+        env = os.environ.copy()
+        env.pop("PYTHONPATH", None)
+        result = subprocess.run(
+            [sys.executable, "-B", "-c", (
+                "from tools import temas_v13_operacional as contract; "
+                "from tools import temas_v13_preflight as preflight; "
+                "from tools.project_policy import SIMULATED_ROOT; "
+                "assert contract.SIMULATED_ROOT == SIMULATED_ROOT; "
+                "assert preflight.s1_contract is contract; "
+                "contract.validate_matrix(contract.load_matrix())"
+            )],
+            cwd=ROOT, env=env, capture_output=True, text=True, timeout=60,
+        )
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
+    def test_script_and_module_entrypoints_without_pythonpath(self):
+        # Preserva a CLI direta, inclusive fora da raiz, e a execução como pacote.
+        env = os.environ.copy()
+        env.pop("PYTHONPATH", None)
+        with tempfile.TemporaryDirectory(prefix="v13 entrypoint ") as outside:
+            routes = (
+                (outside, [str(TOOLS / "temas_v13_operacional.py")]),
+                (ROOT, ["-m", "tools.temas_v13_operacional"]),
+            )
+            for cwd, arguments in routes:
+                with self.subTest(arguments=arguments):
+                    result = subprocess.run(
+                        [sys.executable, "-B", *arguments], cwd=cwd, env=env,
+                        capture_output=True, text=True, timeout=60,
+                    )
+                    self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("PASS", result.stdout)
 
     def test_current_derived_root_and_legacy_owner_alias_fail_closed(self):
         self.assertEqual(".artifacts/simulado/", self.data["rules"]["derived_root"])

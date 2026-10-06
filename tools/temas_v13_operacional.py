@@ -10,7 +10,11 @@ import argparse
 import json
 from pathlib import Path
 from typing import Any
-from project_policy import SIMULATED_ROOT
+
+if __package__:
+    from .project_policy import SIMULATED_ROOT
+else:
+    from project_policy import SIMULATED_ROOT
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MATRIX = ROOT / "docs/sprints/sistema_temas/V13/MATRIZ_OPERACIONAL.json"
