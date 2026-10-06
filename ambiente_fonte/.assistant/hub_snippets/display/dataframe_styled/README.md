@@ -8,11 +8,11 @@
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Apresentação HTML de uma tabela pandas. |
+| O que é? | `display_styled` e `display_styled_resolvido`: apresentação HTML de pandas. |
 | Para que serve? | Facilitar a leitura de resultados já calculados. |
 | Use quando... | A tabela é pequena e seu conteúdo é confiável. |
 | Evite quando... | É preciso processar toda uma base Spark ou renderizar texto não confiável. |
-| Precisa de... | pandas, Jinja2 e importação do Hub configurada. |
+| Precisa de... | pandas, Jinja2, Hub; a variante resolvida também exige tema `notebook` válido. |
 | Entrega... | Texto HTML; o helper não exibe nem salva automaticamente. |
 
 **Acesso direto:** [exemplo](exemplo_dataframe_styled.py) · [implementação](dataframe_styled.py) · [API pública](__init__.py). Leia os requisitos e os efeitos na seção 9 antes de executar o notebook inteiro.
@@ -87,7 +87,7 @@ assert resumo.loc[0, "variacao"] == -0.025
 
 No Databricks, `displayHTML(html)` apresenta a string. O [notebook de exemplo](exemplo_dataframe_styled.py) é diferente deste bloco: executa `%pip install jinja2` e `%restart_python` antes de preparar imports. Isso modifica o ambiente Python e reinicia seu estado. Leia essas células antes de executar; o notebook não grava tabela persistente.
 
-### Caminho V04 — tabela com tema explícito
+### Tabela com tema explícito
 
 ```python
 from hub_snippets.display.dataframe_styled import display_styled_resolvido
@@ -97,7 +97,7 @@ tema = load_reference_theme("notebook")
 html = display_styled_resolvido(resumo, tema, highlight_cols=["variacao"])
 ```
 
-A rota V04 usa `brand.primary` no cabeçalho, `table.header_text` no texto do cabeçalho e `semantic.negative` no realce de negativos. O DataFrame, `highlight_cols` e `format_dict` mantêm o contrato histórico. A fonte da tabela permanece fixa porque o contrato V01 não atribui `font.family` a esse consumidor.
+A rota resolvida usa `brand.primary` no cabeçalho, `table.header_text` no texto do cabeçalho e `semantic.negative` no realce de negativos. O DataFrame, `highlight_cols` e `format_dict` mantêm o contrato histórico. A fonte da tabela permanece fixa porque o contrato de tokens não atribui `font.family` a esse consumidor.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -125,10 +125,12 @@ Verifique manualmente uma proporção conhecida, como 0,025, contra a unidade ex
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](dataframe_styled.py) define a regra de realce; a [fachada](__init__.py) exporta `display_styled`. O [notebook](exemplo_dataframe_styled.py) demonstra também a formatação de contagens. O [guia da coleção](../../README.md) orienta a preparação do import.
+A [implementação](dataframe_styled.py) define a regra de realce; a [fachada](__init__.py) exporta `display_styled` e `display_styled_resolvido(df_pandas, theme, highlight_cols=None, format_dict=None)`. O [notebook](exemplo_dataframe_styled.py) demonstra também a formatação de contagens. O [guia da coleção](../../README.md) orienta a preparação do import.
 
 ## 15. Referências
 
 A documentação [Styler](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.html) sustenta a distinção entre apresentação e dados e a orientação sobre conteúdo não confiável. [Styler.format](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html) explica formatos, escape e opções. Consulta em 2026-09-12; documentação vigente não comprova a versão do seu workspace.
 
-O comportamento do Hub foi confrontado com [código](dataframe_styled.py), [API](__init__.py) e exemplo na base `c60f1e5`. Testes R03-B verificam conteúdo HTML e preservação dos dados; isso não homologa a renderização visual no Databricks. Autorrevisão de ChatGPT, sem auditoria independente.
+O [código](dataframe_styled.py) usa `Styler.map` quando disponível e recorre a `applymap` na ausência desse método. Isso não garante compatibilidade com qualquer versão de pandas; confira pandas/Jinja2 e o HTML no destino. Consulte o [índice display](../README.md).
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03B.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

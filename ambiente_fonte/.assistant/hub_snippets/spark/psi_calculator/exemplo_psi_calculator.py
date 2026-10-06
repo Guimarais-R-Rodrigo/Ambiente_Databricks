@@ -8,15 +8,9 @@
 # MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas.
 # MAGIC
-# MAGIC ## Por que este notebook existe
+# MAGIC ## Por que comparar distribuições
 # MAGIC
-# MAGIC O ambiente anterior a este continha um cálculo de PSI **incorreto**:
-# MAGIC comparava média e desvio padrão entre dois períodos. Parecia razoável,
-# MAGIC produzia um número, e esse número não era PSI.
-# MAGIC
-# MAGIC O erro é fácil de cometer e difícil de perceber, porque o resultado
-# MAGIC errado também "funciona": sobe quando a média muda, desce quando não
-# MAGIC muda. Só que ele é cego para o tipo de mudança que mais importa.
+# MAGIC PSI compara proporções em faixas comuns. Comparar apenas média e desvio não calcula PSI; mudanças de forma podem passar despercebidas quando o resumo parece semelhante.
 
 # COMMAND ----------
 # MAGIC %md
@@ -24,7 +18,7 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e APIs compatíveis; confira runtime, permissões e comportamento no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -229,5 +223,5 @@ for coluna, valor in csi.items():
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ### Contrato atualizado em 09/09/2026
+# MAGIC ### Limite categórico
 # MAGIC max_categorias deve ser inteiro positivo: bool, NaN e infinito são recusados antes de ações Spark. O limite vale por população e controla quantidade de categorias, não bytes totais ou custo do shuffle.

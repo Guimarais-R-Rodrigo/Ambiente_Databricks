@@ -25,7 +25,7 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e APIs compatíveis; confira runtime, permissões e comportamento no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -204,9 +204,9 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # MAGIC cobertura sobre o total : 100.0%
 # MAGIC ```
 # MAGIC
-# MAGIC O rótulo impresso “sobre o total” é histórico e impreciso: o campo
-# MAGIC `cobertura_pct_chaves_validas` **exclui** as 48 linhas de chave nula do
-# MAGIC denominador. Por isso pode mostrar 100% mesmo quando a esquerda contém nulos.
+# MAGIC Leitura didática do campo: `cobertura_pct_chaves_validas` exclui as 48 linhas
+# MAGIC de chave nula do denominador. Se a célula impressa disser “sobre o total”,
+# MAGIC interprete-a pelo campo real: 100% das chaves válidas, não de toda a esquerda.
 # MAGIC
 # MAGIC Chave nula costuma ter causa distinta da chave órfã: erro de extração,
 # MAGIC campo opcional na origem, cliente sem documento. A correção também é

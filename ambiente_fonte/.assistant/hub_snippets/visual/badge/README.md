@@ -21,7 +21,7 @@
 
 Um **badge** é uma etiqueta visual compacta, como “Atenção” ou “Concluído”. Pode reduzir a procura por um estado no relatório, desde que o motivo continue acessível.
 
-O caminho legado fornece `badge_status`, `badge_score` e `badge_inline`. A V04 acrescenta as variantes `_resolvido`, que mudam somente a apresentação quando recebem um tema explícito. O módulo não é um motor de qualidade de dados: `badge_status` recebe o estado escolhido e `badge_score` continua usando os mesmos limites fixos.
+O caminho legado fornece `badge_status`, `badge_score` e `badge_inline`. As variantes `_resolvido` mudam somente a apresentação quando recebem um tema explícito. O módulo não é um motor de qualidade de dados: `badge_status` recebe o estado escolhido e `badge_score` continua usando os mesmos limites fixos.
 
 ## 2. Que problema este recurso resolve?
 
@@ -57,6 +57,17 @@ A biblioteca precisa estar importável. O módulo usa a biblioteca padrão de Py
 
 Para score, confira valores numéricos finitos, escala e máximo positivo antes da chamada. A anotação de tipo não impõe essas condições. O notebook existente usa `spark` para preparar o caminho do pacote; não grava tabelas de negócio.
 
+APIs públicas (retorno `str`; `theme` é um `ResolvedTheme` de contexto `notebook` nas variantes resolvidas):
+
+- `badge_status(texto: str, tipo: str='ok')`
+- `badge_score(valor: float, max: float=100)`
+- `badge_inline(texto: str)`
+- `badge_status_resolvido(texto: str, theme: ResolvedTheme, tipo: str='ok')`
+- `badge_score_resolvido(valor: float, theme: ResolvedTheme, max: float=100)`
+- `badge_inline_resolvido(texto: str, theme: ResolvedTheme)`
+
+A geração legada usa Python e o Hub. As rotas resolvidas revalidam o tema e exigem as [dependências de validação](../../requirements-temas.txt), sem instalação automática.
+
 ## 8. O que este recurso entrega?
 
 O retorno é texto HTML, não um objeto de gráfico nem uma decisão persistida. `badge_status` aceita `ok`, `warn`, `fail` e `info`; um tipo desconhecido utiliza silenciosamente o estilo `info`. Isso não confirma que o argumento estava correto.
@@ -75,7 +86,7 @@ print("3/100" in html)
 
 Saída portátil conferida: `True`. Para ver o selo, renderize o retorno no ambiente apropriado. Não foi o helper que realizou a contagem citada.
 
-### Caminho V04 — badge com tema explícito
+### Tema explícito — badge com tema explícito
 
 ```python
 from hub_snippets.visual.badge import badge_status_resolvido
@@ -85,7 +96,7 @@ tema = load_reference_theme("notebook")
 html = badge_status_resolvido("Conferido", tema, "ok")
 ```
 
-Os cortes de `badge_score` não viram tokens e não mudam na V04. Apenas `status.*`, superfície informativa e dimensões do badge são materializados pelo tema. Um tipo desconhecido continua caindo no estilo informativo.
+Os cortes de `badge_score` não viram tokens e não mudam com o tema. Apenas `status.*`, superfície informativa e dimensões do badge são materializados pelo tema. Um tipo desconhecido continua caindo no estilo informativo.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -97,9 +108,9 @@ Se um número estiver perto do corte, apresente a precisão necessária em texto
 
 `max=0` produz razão interna zero e pode exibir algo como `Score: 1/0` em estado de falha; não há recusa do caso. Valores negativos ou acima do máximo também não são limitados automaticamente. Essa tolerância é limitação de validação, não recomendação de uso.
 
-O estilo `warn` usa texto `#B26A00` sobre `#FFF8E1`, com contraste calculado próximo de **3,99:1**, inferior a 4,5:1 para texto comum; a fonte declarada é de 11px. A [WCAG](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) orienta a avaliação. Não declare o componente plenamente acessível; as cores permaneceram intactas nesta migração.
+O estilo `warn` usa texto `#B26A00` sobre `#FFF8E1`, com contraste calculado próximo de **3,99:1**, inferior a 4,5:1 para texto comum; a fonte declarada é de 11px. A [WCAG](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) orienta a avaliação. Não declare o componente plenamente acessível; valide a combinação efetivamente usada.
 
-Na rota V04, cores e dimensões de estado vêm de `constants.styles` materializado a partir do tema; a rota legada preserva os valores históricos. O escape de HTML não anonimiza conteúdo: mensagens ainda podem expor dados se o autor os inserir.
+Na rota resolvida, cores e dimensões de estado vêm de `constants.styles` materializado a partir do tema; a rota legada preserva os valores históricos. O escape de HTML não anonimiza conteúdo: mensagens ainda podem expor dados se o autor os inserir.
 
 ## 12. Quais são as alternativas?
 
@@ -119,4 +130,6 @@ Se o estado estiver incorreto, revise regra, escala e argumento; não troque som
 
 O [código](badge.py) fundamenta os cortes e a ausência de validações mencionadas. [Python — html.escape](https://docs.python.org/3/library/html.html#html.escape) explica o tratamento do texto; [Databricks — HTML](https://docs.databricks.com/aws/en/notebooks/notebook-media#include-html) documenta a renderização; [WCAG — contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) fundamenta a ressalva. Consulta em 12/09/2026.
 
-Revisão R03-A: testes portáteis de cortes, arredondamento, fallback, escape e contraste. Não houve alteração de CSS ou política, execução do notebook no Databricks ou auditoria independente.
+A [implementação](badge.py) e a [fachada](__init__.py) delimitam o contrato. Confira conteúdo, escape e aparência no destino: gerar uma string não homologa a interface nem acessibilidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

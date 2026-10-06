@@ -45,7 +45,7 @@ Não use o retorno como barra de progresso, resultado de teste ou navegador clic
 
 Se `etapa` existe em `SECOES_EDA`, a função consulta o mapa para preencher campos não informados. Valores explicitamente fornecidos e não vazios têm prioridade. Depois, aplica padrões aos campos que continuarem vazios.
 
-Antes de montar o HTML, o código converte os campos para texto e aplica `html.escape`, que representa sinais como `<` e `>` de modo que apareçam como conteúdo, não como marcação. A rota legada usa as constantes históricas; `section_header_html_resolvido` obtém container, título e descrição da materialização central da V04.
+Antes de montar o HTML, o código converte os campos para texto e aplica `html.escape`, que representa sinais como `<` e `>` de modo que apareçam como conteúdo, não como marcação. A rota legada usa as constantes históricas; `section_header_html_resolvido` obtém container, título e descrição da materialização central de estilos.
 
 ## 6. Exemplo de situação
 
@@ -58,6 +58,13 @@ Em outra seção, “Comparação de políticas”, não existe correspondência
 Para gerar a string, você precisa de Python e da importação do Hub configurada. Não são necessárias bibliotecas analíticas ou uma base de dados. Para visualizar o resultado, precisa de um ambiente capaz de renderizar HTML.
 
 Escolha `etapa` entre as chaves do mapa ou omita-a para uma seção personalizada. O código não rejeita um número desconhecido: sem textos explícitos, pode produzir um cabeçalho genérico. Confira a entrada; não interprete ausência de erro como validação do roteiro.
+
+APIs públicas (retorno `str`; `theme` é um `ResolvedTheme` de contexto `notebook` nas variantes resolvidas):
+
+- `section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo: Optional[str]=None, descricao: Optional[str]=None)`
+- `section_header_html_resolvido(theme: ResolvedTheme, etapa: Optional[int]=None, emoji: Optional[str]=None, titulo: Optional[str]=None, descricao: Optional[str]=None)`
+
+A geração legada usa Python e o Hub. As rotas resolvidas revalidam o tema e exigem as [dependências de validação](../../requirements-temas.txt), sem instalação automática.
 
 ## 8. O que este recurso entrega?
 
@@ -83,9 +90,19 @@ print(cabecalho[:80])
 
 No notebook Databricks, `displayHTML(cabecalho)` mostra o resultado. O [exemplo completo](exemplo_section_header.py) consulta `current_user()` com Spark apenas para configurar o caminho da biblioteca. O helper é independente de Spark. O notebook não grava tabelas persistentes.
 
-### Caminho V04 — cabeçalho com tema explícito
+### Tema explícito — cabeçalho com tema explícito
 
 A função `section_header_html_resolvido(theme, ...)` mantém o preenchimento por `SECOES_EDA`, os defaults e o escape da rota legada. `brand.primary`, superfícies, texto, fonte e dimensões `section.*` passam a vir do `ResolvedTheme` notebook recebido explicitamente.
+
+```python
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.section_header import section_header_html_resolvido
+tema = load_reference_theme("notebook")
+html = section_header_html_resolvido(tema, etapa=3, titulo="Qualidade <amostra>")
+assert "&lt;amostra&gt;" in html
+```
+
+Tema é o primeiro argumento da variante. O retorno não cria título Markdown para o sumário nativo.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -113,10 +130,12 @@ No documento final, verifique sequência, repetição de números e correspondê
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](section_header.py) define padrões, precedência e escape; a [fachada](__init__.py) define a função exportada. O [notebook](exemplo_section_header.py) demonstra etapas e personalização. [Emojis](../../constants/emojis/README.md) explica o mapa; [styles](../../constants/styles/README.md) esclarece os limites da centralização visual.
+A [implementação](section_header.py) define padrões, precedência e escape; a [fachada](__init__.py) exporta `section_header_html` e `section_header_html_resolvido`. O [notebook](exemplo_section_header.py) demonstra etapas e personalização. [Emojis](../../constants/emojis/README.md) explica o mapa; [styles](../../constants/styles/README.md) esclarece os limites da centralização visual.
 
 ## 15. Referências
 
-O comportamento foi confrontado com [section_header.py](section_header.py) na base `c60f1e5`. A documentação [html.escape](https://docs.python.org/3/library/html.html) sustenta o tratamento dos caracteres. A [organização de células Databricks](https://learn.microsoft.com/en-us/azure/databricks/notebooks/notebook-cells) explica a navegação por títulos. Consulta em 2026-09-12.
+O comportamento foi confrontado com [section_header.py](section_header.py). A documentação [html.escape](https://docs.python.org/3/library/html.html) sustenta o tratamento dos caracteres. A [organização de células Databricks](https://learn.microsoft.com/en-us/azure/databricks/notebooks/notebook-cells) explica a navegação por títulos. Consulta em 2026-09-12.
 
-Os testes R03-B verificam preenchimento, sobrescrita, fallback e escape. Não são homologação visual ou de acessibilidade no workspace. Autorrevisão de ChatGPT, sem auditoria independente.
+A [implementação](section_header.py) e a [fachada](__init__.py) delimitam o contrato. Confira conteúdo, escape e aparência no destino: gerar uma string não homologa a interface nem acessibilidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03B.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

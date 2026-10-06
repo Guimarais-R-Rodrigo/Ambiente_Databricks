@@ -19,7 +19,7 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e APIs compatíveis; confira runtime, permissões e comportamento no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -145,11 +145,7 @@ display(suspeitas)
 # MAGIC resumo utilizável: olhar a tabela inteira em cada execução não escala, e
 # MAGIC olhar nenhuma é o que acontece na prática.
 # MAGIC
-# MAGIC **O filtro merece atenção.** O status é emoji, não texto. Escrever
-# MAGIC `status != 'ok'` parece natural, casa todas as linhas, e o `count` sai 5 de
-# MAGIC 5 sem que nada acuse. Foi exatamente o erro que este notebook teve na
-# MAGIC primeira versão — e a validação do projeto ganhou uma guarda por causa
-# MAGIC dele: hoje ela reprova comparação com literal que o módulo não produz.
+# MAGIC **O filtro merece atenção.** `status` contém emojis. Use `status != "🟢"` para selecionar colunas fora do verde. Comparar com `"ok"` selecionaria todas as linhas, porque esse literal não pertence ao retorno.
 
 # COMMAND ----------
 # MAGIC %md

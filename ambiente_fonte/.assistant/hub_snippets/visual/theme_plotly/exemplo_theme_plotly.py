@@ -16,7 +16,7 @@
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
 # MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
-# MAGIC | Bibliotecas | Plotly e NumPy disponíveis; para a seção V03, `jsonschema` e `referencing` preparados conforme `hub_snippets/requirements-temas.txt`; o notebook não instala pacotes |
+# MAGIC | Bibliotecas | Plotly e NumPy disponíveis; para o tema explícito, `jsonschema` e `referencing` preparados conforme `hub_snippets/requirements-temas.txt`; o notebook não instala pacotes |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; tudo em memória |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
@@ -61,11 +61,7 @@ figura2.show()
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** As duas figuras mostram os mesmos dados. A diferença que importa
-# MAGIC não é a cor — é o **rodapé**: a versão com tema declara a fonte dos dados e
-# MAGIC quantos pontos foram declarados. Nesta célula, o rótulo de fonte menciona
-# MAGIC fixtures, mas a série foi gerada por NumPy acima. A chamada original foi
-# MAGIC preservada; não use esse rótulo ilustrativo como procedência comprovada.
+# MAGIC **Como ler.** As figuras mostram os mesmos dados. O rodapé desta chamada menciona fixtures, mas a série foi gerada por NumPy. Fonte e N são declarações do autor; o helper não verifica procedência nem contagem. Confira esses rótulos antes de compartilhar.
 # MAGIC
 # MAGIC Um gráfico não informa, por sua aparência, se representa uma amostra
 # MAGIC ou toda a base. Declare esse contexto e a unidade de N quando pertinente.
@@ -113,11 +109,7 @@ print(f"colorway completo: {tema['colorway']}")
 # MAGIC por isso — a afirmação é sobre o número de cores, e ela precisa ser
 # MAGIC conferível. São **dez**, e são as de `PALETA_CATEGORICA`.
 # MAGIC
-# MAGIC Este módulo **importa** a paleta de `constants.colors` em vez de copiá-la,
-# MAGIC e também importa `CINZA_ESCURO` para a fonte. O hexadecimal exibido na
-# MAGIC saída é o valor resolvido dessa constante, não prova de duplicação no
-# MAGIC código atual. O inventário histórico de estilos não substitui essa leitura
-# MAGIC da implementação. O tema também não substitui cores explícitas de traces.
+# MAGIC O módulo reutiliza `PALETA_CATEGORICA` e `CINZA_ESCURO` de `constants.colors`. Aplicar tema não substitui cores explicitamente definidas nos traces.
 # MAGIC
 # MAGIC Duas escolhas de layout merecem nota. O **título alinhado à esquerda**
 # MAGIC (`x: 0.01`) segue a leitura da página em vez de centralizar; e a
@@ -136,11 +128,9 @@ print(f"colorway completo: {tema['colorway']}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. V03 — referência resolvida, aplicação explícita
+# MAGIC ## 3. Referência resolvida, aplicação explícita
 # MAGIC
-# MAGIC Esta seção usa a referência notebook empacotada para provar a nova rota sem
-# MAGIC editar a configuração dentro do notebook irmão. A referência é uma fixture
-# MAGIC de teste, não um tema operacional aprovado.
+# MAGIC A referência notebook empacotada é demonstração, não um tema operacional aprovado.
 
 # COMMAND ----------
 
@@ -163,9 +153,4 @@ figura3.show()
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A igualdade entre as duas configurações prova que a referência
-# MAGIC `legado_notebook` preserva o layout atual pela nova rota. A aplicação afeta
-# MAGIC somente `figura3` e não muda `pio.templates.default`. Para aprender a criar
-# MAGIC uma proposta com tokens diferentes, use o exemplo comentado no README do
-# MAGIC objeto; o notebook executável mantém um contrato local simples e auditável.
-# MAGIC `dark` e `high_contrast` continuam fora do adaptador Plotly desta sprint.
+# MAGIC **Como ler.** A referência `legado_notebook` preserva o layout legado. A aplicação afeta apenas `figura3`, sem mudar `pio.templates.default`. Para criar uma proposta, siga o [README](README.md). O adaptador aceita somente `notebook/light`; `dark` e `high_contrast` são recusados.

@@ -74,7 +74,19 @@ print(etapa["titulo"])
 print(SEMANTICA["atencao"], "Revisar a chave antes do cruzamento.")
 ```
 
-O trecho portátil foi conferido nesta sprint. Imprimir o aviso não executa a revisão sugerida.
+Imprimir o aviso não executa a revisão sugerida.
+
+Para consultar todas as chaves e personalizar sem compartilhar os dicionários internos:
+
+```python
+from copy import deepcopy
+print(list(SECOES_EDA))  # 0 a 8
+print(list(SEMANTICA))
+secoes_locais = deepcopy(SECOES_EDA)
+secoes_locais[3]["titulo"] = "Qualidade da base sintética"
+```
+
+`SEMANTICA`: `resultado`, `interpretacao`, `negocio`, `proximo_passo`, `insight`, `ok`, `falha`, `atencao`, `status_positivo`, `status_medio`, `status_critico`. Consulte também o [índice constants](../README.md).
 
 ## 10. Decisões e configurações que mais importam
 
@@ -90,7 +102,7 @@ A aparência dos emojis pode variar conforme o sistema e o suporte a Unicode. Ve
 
 ## 12. Quais são as alternativas?
 
-Um título Markdown sem símbolo resolve muitos casos. Para selos em HTML com estilos de estado, examine [badge](../../visual/badge/README.md). Para capítulos renderizados, consulte [section_header](../../visual/section_header/section_header.py). Nenhuma dessas alternativas executa a checagem representada pelo texto.
+Um título Markdown sem símbolo resolve muitos casos. Para selos em HTML com estilos de estado, examine [badge](../../visual/badge/README.md). Para capítulos renderizados, consulte [section_header](../../visual/section_header/README.md). Nenhuma dessas alternativas executa a checagem representada pelo texto.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -106,4 +118,6 @@ Se uma chave não existir, corrija a chave ou use texto explícito; não convert
 
 Os nomes e conteúdos são sustentados pelo [código local](emojis.py). A documentação de [cópia em Python](https://docs.python.org/3/library/copy.html) fundamenta o cuidado com objetos internos; o [Unicode Emoji](https://www.unicode.org/reports/tr51/) descreve representação e apresentação dos símbolos. Consulta em 12/09/2026.
 
-Revisão R03-A: código, fachada, notebook e testes portáteis. A leitura dos mapas foi exercitada; não houve execução de EDA, homologação Databricks ou auditoria independente.
+Consultar os mapas não executa EDA nem comprova renderização no destino.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

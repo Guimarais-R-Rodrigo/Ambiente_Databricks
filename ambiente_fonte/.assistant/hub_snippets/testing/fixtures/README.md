@@ -74,6 +74,13 @@ Os retornos possuem estes grãos — o que uma linha representa — e campos:
 
 `serie_temporal` inicia em janeiro de 2025; as datas dos demais geradores também partem de referências fixas. Não são datas automaticamente atualizadas. `safras` produz `n_contratos * mob_maximo` linhas, sem censura por data corrente.
 
+Assinaturas dos quatro geradores: `base_tabular`, `serie_temporal` e `safras` retornam DataFrame; `fatos_e_features` retorna o par descrito acima:
+
+- `base_tabular(n: int=500, *, seed: int=42, pct_nulos_renda: float=0.04, prevalencia_alvo: float=0.25, n_entidades: Optional[int]=None)`
+- `serie_temporal(n_entidades: int=20, n_periodos: int=24, *, seed: int=42, tendencia: float=0.5)`
+- `fatos_e_features(n_decisoes: int=300, *, seed: int=42, atraso_real_dias: int=3, pct_feature_futura: float=0.2)`
+- `safras(n_contratos: int=400, *, seed: int=42, safras_yyyymm: Sequence[str]=('202501', '202502', '202503'), mob_maximo: int=12)`
+
 ## 9. Como usar este recurso no Hub?
 
 Comece pelo [exemplo de fixtures](exemplo_fixtures.py), após preparar o pacote conforme a [coleção](../../README.md). Para uma sessão Spark já disponível:
@@ -85,6 +92,16 @@ print(clientes.count(), clientes.select("id_cliente").distinct().count())
 ```
 
 O caso tem 20 linhas e cinco identificadores distintos pela construção do gerador. As contagens são ações Spark. O trecho não persiste uma tabela; execução local com Spark, quando registrada nas evidências, não equivale a homologação no Databricks.
+
+Quando a contagem precisa ser exata, prefira entrada explícita a probabilidades:
+
+```python
+borda = spark.createDataFrame([(1, None), (1, 10.0), (2, 20.0)], "id int, valor double")
+assert borda.count() == 3
+assert borda.filter("valor IS NULL").count() == 1
+```
+
+Aqui existe exatamente um nulo e uma chave repetida por construção, sem depender de sorteio.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -104,7 +121,7 @@ O indicador `eh_futura` vale para o desenho com cliente exclusivo por decisão. 
 
 ## 12. Quais são as alternativas?
 
-Para um caso de borda específico, uma pequena tabela criada explicitamente pode ser melhor que um gerador probabilístico. Para desenho amostral de dados reais autorizados, examine [smart_sample](../../spark/smart_sample/smart_sample.py): amostragem real é outra tarefa e exige cuidados de acesso e representatividade.
+Para um caso de borda específico, uma pequena tabela criada explicitamente pode ser melhor que um gerador probabilístico. Para desenho amostral de dados reais autorizados, examine [smart_sample](../../spark/smart_sample/README.md): amostragem real é outra tarefa e exige cuidados de acesso e representatividade.
 
 Uma simulação de carteira para estimar risco precisaria de premissas e validação próprias; não é uma extensão presumida destas fixtures.
 
@@ -122,4 +139,6 @@ Repita com os mesmos parâmetros e compare linhas ordenadas; teste também outra
 
 A [implementação](fixtures.py) sustenta esquema, parâmetros e limites descritos. [Python — random](https://docs.python.org/3/library/random.html#notes-on-reproducibility) delimita reprodutibilidade. [Spark — createDataFrame](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html) explica a criação do DataFrame a partir das entradas aceitas. Fontes consultadas em 12/09/2026; “latest” não identifica a versão do runtime testado.
 
-Revisão R03-A: leitura completa do módulo, fachada e notebook. Os testes da sprint distinguem geração em Spark real de inspeção estática; versões e resultados ficam nas evidências. Não foi executado o notebook no Databricks nem validada uma carteira real.
+Os [testes internos de contrato](../../tests/test_core.py) são evidência técnica, não API de geração nem homologação de carteira ou Databricks. Registre seed, parâmetros e versões ao conferir uma execução.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

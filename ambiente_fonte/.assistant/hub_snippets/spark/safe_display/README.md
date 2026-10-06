@@ -12,7 +12,7 @@ Exibir poucas linhas não significa que toda transformação anterior foi barata
 | Para que serve? | Evitar exibição acidentalmente grande e tornar truncamento explícito. |
 | Use quando... | Você quer inspecionar uma prévia e aceita que ela não é uma amostra estatística. |
 | Evite quando... | Precisa filtrar casos específicos, estimar a população ou reduzir custo de agregação já feita. |
-| Precisa de... | DataFrame, `limit > 0` e normalmente `display_fn=display` no notebook. |
+| Precisa de... | DataFrame, `limit` inteiro positivo e normalmente `display_fn=display` no notebook. |
 | Entrega... | Nenhum objeto; chama o renderer com até `limit` linhas e pode imprimir aviso. |
 
 Leia a [implementação](safe_display.py), a [fachada](__init__.py) e o [notebook](exemplo_safe_display.py). O helper não coleta a tabela inteira para Python, mas executa uma contagem limitada e a ação realizada pelo renderer.
@@ -61,7 +61,7 @@ A saída textual `10+` informa que havia mais dados; não informa quantas linhas
 
 ## 7. O que você precisa antes de usar?
 
-Você precisa de DataFrame PySpark e `limit` positivo. No notebook, passe `display_fn=display`; fora dele, forneça qualquer callable compatível com um DataFrame Spark.
+Você precisa de DataFrame PySpark e `limit` inteiro positivo. O helper valida somente o sinal; Spark pode recusar outro tipo depois. No notebook, passe `display_fn=display`; fora dele, forneça qualquer callable compatível com um DataFrame Spark.
 
 `msg=False` desativa apenas a mensagem; não elimina a contagem limitada usada para detectar truncamento. O helper não valida a assinatura do callable antes de chamá-lo.
 
@@ -81,6 +81,18 @@ safe_display(df, limit=100, display_fn=display)
 
 O [notebook](exemplo_safe_display.py) demonstra a exceção quando `display_fn` não é passado, a chamada correta e a injeção de um renderer de teste. Ele usa somente dados sintéticos.
 
+Renderer de teste, sem interface gráfica nem persistência, usando a sessão existente:
+
+```python
+recebidas = []
+def conferir_preview(preview):
+    recebidas.append(preview.count())
+safe_display(spark.range(5), limit=3, msg=False, display_fn=conferir_preview)
+assert recebidas == [3]
+```
+
+Há a contagem interna e a contagem do renderer. Esse teste confirma o limite, não o custo da linhagem real.
+
 ## 10. Decisões e configurações que mais importam
 
 `limit=1000` é apenas o default local. Escolha um número pequeno o bastante para a tarefa de inspeção. `msg=True` torna o truncamento visível fora da renderização.
@@ -93,7 +105,7 @@ O helper realiza pelo menos a ação `preview.count()` e o renderer normalmente 
 
 `limit` pode ser empurrado no plano em alguns casos, mas transformações anteriores podem precisar de processamento amplo. O helper não impede `collect`, `toPandas` ou outras ações em código ao redor.
 
-Sem `display_fn`, a chamada importada normalmente gera `RuntimeError`. Isso é comportamento atual do contrato, não detecção automática confiável da interface.
+Sem `display_fn`, a chamada importada normalmente gera `RuntimeError` **depois** da contagem limitada, portanto uma tentativa incorreta ainda pode ter custo. Isso é comportamento atual do contrato, não detecção automática confiável da interface.
 
 ## 12. Quais são as alternativas?
 
@@ -119,4 +131,6 @@ Teste também `limit=0` para confirmar a recusa. Se a preocupação é custo, ex
 
 O comportamento foi conferido em `safe_display.py`, na fachada e no notebook desta pasta. As afirmações de custo ficam deliberadamente limitadas ao que a função faz: prefixo limitado, uma contagem desse prefixo e chamada do renderer.
 
-A R04-A testa o helper com renderer injetado e Spark local no runner. Isso não é benchmark nem homologação da interface Databricks.
+Um renderer injetado permite conferir o contrato sem UI; isso não é benchmark nem homologação da interface Databricks.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

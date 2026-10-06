@@ -1,6 +1,6 @@
-# Guia de primeiro uso — AI/BI V11
+# Preparar um tema para AI/BI
 
-Este guia separa o que o projeto consegue preparar no Git do que precisa ser feito em um workspace Databricks autorizado.
+Este guia separa o que o projeto consegue preparar localmente do que precisa ser feito em um workspace Databricks autorizado.
 
 ## 1. Entenda os dois níveis de tema
 
@@ -10,13 +10,13 @@ Este guia separa o que o projeto consegue preparar no Git do que precisa ser fei
 
 Ao aplicar o tema do workspace a um dashboard existente, o dashboard recebe um **snapshot**. Se o administrador mudar o tema do workspace depois, o dashboard existente não é atualizado automaticamente; é necessário reaplicar manualmente.
 
-## 2. O que a V11 produz
+## 2. O que a ponte produz
 
 A função `project_theme()` recebe um `ResolvedTheme` do contexto `notebook` e cria uma projeção auditável. Cada token recebe uma destas classes:
 
 - `translated`: existe capacidade nativa com semântica suficientemente equivalente;
 - `approximated`: há capacidade parecida, mas exige decisão/revisão;
-- `unsupported`: a V11 não encontrou equivalência segura e não tenta esconder a lacuna.
+- `unsupported`: a ponte não mapeia equivalência segura e não tenta esconder a lacuna.
 
 A projeção exportada pelo Hub **não é um arquivo para o botão Import theme**.
 
@@ -29,7 +29,7 @@ Quando houver autorização para trabalhar em um dashboard real:
 3. use `Export theme` para baixar o JSON nativo;
 4. preserve esse arquivo original;
 5. calcule/registre seu SHA-256;
-6. um mantenedor técnico deve revisar o JSON e construir um binding entre as três capacidades diretas da V11 e JSON Pointers que já existam nesse export;
+6. um mantenedor técnico deve revisar o JSON e construir um binding entre as três capacidades diretas da ponte e JSON Pointers que já existam nesse export;
 7. `bind_native_template()` só aceitará o template se o SHA-256 for exatamente o esperado e só substituirá campos já existentes;
 8. o arquivo resultante ainda é **candidato local** até ser testado pelo `Import theme` do próprio Databricks.
 
@@ -66,7 +66,7 @@ Itens `approximated` não devem ser tratados como equivalência exata. Itens `un
 
 ## 6. Publicação
 
-Escolher/importar um tema e publicar um dashboard são ações separadas. A V11 não implementa publicação.
+Escolher/importar um tema e publicar um dashboard são ações separadas. A ponte não implementa publicação.
 
 Se você não possui permissão administrativa, não tente gerenciar o tema do workspace. Use apenas o fluxo permitido para o dashboard que você pode editar.
 

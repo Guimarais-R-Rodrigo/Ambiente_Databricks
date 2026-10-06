@@ -1,6 +1,6 @@
 # Primeiro uso — Aparência do Hub
 
-**Estado:** guia da candidata V05. Não representa instalação ou homologação no seu Databricks. O mantenedor entrega o pacote e as dependências preparados. O operador não precisa de Git, Node ou CLI para usar o painel.
+Este guia não instala nem homologa seu Databricks. O mantenedor entrega o pacote e as dependências preparados. O operador não precisa de Git, Node ou CLI para usar o painel.
 
 ## 1. Onde começar
 
@@ -19,11 +19,11 @@ A rota recomendada para um usuário iniciante é `build_theme_lab_launcher()`.
 ```python
 from hub_snippets.visual.theme_lab import build_theme_lab_launcher
 
-launcher = build_theme_lab_launcher(save_root=PASTA_DE_RASCUNHOS)
+launcher = build_theme_lab_launcher()  # prévia sem persistência
 display(launcher.root)
 ```
 
-`PASTA_DE_RASCUNHOS` é fornecida pelo mantenedor. Sem ela, o laboratório continua permitindo prévia, mas persistência/reabertura ficam indisponíveis.
+Para habilitar gravação/reabertura, use `build_theme_lab_launcher(save_root=PASTA_DE_RASCUNHOS)` somente com a pasta existente fornecida pelo mantenedor. Sem ela, a prévia funciona, mas persistência/reabertura ficam indisponíveis.
 
 A tela deve informar que escolher uma opção **não a torna aprovada** e que nada será publicado.
 
@@ -43,7 +43,7 @@ Todos os campos habilitados são validados em conjunto. Um erro preserva o últi
 
 Abra **Comparar**. Base e proposta usam os mesmos dados sintéticos em cabeçalho, KPI, barras, série temporal, heatmap e tabela. Mudanças permitidas são visuais; valores, nomes e ordem dos dados devem permanecer iguais.
 
-A galeria completa usa `mode=light`. Tema escuro e alto contraste não são simulados como se estivessem homologados, porque o adaptador Plotly V03 ainda os recusa.
+A galeria completa usa `mode=light`. Tema escuro e alto contraste não são simulados como se estivessem homologados, porque o adaptador Plotly ainda os recusa.
 
 Se os controles aparecerem, mas o frontend não renderizar as figuras, use `compare_preview(draft)` fora do painel e registre runtime/navegador. Não instale JavaScript arbitrário para forçar a saída.
 
@@ -63,7 +63,7 @@ O histórico em memória é limitado. Para continuar em outra sessão, use o sal
 <nome-da-sessao>/
   base.json
   proposal.json
-  history-000.json ...
+  history_000.json ...
   session.json
 ```
 
@@ -75,7 +75,7 @@ Depois de aplicar todos os campos, informe um nome simples em **Sessão** e cliq
 
 Uma sessão existente nunca é sobrescrita. Se houver campos digitados mas ainda não aplicados, a operação é recusada para impedir que a tela mostre uma proposta enquanto outra revisão é salva.
 
-Após sucesso, o dropdown de sessões é atualizado. O recibo confirma a sessão local e sua linhagem; não significa submissão ou aprovação.
+Após sucesso, o dropdown de sessões é atualizado. A listagem valida o manifesto; não comprova que todos os payloads ainda correspondem aos hashes. Essa verificação acontece ao reabrir. O recibo confirma a sessão local e sua linhagem; não significa submissão ou aprovação.
 
 ## 10. Reabrir sem escrever código
 
@@ -113,16 +113,14 @@ apply_dbutils_fallback(rascunho, dbutils)
 
 Essa rota exige reexecução da célula de aplicação e não oferece catálogo de sessões/presets com a mesma ergonomia.
 
-## 13. O que continua fora da V05
+## 13. Limites do laboratório
 
-A V05 não implementa submissão, aprovação ou publicação compartilhada. Não recolore PNGs, não migra notebooks antigos, não configura Databricks App e não altera dashboards AI/BI.
+O laboratório não implementa submissão, aprovação ou publicação compartilhada. Não recolore PNGs, não migra notebooks antigos, não configura Databricks App e não altera dashboards AI/BI.
 
-Também permanecem pendentes como homologação separada: frontend Databricks real, teclado/leitor de tela, zoom, contraste percebido, p95 da prévia, permissões reais do destino e teste por usuário iniciante sem ajuda.
+Confirme legibilidade, renderização e acesso à pasta no seu ambiente; uma prévia em Python não certifica o navegador de destino.
 
-## 14. Teste de primeiro uso — pendente
+## 14. Pedir ajuda
 
-O UAT deve entregar este guia e o notebook preparado, sem ajuda verbal inicial. Registrar se a pessoa consegue escolher uma base, alterar e comparar, salvar sessão, encerrar/reabrir, explicar qual era a base original e dizer corretamente quem foi afetado pela mudança.
-
-Teste Python automatizado não substitui esse UAT.
+Se houver dificuldade para escolher, comparar, salvar ou reabrir, informe a etapa e o código de erro. Não envie conteúdo sensível ou credenciais. Testes Python não comprovam a experiência no seu navegador.
 
 [Voltar ao README](README.md)
