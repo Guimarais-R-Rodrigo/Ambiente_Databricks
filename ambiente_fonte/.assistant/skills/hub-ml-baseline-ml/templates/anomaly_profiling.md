@@ -24,8 +24,8 @@ Score distribution:
   P25:  [X.XX]
   P50:  [X.XX]
   P75:  [X.XX]
-  P95:  [X.XX]  ← threshold candidato
-  P99:  [X.XX]  ← threshold conservador
+  P95:  [X.XX]  ← estatística descritiva, não limiar aprovado
+  P99:  [X.XX]  ← estatística descritiva; direção do score a confirmar
   Max:  [X.XX]
 
 Threshold definido: [X.XX] (percentil [X]%)
@@ -59,8 +59,8 @@ Threshold definido: [X.XX] (percentil [X]%)
 
 | Métrica | Valor | Aceitável? |
 |---|---|---|
-| Precision@50 | [X]% | [✅ >60% / ❌] |
-| Precision@100 | [X]% | [comparar à capacidade de revisão] |
+| Precision@k | [X]% ou NÃO CALCULADO | [k, capacidade de revisão, limiar aprovado e responsável] |
+| Precision em outro k (se pertinente) | [X]% ou NÃO CALCULADO | [comparar à capacidade e ao baseline] |
 | Recall | [X]% | [comparar ao custo de falso negativo] |
 | AUC-PR | [X.XX] | [comparar à prevalência e benchmark] |
 | False Positive Rate | [X]% | [comparar ao limite operacional] |
@@ -85,5 +85,5 @@ Threshold definido: [X.XX] (percentil [X]%)
 
 "Detectamos [N] anomalias ([X]% da base) usando [algoritmo].
 As anomalias se concentram em [padrão principal], com [X]% relacionadas a
-[tipo A]. Validação manual das top-50 indica precisão de [X]%.
+[tipo A]. Validação manual de [k] casos [foi/não foi] realizada; precisão observada [valor ou NÃO CALCULADO], com [incerteza e regra de seleção].
 Recomendamos [ação principal] para [impacto estimado]."
