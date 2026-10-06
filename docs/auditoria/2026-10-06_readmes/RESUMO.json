@@ -19,5 +19,15 @@
   },
   "runtime_policy_algorithm_changed": false,
   "databricks_publication": "NOT_RUN_NOT_AUTHORIZED",
-  "final_integration_checks": "SEE_TESTES.md"
+  "final_integration_checks": {
+    "candidate_commit": "a3fcf44e2c301177180304c399d7555a204f938b",
+    "ci_local": "PASS_12_OF_12",
+    "validator": "PASS_0_FAILURES_0_WARNINGS",
+    "package": "691_OF_691_BYTE_IDENTICAL",
+    "renderer": "IDEMPOTENT",
+    "dispositions": "1135_OF_1135",
+    "records": "497_OF_497",
+    "paths": "723_OF_723",
+    "scope": "LOCAL_DOCUMENTATION_ONLY"
+  }
 }

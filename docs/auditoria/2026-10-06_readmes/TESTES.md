@@ -28,7 +28,13 @@ A igualdade integral fonte/pacote, a repetibilidade, os hashes e o CI sobre comm
 
 ## Rodada integrada
 
-PENDENTE DE EXECUÇÃO SOBRE O COMMIT FINAL PREPARADO. Comandos: `python tools/validate_assistant.py --conferir-readme`; `python tools/ci_local.py --verbose`; regressões direcionadas de integridade e auditoria independente da mesma árvore.
+No commit `a3fcf44e2c301177180304c399d7555a204f938b`, árvore `a2050e2a145f90c84d0ba6589585565e16f37175`, o comando `python tools/ci_local.py --verbose` terminou com exit 0 e **12/12 etapas PASS**: temas, validação, SEF, biblioteca, ferramentas, transição, Micromodelos, pacote Micromodelos, READMEs e três etapas Concierge. Os 11 skips temáticos e 7 de transição permanecem explícitos; não são PASS ambiental.
+
+`python tools/validate_assistant.py --conferir-readme` passou com zero falhas/avisos. Os 691 arquivos do produto correspondem byte a byte ao espelho. Nova execução do renderer sobre a mesma fonte preservou a worktree limpa, confirmando repetibilidade. Os 290 arquivos Python de produto conservam AST e células executáveis/magics; 68 notebooks têm apenas alterações narrativas. Todos os 65 arquivos protegidos de policy/schema/assets/licenças examinados e as três listas efetivas de dependências são invariantes.
+
+As quatro APIs canônicas de integridade aceitaram os manifests corretos e rejeitaram quatro mutantes documentais; a CLI KS executou a fixture e verificou o oráculo `D=1`, `p=1/35`. A regressão específica de object_validation passou em 29 casos, com sete integrações opcionais puladas por exigir opt-in. Nenhum hash foi relaxado para aprovar mudança de código.
+
+A primeira rodada integrada teve dois FAILs de assertivas documentais legadas (comando de manutenção dentro do Manual e pendência antiga do Concierge). As verificações passaram a exigir o dono correto e limites operacionais atuais, com mutantes de remoção; os guards de policy, promoção, integridade, runtime e histórico permanecem. A nova rodada acima passou sem reclassificar esses FAILs anteriores. A revisão independente confere o commit final publicado e a igualdade da árvore; este registro de resultado é um fechamento documental posterior da mesma fonte validada.
 
 ## Não executado
 

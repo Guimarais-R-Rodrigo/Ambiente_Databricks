@@ -10,7 +10,7 @@
 - (Codex) Separada a projeção operacional de TOKENS da emissão histórica; saída padrão, snapshot V01, schema e testes históricos preservados. A documentação de assets distingue uso de autoria sem regenerar imagens ou alterar licenças.
 
 - (Codex) Integrados os lotes de prompts/scripts, snippets gerais/ML e 61 templates, com 1.135 disposições e 497 registros de origem. Revisor independente conferiu contratos, contas, efeitos e conteúdo realocado. Sete hashes documentais em quatro manifests foram regenerados sem alterar schema, allowlist, roles ou hashes de implementação.
-- (Codex) Espelho integral regenerado na árvore isolada após inventário de 692 arquivos e zero extras; a certificação integrada está registrada em `docs/auditoria/2026-10-06_readmes/TESTES.md`.
+- (Codex) Espelho integral regenerado na árvore isolada após inventário de 692 arquivos e zero extras; a certificação integrada está registrada em `docs/auditoria/2026-10-06_readmes/TESTES.md`. CI integrado aprovado nas 12 etapas; snapshot local zero falhas/avisos, 691/691 arquivos equivalentes e renderer repetível. Políticas, schemas, assets, licenças e execução Python preservados.
 
 ## 2026-10-01 — Integração do aceite técnico B1 A
 
