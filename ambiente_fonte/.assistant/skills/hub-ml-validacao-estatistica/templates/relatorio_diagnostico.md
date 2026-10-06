@@ -1,8 +1,10 @@
 # Template: Relatório Diagnóstico Consolidado
 
 > Formato canônico do diagnóstico final emitido pela skill.
-> Posicionado após execução de todos os testes (Core + Suite específica).
-> Resume resultados, emite decisão e prescreve ações.
+> Resume somente testes aplicáveis, distinguindo executados, não executados e
+> não suportados pela rota. Se o pedido foi só planejamento, manter NÃO EXECUTADO.
+> Recomendação técnica depende do estimando, do critério e da evidência; registrar
+> decisor/aprovação separadamente. Não presumir Core + Suite completos.
 
 ---
 
@@ -26,16 +28,14 @@
 
 ### Resultado por teste
 
-| # | Código | Teste | Resultado | Severidade |
-|---|---|---|---|---|
-| 1 | C1 | Duplicidade PK | {{RESULTADO}} | {{BADGE}} |
-| 2 | C2 | Missingness Pattern | {{RESULTADO}} | {{BADGE}} |
-| 3 | C3 | Cardinalidade Extrema | {{RESULTADO}} | {{BADGE}} |
-| 4 | C4 | Near-Zero Variance | {{RESULTADO}} | {{BADGE}} |
-| 5 | C5 | Correlação/Redundância | {{RESULTADO}} | {{BADGE}} |
-| 6 | C6 | Class Imbalance | {{RESULTADO}} | {{BADGE}} |
-| 7 | C7 | Power Analysis | {{RESULTADO}} | {{BADGE}} |
-| 8+ | {{COD}} | {{TESTE_SUITE}} | {{RESULTADO}} | {{BADGE}} |
+| Código/teste aplicável | Estado | Resultado e evidência | Severidade/critério |
+|---|---|---|---|
+| [teste selecionado] | [EXECUTADO/NÃO EXECUTADO/NÃO SUPORTADO] | [estatística, efeito e fonte; ausentes ficam pendentes] | [critério aprovado ou NÃO CLASSIFICADO] |
+
+Inaplicáveis ficam em registro separado com motivo, fora da contagem de testes
+executados. Listar também falhas e execução parcial; não herdar resultado de
+um plano, de exemplo sintético ou de outro run. IC/power só quando calculados
+e suportados; no piloto KS, IC é UNSUPPORTED_IN_PROFILE.
 
 ---
 
@@ -106,6 +106,8 @@
 | **Semáforo** | {{EMOJI}} {{DECISAO}} |
 | **Justificativa** | {{JUSTIFICATIVA_COMPLETA}} |
 | **Condições** | {{CONDICOES}} (se CONDICIONAL) |
+| **Estimando e critério** | {{ESTIMANDO_CRITERIO_E_AUTORIDADE}} |
+| **Decisor/aprovação** | {{RESPONSAVEL_E_ESTADO_OU_PENDENTE}} |
 | **Próximo passo** | {{PROXIMO_PASSO}} |
 
 ---
@@ -114,8 +116,8 @@
 
 | Se decisão = | Próxima etapa |
 |---|---|
-| ✅ GO | Prosseguir para modelagem / análise |
-| 🟡 CONDICIONAL | Aplicar mitigações → reexecutar `@hub-ml-validacao-estatistica` → GO |
+| ✅ GO técnico | Próxima etapa somente dentro do escopo e autorização aplicáveis |
+| 🟡 CONDICIONAL | Propor mitigações e reavaliar pela rota autorizada; GO não é garantido |
 | 🔴 NO-GO | Resolver violações críticas → usar `@hub-ml-feature-engineering` ou `@hub-ml-eda-profissional` |
 
 ---

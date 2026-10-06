@@ -1,8 +1,8 @@
 # Template: Test Result Card
 
 > Formato canônico para apresentação de cada teste no notebook de saída.
-> Cada teste gera **2 células**: 1 Markdown (explicação) + 1 código (execução),
-> seguidas de 1 Markdown (resultado/interpretação).
+> Quando usado o ciclo completo, cada teste tem **3 células**: Markdown PRÉ
+> (explicação), código (execução) e Markdown PÓS (resultado/interpretação).
 >
 > Preencher somente o que o perfil suporta e a evidência sustenta. Sem execução,
 > manter o resultado pendente; contas didáticas devem ser identificadas como
@@ -131,7 +131,7 @@ significa para ESTE dataset e ESTE método. Não repetir definição genérica.]
 - Tamanho de efeito: {{EFFECT_MEASURE}} = {{EFFECT_VALUE}} ({{EFFECT_CLASS}})
 - IC: {{NIVEL_E_LIMITES_CALCULADOS_OU_STATUS_COM_MOTIVO}}
 - Conclusão: {{REJEITA_NAO_REJEITA}} H₀ ao nível α = {{ALPHA}}.
-- Power: {{POWER}} (risco tipo II: β ≈ {{BETA}})
+- Power: {{CALCULO_COM_ALTERNATIVA_DESENHO_ALPHA_OU_NAO_SUPORTADO_PENDENTE}}; β só se calculado e pertinente
 ```
 
 ---
@@ -140,7 +140,7 @@ significa para ESTE dataset e ESTE método. Não repetir definição genérica.]
 
 1. **Toda interpretação deve ser contextual**: não repetir definição genérica do teste.
    Conectar ao dataset, ao método e ao objetivo do usuário.
-2. **Badges**: usar snippet `badge()` quando disponível, ou emoji direto (✅/🟡/🔴/ℹ️).
+2. **Badges**: usar a API efetiva do componente quando pertinente e disponível, ou texto/emoji; nenhum visual substitui critério e evidência.
 3. **Valores numéricos**: 4 casas decimais para estatísticas e p-valores;
    formatar grandes números no padrão BR (1.234.567).
 4. **Próximos passos**: máximo 3, ordenados por viabilidade (mais simples primeiro).

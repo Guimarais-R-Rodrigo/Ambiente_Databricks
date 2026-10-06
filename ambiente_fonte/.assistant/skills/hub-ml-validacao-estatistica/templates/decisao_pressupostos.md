@@ -1,103 +1,79 @@
 # Template: Decisão de Pressupostos
 
-> Tabela de decisão rápida: "Pressuposto violado → O que fazer?"
-> Organizada por suite, com mitigação primária, secundária e última opção.
-> Usar como referência no diagnóstico consolidado e calibrar ao desenho real.
+## Como usar
+Selecionar diagnóstico por pergunta, estimando, desenho e método. As alternativas
+abaixo são candidatas de planejamento; não são sequência automática de execução.
+Códigos R/T/M/D/I identificam testes de diagnóstico, não capacidade do runner.
+Confirmar rota disponível na [skill](../SKILL.md). O piloto KS não executa as
+outras suites por aproximação. Sem evidência, registrar NÃO AVALIADO.
 
----
+Antes de agir, registrar alfa pré-especificado, efeito mínimo relevante, família
+de hipóteses, critério aprovado, população/N e dependência. Teste isolado não
+comprova pressuposto, leakage ou causalidade; não escolher remediação por p-valor
+sem examinar consequências para o estimando.
 
-## Suite: Regressão & Econometria
+## Regressão e econometria
 
-| Pressuposto | Teste | Violação detectada | Mitigação primária | Mitigação secundária | Última opção | Muda o método? |
-|---|---|---|---|---|---|---|
-| Normalidade (resíduos) | R1/R2 | p ≤ 0,05 | Transformação Box-Cox/log na resposta | Bootstrapped standard errors | Modelo não-paramétrico | Não (se predição) / Sim (se inferência) |
-| Multicolinearidade | R3 | VIF ≥ 10 | Remover feature menos importante do par | Ridge/Lasso regularização | PCA parcial nas colineares | Não |
-| Autocorrelação | R4 | DW < 1,0 ou > 3,0 | Adicionar lags/AR terms | Erros robustos Newey-West (HAC) | Reespecificar modelo | Sim (se persistir) |
-| Homocedasticidade | R5/R6 | BP p ≤ 0,01 | Erros robustos HC3 (White) | WLS (Weighted Least Squares) | Transformação da resposta | Não |
-| Especificação funcional | R7 | RESET p ≤ 0,01 | Termos quadráticos/interações | Modelo GAM/splines | Abandonar OLS → tree-based | Sim |
-| Estabilidade numérica | R8 | CN ≥ 100 | Standardizar features (z-score) | Remover quase-colineares | Ridge regularização | Não |
+| Diagnóstico | Código | Evidência a avaliar | Alternativas a justificar |
+|---|---|---|---|
+| Normalidade dos resíduos | R1/R2 | Resíduos, N, caudas e sensibilidade da inferência | Inferência robusta/reamostragem compatível; transformação só se preservar objetivo |
+| Multicolinearidade | R3 | VIF, estrutura das features e estabilidade | Regularização, revisão da especificação; sem remover por VIF fixo |
+| Autocorrelação | R4 | Dependência residual, tempo e desenho | Lags/erros robustos HAC/modelagem da dependência, conforme objetivo |
+| Heterocedasticidade | R5/R6 | Padrão dos resíduos, teste e magnitude | Erros robustos ou WLS com hipótese de variância justificada |
+| Forma funcional | R7 | Resíduos e teste RESET com especificação declarada | Termos adicionais/GAM/modelo alternativo com validação |
+| Estabilidade numérica | R8 | Escala, condition number e sensibilidade | Padronização/reparametrização/regularização justificadas |
 
-### Árvore de decisão Regressão
+Não exigir normalidade dos preditores. Transformar a resposta pode alterar
+estimando, interpretação e retransformation; não é correção automática.
 
-```text
-Normalidade falha?
-├── Objetivo = predição → 🟡 registrar, prosseguir
-└── Objetivo = inferência →
-    ├── Box-Cox resolve? → ✅ re-testar
-    └── Não resolve →
-        ├── Bootstrap → ✅ IC via resampling
-        └── Mudar para método não-paramétrico
-```
+## Séries temporais
 
----
+| Diagnóstico | Código | Evidência a avaliar | Alternativas a justificar |
+|---|---|---|---|
+| Estacionariedade | T1/T2 | ADF/KPSS, componentes determinísticos, lags e quebras | Diferenciação/detrend apenas com especificação; verificar excesso de diferenciação |
+| Ruído residual | T3 | Ljung-Box, lags e multiplicidade | Rever estrutura temporal e validar fora da amostra |
+| Dependência de primeira ordem | T4 | Resíduos e desenho temporal | Modelar dependência compatível, sem corte universal de DW |
+| Sazonalidade | T5 | Período, histórico e estabilidade do padrão | Termos sazonais/decomposição quando suportados |
+| Normalidade residual | T6 | Caudas e impacto nos intervalos | Intervalos robustos/reamostragem que preserve dependência |
+| Variância condicional | T7 | ARCH-LM, magnitude e contexto | Modelo de volatilidade ou intervalo adequado à finalidade |
 
-## Suite: Séries Temporais
+ADF/KPSS não aprovam forecast. Comparar baseline, horizonte e desempenho OOT.
 
-| Pressuposto | Teste | Violação detectada | Mitigação primária | Mitigação secundária | Última opção | Muda o método? |
-|---|---|---|---|---|---|---|
-| Estacionariedade | T1/T2 | ADF p ≥ 0,10 + KPSS p ≤ 0,01 | Diferenciação (d=1 ou d=2) | Remoção de tendência (detrend) | Cointegração se múltiplas séries | Pode (ARIMA vs ARIMAX) |
-| Ruído branco (resíduos) | T3 | LB p ≤ 0,05 em múltiplos lags | Aumentar ordem AR/MA | Incluir termos sazonais (SARIMA) | Modelo mais complexo (VAR/GARCH) | Sim |
-| Autocorrelação 1ª ordem | T4 | DW < 1,0 ou > 3,0 | Adicionar AR(1) | Reespecificar com mais lags | Modelo autoregressivo completo | Sim |
-| Sazonalidade | T5 | Strength ≥ 0,40 não modelada | SARIMA (P,D,Q,s) | Dummies sazonais | Decomposição STL + modelo resíduos | Sim |
-| Normalidade (resíduos) | T6 | Shapiro p ≤ 0,05 | Bootstrap nos intervalos de previsão | Transformação (log-returns) | Reportar IC com ressalva | Não (para pontuais) |
-| ARCH effects | T7 | ARCH-LM p ≤ 0,05 | Modelo GARCH | Bootstrap para intervalos | Log-returns + volatilidade separada | Sim |
+## ML tabular
 
-### Árvore de decisão Séries Temporais
+| Diagnóstico | Código | Evidência a avaliar | Alternativas a justificar |
+|---|---|---|---|
+| Leakage | M7 | Proveniência, disponibilidade até decisão, split e fit no treino | Corrigir fonte/split/transformação quando violação comprovada; correlação alta isolada não prova leakage |
+| Drift | M4/M5 | Referência/bins, volume, segmentos e critério aprovado | Investigar dados/população; challenger só com escopo e autoridade próprios |
+| Sinal incremental | M1/M2/M6 | Comparação justa fora da amostra e incerteza | Revisar features ou objetivo; ausência de significância univariada não prova ausência de sinal |
+| Imbalance | C6 | Eventos, métrica, capacidade e custo do erro | Pesos/threshold/reamostragem só no treino, quando justificados |
+| Suficiência amostral | M9 | Alternativa, desenho, alfa e cálculo de potência ou precisão | Coleta adicional ou escopo limitado; sem corte universal de power |
 
-```text
-Série é estacionária? (ADF + KPSS)
-├── Sim → prosseguir com ARMA/VAR
-└── Não →
-    ├── Diferenciar (d=1) → re-testar
-    │   ├── Agora estacionária? → ✅ ARIMA(p,1,q)
-    │   └── Ainda não? → d=2 ou detrend
-    └── Múltiplas séries? → testar cointegração (Johansen)
-```
+## Deep learning
 
----
+| Diagnóstico | Código | Evidência a avaliar | Alternativas a justificar |
+|---|---|---|---|
+| Overlap de entidade | D3 | Política de independência e duplicação cross-split | Reparticionar quando o contrato exigir entidades disjuntas |
+| Qualidade de labels | D2 | Método de avaliação e erros verificados | Revisão de anotação/robustez; não limpar por taxa arbitrária |
+| Escala | D5 | Sensibilidade do algoritmo e pipeline | Scaling ajustado só no treino, se necessário |
+| Distribuição entre splits | D8 | Shift, tempo e mecanismo amostral | Investigar e preservar desenho de uso; não estratificar apagando OOT |
 
-## Suite: ML Tabular
+## Inferência entre grupos
 
-| Pressuposto | Teste | Violação detectada | Mitigação primária | Mitigação secundária | Última opção | Muda o método? |
-|---|---|---|---|---|---|---|
-| Sem leakage | M7 | Correlação feature-target > 0,95 | Remover feature | Refazer split temporal | Voltar para FE | Não (muda dados) |
-| Estabilidade (drift) | M4/M5 | PSI acima do limite aprovado | Investigar dados/população | Treinar challenger e validar | Redefinir referência/janela com justificativa | Pode |
-| Sinal genuíno | M1/M2/M6 | Nenhuma feature significativa | Revisar feature engineering | Buscar fontes adicionais | Repensar problema | Sim (escopo) |
-| Balanceamento | C6 | Métrica/volume insuficiente para a decisão | Class weights / threshold tuning | Reamostragem ajustada só no treino | Reformular o problema se justificável | Pode |
-| Suficiência amostral | M9 | Power < 0,60 | Mais dados | Menos features (reduzir dimensão) | Aceitar limitação + declarar | Não |
+| Diagnóstico | Código | Evidência a avaliar | Alternativas a justificar |
+|---|---|---|---|
+| Distribuição relevante ao estimando | I1 | Forma, N e robustez do método | Transformação, bootstrap ou teste alternativo; testes não paramétricos podem mudar a hipótese |
+| Variâncias | I2 | Desenho, tamanhos e heterogeneidade | Welch ou modelo apropriado, sem preteste automático como único seletor |
+| Dependência/pareamento | — | Unidade e desenho de coleta | Teste pareado/modelo hierárquico apropriado |
+| Contagens categóricas | I7 | Contagens esperadas, dimensão e independência | Método exato/simulação compatível; agregação de categorias só com sentido substantivo |
+| Multiplicidade | I9 | Família definida antes de olhar resultados e controle de erro pretendido | Holm/Bonferroni/FDR conforme objetivo e pressupostos; não esperar “mais de 3 testes” |
 
----
+## Decisão documentada
+- Achado e evidência: [fonte ou NÃO AVALIADO]
+- Consequência para estimando/decisão: [magnitude, incerteza e limite]
+- Mitigação proposta e critério de reavaliação: [justificativa]
+- Autoridade e escopo: [aprovação necessária antes de alterar dados/método/execução]
+- Estado: [pendente/condicional/bloqueado ou decisão fundamentada]
 
-## Suite: Deep Learning
-
-| Pressuposto | Teste | Violação detectada | Mitigação primária | Mitigação secundária | Última opção | Muda o método? |
-|---|---|---|---|---|---|---|
-| Sem leakage (entidade) | D3 | Entidades duplicadas cross-split | Re-split por entidade | GroupKFold | Redefinir splits | Não (muda dados) |
-| Label quality | D2 | Noise > 10% | Limpeza manual/heurística | Confident learning (CleanLab) | Label smoothing | Não |
-| Scale consistency | D5 | Escalas divergentes > 10x | StandardScaler / MinMax | BatchNormalization | Feature-wise normalization | Não |
-| Distribuição entre splits | D8 | KS p ≤ 0,05 em muitas features | Stratified split | Re-amostragem | Aceitar com documentação | Não |
-
----
-
-## Suite: Inferência Estatística
-
-| Pressuposto | Teste | Violação detectada | Mitigação primária | Mitigação secundária | Última opção | Muda o método? |
-|---|---|---|---|---|---|---|
-| Normalidade (dados) | I1 | Shapiro p ≤ 0,05 | Transformação | Teste não-paramétrico equivalente | Bootstrap | Sim (muda teste) |
-| Homocedasticidade | I2 | Levene p ≤ 0,05 | Welch's t-test (não assume igualdade) | Transformação | Teste não-paramétrico | Sim |
-| Independência | — | Amostras pareadas detectadas | Usar teste pareado (paired t) | Wilcoxon signed-rank | Modelo misto | Sim |
-| N por célula (χ²) | I7 | N esperado < 5 | Fisher's Exact Test | Combinar categorias | Simulação Monte Carlo | Sim |
-| Múltiplos testes | I9 | > 3 testes simultâneos | Bonferroni | FDR (Benjamini-Hochberg) | Ajuste de α por família | Não (ajusta α) |
-
----
-
-## Regras gerais de decisão
-
-1. **Se mitigação resolve (re-teste passa)** → prosseguir com documentação
-2. **Se mitigação não resolve e há alternativa de método** → mudar método
-3. **Se não há alternativa e violação é 🔴** → NO-GO documentado
-4. **Nunca ignorar 🔴 sem justificativa** — toda decisão de "seguir mesmo assim" deve ser explícita, documentada e com risco declarado
-
----
-
-*Aplicar em conjunto com o fluxo atual do SKILL.md.*
+Risco crítico interrompe a etapa dependente. Mitigação proposta não é mitigação
+executada, e um reteste não apaga seleção pós-hoc, falha anterior ou risco residual.
