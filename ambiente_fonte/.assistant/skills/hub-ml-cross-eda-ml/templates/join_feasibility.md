@@ -19,12 +19,12 @@
 | Entidades em A | [N] | — |
 | Entidades em B | [N] | — |
 | Interseção (A ∩ B) | [N] | — |
-| Só em A (órfãos A) | [N] ([X%]) | [Preocupante se > 20%] |
-| Só em B (órfãos B) | [N] ([X%]) | [Preocupante se > 20%] |
+| Só em A (órfãos A) | [N] ([X%]) | [efeito na população e limite definido no estudo] |
+| Só em B (órfãos B) | [N] ([X%]) | [efeito na população e limite definido no estudo] |
 | **Jaccard** | [0.XX] | [Alta/Moderada/Baixa sobreposição] |
 | **Overlap Coefficient** | [0.XX] | [Relevante se tamanhos muito diferentes] |
-| Cardinalidade chave em A | [N distintos / N total] | [1:1 se iguais] |
-| Cardinalidade chave em B | [N distintos / N total] | [1:1 se iguais] |
+| Cardinalidade chave em A | [N distintos / N total] | [unicidade desta fonte; relação 1:1 exige conferir ambos os lados, nulos e predicado completo] |
+| Cardinalidade chave em B | [N distintos / N total] | [unicidade desta fonte; relação 1:1 exige conferir ambos os lados, nulos e predicado completo] |
 | Fator de explosão (M:N) | [X.Xx] | [comparar ao contrato de granularidade] |
 
 **Tipo de join recomendado**: [INNER / LEFT / ...]
@@ -47,28 +47,27 @@
 [Âncora: tabela_A (1 linha/entidade)]
     │
     ├── LEFT JOIN tabela_B ON [chave] (pré-agregada por [chave])
-    │   └── Coverage: [X%] | Explosão: Não
+    │   └── Coverage: [X%] | Explosão: [não medida ou evidência]
     │
     └── LEFT JOIN tabela_C ON [chave]
-        └── Coverage: [X%] | Explosão: Não
+        └── Coverage: [X%] | Explosão: [não medida ou evidência]
 
 Resultado esperado: [N] linhas (1 por entidade)
 ```
 
 ### Validações pós-join obrigatórias
 
-- [ ] Count pós-join = count da âncora (sem explosão)
+- [ ] Count e multiplicidade pós-join coerentes com tipo de join e grão contratados; igualdade isolada não prova ausência de perdas/duplicações
 - [ ] Nenhuma chave duplicada após join
-- [ ] % de NULLs em colunas de fontes secundárias = (1 - coverage)
+- [ ] Sem match de chave e atributo NULL com match medidos separadamente, no mesmo grão/denominador; 1 − coverage não é a taxa geral de NULLs
 - [ ] Distribuição da chave pré/pós join é estável
 
 ## Registros órfãos — análise de perfil
 
-> ⚠️ Preencher apenas se Jaccard < 0.80 em algum par.
+> Investigar órfãos sempre que a ausência puder mudar representatividade ou decisão; não depender de corte universal de Jaccard.
 
 **Pergunta central**: Os registros que ficam de fora do join têm perfil
-diferente dos que ficam? Se sim, o modelo treinado no inner join não
-generalizará para a população completa.
+diferente dos que ficam? Uma diferença material pode limitar generalização; testar essa hipótese na população de uso, sem concluir impossibilidade apenas por um contraste descritivo.
 
 | Segmento | N | % | Hipótese de causa |
 |---|---|---|---|
