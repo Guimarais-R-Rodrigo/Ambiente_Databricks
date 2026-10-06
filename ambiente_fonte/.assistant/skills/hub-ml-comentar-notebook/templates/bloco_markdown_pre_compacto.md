@@ -6,7 +6,7 @@ Usar quando o bloco for **simples e autoexplicativo** — configuração,
 imports agrupados, definições auxiliares, leitura direta sem lógica
 complexa.
 
-**Critério**: a explicação cabe em 3 a 5 linhas.
+**Critério**: usar introdução curta quando a intenção não for óbvia. Não comentar imports triviais nem código autoexplicativo; agrupar células consecutivas quando útil.
 
 ---
 
@@ -22,12 +22,12 @@ complexa.
 
 ---
 
-## Exemplo real
+## Exemplo ilustrativo fictício
 
 ```markdown
 ### Etapa 1 — Configuração e Imports
 
-**Objetivo**: Importar bibliotecas, definir paleta visual e inicializar widgets.
+**Objetivo**: Carregar a configuração visual autorizada e os parâmetros necessários à análise, se esse preparo precisar de contexto.
 **Entradas**: Nenhuma (célula de setup).
 **Saída**: Variáveis de configuração disponíveis para o restante do notebook.
 ```

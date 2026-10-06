@@ -5,14 +5,14 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Autor** | Rodrigo — [Squad CRM | Squad MLOps] |
-| **Versão** | [v1.0] |
+| **Autor** | [autor/equipe informados ou NÃO INFORMADO] |
+| **Versão** | [versão observada do artefato ou NÃO INFORMADA] |
 | **Criação** | [YYYY-MM-DD] |
 | **Última atualização** | [YYYY-MM-DD] |
 | **Projeto** | [NOME_DO_PROJETO] |
 | **Catálogo principal** | `[CATALOGO]` |
 | **Schema principal** | `[SCHEMA]` |
-| **Status** | [DESENVOLVIMENTO | HOMOLOGAÇÃO | PRODUÇÃO] |
+| **Status** | [estado comprovado e fonte, ou NÃO INFORMADO] |
 
 ## Objetivo
 
@@ -36,7 +36,9 @@ notebook de transformação."]
 - `[CATALOGO].[SCHEMA].[TABELA_ENTRADA_2]` — [breve descrição]
 - Parâmetro `data_referencia` (widget) — formato `YYYY-MM-DD`.
 
-## Saídas
+## Saídas previstas versus observadas
+
+[Relacionar apenas saídas presentes no código; registrar evidência da execução ou NÃO EXECUTADO. Não inventar tabela/log/métrica para completar o molde.]
 
 - `[CATALOGO].[SCHEMA].[TABELA_SAIDA]` — [descrição].
 - Registro em `[CATALOGO].[SCHEMA].[TABELA_LOG_EXECUCAO]`.

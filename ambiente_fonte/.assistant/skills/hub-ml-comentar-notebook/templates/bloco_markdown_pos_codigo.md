@@ -4,14 +4,14 @@ Usar para blocos **críticos** que exigem interpretação técnica e de
 negócio (etapas de qualidade, granularidade, univariada, bivariada,
 visualizações).
 
-**Critério**: resultado exige análise e gera ≥16 linhas de Markdown.
+**Critério**: resultado exige interpretação material. A extensão segue o risco e a utilidade, sem quota de linhas. Sem execução, registrar NÃO EXECUTADO; com execução parcial, preservar falha, resultados efetivos e limites.
 
 ---
 
 ## Estrutura padrão
 
 ```markdown
-### ✅ Resultado — Etapa N: [Nome] | `STATUS: OK` | `RISCO: BAIXO`
+### Resultado — Etapa N: [Nome] | `STATUS: NÃO EXECUTADO` | `RISCO: NÃO INFORMADO`
 
 > **KPI1** valor | **KPI2** valor | **KPI3** valor | **KPI4** valor
 
@@ -21,9 +21,7 @@ visualizações).
 
 | Métrica | Valor | Status |
 | --- | ---: | :---: |
-| Descrição 1 | 3.375.674 | 🟢 |
-| Descrição 2 | 54 (0,002%) | 🟡 |
-| Descrição 3 | 229.753 | 🔴 |
+| [métrica e unidade] | [valor observado ou NÃO CALCULADO] | [critério, evidência ou NÃO CLASSIFICADO] |
 
 ---
 
@@ -44,9 +42,8 @@ visualizações).
 
 #### Checks de qualidade
 
-- [x] Check 1 (passou)
-- [x] Check 2 (passou)
-- [ ] Check 3 (pendente — ação necessária)
+- [ ] [Check aplicável, resultado e fonte; marcar só após verificação]
+- [ ] [Check pendente, falhou ou não suportado; motivo e próximo passo]
 
 ---
 
@@ -66,9 +63,9 @@ visualizações).
 
 ## Regras de formatação
 
-### KPI Card (obrigatório)
+### KPI Card (quando houver métricas relevantes observadas)
 
-- Primeira linha após o título, sempre em blockquote (`>`).
+- Se usado, colocar após o título em blockquote (`>`); não preencher valores ausentes.
 - 4-5 KPIs máximo, separados por ` | `.
 - Valores em **negrito**, unidades abreviadas (M, k, bi, %).
 - Selecionar os KPIs mais relevantes (não repetir todos os números).
@@ -94,7 +91,7 @@ visualizações).
 
 ### Badges de status (opcional, apenas etapas 2 e 3)
 
-- `| \`STATUS: OK\` | \`RISCO: BAIXO\``
+- `| \`STATUS: [observado ou NÃO EXECUTADO]\` | \`RISCO: [critério ou NÃO INFORMADO]\``
 - Colocar no final do título `###`.
 
 ---
@@ -106,7 +103,7 @@ Incluir apenas as que agregam valor:
 
 | Seção | Quando incluir |
 | --- | --- |
-| 📊 Resultado observado | **Sempre** |
+| 📊 Resultado observado | Quando executado; caso contrário, motivo de NÃO EXECUTADO |
 | 🔍 Interpretação técnica | Sempre que houver achado não-óbvio |
 | 💼 Interpretação de negócio | Quando o resultado tiver implicação executiva |
 | Checks de qualidade | Etapas 2 e 3 (validações) |
