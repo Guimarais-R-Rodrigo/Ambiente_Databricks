@@ -1,6 +1,6 @@
 # Template: Relatório de Scorecard
 
-> **[KS]** KS | **[Gini]** Gini | **[IV total]** IV | **[N vars]** variáveis selecionadas
+> **[KS]** KS | **[Gini]** Gini | **[IV por variável]** diagnóstico univariado | **[N vars]** variáveis selecionadas
 
 
 ## Uso
@@ -28,9 +28,7 @@ Desenvolver scorecard de [produto] para [decisão] com horizonte de [N] dias.
 ### Por Information Value
 | Variável | IV | Classificação | Decisão |
 |---|---|---|---|
-| [var1] | [X] | Forte | Incluir |
-| [var2] | [X] | Média | Incluir |
-| [var3] | [X] | Fraca | Excluir |
+| [variável] | [IV calculado no treino] | [interpretação contextual] | [decisão por ganho incremental, estabilidade, redundância e disponibilidade; evidência] |
 
 ### Variáveis selecionadas
 [N] variáveis selecionadas por valor incremental, estabilidade e interpretação (de [M] candidatas)
@@ -61,13 +59,16 @@ Parametrização: PDO=[X], Base Score=[X], Base Odds=[X]:1
 PSI (dev vs val): [X] — [interpretação]
 
 ## 10. Conclusão e recomendação
-[Modelo aprovado/reprovado + próximos passos]
+[Recomendação técnica + evidência + limitações + próximos passos]
+[Decisão humana: responsável, data, escopo e aprovação registrada ou NÃO INFORMADO]
+[A recomendação não aprova o modelo nem clientes e não autoriza registro/deploy]
 ```
 
 ---
 
 #### 💼 Interpretação executiva
 
-> "O scorecard utiliza [N] variáveis com IV total de [X]. O KS de [X]
-> indica [boa/excelente] capacidade de separação. As faixas de score
-> distribuem a base em [K] grupos com taxas de evento entre [min]% e [max]%."
+> "O scorecard utiliza [N] variáveis selecionadas por [evidência incremental].
+> IV é diagnóstico univariado: somá-lo entre features não mede informação
+> conjunta independente. KS = [X] foi comparado com [benchmark/critério],
+> com [incerteza]. As faixas têm taxas observadas [valores/período]."
