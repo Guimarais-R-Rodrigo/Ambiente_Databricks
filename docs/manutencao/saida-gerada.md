@@ -44,8 +44,10 @@ sucesso da suíte cumulativa correspondente. Falha, cancelamento, skip ou result
 ausente do upstream reprovam o check, em vez de deixá-lo passar por skip.
 
 - `validar`: agregado Python 3.12, Spark ausente, widgets opcionais.
-- `temas-widgets`: descoberta completa Python 3.12 com ipywidgets obrigatório.
-- `temas-widgets-app`: a mesma descoberta com dependências do App também presentes.
+- `temas-widgets`: descoberta completa Python 3.12 com ipywidgets obrigatório, sem seed de ambiente (V05).
+- `temas-widgets-seeded`: mesmo perfil com `SOURCE_DATE_EPOCH=1700000000` (V06–V09).
+- `temas-widgets-app`: widgets + App, seed fixo e `ubuntu-latest` (V10–V12).
+- `temas-widgets-app-24`: mesmo conjunto de dependências/seed, `ubuntu-24.04` (V13–V14).
 - `preparar`, no workflow de kit: agregado separado Python 3.11 + Spark 4.0.1/Java 17.
 
 V00 preserva suas três suítes fora do prefixo `test_temas`; V05 preserva
@@ -66,6 +68,15 @@ Os testes `test_ai_ci_workflows.py` preservam a matriz de nomes/comandos/artifac
 observada e os negativos de propagação. Cache pip inclui o requirements externo
 e o arquivo de Temas incluído por ele; o perfil App inclui seu requirements.
 Nenhum cache de resultado de teste concede aprovação.
+
+A escolha conservadora deixa todos os checks comuns sem filtros. Num push amplo
+em main, as rotas configuradas de suíte completa caem de 13 para 6, incluindo o
+kit Python 3.11/Spark quando seu filtro se aplica. Num PR estreito de documentação,
+as rotas podem aumentar de 1 para 5. Isso preserva reporte e dependências dos
+checks enquanto required checks não podem ser auditados; não é uma promessa de
+redução universal nem de duração. Tempo remoto ainda não foi medido. Runners
+`ubuntu-latest` e `ubuntu-24.04`, seed presente/ausente e dependências diferentes
+continuam separados; não se presume equivalência entre labels de imagem.
 
 ## Limites e retenção
 

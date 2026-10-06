@@ -1,20 +1,8 @@
 name: Production readiness V14
 
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches:
-      - main
-      - 'codex/temas-v14*'
-  pull_request:
-    paths:
-      - 'README.md'
-      - 'docs/sprints/README.md'
-      - 'docs/sprints/sistema_temas/README.md'
-      - 'docs/sprints/sistema_temas/V14/**'
-      - 'tools/temas_v14_ownership.py'
-      - 'tools/tests/test_temas_v14_s0.py'
-      - 'tools/tests/test_temas_v14_s1.py'
-      - '.github/workflows/temas-v14-ci.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -43,6 +31,10 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências Python
         run: |
           python -m pip install -r tools/requirements-dev.txt

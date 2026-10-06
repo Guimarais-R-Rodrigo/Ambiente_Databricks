@@ -1,8 +1,8 @@
 name: Regressões da instrumentação V00
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  pull_request:
-  push:
-    branches: [main, codex/temas-v00]
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -21,11 +21,23 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: tools/requirements-dev.txt
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Instalar dependências declaradas
         run: python -m pip install -r tools/requirements-dev.txt
-      - name: Gate da branch isolada sem depender da integração com main
-        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v00'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar compositor para gate completo
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Gate local completo da receita manual
         run: python -B tools/ci_local.py --verbose
       - name: Guardas do inventário
         run: python -B tools/tests/test_inventario_visual.py

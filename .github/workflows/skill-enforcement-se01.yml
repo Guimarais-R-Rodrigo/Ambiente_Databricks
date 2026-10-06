@@ -3,8 +3,12 @@ name: Skill Enforcement SE01
 on:
   pull_request:
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - "Novo_Ambiente_Simulado/**"
+      - 'ambiente_fonte/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
@@ -14,8 +18,12 @@ on:
   push:
     branches: [main]
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - "Novo_Ambiente_Simulado/**"
+      - 'ambiente_fonte/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
@@ -40,6 +48,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Contrato v0.1
         run: python -B tools/skill_enforcement/validate_contracts.py
 
@@ -56,12 +68,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: se01-skill-renderizado
-          path: Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
+          path: .artifacts/simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
           if-no-files-found: error
           retention-days: 7
 
       - name: Renderer canônico não pode deixar diff
-        run: git diff --exit-code -- Novo_Ambiente_Simulado
+        run: python tools/render_simulado.py --check
 
       - name: Snapshot README
         run: python tools/validate_assistant.py --conferir-readme

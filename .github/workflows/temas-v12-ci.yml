@@ -1,18 +1,8 @@
 name: Homologação de jornadas V12
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v12*']
-  pull_request:
-    paths:
-      - 'tools/temas_v12_homologacao.py'
-      - 'tools/tests/test_temas_v12.py'
-      - 'tools/tests/test_temas_v12_evidencia_real.py'
-      - 'docs/sprints/sistema_temas/V12/**'
-      - 'docs/sprints/sistema_temas/README.md'
-      - 'docs/sprints/README.md'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.github/workflows/temas-v12-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -34,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências Python de manutenção
         run: |
           python -m pip install -r tools/requirements-dev.txt

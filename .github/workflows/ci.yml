@@ -1,38 +1,1044 @@
 name: CI local reproduzível
-
-on:
-  pull_request:
+'on':
+  pull_request: null
   push:
-    branches: [main]
-
+    branches:
+    - main
+    - codex/temas-v*
 permissions:
   contents: read
-
 jobs:
   validar:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
-      - name: Baixar o repositório
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: tools/requirements-dev.txt
-      - name: Configurar Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Instalar dependências de teste
-        run: python -m pip install -r tools/requirements-dev.txt
-      - name: Instalar dependências do compositor V06
-        run: |
-          npm install --global pnpm@10.34.5
-          pnpm --dir tools/readme_visuals install --frozen-lockfile
-      - name: Executar o gate sem credenciais
-        run: python tools/ci_local.py
+    - name: Baixar o repositório
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          '
+    - name: Configurar Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Instalar dependências de teste
+      run: python -m pip install -r tools/requirements-dev.txt
+    - name: Instalar dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Executar o gate sem credenciais
+      run: python tools/ci_local.py
+  temas-widgets:
+    name: temas-widgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+          '
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Dependências do perfil
+      run: 'python -m pip install -r tools/requirements-dev.txt ''ipywidgets>=8,<9''
+
+        npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Gerar e conferir saída ignorada
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Suíte cumulativa por ambiente equivalente
+      run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+  temas-widgets-app:
+    name: temas-widgets-app
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SOURCE_DATE_EPOCH: '1700000000'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+          '
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Dependências do perfil
+      run: 'python -m pip install -r tools/requirements-dev.txt ''ipywidgets>=8,<9''
+
+        npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Dependências exclusivas App
+      run: python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+    - name: Gerar e conferir saída ignorada
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Suíte cumulativa por ambiente equivalente
+      run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+  temas-widgets-seeded:
+    name: temas-widgets-seeded
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SOURCE_DATE_EPOCH: '1700000000'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+          '
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Dependências do perfil
+      run: 'python -m pip install -r tools/requirements-dev.txt ''ipywidgets>=8,<9''
+
+        npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Gerar e conferir saída ignorada
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Suíte cumulativa por ambiente equivalente
+      run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+  temas-widgets-app-24:
+    name: temas-widgets-app-24
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      SOURCE_DATE_EPOCH: '1700000000'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+          '
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Dependências do perfil
+      run: 'python -m pip install -r tools/requirements-dev.txt ''ipywidgets>=8,<9''
+
+        npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Dependências exclusivas App
+      run: python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+    - name: Gerar e conferir saída ignorada
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Suíte cumulativa por ambiente equivalente
+      run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+
+  # BEGIN GENERATED CAMPAIGN JOBS: tools/ci_workflows.py
+  testar-v00:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.validar.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: 'tools/requirements-dev.txt
+
+          tools/requirements-temas-dev.txt
+
+          '
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Instalar dependências declaradas
+      run: python -m pip install -r tools/requirements-dev.txt
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar compositor para gate completo
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: Guardas do inventário
+      run: python -B tools/tests/test_inventario_visual.py
+    - name: Contratos legados sintéticos
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Confiabilidade do relatório
+      run: python -B tools/tests/test_baseline_visual_runner.py
+    name: testar-v00
+    needs:
+    - validar
+    if: ${{ always() }}
+  html-v04:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.validar.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências declaradas
+      run: python -m pip install -r tools/requirements-dev.txt
+    - name: Dependências do compositor V06 para regressão cumulativa
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V04 específica
+      run: python -B tools/tests/test_temas_v04.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo
+      run: echo 'V04 mantém regressão cumulativa V01–V06; o preparo Node existe apenas para os testes V06 e não publica nem homologa Databricks, acessibilidade ou UX visual.'
+    name: html-v04
+    needs:
+    - validar
+    if: ${{ always() }}
+  visual-lab-v05:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências declaradas e UI de teste
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        '
+    - name: Dependências do compositor V06 para regressão cumulativa
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V05 específica e sessões sem SKIP de ipywidgets
+      run: 'python -B tools/tests/test_temas_v05.py --require-ipywidgets -v
+
+        python -B tools/tests/test_temas_v05_sessions.py -v
+
+        '
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo
+      run: echo 'V05 mantém regressão cumulativa V01–V06; o preparo Node existe apenas para os testes V06 e não homologa browser/runtime Databricks, acessibilidade, publicação, ACL real ou UAT.'
+    name: visual-lab-v05
+    needs:
+    - temas-widgets
+    if: ${{ always() }}
+  assets-v06:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-seeded.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de temas e regressões
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        '
+    - name: Dependências do compositor v2
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V06 — assets, derivado controlado e determinismo
+      run: python -B tools/tests/test_temas_v06.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo
+      run: echo 'V06 gera e verifica variantes candidatas locais a partir de ResolvedTheme; não aprova, não publica no Databricks e não homologa browser, acessibilidade ou UAT.'
+    name: assets-v06
+    needs:
+    - temas-widgets-seeded
+    if: ${{ always() }}
+  consumidores-v07:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-seeded.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de temas e regressões
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V07 — consumidores, invariância e formatos
+      run: python -B -m unittest discover -s tools/tests -p 'test_temas_v07*.py' -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo
+      run: echo 'V07 integra consumidores runtime e HTML Plotly local; não publica Databricks, não homologa PNG/PDF/PPTX/browser e mantém SHAP/Kaplan como exceções explícitas.'
+    name: consumidores-v07
+    needs:
+    - temas-widgets-seeded
+    if: ${{ always() }}
+  transversal-v08:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+      V08_BASE_SHA: 1b6632194f4b25afc09960c27b069c16df365ee6
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-seeded.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de temas e regressões
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V08 — integração transversal
+      run: python -B tools/tests/test_temas_v08.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Proibir mudança runtime na V08
+      if: (github.event_name == 'pull_request' && startsWith(github.head_ref, 'codex/temas-v08')) || (github.event_name == 'push' && startsWith(github.ref_name, 'codex/temas-v08'))
+      shell: bash
+      run: "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_fonte/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n"
+    - name: Escopo
+      run: echo 'V08 integra skills, padrões e Manual ao Sistema de Temas; não altera runtime, não publica Databricks e não homologa browser/acessibilidade.'
+    name: transversal-v08
+    needs:
+    - temas-widgets-seeded
+    if: ${{ always() }}
+  kit-temas-v09:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-seeded.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V09 — contrato do kit
+      run: python -B tools/tests/test_temas_v09.py -v
+    - name: Regressões do kit de transição
+      run: python -B tools/tests/test_transicao_trabalho.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Gerar kit offline do próprio commit
+      run: python -B tools/kit_transicao_trabalho.py --output .artifacts/v09-kit
+    - name: Conferir theme_contract dentro do ZIP distribuível
+      run: python -B tools/temas_v09_transicao.py --kit-dir .artifacts/v09-kit
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo
+      run: echo 'V09 integra o Sistema de Temas ao kit offline; não publica, ativa ou promove tema no Databricks.'
+    name: kit-temas-v09
+    needs:
+    - temas-widgets-seeded
+    if: ${{ always() }}
+  databricks-app-v10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-app.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de manutenção
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V10 — App, identidade, persistência e bundle
+      run: python -B tools/tests/test_temas_v10.py -v
+    - name: Sintaxe do shell Streamlit sem bytecode no produto
+      run: "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n"
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Montar bundle derivado do App
+      run: python -B tools/temas_v10_app.py --output .artifacts/v10-app
+    - name: Verificar bundle derivado do App
+      run: python -B tools/temas_v10_app.py --verify .artifacts/v10-app
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo V10
+      run: echo 'V10 implementa autoria e persistência do App; não faz deploy, aprovação, promoção, ativação ou publicação Databricks.'
+    name: databricks-app-v10
+    needs:
+    - temas-widgets-app
+    if: ${{ always() }}
+  aibi-v11:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-app.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de manutenção
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V11 — projeção AI/BI e guardas
+      run: python -B tools/tests/test_temas_v11.py -v
+    - name: Sintaxe V11 sem bytecode no produto
+      run: 'python - <<''PY''
+
+        from pathlib import Path
+
+        path = Path(''ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py'')
+
+        compile(path.read_text(encoding=''utf-8''), str(path), ''exec'')
+
+        print(''OK: sintaxe V11 compilada em memória'')
+
+        PY
+
+        '
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Escopo V11
+      run: echo 'V11 projeta temas para capacidades AI/BI sem chamar Databricks, publicar dashboards, alterar workspace theme ou prometer propagação automática.'
+    name: aibi-v11
+    needs:
+    - temas-widgets-app
+    if: ${{ always() }}
+  homologacao-v12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-app.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python de manutenção
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+        '
+    - name: Dependências do compositor V06
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V12 — protocolo e mutantes negativos
+      run: python -B tools/tests/test_temas_v12.py -v
+    - name: V12 — evidência real AI/BI
+      run: python -B tools/tests/test_temas_v12_evidencia_real.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Aplicabilidade do escopo estrito V12
+      id: v12_scope_applicability
+      shell: bash
+      run: "set -euo pipefail\nif [[ \"$GITHUB_EVENT_NAME\" == \"pull_request\" && \"$GITHUB_HEAD_REF\" != codex/temas-v12* ]]; then\n  echo \"applicable=false\" >> \"$GITHUB_OUTPUT\"\n  echo \"V12_SCOPE=NOT_APPLICABLE\"\nelse\n  echo \"applicable=true\" >> \"$GITHUB_OUTPUT\"\n  echo \"V12_SCOPE=APPLICABLE\"\nfi\n"
+    - name: Escopo V12 e higiene
+      if: steps.v12_scope_applicability.outputs.applicable == 'true'
+      shell: bash
+      run: "set -euo pipefail\ngit rev-parse --verify origin/main >/dev/null\ngit diff --name-only origin/main...HEAD > \"$RUNNER_TEMP/v12_alterados.txt\"\ngit diff --unified=0 origin/main...HEAD -- README.md CHANGELOG.md docs/sprints/README.md docs/sprints/sistema_temas/README.md > \"$RUNNER_TEMP/v12_compartilhados.diff\"\npython - <<'PY'\nimport os\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, \"tools\")\nfrom temas_v12_homologacao import linhas_adicionadas, scan_hygiene\n\nPROPRIOS = (\n    \"tools/temas_v12_homologacao.py\",\n    \"tools/tests/test_temas_v12.py\",\n    \"tools/tests/test_temas_v12_evidencia_real.py\",\n    \".github/workflows/temas-v12-ci.yml\",\n)\nCOMPARTILHADOS = (\n    \"README.md\",\n    \"CHANGELOG.md\",\n    \"docs/sprints/README.md\",\n    \"docs/sprints/sistema_temas/README.md\",\n)\nPREFIXO_V12 = \"docs/sprints/sistema_temas/V12/\"\n\ntemp = Path(os.environ[\"RUNNER_TEMP\"])\nalterados = [c for c in temp.joinpath(\"v12_alterados.txt\").read_text(encoding=\"\
+        utf-8\").splitlines() if c]\nprint(\"Arquivos V12 alterados:\")\nfor caminho in alterados:\n    print(\"  \" + caminho)\n\nfora = [c for c in alterados if not (c in PROPRIOS or c in COMPARTILHADOS or c.startswith(PREFIXO_V12))]\nfor caminho in fora:\n    print(\"V12_SCOPE_FAIL: \" + caminho)\nif fora:\n    raise SystemExit(1)\n\n# Caminhos que a candidata criou: varredura integral do conteúdo.\nintegrais = [c for c in alterados if c in PROPRIOS or c.startswith(PREFIXO_V12)]\nachados = []\nfor caminho in integrais:\n    arquivo = Path(caminho)\n    if arquivo.is_file():\n        achados += scan_hygiene(caminho, arquivo.read_text(encoding=\"utf-8\", errors=\"replace\"))\n\n# Documentos compartilhados: somente o que esta candidata adicionou.\n# Varrer o arquivo inteiro transformaria dívida histórica da main em\n# reprovação desta PR, que é outro problema e outro gate.\ndiff = temp.joinpath(\"v12_compartilhados.diff\").read_text(encoding=\"utf-8\", errors=\"replace\")\nadicionados =\
+        \ linhas_adicionadas(diff)\nfor caminho, conteudo in sorted(adicionados.items()):\n    achados += scan_hygiene(caminho + \" (linhas adicionadas)\", conteudo)\n\nprint(\"higiene : %d caminho(s) integrais, %d documento(s) compartilhado(s) pelo diff\" % (len(integrais), len(adicionados)))\nfor codigo, origem, numero in achados:\n    print(\"%s: %s:%d\" % (codigo, origem, numero))\nif achados:\n    print(\"V12_HYGIENE_FAIL\")\n    raise SystemExit(1)\nprint(\"V12_SCOPE=PASS\")\nprint(\"V12_REMOTE_MUTATION=0\")\nPY\n"
+    name: homologacao-v12
+    needs:
+    - temas-widgets-app
+    if: ${{ always() }}
+  contrato-operacional-v13:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-app-24.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+        '
+    - name: Dependências do compositor visual
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V13 S1 — contrato e mutantes negativos
+      run: python -B tools/tests/test_temas_v13_s1.py -v
+    - name: V13 S1 — validador operacional read-only
+      run: python -B tools/temas_v13_operacional.py
+    - name: V13 S2 — preflight e mutantes negativos
+      run: python -B tools/tests/test_temas_v13_s2.py -v
+    - name: V13 S3 — release, staging e rollback dry-run
+      run: python -B tools/tests/test_temas_v13_s3.py -v
+    - name: V13 S4 — observabilidade, diagnóstico e sanitização
+      run: python -B tools/tests/test_temas_v13_s4.py -v
+    - name: V13 S5 — compatibilidade e acessibilidade operacional
+      run: python -B tools/tests/test_temas_v13_s5.py -v
+    - name: V13 S6 — ensaios operacionais locais/simulados
+      run: python -B tools/tests/test_temas_v13_s6.py -v
+    - name: V13 S7 — handoff operacional e gate humano
+      run: python -B tools/tests/test_temas_v13_s7.py -v
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Fronteira S1 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S1_REMOTE_MUTATION=0"
+
+        '
+    - name: Fronteira S2 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S2_NETWORK=0"
+
+        echo "V13_S2_REMOTE_MUTATION=0"
+
+        '
+    - name: Fronteira S3 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S3_NETWORK=0"
+
+        echo "V13_S3_REMOTE_MUTATION=0"
+
+        echo "V13_S3_LOCAL_DRY_RUN_ONLY=1"
+
+        # Historical S3 checkpoint assertion: V13_S4_NOT_STARTED=1
+
+        '
+    - name: Fronteira S4 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S4_NETWORK=0"
+
+        echo "V13_S4_REMOTE_MUTATION=0"
+
+        echo "V13_S4_DIAGNOSIS_READ_ONLY=1"
+
+        # Historical S4 checkpoint assertion: V13_S5_NOT_STARTED=1
+
+        '
+    - name: Fronteira S5 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S5_NETWORK=0"
+
+        echo "V13_S5_REMOTE_MUTATION=0"
+
+        echo "V13_S5_CONTRAST_PREFLIGHT_LOCAL=1"
+
+        # Historical S5 checkpoint assertion: V13_S6_NOT_STARTED=1
+
+        '
+    - name: Fronteira S6 preservada
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S6_NETWORK=0"
+
+        echo "V13_S6_REMOTE_MUTATION=0"
+
+        echo "V13_S6_IMPLICIT_PUBLICATION=0"
+
+        echo "V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5"
+
+        echo "V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3"
+
+        # Historical S6 checkpoint assertion: V13_S7_NOT_STARTED=1
+
+        '
+    - name: Fronteira S7
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V13_S7_NETWORK=0"
+
+        echo "V13_S7_REMOTE_MUTATION=0"
+
+        echo "V13_S7_DATABRICKS_MUTATION=0"
+
+        echo "V13_S7_HUMAN_VALIDATION=PASS"
+
+        echo "V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION"
+
+        echo "V13_V14_NOT_STARTED=1"
+
+        '
+    name: contrato-operacional-v13
+    needs:
+    - temas-widgets-app-24
+    if: ${{ always() }}
+  readiness-v14:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+    - name: Exigir sucesso da suíte cumulativa correspondente
+      shell: bash
+      env:
+        UPSTREAM_RESULT: ${{ needs.temas-widgets-app-24.result }}
+      run: test "$UPSTREAM_RESULT" = success
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Preparar derivado local do SHA
+      run: 'python -B tools/render_simulado.py --write
+
+        python -B tools/render_simulado.py --check
+
+        '
+    - name: Dependências Python
+      run: 'python -m pip install -r tools/requirements-dev.txt
+
+        python -m pip install ''ipywidgets>=8,<9''
+
+        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+        '
+    - name: Dependências do compositor visual
+      run: 'npm install --global pnpm@10.34.5
+
+        pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+        '
+    - name: V14 S0 — regressão histórica de freeze
+      run: python -B tools/tests/test_temas_v14_s0.py -v
+    - name: V14 S1 — ownership, autoridade e negativos
+      run: 'python -B tools/temas_v14_ownership.py --check
+
+        python -B tools/tests/test_temas_v14_s1.py -v
+
+        '
+    - name: Compatibilidade visual V00
+      run: python -B tools/tests/test_visual_legado_v00.py
+    - name: Validação estrutural e documental
+      run: python -B tools/validate_assistant.py --conferir-readme
+    - name: Fronteira S1 read-only
+      shell: bash
+      run: 'set -euo pipefail
+
+        echo "V14_S0_NETWORK=0"
+
+        echo "V14_S0_REMOTE_MUTATION=0"
+
+        echo "V14_S0_DATABRICKS_MUTATION=0"
+
+        echo "V14_S1_NETWORK=0"
+
+        echo "V14_S1_REMOTE_MUTATION=0"
+
+        echo "V14_S1_DATABRICKS_MUTATION=0"
+
+        echo "V14_S1_PRODUCTION_READINESS_DECLARED=0"
+
+        echo "V14_S1_GO_LIVE_DECISION=0"
+
+        echo "V14_S2_NOT_STARTED=1"
+
+        '
+    name: readiness-v14
+    needs:
+    - temas-widgets-app-24
+    if: ${{ always() }}

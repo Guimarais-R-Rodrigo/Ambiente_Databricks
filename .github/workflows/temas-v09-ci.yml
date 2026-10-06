@@ -1,21 +1,8 @@
 name: Kit de transição e temas V09
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v09*']
-  pull_request:
-    paths:
-      - 'tools/temas_v09_transicao.py'
-      - 'tools/bundle_implantacao.py'
-      - 'tools/kit_transicao_trabalho.py'
-      - 'tools/aceite_trabalho.py'
-      - 'tools/aceite_micromodelos_trabalho.py'
-      - 'tools/tests/test_aceite_micromodelos_trabalho.py'
-      - 'ambiente_fonte/.assistant/hub_micromodelos/**'
-      - 'tools/tests/test_temas_v09.py'
-      - 'tools/tests/test_transicao_trabalho.py'
-      - 'docs/playbooks/**'
-      - 'docs/sprints/sistema_temas/V09/**'
-      - '.github/workflows/temas-v09-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -37,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências Python
         run: |
           python -m pip install -r tools/requirements-dev.txt

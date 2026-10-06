@@ -1,18 +1,8 @@
 name: Consumidores e formatos V07
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v07*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_snippets/display/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/ml/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/**'
-      - 'tools/tests/test_temas_v07*.py'
-      - 'docs/sprints/sistema_temas/V07/**'
-      - '.github/workflows/temas-v07-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -34,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências Python de temas e regressões
         run: |
           python -m pip install -r tools/requirements-dev.txt

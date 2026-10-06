@@ -1,18 +1,8 @@
 name: Databricks App de gestão visual V10
+# Receita manual de compatibilidade. Execução automática: ci.yml (DAG compartilhado).
 on:
-  push:
-    branches: [main, 'codex/temas-v10*']
-  pull_request:
-    paths:
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/**'
-      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/**'
-      - 'tools/temas_v10_app.py'
-      - 'tools/tests/test_temas_v10.py'
-      - 'docs/sprints/sistema_temas/V10/**'
-      - 'docs/sprints/sistema_temas/README.md'
-      - 'docs/sprints/README.md'
-      - 'README.md'
-      - '.github/workflows/temas-v10-ci.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -34,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências Python de manutenção
         run: |
           python -m pip install -r tools/requirements-dev.txt

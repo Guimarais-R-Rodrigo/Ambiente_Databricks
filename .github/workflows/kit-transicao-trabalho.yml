@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
     paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
       - "tools/aceite_trabalho.py"
       - "tools/aceite_micromodelos_trabalho.py"
       - "tools/kit_transicao_trabalho.py"
@@ -36,7 +40,9 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-          cache-dependency-path: tools/requirements-dev.txt
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -44,6 +50,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Dependências somente do runner Linux
         run: python -m pip install -r tools/requirements-dev.txt 'pyspark==4.0.1'
       - name: Dependências do compositor V06
