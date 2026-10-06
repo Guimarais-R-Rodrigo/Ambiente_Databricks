@@ -150,17 +150,13 @@ reescrita inteira, porque a forma muda.
 | O objeto… | é | template |
 |---|---|---|
 | recebe DataFrame ou valores e devolve resultado | **snippet** | `hub_padroes/snippet/template.md` |
-| recebe o **endereço do que vai diagnosticar** e devolve um veredito | **script** | `hub_padroes/script/template.md` |
+| atende tarefa explícita de inspeção, transformação ou governança, com contrato e efeitos próprios | **script** | `hub_padroes/script/template.md` |
 | é texto que a pessoa preenche e cola no chat | **prompt** | `hub_padroes/prompt/template.md` |
 | explica uma pasta para quem chega | **README** | `hub_padroes/readme/template.md`; escala Objeto: `template_objeto.md` na mesma pasta |
 | ensina a usar um objeto, executando | **notebook** | `hub_padroes/notebook/template.py` |
 | é instrução que o Genie Code carrega sozinho | **skill** | `hub_padroes/skill/template.md` |
 
-A distinção entre snippet e script é a que mais erra, e ela muda a assinatura:
-snippet recebe **dado já carregado**; script recebe o **endereço** — nome de
-tabela, tipicamente, ou caminho de arquivo, como faz `hub_scripts.doc_coverage`.
-Na dúvida, pergunte quem chama: se for um notebook passando um DataFrame que ele
-já tem, é snippet.
+O papel orienta a escolha, não um tipo universal de argumento ou retorno. Snippet é uma peça reutilizável de cálculo; script atende uma tarefa explícita. Confira a API específica: pode receber endereço, arquivo, conteúdo ou objeto, e devolver relatório, texto, estrutura ou resultado conforme o contrato. Declare leitura, cálculo e persistência; efeitos exigem autorização própria.
 
 `hub_padroes/` tem uma sétima pasta, `auditoria/`. Ela é molde de **processo**,
 não tipo de objeto, e não conta entre os seis.

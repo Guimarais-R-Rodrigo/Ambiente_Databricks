@@ -35,6 +35,44 @@ def text(relative: str) -> str:
     return (SOURCE / relative).read_text(encoding="utf-8")
 
 
+def assert_operational_guidance(case, content, required):
+    """Approved README plan: capabilities and limits replace sprint labels.
+
+    The required terms represent canonical routes, explicit application and
+    limitations, not a chronology snapshot. No functional/theme gate is changed.
+    """
+    for term in required:
+        case.assertIn(term.casefold(), content.casefold(), term)
+
+
+OPERATIONAL_GUIDANCE = {
+    "README.md": ("ResolvedTheme", "Visual Lab", "opt-in", "SHAP", "Kaplan", "identidade_visual/README.md"),
+    "hub_padroes/identidade_visual/README.md": (
+        "ResolvedTheme", "theme.schema.json", "GUIA_OPERACIONAL.md",
+        "não muda automaticamente", "não concede aprovação ou publicação"),
+    "hub_padroes/identidade_visual/GUIA_OPERACIONAL.md": (
+        "Visual Lab", "_resolvido", "opt-in", "não publica", "requirements-temas.txt"),
+    "MANUAL_TECNICO.md": (
+        "Sistema de Temas", "ResolvedTheme", "theme.schema.json", "_resolvido",
+        "SHAP/Matplotlib", "Kaplan–Meier", "não muda dados"),
+    "hub_padroes/README.md": (
+        "ResolvedTheme", "identidade_visual/README.md", "Visual Lab",
+        "theme_lab/README.md", "Não há ativação global ou publicação implícita"),
+}
+
+
+class OperationalGuidanceMutationTests(unittest.TestCase):
+    def test_missing_capability_or_limit_is_rejected(self):
+        for relative, required in OPERATIONAL_GUIDANCE.items():
+            original = text(relative)
+            assert_operational_guidance(self, original, required)
+            for term in required:
+                with self.subTest(relative=relative, removed=term):
+                    mutated = re.sub(re.escape(term), "OMITTED", original, flags=re.IGNORECASE)
+                    with self.assertRaises(AssertionError):
+                        assert_operational_guidance(self, mutated, required)
+
+
 class MatrixTests(unittest.TestCase):
     def setUp(self):
         self.matrix = json.loads(REGISTRY.read_text(encoding="utf-8"))
@@ -81,26 +119,22 @@ class CurrentStateTests(unittest.TestCase):
         content = text("README.md")
         self.assertNotIn("Visual Lab do Sistema de Temas — V05 candidata", content)
         self.assertNotIn("A V05 ainda não possui aceite nem merge", content)
-        self.assertIn("V07", content)
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["README.md"])
 
     def test_identity_pattern_is_current_through_v07(self):
         content = text("hub_padroes/identidade_visual/README.md")
         self.assertNotIn("CONSUMO OPT-IN ATÉ V04", content)
-        self.assertIn("V07", content)
-        self.assertIn("ResolvedTheme", content)
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["hub_padroes/identidade_visual/README.md"])
 
     def test_first_use_does_not_stop_at_v04(self):
         content = text("hub_padroes/identidade_visual/GUIA_OPERACIONAL.md")
         self.assertNotIn("operações permanecem fora de V00–V04", content)
-        self.assertIn("Visual Lab", content)
-        self.assertIn("V07", content)
-        self.assertIn("_resolvido", content)
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["hub_padroes/identidade_visual/GUIA_OPERACIONAL.md"])
 
     def test_manual_live_heading_and_state_are_current(self):
         content = text("MANUAL_TECNICO.md")
         self.assertNotIn("## Sistema de Temas — V04 integrada no Git; V05 candidata em fechamento", content)
-        self.assertIn("## Sistema de Temas — V00–V07 integradas no Git", content)
-        self.assertIn("V08", content)
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["MANUAL_TECNICO.md"])
 
 
 class EdaVisualTemplateTests(unittest.TestCase):
@@ -174,9 +208,7 @@ class SkillRoutingTests(unittest.TestCase):
 class PatternsAndWorkflowTests(unittest.TestCase):
     def test_patterns_index_reaches_v07(self):
         content = text("hub_padroes/README.md")
-        self.assertIn("V07", content)
-        self.assertIn("Visual Lab", content)
-        self.assertIn("ResolvedTheme", content)
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["hub_padroes/README.md"])
 
     def test_skills_catalog_names_canonical_visual_owner(self):
         content = text("skills/README.md")

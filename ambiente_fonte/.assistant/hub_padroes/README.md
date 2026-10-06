@@ -27,7 +27,7 @@ A política transversal de enforcement por skill está em [skill_enforcement/REA
 
 ## Sistema de Temas
 
-Para recursos com aparência configurável, use o contrato central de identidade visual e um ResolvedTheme validado. Templates não redeclaram tokens ou paletas. Consulte o [contrato central](identidade_visual/README.md), o [App de autoria](identidade_visual/databricks_app/README.md) e a [ponte AI/BI](identidade_visual/aibi/README.md). Não há ativação global ou publicação implícita.
+Para recursos com aparência configurável, use o contrato central de identidade visual e um ResolvedTheme validado. Templates não redeclaram tokens ou paletas. Consulte o [contrato central](identidade_visual/README.md), o [Visual Lab](../hub_snippets/visual/theme_lab/README.md), o [App de autoria](identidade_visual/databricks_app/README.md) e a [ponte AI/BI](identidade_visual/aibi/README.md). Não há ativação global ou publicação implícita.
 
 ## Fluxo recomendado
 

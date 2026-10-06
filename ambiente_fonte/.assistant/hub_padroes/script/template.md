@@ -37,7 +37,7 @@ O formato abaixo pertence ao exemplar; não define todas as APIs de scripts.
 }
 ```
 
-Quatro regras que o contrato carrega:
+Quatro regras deste exemplar de diagnóstico, sem impor o mesmo retorno a outros scripts:
 
 1. **`status: "fail"` não significa dado ruim.** Significa que algo precisa de
    decisão humana antes de a medição valer. Diga isso na docstring, porque o
