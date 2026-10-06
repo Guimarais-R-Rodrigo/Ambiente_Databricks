@@ -4,7 +4,7 @@ Rejeita etapas omitidas, extras ou duplicadas e declarações AST sem teste
 coletável. Contratos históricos permanecem ligados a seus SHAs de origem.
 """
 from __future__ import annotations
-import ast, fnmatch, importlib.util, json, re, sys, unittest
+import ast, fnmatch, hashlib, importlib.util, json, re, sys, unittest
 from collections import Counter
 from contextlib import contextmanager
 from pathlib import Path
@@ -222,7 +222,7 @@ def _row(step_id,classification,argv,command_only,overrides,description=None):
  if ast_errors:
   collection_errors.extend(ast_errors)
   status = "COLLECTION_ERROR"
- default="CURRENT_INVARIANT" if classification=="MIXED_METHOD_CLASSIFICATION" else classification
+ default="CURRENT_INVARIANT" if classification in {"MIXED_METHOD_CLASSIFICATION", "MIXED_CURRENT_AND_TEMPORAL"} else classification
  row={"step_id":step_id,"classification":classification,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"ast_methods":sorted(set(ast_methods)),"test_methods":[_classify(x,default,overrides) for x in test_ids],"mapping_status":status,"collection_errors":collection_errors,"duplicate_test_ids":sorted(x for x,count in Counter(test_ids).items() if count>1)}
  if description is not None: row["description"]=description
  return row
@@ -277,8 +277,22 @@ def registry_issues(cfg):
  if not isinstance(retired, dict): issues.append("RETIRED_OVERRIDES_NOT_OBJECT")
  else:
   for test_id, record in retired.items():
-   if not isinstance(record, dict) or set(record) != {"override", "retirement_sha", "reason", "successor_ids"}:
+   required = {"override", "retirement_sha", "reason", "successor_ids"}
+   assertion_fields = {"retirement_kind", "historical_method_ast_sha256", "current_method_ast_sha256"}
+   if not isinstance(record, dict) or not required <= set(record) or set(record) - required - assertion_fields:
     issues.append("RETIRED_OVERRIDE_SCHEMA_INVALID:" + test_id); continue
+   kind = record.get("retirement_kind", "method_removed")
+   if not isinstance(kind, str) or kind not in {"method_removed", "assertions_replaced"}:
+    issues.append("RETIRED_OVERRIDE_KIND_INVALID:" + test_id)
+   if kind == "assertions_replaced":
+    for field in ("historical_method_ast_sha256", "current_method_ast_sha256"):
+     value = record.get(field)
+     if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:
+      issues.append("RETIRED_OVERRIDE_AST_HASH_INVALID:" + test_id + ":" + field)
+    if not isinstance(record.get("successor_ids"), list) or test_id not in record["successor_ids"]:
+     issues.append("RETIRED_OVERRIDE_SAME_ID_SUCCESSOR_REQUIRED:" + test_id)
+   elif assertion_fields & set(record):
+    issues.append("RETIRED_OVERRIDE_ASSERTION_FIELDS_UNEXPECTED:" + test_id)
    issues.extend(_validate_override(test_id, record["override"]))
    if not isinstance(record["retirement_sha"], str) or _SHA_RE.fullmatch(record["retirement_sha"]) is None:
     issues.append("RETIRED_OVERRIDE_SHA_INVALID:" + test_id)
@@ -298,6 +312,22 @@ def registry_issues(cfg):
    elif not isinstance(group.get("mapping_mode", "unittest"), str) or group.get("mapping_mode", "unittest") not in {"command", "unittest"}:
     issues.append("SER01_GROUP_MAPPING_MODE_INVALID:" + group["group_id"])
  return issues
+
+def method_ast_digest(test_id, source=None):
+ """Identifica as asserções de um método, ignorando só localização e comentários."""
+ relative, selector = test_id.split("::", 1)
+ path = Path(relative)
+ if path.is_absolute() or ".." in path.parts or not (ROOT / path).resolve().is_relative_to(ROOT.resolve()):
+  raise ValueError("METHOD_AST_PATH_INVALID:" + test_id)
+ tree = ast.parse(source if source is not None else (ROOT / relative).read_text(encoding="utf-8"))
+ nodes = tree.body
+ node = None
+ for component in selector.split("."):
+  node = next((item for item in nodes if isinstance(item, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and item.name == component), None)
+  if node is None: raise ValueError("METHOD_AST_MISSING:" + test_id)
+  nodes = node.body
+ if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)): raise ValueError("METHOD_AST_INVALID:" + test_id)
+ return hashlib.sha256(ast.dump(node, include_attributes=False).encode("utf-8")).hexdigest()
 
 def _unique_object(pairs):
  result = {}
@@ -353,7 +383,13 @@ def inventory():
   for successor in override["successor_ids"]:
    if successor not in observed: issues.append(f"TEMPORAL_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
  for test_id, record in cfg.get("retired_method_overrides", {}).items():
-  if test_id in observed: issues.append("RETIRED_OVERRIDE_OBSERVED:" + test_id)
+  if record.get("retirement_kind", "method_removed") == "method_removed":
+   if test_id in observed: issues.append("RETIRED_OVERRIDE_OBSERVED:" + test_id)
+  else:
+   try: digest = method_ast_digest(test_id)
+   except (OSError, UnicodeDecodeError, ValueError, SyntaxError): digest = None
+   if digest != record["current_method_ast_sha256"]:
+    issues.append("RETIRED_OVERRIDE_CURRENT_AST_MISMATCH:" + test_id)
   for successor in [*record["successor_ids"], *record["override"]["successor_ids"]]:
    if successor not in observed: issues.append(f"RETIRED_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
  counts=Counter(observed_occurrences)

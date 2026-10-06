@@ -638,6 +638,7 @@ class CoverageIdentityTests(unittest.TestCase):
         self.assertEqual(2, len(rows["ci:tests"]["test_methods"]))
         self.assertEqual("COMMAND_ONLY", rows["ci:command"]["mapping_status"])
         self.assertFalse(rows["ci:command"]["test_methods"])
+        self.assertTrue(all(item["classification"] == "CURRENT_INVARIANT" for row in result["ser01"] for item in row["test_methods"]))
 
     def test_omitted_step_fails(self):
         self.steps = [step for step in self.steps if step[0] != "tests"]
@@ -783,6 +784,45 @@ class CoverageIdentityTests(unittest.TestCase):
     def test_unretired_stale_override_still_fails(self):
         self.cfg["method_overrides"]["old"] = self.retired_record("tools/tests/test_cases.py::Checks.test_one")["override"]
         self.assert_issue("TEMPORAL_OVERRIDE_NOT_OBSERVED:old")
+
+    def replaced_assertion_record(self, method):
+        record = self.retired_record(method)
+        with mock.patch.object(coverage, "ROOT", self.root):
+            digest = coverage.method_ast_digest(method)
+        return {**record, "retirement_kind": "assertions_replaced", "historical_method_ast_sha256": "c" * 64, "current_method_ast_sha256": digest}
+
+    def test_same_id_updated_assertion_is_current_not_historical(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"][method] = self.replaced_assertion_record(method)
+        result = self.inventory()
+        self.assertEqual("PASS", result["status"], result["issues"])
+        found = [item for row in result["se08"] for item in row["test_methods"] if item["test_id"] == method]
+        self.assertEqual([{"test_id": method, "classification": "CURRENT_INVARIANT"}], found)
+        self.assertEqual("HISTORICAL_TEMPORAL", result["retired_temporal_overrides"][method]["override"]["classification"])
+
+    def test_same_id_current_assertion_drift_is_detected(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        self.cfg["retired_method_overrides"][method] = self.replaced_assertion_record(method)
+        self.path.write_text(self.path.read_text().replace("def test_one(self): pass", "def test_one(self): self.assertTrue(True)"), encoding="utf-8")
+        self.assert_issue("RETIRED_OVERRIDE_CURRENT_AST_MISMATCH:" + method)
+
+    def test_same_id_retirement_requires_hashes_and_successor(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        record = self.replaced_assertion_record(method)
+        record["current_method_ast_sha256"] = "not-a-hash"
+        self.cfg["retired_method_overrides"][method] = record
+        self.assert_issue("RETIRED_OVERRIDE_AST_HASH_INVALID:" + method + ":current_method_ast_sha256")
+        record["current_method_ast_sha256"] = "a" * 64
+        record["successor_ids"] = ["different"]
+        self.assert_issue("RETIRED_OVERRIDE_SAME_ID_SUCCESSOR_REQUIRED:" + method)
+
+    def test_assertion_ast_ignores_comments_but_not_semantics(self):
+        method = "tools/tests/test_cases.py::Checks.test_one"
+        with mock.patch.object(coverage, "ROOT", self.root):
+            original = coverage.method_ast_digest(method)
+            self.path.write_text("# harmless location change\n" + self.path.read_text(), encoding="utf-8")
+            self.assertEqual(original, coverage.method_ast_digest(method))
+
 
 
 if __name__=="__main__": unittest.main()
