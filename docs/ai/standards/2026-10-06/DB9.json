@@ -1,0 +1,10 @@
+{
+  "id": "DB9",
+  "url": "https://learn.microsoft.com/en-us/azure/databricks/ldp/",
+  "title": "Pipelines",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "Documentation distinguishes Spark Declarative Pipelines framework and Lakeflow pipelines; older wording remains in history.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

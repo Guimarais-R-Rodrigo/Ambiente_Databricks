@@ -1,0 +1,10 @@
+{
+  "id": "G4",
+  "url": "https://support.google.com/gemini/answer/16176929",
+  "title": "Import a GitHub repository & ask about it in the Gemini web app",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "Imported repository is a snapshot; one repo, up to 5000 files/100 MB; upload freshness must be tracked.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

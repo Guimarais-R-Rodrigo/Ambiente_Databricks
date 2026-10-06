@@ -4,7 +4,7 @@ A mudança começa localmente. Editar documentação não autoriza publicar, exe
 
 ## 1. Definir escopo e preparar
 
-Confirme HEAD, worktree, arquivos permitidos e efeitos autorizados. Leia `AGENTS.md`, `CLAUDE.md` e as regras pertinentes. Use as [dependências de manutenção](../../tools/README.md#pré-requisitos-e-efeitos). Registre baseline e falhas preexistentes.
+Confirme HEAD, worktree, arquivos permitidos e efeitos autorizados. Leia `AGENTS.md` e siga o mapa de regras pertinentes em `docs/ai/README.md`. Use as [dependências de manutenção](../../tools/README.md#pré-requisitos-e-efeitos). Registre baseline e falhas preexistentes.
 
 ## 2. Editar e validar a fonte
 
@@ -32,7 +32,7 @@ Um contrato de enforcement pode exigir gates adicionais. Não inferir autorizaç
 
 ## 6. Publicação separada
 
-Depois de autorizados destino, versão e efeito, siga a [skill de publicação](../../.claude/skills/publicar-free/SKILL.md). O modo de plano (`python tools/publicar_free.py`) não escreve remotamente, mas consulta identidade e destino pela CLI autenticada; não é inteiramente offline. `--execute` escreve. `--verify` compara inventário/tipos; `--verify --conteudo` também compara conteúdo. Confira recibos, ausentes e obsoletos; em falha parcial, inspecione a tentativa anterior antes de qualquer retry. A conferência não homologa comportamento Genie.
+Depois de autorizados destino, versão e efeito, siga a [skill de publicação](../../.agents/skills/publicar-free/SKILL.md). O modo de plano (`python tools/publicar_free.py`) não escreve remotamente, mas consulta identidade e destino pela CLI autenticada; não é inteiramente offline. `--execute` escreve. `--verify` compara inventário/tipos; `--verify --conteudo` também compara conteúdo. Confira recibos, ausentes e obsoletos; em falha parcial, inspecione a tentativa anterior antes de qualquer retry. A conferência não homologa comportamento Genie.
 
 ## 7. Trabalho corporativo
 

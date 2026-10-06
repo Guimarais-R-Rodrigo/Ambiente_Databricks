@@ -148,6 +148,16 @@ ETAPAS = [
         "integração canônica, contratos declarados e espelho",
         [sys.executable, "tools/tests/test_concierge_integracao.py", "-v"],
     ),
+    (
+        "ai-controles",
+        "contratos offline das instruções do mantenedor",
+        [sys.executable, "-B", "tools/ai_controls.py", "--check"],
+    ),
+    (
+        "ai-regressoes",
+        "regressões e mutantes das instruções do mantenedor",
+        [sys.executable, "-B", "tools/tests/test_ai_controls.py", "-v"],
+    ),
 ]
 
 

@@ -1,0 +1,10 @@
+{
+  "id": "X7",
+  "url": "https://docs.x.ai/build/features/skills-plugins-marketplaces",
+  "title": "Skills, Plugins & Marketplaces",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "allowed-tools ignored authority; model/effort/license/compatibility accepted but not applied; native/Claude-compatible paths and user .agents alias. Project .agents alias not established.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

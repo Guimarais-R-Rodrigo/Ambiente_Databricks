@@ -1,0 +1,3494 @@
+{
+  "schema_version": "1.0",
+  "scope": "58 original action records plus separately identified newly discovered dependencies; not defect count",
+  "counts": {
+    "controls": 22,
+    "original_dependencies": 24,
+    "findings": 12,
+    "original_records": 58,
+    "new_dependencies": 10
+  },
+  "records": [
+    {
+      "id": "C01",
+      "kind": "control",
+      "path": "AGENTS.md",
+      "target": "AGENTS.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T05",
+        "T06",
+        "T17",
+        "T24"
+      ],
+      "finding_ids": [
+        "IA-01",
+        "IA-02",
+        "IA-04",
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Substituir ponte por núcleo autocontido; conservar invariantes e mapa seletivo; autoria real.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/AGENTS.md#L3-L12",
+      "source_payload": {
+        "caminho": "AGENTS.md",
+        "funcao": "Adapter Codex/agentes AGENTS",
+        "carregamento_atual": "Descoberta nativa de AGENTS nos clientes compatíveis; conteúdo encaminha manualmente para CLAUDE",
+        "decisao_proposta": "ADAPTAR: tornar entrada canônica neutra",
+        "destino_proposto": "AGENTS.md",
+        "justificativa": "Hoje a entrada aberta é ponte de 12 linhas para a fonte específica de Claude. Colocar missão curta, invariantes críticos, comandos mínimos e mapa de leitura condicional. Atribuição deve refletir o executor real, não sempre Codex.",
+        "reuso": "núcleo genérico + mapa e invariantes deste projeto",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Não presumir que menção em prosa importa o alvo; o detalhe indispensável deve estar no núcleo.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/AGENTS.md#L3-L12",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C01-01",
+          "O-C01-02",
+          "O-C01-03",
+          "O-C01-04",
+          "O-C01-05",
+          "O-C01-06"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "AGENTS.md",
+        "tests": [
+          "T04",
+          "T05",
+          "T06",
+          "T17",
+          "T24"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T05",
+          "T17",
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C02",
+      "kind": "control",
+      "path": "CLAUDE.md",
+      "target": "CLAUDE.md (raiz, @AGENTS.md)",
+      "primary_sprint": "S04",
+      "sprints": [
+        "S04",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-01",
+        "IA-02",
+        "IA-04"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Extrair conteúdo para núcleo/docs; conservar um único shim mínimo até aceitação do modo direto. Não supor deduplicação Grok.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L1-L125",
+      "source_payload": {
+        "caminho": "CLAUDE.md",
+        "funcao": "Contexto canônico e status de frentes",
+        "carregamento_atual": "Nativo Claude; lido por outros via adapters",
+        "decisao_proposta": "ADAPTAR: adapter mínimo de compatibilidade",
+        "destino_proposto": "CLAUDE.md com @AGENTS.md, ou remoção condicionada a versão/fallback verificados",
+        "justificativa": "Extrair regras duráveis para núcleo/documentos neutros e retirar cronologia duplicada. Manter só import sem política concorrente é a opção de compatibilidade; Claude >=2.1.277 admite alternativa AGENTS nativa se não houver CLAUDE de projeto/ancestral.",
+        "reuso": "conteúdo misto: invariantes reutilizáveis e fatos locais",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Mudança supersede parcialmente ADR-0001; não apagar decisão histórica. Falta registrar versões reais dos clientes.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L1-L125",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C02-01",
+          "O-C02-02",
+          "O-C02-03",
+          "O-C02-04",
+          "O-C02-05",
+          "O-C02-06",
+          "O-C02-07",
+          "O-C02-08",
+          "O-C02-09",
+          "O-C02-10",
+          "O-C02-11",
+          "O-C02-12",
+          "O-C02-13",
+          "O-C02-14",
+          "O-C02-15",
+          "O-C02-16",
+          "O-C02-17",
+          "O-C02-18",
+          "O-C02-19",
+          "O-C02-20",
+          "O-C02-21",
+          "O-C02-22",
+          "O-C02-23",
+          "O-C02-24",
+          "O-C02-25",
+          "O-C02-26"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "CLAUDE.md (raiz, @AGENTS.md)",
+        "tests": [
+          "T17",
+          "T18",
+          "T19",
+          "T20",
+          "T23",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T17",
+          "T18",
+          "T19",
+          "T20",
+          "T23",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C03",
+      "kind": "control",
+      "path": "GEMINI.md",
+      "target": "GEMINI.md (raiz, @./AGENTS.md)",
+      "primary_sprint": "S04",
+      "sprints": [
+        "S04",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T06",
+        "T17",
+        "T19",
+        "T23"
+      ],
+      "finding_ids": [
+        "IA-01",
+        "IA-04",
+        "IA-07",
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Eliminar import de CHANGELOG/papel fixo; shim inicial. Troca por context.fileName somente com autorização e teste.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L3-L13",
+      "source_payload": {
+        "caminho": "GEMINI.md",
+        "funcao": "Adapter Gemini, imports e papel preferencial",
+        "carregamento_atual": "GEMINI.md e imports @ nativos; configuração context.fileName não existe no repo",
+        "decisao_proposta": "ADAPTAR: adapter mínimo",
+        "destino_proposto": "GEMINI.md com import de AGENTS.md",
+        "justificativa": "Eliminar import integral de CHANGELOG e papel fixo por fornecedor. Preservar ponte até optar explicitamente por context.fileName=AGENTS.md e testar.",
+        "reuso": "adapter da ferramenta",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Não remover sem verificar como o Gemini usado pelo usuário encontra AGENTS.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L3-L13",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C03-01",
+          "O-C03-02",
+          "O-C03-03"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "GEMINI.md (raiz, @./AGENTS.md)",
+        "tests": [
+          "T06",
+          "T17",
+          "T19",
+          "T23"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T17",
+          "T19",
+          "T23"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C04",
+      "kind": "control",
+      "path": ".claude/CLAUDE.md",
+      "target": "docs/ai/README.md + mapa em AGENTS.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T06",
+        "T17",
+        "T19",
+        "T27"
+      ],
+      "finding_ids": [
+        "IA-01",
+        "IA-04",
+        "IA-08"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Migrar mapa; retirar bootstrap secundário somente junto da integração e dos consumidores substitutos.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/CLAUDE.md#L3-L41",
+      "source_payload": {
+        "caminho": ".claude/CLAUDE.md",
+        "funcao": "Índice de rotas de leitura",
+        "carregamento_atual": "Nativo Claude; lido via ponte por outros",
+        "decisao_proposta": "REALOCAR e eliminar bootstrap duplicado após migração",
+        "destino_proposto": "docs/ai/README.md; mapa curto em AGENTS.md",
+        "justificativa": "O índice é útil; seu local mistura governança comum com descoberta exclusiva de Claude. Não o manter como segundo CLAUDE ativo se for escolhida descoberta AGENTS nativa.",
+        "reuso": "mapa de projeto",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/CLAUDE.md#L3-L41",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C04-01",
+          "O-C04-02",
+          "O-C04-03",
+          "O-C04-04",
+          "O-C04-05",
+          "O-C04-06",
+          "O-C04-07",
+          "O-C04-08",
+          "O-C04-09",
+          "O-C04-10",
+          "O-C04-11",
+          "O-C04-12"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md + mapa em AGENTS.md",
+        "tests": [
+          "T04",
+          "T06",
+          "T17",
+          "T19",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T17",
+          "T19"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C05",
+      "kind": "control",
+      "path": ".claude/rules/docs-e-readmes.md",
+      "target": "docs/ai/rules/documentacao.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T07",
+        "T26",
+        "T30"
+      ],
+      "finding_ids": [
+        "IA-03",
+        "IA-04",
+        "IA-10"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Preservar hierarquia, PT-BR, contrato 1.0.0, Manual/cópias e ratchet; delimitar 75/75 como histórico.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/docs-e-readmes.md#L7-L90",
+      "source_payload": {
+        "caminho": ".claude/rules/docs-e-readmes.md",
+        "funcao": "Política editorial e contrato README",
+        "carregamento_atual": "Regra Claude incondicional: sem frontmatter paths",
+        "decisao_proposta": "ADAPTAR/REALOCAR",
+        "destino_proposto": "docs/ai/rules/documentacao.md",
+        "justificativa": "Preservar hierarquia, PT-BR, precisão, histórico imutável, Manual canônico e contrato 1.0.0. Trocar contagem viva 75/75 por escopo histórico e owner executável; corpo extenso sob demanda.",
+        "reuso": "padrão genérico editorial + contrato Hub",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/docs-e-readmes.md#L7-L90",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C05-01",
+          "O-C05-02",
+          "O-C05-03",
+          "O-C05-04",
+          "O-C05-05",
+          "O-C05-06",
+          "O-C05-07",
+          "O-C05-08",
+          "O-C05-09",
+          "O-C05-10",
+          "O-C05-11",
+          "O-C05-12",
+          "O-C05-13",
+          "O-C05-14",
+          "O-C05-15",
+          "O-C05-16",
+          "O-C05-17",
+          "O-C05-18"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/rules/documentacao.md",
+        "tests": [
+          "T04",
+          "T07",
+          "T26",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C06",
+      "kind": "control",
+      "path": ".claude/rules/fonte-de-verdade.md",
+      "target": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T24",
+        "T30",
+        "T31"
+      ],
+      "finding_ids": [
+        "IA-05",
+        "IA-08",
+        "IA-11"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Núcleo guarda fonte/derivado/quarentena; detalhe recebe preflight de geração e referências corrigidas.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/fonte-de-verdade.md#L3-L14",
+      "source_payload": {
+        "caminho": ".claude/rules/fonte-de-verdade.md",
+        "funcao": "Camadas e fonte do produto",
+        "carregamento_atual": "Regra Claude incondicional",
+        "decisao_proposta": "MANTER conteúdo; REALOCAR",
+        "destino_proposto": "AGENTS.md: invariantes curtos; docs/ai/rules/fontes-e-derivados.md: detalhes",
+        "justificativa": "Fonte editável/espelho/workspaces/quarentena são invariantes críticos, não excesso. Preservar uma repetição curta deliberada no núcleo e a operação em playbook.",
+        "reuso": "padrão genérico fonte/derivado com caminhos locais",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Atualizar referência em tools/render_simulado.py: 46 e regenerar somente o marcador derivado, se autorizado.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/fonte-de-verdade.md#L3-L14",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C06-01",
+          "O-C06-02",
+          "O-C06-03",
+          "O-C06-04",
+          "O-C06-05"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+        "tests": [
+          "T04",
+          "T24",
+          "T30",
+          "T31"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C07",
+      "kind": "control",
+      "path": ".claude/rules/free-vs-trabalho.md",
+      "target": "docs/ai/context/ambientes.md + evidência datada",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T08",
+        "T24",
+        "T26"
+      ],
+      "finding_ids": [
+        "IA-04",
+        "IA-06",
+        "IA-08"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Separar restrições de quota/pins/tempos observados; manter histórico; corrigir mensagem smoke em S05.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L6-L96",
+      "source_payload": {
+        "caminho": ".claude/rules/free-vs-trabalho.md",
+        "funcao": "Restrições ambientais, observações e troubleshooting",
+        "carregamento_atual": "Regra Claude incondicional",
+        "decisao_proposta": "DIVIDIR sem perder evidência",
+        "destino_proposto": "docs/ai/context/ambientes.md + docs/testes/ ou guias datados existentes",
+        "justificativa": "Separar regra durável (Free sintético, produção governada, gates independentes) de observação datada (cota, MLflow, pacotes, pins, tempos). Não promover experimento de agosto a recomendação universal.",
+        "reuso": "restrições Databricks locais; padrão de validade temporal reutilizável",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Atualizar mensagem de tools/spark_smoke_test.py: 109; observações antigas ficam históricas, não são apagadas.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L6-L96",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C07-01",
+          "O-C07-02",
+          "O-C07-03",
+          "O-C07-04",
+          "O-C07-05",
+          "O-C07-06",
+          "O-C07-07",
+          "O-C07-08",
+          "O-C07-09",
+          "O-C07-10",
+          "O-C07-11",
+          "O-C07-12",
+          "O-C07-13",
+          "O-C07-14",
+          "O-C07-15",
+          "O-C07-16"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/context/ambientes.md + evidência datada",
+        "tests": [
+          "T04",
+          "T08",
+          "T24",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C08",
+      "kind": "control",
+      "path": ".claude/rules/genie-code-oficial.md",
+      "target": "docs/ai/references/databricks-genie-code.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T07",
+        "T08"
+      ],
+      "finding_ids": [
+        "IA-06"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Separar oficial/custom/local; registrar URL/data/versão; revalidar afirmações negativas antes de reaproveitar.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/genie-code-oficial.md#L3-L54",
+      "source_payload": {
+        "caminho": ".claude/rules/genie-code-oficial.md",
+        "funcao": "Conhecimento da plataforma e política de fontes",
+        "carregamento_atual": "Regra Claude incondicional",
+        "decisao_proposta": "DIVIDIR/ATUALIZAR sob demanda",
+        "destino_proposto": "docs/ai/references/databricks-genie-code.md; princípio de verificação em AGENTS.md",
+        "justificativa": "Conservar distinção nativo/customizado, MCP e dados sigilosos. Separar afirmações oficiais de observações locais, registrar URL/data/versão/alcance; revalidar claims negativos antes de reutilizar.",
+        "reuso": "política de fontes genérica + referência Databricks",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Arquivo verificado em 09/09; capacidades mudam. Não usar como evidência externa atual sem nova pesquisa.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/genie-code-oficial.md#L3-L54",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C08-01",
+          "O-C08-02",
+          "O-C08-03",
+          "O-C08-04",
+          "O-C08-05",
+          "O-C08-06",
+          "O-C08-07",
+          "O-C08-08",
+          "O-C08-09",
+          "O-C08-10",
+          "O-C08-11",
+          "O-C08-12",
+          "O-C08-13",
+          "O-C08-14",
+          "O-C08-15",
+          "O-C08-16",
+          "O-C08-17"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/references/databricks-genie-code.md",
+        "tests": [
+          "T04",
+          "T07",
+          "T08"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C09",
+      "kind": "control",
+      "path": ".claude/rules/multi-llm.md",
+      "target": "docs/ai/rules/colaboracao.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T22",
+        "T24",
+        "T26"
+      ],
+      "finding_ids": [
+        "IA-07",
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Retirar papéis fixos/dependência obrigatória de repo irmão; conservar autoria, contraditório e independência.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/multi-llm.md#L6-L29",
+      "source_payload": {
+        "caminho": ".claude/rules/multi-llm.md",
+        "funcao": "Colaboração, autoria, auditoria e hierarquia",
+        "carregamento_atual": "Regra Claude incondicional",
+        "decisao_proposta": "ADAPTAR/REALOCAR",
+        "destino_proposto": "docs/ai/rules/colaboracao.md",
+        "justificativa": "Preservar autoria, não sobrescrever e contraditório. Remover hierarquia vendor-specific e papéis fixos. Internalizar o contrato mínimo que depende de ../Verg_Alchemy_Hub; deixar origem como referência opcional.",
+        "reuso": "fortemente reutilizável depois de retirar nomes/caminhos locais",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Auditoria cega conflita com leitura universal de changelog. Nível A1 não surge de contar auxiliares da mesma revisão como origens independentes.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/multi-llm.md#L6-L29",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C09-01",
+          "O-C09-02",
+          "O-C09-03",
+          "O-C09-04",
+          "O-C09-05",
+          "O-C09-06",
+          "O-C09-07",
+          "O-C09-08",
+          "O-C09-09"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/rules/colaboracao.md",
+        "tests": [
+          "T04",
+          "T22",
+          "T24",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T22",
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C10",
+      "kind": "control",
+      "path": ".claude/context/ambiente-free.md",
+      "target": "docs/ai/context/ambientes.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T08",
+        "T24"
+      ],
+      "finding_ids": [
+        "IA-06"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Conservar Free sintético; substituir autenticação presumida por probe atual; guardar observação datada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-free.md#L3-L24",
+      "source_payload": {
+        "caminho": ".claude/context/ambiente-free.md",
+        "funcao": "Perfil Free e último estado observado",
+        "carregamento_atual": "Somente leitura explícita; não auto-regra",
+        "decisao_proposta": "ADAPTAR/CONSOLIDAR",
+        "destino_proposto": "docs/ai/context/ambientes.md",
+        "justificativa": "Remover suposição de CLI autenticada nesta máquina e tratar disponibilidade/cota como verificação local atual; conservar observações com data e fonte.",
+        "reuso": "fatos locais e privados do ambiente, não instrução genérica",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Não persistir host, perfil secreto, credencial ou username real no Git. Histórico de cota de agosto não é estado atual.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-free.md#L3-L24",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C10-01",
+          "O-C10-02",
+          "O-C10-03",
+          "O-C10-04",
+          "O-C10-05",
+          "O-C10-06",
+          "O-C10-07",
+          "O-C10-08",
+          "O-C10-09"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/context/ambientes.md",
+        "tests": [
+          "T04",
+          "T08",
+          "T24"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C11",
+      "kind": "control",
+      "path": ".claude/context/ambiente-trabalho.md",
+      "target": "docs/ai/context/ambientes.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T08",
+        "T24"
+      ],
+      "finding_ids": [
+        "IA-06"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Preservar governança/placeholders e gate corporativo; apontar runbook atual, sem acesso presumido.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-trabalho.md#L3-L15",
+      "source_payload": {
+        "caminho": ".claude/context/ambiente-trabalho.md",
+        "funcao": "Perfil corporativo e implantação manual",
+        "carregamento_atual": "Somente leitura explícita",
+        "decisao_proposta": "MANTER/CONSOLIDAR",
+        "destino_proposto": "docs/ai/context/ambientes.md",
+        "justificativa": "Guardar restrições reais e placeholders; linkar runbook vigente, não fase 4 de roadmap histórico. Declarar que capacidades/acesso devem ser confirmados no executor real.",
+        "reuso": "específico do ambiente",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-trabalho.md#L3-L15",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C11-01",
+          "O-C11-02",
+          "O-C11-03",
+          "O-C11-04",
+          "O-C11-05"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/context/ambientes.md",
+        "tests": [
+          "T04",
+          "T08",
+          "T24"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C12",
+      "kind": "control",
+      "path": ".claude/context/perfil-usuario.md",
+      "target": "docs/ai/context/projeto.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T08"
+      ],
+      "finding_ids": [
+        "IA-06",
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Conservar objetivos e convenções; minimizar dados/caminhos pessoais; nenhuma configuração global automática.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/perfil-usuario.md#L3-L14",
+      "source_payload": {
+        "caminho": ".claude/context/perfil-usuario.md",
+        "funcao": "Pessoa, objetivos e preferências",
+        "carregamento_atual": "Somente leitura explícita",
+        "decisao_proposta": "ADAPTAR e minimizar contexto pessoal",
+        "destino_proposto": "docs/ai/context/projeto.md; preferências pessoais globais fora do repositório, se o usuário quiser",
+        "justificativa": "Preservar objetivos do Hub e convenções técnicas relevantes. Não tornar nome pessoal, caminho Windows e preferência por uma ferramenta requisitos de todo clone. Separar política de projeto de preferência geral.",
+        "reuso": "misto: objetivos do projeto + preferências pessoais",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Não mover nada para configuração global sem autorização e sem explicar escopo.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/perfil-usuario.md#L3-L14",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C12-01",
+          "O-C12-02",
+          "O-C12-03",
+          "O-C12-04",
+          "O-C12-05",
+          "O-C12-06"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/context/projeto.md",
+        "tests": [
+          "T04",
+          "T08"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C13",
+      "kind": "control",
+      "path": ".claude/skills/README.md",
+      "target": ".agents/skills/README.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T21",
+        "T27"
+      ],
+      "finding_ids": [
+        "IA-01",
+        "IA-09",
+        "IA-12"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Catálogo único das cinco skills; distinguir produto e proposta revisar-docs-oficiais ainda inexistente.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/README.md#L3-L43",
+      "source_payload": {
+        "caminho": ".claude/skills/README.md",
+        "funcao": "Catálogo das 5 skills de manutenção",
+        "carregamento_atual": "Índice documental, não skill invocável",
+        "decisao_proposta": "MANTER/REALOCAR",
+        "destino_proposto": " .agents/skills/README.md",
+        "justificativa": "Já distingue corretamente manutenção de produto e a skill planejada inexistente. Preservar melhoria da branch, ajustar rotas/discovery por cliente.",
+        "reuso": "estrutura reutilizável; lista específica",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/README.md#L3-L43",
+        "alterado_na_branch_documental": "True"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C13-O01",
+          "C13-O02",
+          "C13-O03",
+          "C13-O04",
+          "C13-O05",
+          "C13-O06",
+          "C13-O07"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/README.md",
+        "tests": [
+          "T09",
+          "T21",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T21"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C14",
+      "kind": "control",
+      "path": ".claude/skills/validar-assistant/SKILL.md",
+      "target": ".agents/skills/validar-assistant/SKILL.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T10",
+        "T21",
+        "T32",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-03",
+        "IA-05"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Portar procedimento; saída real; contagens do owner; sem equivalência entre gate estático e runtime.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/validar-assistant/SKILL.md#L13-L59",
+      "source_payload": {
+        "caminho": ".claude/skills/validar-assistant/SKILL.md",
+        "funcao": "Procedimento de validação estrutural",
+        "carregamento_atual": "Descoberta Claude .claude/skills; outros só leitura explícita",
+        "decisao_proposta": "ADAPTAR/PORTABILIZAR",
+        "destino_proposto": ".agents/skills/validar-assistant/SKILL.md + cópia Claude gerada com paridade",
+        "justificativa": "Preservar ordem de execução e leitura de falhas; remover contagens obsoletas 14 skills,16 prompts,161 campos,75 objetos e a afirmação contraditória sobre PASS por check. Owner é validador executável.",
+        "reuso": "playbook específico; padrão de validar/resultados reutilizável",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Verificação atual: 15 skills,18 prompts/174 campos,79 objetos+3 exemplares. Check estático não certifica runtime.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/validar-assistant/SKILL.md#L13-L59",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C14-O01",
+          "C14-O02",
+          "C14-O03",
+          "C14-O04",
+          "C14-O05",
+          "C14-O06",
+          "C14-O07",
+          "C14-O08",
+          "C14-O09",
+          "C14-O10",
+          "C14-O11",
+          "C14-O12"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/validar-assistant/SKILL.md",
+        "tests": [
+          "T09",
+          "T10",
+          "T21",
+          "T32",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T21",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C15",
+      "kind": "control",
+      "path": ".claude/skills/render-simulado/SKILL.md",
+      "target": ".agents/skills/render-simulado/SKILL.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T11",
+        "T21",
+        "T24",
+        "T31",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-05",
+        "IA-08",
+        "IA-11"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Portar com preflight, inventário de extras e autoridade para substituição; nunca disparar --write por seleção só.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/render-simulado/SKILL.md#L13-L41",
+      "source_payload": {
+        "caminho": ".claude/skills/render-simulado/SKILL.md",
+        "funcao": "Procedimento de geração do espelho",
+        "carregamento_atual": "Descoberta Claude; outros leitura explícita",
+        "decisao_proposta": "ADAPTAR/PORTABILIZAR",
+        "destino_proposto": ".agents/skills/render-simulado/SKILL.md + cópia Claude gerada com paridade",
+        "justificativa": "Manter fonte/derivado, neutralidade e bytes idênticos. Incorporar preflight de extras/escopo de substituição do playbook novo: --write apaga toda árvore de destino.",
+        "reuso": "procedimento específico com padrão de geração reutilizável",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Não transformar ação automática de skill em permissão para destruir arquivos extras.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/render-simulado/SKILL.md#L13-L41",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C15-O01",
+          "C15-O02",
+          "C15-O03",
+          "C15-O04",
+          "C15-O05",
+          "C15-O06",
+          "C15-O07",
+          "C15-O08"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/render-simulado/SKILL.md",
+        "tests": [
+          "T09",
+          "T11",
+          "T21",
+          "T24",
+          "T31",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T11",
+          "T21",
+          "T24",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C16",
+      "kind": "control",
+      "path": ".claude/skills/publicar-free/SKILL.md",
+      "target": ".agents/skills/publicar-free/SKILL.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T12",
+        "T21",
+        "T24",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-03",
+        "IA-05"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Portar plano/execute/verify; plano é remoto; distinguir conteúdo/tipo, parcial e limpeza autorizada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/publicar-free/SKILL.md#L11-L55",
+      "source_payload": {
+        "caminho": ".claude/skills/publicar-free/SKILL.md",
+        "funcao": "Plano/execute/verify de publicação Free",
+        "carregamento_atual": "Descoberta Claude; outros leitura explícita",
+        "decisao_proposta": "ADAPTAR/PORTABILIZAR",
+        "destino_proposto": ".agents/skills/publicar-free/SKILL.md + cópia Claude gerada com paridade",
+        "justificativa": "Corrigir 13 skills/4 hubs e separar verify de inventário/tipo de verify --conteudo. Remeter a EXPECTED_* em código. Alinhar autorização por destino, inspeção de tentativa parcial e preservação de conteúdo alheio.",
+        "reuso": "específico Databricks; transação em fases reutilizável",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "Plano consulta CLI autenticada; não é offline. Não executar limpeza de obsoletos sem escopo/autoridade e não equiparar todos .py a FILE: notebooks didáticos seguem marcador.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/publicar-free/SKILL.md#L11-L55",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C16-O01",
+          "C16-O02",
+          "C16-O03",
+          "C16-O04",
+          "C16-O05",
+          "C16-O06",
+          "C16-O07",
+          "C16-O08",
+          "C16-O09",
+          "C16-O10",
+          "C16-O11",
+          "C16-O12",
+          "C16-O13"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/publicar-free/SKILL.md",
+        "tests": [
+          "T09",
+          "T12",
+          "T21",
+          "T24",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T12",
+          "T21",
+          "T24",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C17",
+      "kind": "control",
+      "path": ".claude/skills/forward-test-skills/SKILL.md",
+      "target": ".agents/skills/forward-test-skills/SKILL.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T13",
+        "T21",
+        "T22",
+        "T26",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-03",
+        "IA-05",
+        "IA-07",
+        "IA-10"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Preservar sessões novas/observação; 14/42 histórico; nova campanha própria sem fake PASS.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/forward-test-skills/SKILL.md#L12-L47",
+      "source_payload": {
+        "caminho": ".claude/skills/forward-test-skills/SKILL.md",
+        "funcao": "Teste de seleção de skills Genie",
+        "carregamento_atual": "Descoberta Claude; outros leitura explícita",
+        "decisao_proposta": "ADAPTAR/PORTABILIZAR",
+        "destino_proposto": ".agents/skills/forward-test-skills/SKILL.md + cópia Claude gerada com paridade",
+        "justificativa": "Manter chat novo e observado distinto de autorrelato. Explicitar corpus exigido vs contexto extra indevido. Matriz42 é histórica de14 skills; separar plano por catálogo atual e campanhas próprias sem fabricar45/45.",
+        "reuso": "método genérico de seleção + casos Databricks",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/forward-test-skills/SKILL.md#L12-L47",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C17-O01",
+          "C17-O02",
+          "C17-O03",
+          "C17-O04",
+          "C17-O05",
+          "C17-O06",
+          "C17-O07",
+          "C17-O08",
+          "C17-O09",
+          "C17-O10",
+          "C17-O11"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/forward-test-skills/SKILL.md",
+        "tests": [
+          "T09",
+          "T13",
+          "T21",
+          "T22",
+          "T26",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T21",
+          "T22",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C18",
+      "kind": "control",
+      "path": ".claude/skills/replicar-trabalho/SKILL.md",
+      "target": ".agents/skills/replicar-trabalho/SKILL.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T13",
+        "T21",
+        "T24",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-03",
+        "IA-05"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Portar runbook/gates humanos; manifesto físico; preservar PENDENTE, MCP e conteúdo alheio.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/replicar-trabalho/SKILL.md#L12-L41",
+      "source_payload": {
+        "caminho": ".claude/skills/replicar-trabalho/SKILL.md",
+        "funcao": "Roteamento ao runbook corporativo",
+        "carregamento_atual": "Descoberta Claude; outros leitura explícita",
+        "decisao_proposta": "MANTER/ADAPTAR/PORTABILIZAR",
+        "destino_proposto": ".agents/skills/replicar-trabalho/SKILL.md + cópia Claude gerada com paridade",
+        "justificativa": "Preserva bons limites (sem CLI, gate humano, não promover PENDENTE). Remover número cinco pastas a favor de manifesto/EXPECTED_HUB_DIRS: agora são6 diretórios físicos, incluindo assets editoriais.",
+        "reuso": "específico do destino; padrão de aceite reutilizável",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/replicar-trabalho/SKILL.md#L12-L41",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "C18-O01",
+          "C18-O02",
+          "C18-O03",
+          "C18-O04",
+          "C18-O05",
+          "C18-O06",
+          "C18-O07",
+          "C18-O08",
+          "C18-O09",
+          "C18-O10",
+          "C18-O11",
+          "C18-O12",
+          "C18-O13"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".agents/skills/replicar-trabalho/SKILL.md",
+        "tests": [
+          "T09",
+          "T13",
+          "T21",
+          "T24",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T21",
+          "T24",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C19",
+      "kind": "control",
+      "path": ".claude/templates/adr.md",
+      "target": "docs/ai/templates/adr.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T26",
+        "T27"
+      ],
+      "finding_ids": [
+        "IA-08",
+        "IA-10"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Mover com corpo decisório preservado e erratas/status anexados; novo ADR para decisão nova.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/adr.md#L3-L33",
+      "source_payload": {
+        "caminho": ".claude/templates/adr.md",
+        "funcao": "Modelo de decisão arquitetural",
+        "carregamento_atual": "Artefato sob demanda, sem autoload nativo",
+        "decisao_proposta": "MANTER/REALOCAR",
+        "destino_proposto": "docs/ai/templates/adr.md",
+        "justificativa": "Modelo genérico útil; harmonizar corpo decisório imutável com errata factual/status anexados já permitidos. Novo ADR de migração supersede somente hierarquia do ADR-0001.",
+        "reuso": "reutilizável com placeholders",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/adr.md#L3-L33",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C19-01",
+          "O-C19-02",
+          "O-C19-03",
+          "O-C19-04",
+          "O-C19-05"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/templates/adr.md",
+        "tests": [
+          "T04",
+          "T26",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C20",
+      "kind": "control",
+      "path": ".claude/templates/auditoria.md",
+      "target": "docs/ai/templates/auditoria.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T22",
+        "T24",
+        "T26"
+      ],
+      "finding_ids": [
+        "IA-07",
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Internalizar critérios A0–A3 e corpus; separar revisão completa/auditoria cega/runtime outputs.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/auditoria.md#L3-L24",
+      "source_payload": {
+        "caminho": ".claude/templates/auditoria.md",
+        "funcao": "Modelo de pacote multi-IA",
+        "carregamento_atual": "Artefato sob demanda",
+        "decisao_proposta": "ADAPTAR/REALOCAR",
+        "destino_proposto": "docs/ai/templates/auditoria.md",
+        "justificativa": "Distinguir protocolo genérico de independência, fontes permitidas e matriz de risco local A0-A3. Tirar dependência obrigatória de repo irmão. Não confundir com rubrica runtime de auditoria de outputs.",
+        "reuso": "genérico com política local de criticidade",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/auditoria.md#L3-L24",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C20-01",
+          "O-C20-02",
+          "O-C20-03",
+          "O-C20-04",
+          "O-C20-05"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/templates/auditoria.md",
+        "tests": [
+          "T04",
+          "T22",
+          "T24",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T22",
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C21",
+      "kind": "control",
+      "path": ".claude/templates/changelog-entry.md",
+      "target": "docs/ai/templates/changelog-entry.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T26"
+      ],
+      "finding_ids": [
+        "IA-09",
+        "IA-10"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Trocar exemplo do engine antigo por placeholders; autoria real e histórico append-only.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/changelog-entry.md#L3-L25",
+      "source_payload": {
+        "caminho": ".claude/templates/changelog-entry.md",
+        "funcao": "Modelo de registro de mudança",
+        "carregamento_atual": "Artefato sob demanda",
+        "decisao_proposta": "ADAPTAR/REALOCAR",
+        "destino_proposto": "docs/ai/templates/changelog-entry.md",
+        "justificativa": "Manter autoria real e histórico append-only. Exemplo hardcoded de integração do publicador ao engine já supersedido deve virar placeholder neutro; template não precisa trazer release antiga.",
+        "reuso": "genérico após parametrização",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/changelog-entry.md#L3-L25",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C21-01",
+          "O-C21-02",
+          "O-C21-03"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/templates/changelog-entry.md",
+        "tests": [
+          "T04",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "C22",
+      "kind": "control",
+      "path": ".claude/templates/handoff.md",
+      "target": "docs/ai/templates/handoff.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T33"
+      ],
+      "finding_ids": [
+        "IA-09"
+      ],
+      "disposition": "MIGRAR_PRESERVANDO_CONTRATO",
+      "action": "Acrescentar branch/SHA, escopo, evidência, bloqueio e retomada; retirar duplicação editorial de índice.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/handoff.md#L3-L29",
+      "source_payload": {
+        "caminho": ".claude/templates/handoff.md",
+        "funcao": "Modelo de continuidade",
+        "carregamento_atual": "Artefato sob demanda",
+        "decisao_proposta": "MANTER/REALOCAR",
+        "destino_proposto": "docs/ai/templates/handoff.md",
+        "justificativa": "Útil e genérico; acrescentar SHA/branch, escopo autorizado, evidência, critério de retomada e encerramento. Remover cópia concorrente do esqueleto no índice ou reduzi-la a síntese.",
+        "reuso": "genérico",
+        "leitura": "leitura integral e confronto com consumidores/owners pertinentes",
+        "riscos": "",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/handoff.md#L3-L29",
+        "alterado_na_branch_documental": "False"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [
+          "O-C22-01",
+          "O-C22-02",
+          "O-C22-03",
+          "O-C22-04",
+          "O-C22-05",
+          "O-C22-06"
+        ],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/templates/handoff.md",
+        "tests": [
+          "T04",
+          "T33"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D01",
+      "kind": "dependency",
+      "path": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+      "target": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+      "primary_sprint": "S01",
+      "sprints": [
+        "S01",
+        "S07"
+      ],
+      "test_ids": [
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_CORPO",
+      "action": "Novo ADR supersede apenas hierarquia de instruções; corpo do ADR-0001 fica intacto.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/decisions/ADR-0001-arquitetura-multi-ia.md#L16-L26",
+      "source_payload": {
+        "caminho": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+        "papel": "Contrato arquitetural aceito",
+        "tratamento": "Preservar corpo; novo ADR supersede apenas escolha CLAUDE/.claude canônica.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/decisions/ADR-0001-arquitetura-multi-ia.md#L16-L26"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+        "tests": [
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D02",
+      "kind": "dependency",
+      "path": "docs/decisions/README.md",
+      "target": "docs/decisions/README.md",
+      "primary_sprint": "S01",
+      "sprints": [
+        "S01",
+        "S07"
+      ],
+      "test_ids": [
+        "T26",
+        "T27"
+      ],
+      "finding_ids": [],
+      "disposition": "ATUALIZAR_INDICE",
+      "action": "Incluir novo ADR/status e conferir unicidade/rotas; não reservar número sem ler índice atual.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/decisions/README.md#L16-L24",
+      "source_payload": {
+        "caminho": "docs/decisions/README.md",
+        "papel": "Índice de decisões",
+        "tratamento": "Atualizar status/novo ADR; tests verificam rotas e unicidade.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/decisions/README.md#L16-L24"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/decisions/README.md",
+        "tests": [
+          "T26",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D03",
+      "kind": "dependency",
+      "path": "docs/playbooks/ciclo-de-vida.md",
+      "target": "docs/playbooks/ciclo-de-vida.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S07"
+      ],
+      "test_ids": [
+        "T11",
+        "T12",
+        "T13",
+        "T24"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_OWNER",
+      "action": "Owner de efeitos; atualizar apenas referências necessárias e manter salvaguardas da branch.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/playbooks/ciclo-de-vida.md#L3-L39",
+      "source_payload": {
+        "caminho": "docs/playbooks/ciclo-de-vida.md",
+        "papel": "Owner de efeitos e procedimento",
+        "tratamento": "Preservar melhoria da branch; atualizar referências e torná-lo dono do fluxo.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/playbooks/ciclo-de-vida.md#L3-L39"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/playbooks/ciclo-de-vida.md",
+        "tests": [
+          "T11",
+          "T12",
+          "T13",
+          "T24"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T11",
+          "T12",
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D04",
+      "kind": "dependency",
+      "path": "docs/manutencao/CHECKLIST_OBJETO_NOVO.md",
+      "target": "docs/manutencao/CHECKLIST_OBJETO_NOVO.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T27"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_E_REFERENCIAR",
+      "action": "Manter checklist repo-side e links novos; não transportá-lo como produto.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/manutencao/CHECKLIST_OBJETO_NOVO.md#L3-L41",
+      "source_payload": {
+        "caminho": "docs/manutencao/CHECKLIST_OBJETO_NOVO.md",
+        "papel": "Checklist repo-side vigente",
+        "tratamento": "Manter; não publicar com produto; referenciar das skills de manutenção.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/manutencao/CHECKLIST_OBJETO_NOVO.md#L3-L41"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/manutencao/CHECKLIST_OBJETO_NOVO.md",
+        "tests": [
+          "T09",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D05",
+      "kind": "dependency",
+      "path": "tools/render_simulado.py",
+      "target": "tools/render_simulado.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T27",
+        "T30",
+        "T31"
+      ],
+      "finding_ids": [],
+      "disposition": "ATUALIZAR_STRING",
+      "action": "Corrigir path emitido; sem mudança funcional; marcador por geração isolada e payload inalterado.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L42-L46",
+      "source_payload": {
+        "caminho": "tools/render_simulado.py",
+        "papel": "Geração do espelho",
+        "tratamento": "Corrigir string da regra somente na futura migração autorizada; verificar marker derivado.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L42-L46"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/render_simulado.py",
+        "tests": [
+          "T27",
+          "T30",
+          "T31"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D06",
+      "kind": "dependency",
+      "path": "tools/spark_smoke_test.py",
+      "target": "tools/spark_smoke_test.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T27",
+        "T30"
+      ],
+      "finding_ids": [],
+      "disposition": "ATUALIZAR_STRING",
+      "action": "Corrigir destino da mensagem Free; não executar Spark nem mudar runtime.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/spark_smoke_test.py#L103-L110",
+      "source_payload": {
+        "caminho": "tools/spark_smoke_test.py",
+        "papel": "Mensagem de diagnóstico ambiental",
+        "tratamento": "Atualizar destino da regra Free; nenhuma alteração funcional necessária para mover docs.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/spark_smoke_test.py#L103-L110"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/spark_smoke_test.py",
+        "tests": [
+          "T27",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D07",
+      "kind": "dependency",
+      "path": "tools/validate_assistant.py",
+      "target": "tools/validate_assistant.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T27",
+        "T32"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_GATE",
+      "action": "Conferir cobertura de novos caminhos rastreados; novo check complementa loader/strings, sem enfraquecer validator.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/validate_assistant.py#L1515-L1548",
+      "source_payload": {
+        "caminho": "tools/validate_assistant.py",
+        "papel": "Validação de Markdown rastreado",
+        "tratamento": "Cobre links relativos, não a carga de instruções por cliente nem toda prosa.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/validate_assistant.py#L1515-L1548"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/validate_assistant.py",
+        "tests": [
+          "T27",
+          "T32"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D08",
+      "kind": "dependency",
+      "path": "tools/project_policy.py",
+      "target": "tools/project_policy.py",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S07"
+      ],
+      "test_ids": [
+        "T10",
+        "T30"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_OWNER",
+      "action": "Ler conjuntos atuais; zero mudanças de policy para adequar a narrativa.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/project_policy.py#L15-L86",
+      "source_payload": {
+        "caminho": "tools/project_policy.py",
+        "papel": "Owner dos conjuntos de publicação e sanitização",
+        "tratamento": "Preservar; usar como fonte de contagem; não é arquivo de contexto.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/project_policy.py#L15-L86"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/project_policy.py",
+        "tests": [
+          "T10",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D09",
+      "kind": "dependency",
+      "path": "tools/repo_inventory.py",
+      "target": "tools/repo_inventory.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T02",
+        "T28"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_GATE",
+      "action": "Manter inventário Git e reprovação de scan vazio; testar novos controles/derivados.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/repo_inventory.py#L8-L37",
+      "source_payload": {
+        "caminho": "tools/repo_inventory.py",
+        "papel": "Inventário Git fail-closed",
+        "tratamento": "Preservar inventário rastreado e bloqueio de varredura vazia.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/repo_inventory.py#L8-L37"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/repo_inventory.py",
+        "tests": [
+          "T02",
+          "T28"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D10",
+      "kind": "dependency",
+      "path": "tools/ci_local.py",
+      "target": "tools/ci_local.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T28",
+        "T32"
+      ],
+      "finding_ids": [],
+      "disposition": "ADICIONAR_GATE",
+      "action": "Acrescentar check local de controle; preservar fases existentes e ausência de rede/credenciais.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/ci_local.py#L82-L151",
+      "source_payload": {
+        "caminho": "tools/ci_local.py",
+        "papel": "Agregação de gates executáveis",
+        "tratamento": "Preservar fases existentes; novo teste dos controles seria aditivo.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/ci_local.py#L82-L151"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/ci_local.py",
+        "tests": [
+          "T28",
+          "T32"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D11",
+      "kind": "dependency",
+      "path": ".github/workflows/ci.yml",
+      "target": ".github/workflows/ci.yml",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T28",
+        "T32"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_OU_ADITAR",
+      "action": "Consumir gate agregado; editar workflow somente se necessário; não instalar clientes nem chamar APIs.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.github/workflows/ci.yml#L1-L38",
+      "source_payload": {
+        "caminho": ".github/workflows/ci.yml",
+        "papel": "Execução CI",
+        "tratamento": "Preservar; não prova clientes Claude/Codex/Gemini instalados.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.github/workflows/ci.yml#L1-L38"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".github/workflows/ci.yml",
+        "tests": [
+          "T28",
+          "T32"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D12",
+      "kind": "dependency",
+      "path": "tools/kit_transicao_trabalho.py",
+      "target": "tools/kit_transicao_trabalho.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T27",
+        "T30"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_PATHS",
+      "action": "Conservar caminhos dos guias consumidos; nenhum empacotamento corporativo implícito.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/kit_transicao_trabalho.py#L208-L214",
+      "source_payload": {
+        "caminho": "tools/kit_transicao_trabalho.py",
+        "papel": "Empacotamento de guias para destino",
+        "tratamento": "Lê docs/playbooks por path exato; não realocar sem ajustar consumidores.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/kit_transicao_trabalho.py#L208-L214"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/kit_transicao_trabalho.py",
+        "tests": [
+          "T27",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D13",
+      "kind": "dependency",
+      "path": "tools/tests/test_readme_integracao.py",
+      "target": "tools/tests/test_readme_integracao.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T26",
+        "T30",
+        "T32"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_TESTES",
+      "action": "Manter igualdade Manual/instruções, rotas ADR e contratos; nenhum expected relaxado.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/tests/test_readme_integracao.py#L87-L117",
+      "source_payload": {
+        "caminho": "tools/tests/test_readme_integracao.py",
+        "papel": "Guardas de contratos e cópias",
+        "tratamento": "Preservar rotas ADR e igualdade de Manual/instruções.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/tests/test_readme_integracao.py#L87-L117"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/tests/test_readme_integracao.py",
+        "tests": [
+          "T26",
+          "T30",
+          "T32"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D14",
+      "kind": "dependency",
+      "path": "tools/tests/test_concierge_integracao.py",
+      "target": "tools/tests/test_concierge_integracao.py",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T26",
+        "T30",
+        "T32"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_TESTES",
+      "action": "Manter integração, estados históricos e pendências; sem substituição global de contagens.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/tests/test_concierge_integracao.py#L122-L129",
+      "source_payload": {
+        "caminho": "tools/tests/test_concierge_integracao.py",
+        "papel": "Guardas de roteiros e integração",
+        "tratamento": "Preservar estados históricos e pendências; não atualizar contagens globalmente.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/tests/test_concierge_integracao.py#L122-L129"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "tools/tests/test_concierge_integracao.py",
+        "tests": [
+          "T26",
+          "T30",
+          "T32"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D15",
+      "kind": "dependency",
+      "path": "docs/testes/forward/README.md",
+      "target": "docs/testes/forward/README.md",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S07"
+      ],
+      "test_ids": [
+        "T13",
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_HISTORICO",
+      "action": "Manter escopo 14/42 histórico; uma campanha nova ganha seu próprio manifesto.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/README.md#L17-L43",
+      "source_payload": {
+        "caminho": "docs/testes/forward/README.md",
+        "papel": "Owner do protocolo de roteamento",
+        "tratamento": "Matriz 14/42 é explicitamente histórica; novas campanhas precisam de escopo próprio.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/README.md#L17-L43"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/testes/forward/README.md",
+        "tests": [
+          "T13",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D16",
+      "kind": "dependency",
+      "path": "docs/testes/forward/roteiro.md",
+      "target": "docs/testes/forward/roteiro.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T13",
+        "T26",
+        "T27"
+      ],
+      "finding_ids": [],
+      "disposition": "ATUALIZAR_ROTA_ATIVA",
+      "action": "Corrigir referências operacionais, mantendo casos/resultados históricos e corpus.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/roteiro.md#L701-L716",
+      "source_payload": {
+        "caminho": "docs/testes/forward/roteiro.md",
+        "papel": "Instrumento de teste",
+        "tratamento": "Preservar histórico e corrigir referência operacional quando migrar.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/roteiro.md#L701-L716"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/testes/forward/roteiro.md",
+        "tests": [
+          "T13",
+          "T26",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D17",
+      "kind": "dependency",
+      "path": "docs/testes/forward/template_resultados.md",
+      "target": "docs/testes/forward/template_resultados.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T13",
+        "T26",
+        "T27"
+      ],
+      "finding_ids": [],
+      "disposition": "DELIMITAR_MODELO",
+      "action": "Marcar escopo histórico e corrigir rota da skill; não converter modelo em resultado executado.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/template_resultados.md#L3-L6",
+      "source_payload": {
+        "caminho": "docs/testes/forward/template_resultados.md",
+        "papel": "Modelo de registro histórico 42 casos",
+        "tratamento": "Não é configuração de IA; marcar escopo para nova rodada e atualizar rota da skill.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/template_resultados.md#L3-L6"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/testes/forward/template_resultados.md",
+        "tests": [
+          "T13",
+          "T26",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D18",
+      "kind": "dependency",
+      "path": "docs/testes/skill_execution/template_resultado.md",
+      "target": "docs/testes/skill_execution/template_resultado.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T24",
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_OBSERVACAO",
+      "action": "Manter registro SE00 como observacional; não promove execução, consentimento ou policy.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/skill_execution/template_resultado.md#L118-L138",
+      "source_payload": {
+        "caminho": "docs/testes/skill_execution/template_resultado.md",
+        "papel": "Modelo observacional SE00",
+        "tratamento": "Preservar; não promove execução, consentimento ou policy.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/skill_execution/template_resultado.md#L118-L138"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/testes/skill_execution/template_resultado.md",
+        "tests": [
+          "T24",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D19",
+      "kind": "dependency",
+      "path": "docs/auditoria/templates/auditoria_sprint.md",
+      "target": "docs/auditoria/templates/auditoria_sprint.md",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S07"
+      ],
+      "test_ids": [
+        "T22",
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "AJUSTAR_PROTOCOLO",
+      "action": "Definir corpus/sessão/contexto e nível de independência; eliminar conflito com bootstrap universal.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/auditoria/templates/auditoria_sprint.md#L13-L23",
+      "source_payload": {
+        "caminho": "docs/auditoria/templates/auditoria_sprint.md",
+        "papel": "Modelo de auditoria independente",
+        "tratamento": "Parametrizar escopo e resolver conflito com histórico universal.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/auditoria/templates/auditoria_sprint.md#L13-L23"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/auditoria/templates/auditoria_sprint.md",
+        "tests": [
+          "T22",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T22"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D20",
+      "kind": "dependency",
+      "path": "docs/historico/AGENTS_TEMPLATE.md",
+      "target": "docs/historico/AGENTS_TEMPLATE.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T26",
+        "T30"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_HISTORICO",
+      "action": "Manter template analítico histórico fora do loader; eventual versão genérica nova exige tarefa separada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/historico/AGENTS_TEMPLATE.md#L1-L61",
+      "source_payload": {
+        "caminho": "docs/historico/AGENTS_TEMPLATE.md",
+        "papel": "Template analítico histórico",
+        "tratamento": "Preservar; eventual nova derivação não é rename destrutivo.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/historico/AGENTS_TEMPLATE.md#L1-L61"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/historico/AGENTS_TEMPLATE.md",
+        "tests": [
+          "T26",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D21",
+      "kind": "dependency",
+      "path": "PLANO_HUB.md",
+      "target": "PLANO_HUB.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T04",
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_DECISOES",
+      "action": "Preservar cronologia e exceção de paleta; nota administrativa/rota datada quando necessária.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/PLANO_HUB.md#L3-L66",
+      "source_payload": {
+        "caminho": "PLANO_HUB.md",
+        "papel": "Plano histórico com decisões ainda referenciadas",
+        "tratamento": "Aviso de histórico e links aos owners; não apagar exceção da paleta.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/PLANO_HUB.md#L3-L66"
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "PLANO_HUB.md",
+        "tests": [
+          "T04",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D22",
+      "kind": "dependency",
+      "path": ".gitignore",
+      "target": ".gitignore",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T08",
+        "T16",
+        "T28"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_PROTECOES",
+      "action": "Manter segredos/quarentena fora de Git; adaptar ignore só por necessidade comprovada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.gitignore#L1-L20",
+      "source_payload": {
+        "caminho": ".gitignore",
+        "papel": "Configuração Git real",
+        "tratamento": "Preservar quarentena e segredos locais; ajustes de novos adapters só se necessários.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.gitignore#L1-L20"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".gitignore",
+        "tests": [
+          "T08",
+          "T16",
+          "T28"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T16"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D23",
+      "kind": "dependency",
+      "path": ".gitattributes",
+      "target": ".gitattributes",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T16",
+        "T27"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_FORMATO",
+      "action": "Manter LF/classificação binária; comprovar Windows/Linux e caixa exata.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.gitattributes#L1-L24",
+      "source_payload": {
+        "caminho": ".gitattributes",
+        "papel": "Configuração Git real",
+        "tratamento": "Preservar LF e classificação binária; importante na migração Windows/Linux.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.gitattributes#L1-L24"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": ".gitattributes",
+        "tests": [
+          "T16",
+          "T27"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T16"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "D24",
+      "kind": "dependency",
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+      "target": "docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+      "primary_sprint": "S05",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T24",
+        "T26"
+      ],
+      "finding_ids": [],
+      "disposition": "PRESERVAR_NAO_EXECUTAVEL",
+      "action": "Manter índice e quatro JSONs; launchable/execution_authorized false e NOT_RUN/NOT_OBSERVABLE.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md#L1-L7",
+      "source_payload": {
+        "caminho": "docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+        "papel": "Índice dos 4 JSONs não executáveis",
+        "tratamento": "Preservar, juntamente com CAMPANHA_PLANEJADA, TAREFA_LOCAL, GATE_USUARIO e ACHADO_AUDITORIA; não tratar como autorização.",
+        "fonte_commit": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md#L1-L7"
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "PRESERVED_AND_CHECKED",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+        "tests": [
+          "T24",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-01",
+      "kind": "finding",
+      "path": "AGENTS.md; CLAUDE.md; GEMINI.md; docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+      "target": "",
+      "primary_sprint": "S01",
+      "sprints": [
+        "S01",
+        "S02",
+        "S04",
+        "S06"
+      ],
+      "test_ids": [
+        "T04",
+        "T14",
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T21",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-01"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Núcleo neutro com integração por superfície e prova de discovery, não simples rename.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/AGENTS.md#L1-L12",
+      "source_payload": {
+        "id": "IA-01",
+        "priority": "P1",
+        "title": "A fonte ativa ainda é Claude-específica, e simples troca de nome não é portabilidade",
+        "observed": "AGENTS se declara ponte; CLAUDE se declara canônico; .claude/CLAUDE é outro ponto nativo; GEMINI importa ambos. O desenho é coerente com o ADR-0001 original, mas distribui a mesma política por mecanismos diferentes e mantém Codex/Gemini dependentes de leitura indireta.",
+        "impact": "Mover arquivos para docs/ai ou apenas adicionar AGENTS não garante carga. No Claude atual, CLAUDE de projeto/ancestral suprime o fallback AGENTS; skills fora dos diretórios nativos deixam de ser descobertas.",
+        "proposal": "Tornar AGENTS a única fonte editorial comum. Preferir inicialmente CLAUDE/GEMINI mínimos importadores; permitir retirada de CLAUDE com versões e cadeia ancestral testadas. Manter adaptadores de descoberta de skills sem regras concorrentes.",
+        "evidence": [
+          {
+            "path": "AGENTS.md",
+            "lines": "1-12",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/AGENTS.md#L1-L12"
+          },
+          {
+            "path": "CLAUDE.md",
+            "lines": "1-18",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L1-L18"
+          },
+          {
+            "path": "GEMINI.md",
+            "lines": "1-13",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L1-L13"
+          },
+          {
+            "path": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+            "lines": "16-26",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/decisions/ADR-0001-arquitetura-multi-ia.md#L16-L26"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T04",
+          "T14",
+          "T17",
+          "T18",
+          "T19",
+          "T20",
+          "T21",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T17",
+          "T18",
+          "T19",
+          "T20",
+          "T21",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-02",
+      "kind": "finding",
+      "path": "CLAUDE.md; docs/sprints/sistema_temas/README.md; docs/sprints/micromodelos/README.md; docs/README.md",
+      "target": "",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02"
+      ],
+      "test_ids": [
+        "T04",
+        "T06",
+        "T07"
+      ],
+      "finding_ids": [
+        "IA-02"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Retirar status vivo do bootstrap e recuperar estado dos owners Temas/Micromodelos.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L65-L93",
+      "source_payload": {
+        "id": "IA-02",
+        "priority": "P1",
+        "title": "Status antigo está no bootstrap mais autoritativo",
+        "observed": "CLAUDE destaca Temas V00–V09 e Micromodelos como candidata E0. Os índices donos já registram Temas V00–V13 e V14 S0/S1 integrados e módulo Micromodelos integrado pela PR119. A branch documental melhorou esses owners, mas os controles ficaram praticamente iguais à main.",
+        "impact": "Uma IA que lê primeiro o bootstrap pode planejar trabalho encerrado, reabrir gates históricos ou usar uma candidata antiga como estado vigente.",
+        "proposal": "Retirar cronologia e SHAs mutáveis do bootstrap, substituindo por links curtos aos owners vigentes. Não apagar histórico nem converter integração Git em homologação corporativa.",
+        "evidence": [
+          {
+            "path": "CLAUDE.md",
+            "lines": "65-93",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L65-L93"
+          },
+          {
+            "path": "docs/sprints/sistema_temas/README.md",
+            "lines": "3-11",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/sprints/sistema_temas/README.md#L3-L11"
+          },
+          {
+            "path": "docs/sprints/micromodelos/README.md",
+            "lines": "1-23",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/sprints/micromodelos/README.md#L1-L23"
+          },
+          {
+            "path": "docs/README.md",
+            "lines": "50-57",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/README.md#L50-L57"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T04",
+          "T06",
+          "T07"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-03",
+      "kind": "finding",
+      "path": ".claude/skills/publicar-free/SKILL.md; .claude/skills/validar-assistant/SKILL.md; .claude/skills/replicar-trabalho/SKILL.md; tools/project_policy.py; CLAUDE.md",
+      "target": "",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03"
+      ],
+      "test_ids": [
+        "T09",
+        "T10",
+        "T13"
+      ],
+      "finding_ids": [
+        "IA-03"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Contagens vêm de policy/inventário; resultados históricos permanecem datados.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/publicar-free/SKILL.md#L24-L32",
+      "source_payload": {
+        "id": "IA-03",
+        "priority": "P1",
+        "title": "As skills de manutenção descrevem inventários já superados",
+        "observed": "publicar-free promete 13 skills/4 diretórios; validar-assistant 14 skills,16 prompts/161 campos e 75 objetos; replicar-trabalho fala em cinco pastas. O código atual define 15 skills e 6 diretórios físicos hub_*. O validador executado nesta auditoria mediu 18 prompts/174 campos e 79 objetos operacionais+3 exemplares.",
+        "impact": "Contagens concorrentes confundem manutenção e podem motivar remoção ou alteração indevida de uma guarda correta. Cinco componentes funcionais do README é uma taxonomia diferente de seis diretórios físicos do manifesto.",
+        "proposal": "Referenciar conjuntos EXPECTED_SKILL_NAMES/EXPECTED_HUB_DIRS e saída do validador. Preservar 75/75 onde designa a campanha histórica R00–R13; não fazer substituição global.",
+        "evidence": [
+          {
+            "path": ".claude/skills/publicar-free/SKILL.md",
+            "lines": "24-32",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/publicar-free/SKILL.md#L24-L32"
+          },
+          {
+            "path": ".claude/skills/validar-assistant/SKILL.md",
+            "lines": "17-45",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/validar-assistant/SKILL.md#L17-L45"
+          },
+          {
+            "path": ".claude/skills/replicar-trabalho/SKILL.md",
+            "lines": "22-26",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/replicar-trabalho/SKILL.md#L22-L26"
+          },
+          {
+            "path": "tools/project_policy.py",
+            "lines": "15-63",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/project_policy.py#L15-L63"
+          },
+          {
+            "path": "CLAUDE.md",
+            "lines": "109-125",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L109-L125"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T09",
+          "T10",
+          "T13"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-04",
+      "kind": "finding",
+      "path": "GEMINI.md; CLAUDE.md; .claude/CLAUDE.md; .claude/rules/free-vs-trabalho.md",
+      "target": "",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S04"
+      ],
+      "test_ids": [
+        "T05",
+        "T06",
+        "T17",
+        "T23"
+      ],
+      "finding_ids": [
+        "IA-04"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Sem CHANGELOG universal; invariantes no núcleo e detalhes com gatilhos testados.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L3-L7",
+      "source_payload": {
+        "id": "IA-04",
+        "priority": "P1",
+        "title": "Gemini importa o changelog inteiro; Claude antecipa todas as regras",
+        "observed": "GEMINI contém @CHANGELOG.md. São 305.348 bytes/4.492 linhas apenas desse arquivo, além das entradas importadas. As cinco .claude/rules não têm paths frontmatter; root CLAUDE + .claude/CLAUDE + regras somam 27.011 caracteres antes de outras fontes.",
+        "impact": "Histórico de baixo sinal e observações ambientais entram em tarefas irrelevantes. Organização por arquivo não equivale a carga sob demanda. Os tamanhos são medidas do corpus, não medição de tokens ou do contexto efetivamente usado por um cliente.",
+        "proposal": "Remover import integral do changelog e instrução universal de ler toda a história. Ler últimos trechos pertinentes ou owner de status quando a tarefa exigir. Levar detalhes para docs/ai com mapa explícito e somente invariantes curtos no AGENTS.",
+        "evidence": [
+          {
+            "path": "GEMINI.md",
+            "lines": "3-7",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L3-L7"
+          },
+          {
+            "path": "CLAUDE.md",
+            "lines": "14-18",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L14-L18"
+          },
+          {
+            "path": ".claude/CLAUDE.md",
+            "lines": "3-14",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/CLAUDE.md#L3-L14"
+          },
+          {
+            "path": ".claude/rules/free-vs-trabalho.md",
+            "lines": "15-86",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L15-L86"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T05",
+          "T06",
+          "T17",
+          "T23"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T05",
+          "T17",
+          "T23"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-05",
+      "kind": "finding",
+      "path": "docs/playbooks/ciclo-de-vida.md; .claude/skills/render-simulado/SKILL.md; tools/render_simulado.py; .claude/skills/publicar-free/SKILL.md; tools/publicar_free.py",
+      "target": "",
+      "primary_sprint": "S03",
+      "sprints": [
+        "S03",
+        "S06"
+      ],
+      "test_ids": [
+        "T11",
+        "T12",
+        "T13",
+        "T24",
+        "T34"
+      ],
+      "finding_ids": [
+        "IA-05"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Skills incorporam salvaguardas reais; teste de bloqueio sem publicação não autorizada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/playbooks/ciclo-de-vida.md#L3-L39",
+      "source_payload": {
+        "id": "IA-05",
+        "priority": "P1",
+        "title": "Procedimentos antigos ainda precisam herdar as salvaguardas novas",
+        "observed": "O playbook readequado distingue escopo autorizado, substituição completa do espelho, gate local, publicação, verify e verify --conteudo. As skills operacionais ainda oferecem sequências curtas sem todas essas distinções e dizem genericamente que .py deve ser FILE, embora notebooks didáticos tenham classificação própria.",
+        "impact": "Executar o procedimento pela skill pode perder a cautela explicitada no playbook. --write remove o destino inteiro; plano do publicador consulta CLI remota; verify sem --conteudo não atesta bytes.",
+        "proposal": "Usar playbook como owner de efeitos e incorporar preflight essencial nas skills. Antes de remoto: destino/versão/operação autorizados, estado anterior inspecionado, preservação de arquivos alheios/MCP. Não tratar instrução Markdown como autorização ou bloqueio executável.",
+        "evidence": [
+          {
+            "path": "docs/playbooks/ciclo-de-vida.md",
+            "lines": "3-39",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/playbooks/ciclo-de-vida.md#L3-L39"
+          },
+          {
+            "path": ".claude/skills/render-simulado/SKILL.md",
+            "lines": "13-16",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/render-simulado/SKILL.md#L13-L16"
+          },
+          {
+            "path": "tools/render_simulado.py",
+            "lines": "89-104",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L89-L104"
+          },
+          {
+            "path": ".claude/skills/publicar-free/SKILL.md",
+            "lines": "13-47",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/publicar-free/SKILL.md#L13-L47"
+          },
+          {
+            "path": "tools/publicar_free.py",
+            "lines": "405-466",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/publicar_free.py#L405-L466"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T11",
+          "T12",
+          "T13",
+          "T24",
+          "T34"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T11",
+          "T12",
+          "T24",
+          "T34"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-06",
+      "kind": "finding",
+      "path": ".claude/context/ambiente-free.md; .claude/context/perfil-usuario.md; .claude/context/ambiente-trabalho.md; .claude/rules/free-vs-trabalho.md",
+      "target": "",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02"
+      ],
+      "test_ids": [
+        "T07",
+        "T08"
+      ],
+      "finding_ids": [
+        "IA-06"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Separar contexto durável, fonte oficial e observação; nenhuma autenticação herdada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-free.md#L3-L23",
+      "source_payload": {
+        "id": "IA-06",
+        "priority": "P2",
+        "title": "Contexto pessoal e ambiental se apresenta como permanente",
+        "observed": "ambiente-free e perfil-usuario afirmam CLI autenticada “nesta máquina”. A regra Free mistura restrições permanentes com pins, cotas e tempos observados em agosto/setembro. Contexto de trabalho remete a fase 4 de roadmap.",
+        "impact": "Um clone em outra máquina não herda instalação, autenticação, autorização ou disponibilidade de chat. Observações datadas podem virar prescrição universal por estarem em regra auto-carregada.",
+        "proposal": "Consolidar fatos do projeto e matriz de ambientes sanitizada, com data/owner/probe. Preservar resultados antigos em evidências datadas; confirmar ferramentas e acesso na sessão real. Preferências gerais do usuário não precisam ser requisito do repo.",
+        "evidence": [
+          {
+            "path": ".claude/context/ambiente-free.md",
+            "lines": "3-23",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-free.md#L3-L23"
+          },
+          {
+            "path": ".claude/context/perfil-usuario.md",
+            "lines": "3-14",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/perfil-usuario.md#L3-L14"
+          },
+          {
+            "path": ".claude/context/ambiente-trabalho.md",
+            "lines": "3-15",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-trabalho.md#L3-L15"
+          },
+          {
+            "path": ".claude/rules/free-vs-trabalho.md",
+            "lines": "35-86",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L35-L86"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T07",
+          "T08"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-07",
+      "kind": "finding",
+      "path": "CLAUDE.md; GEMINI.md; docs/auditoria/templates/auditoria_sprint.md; docs/auditoria/templates/auditoria_sprint.md",
+      "target": "",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "test_ids": [
+        "T06",
+        "T22",
+        "T26"
+      ],
+      "finding_ids": [
+        "IA-07"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Corpus permitido e sessão limpa demonstrados; contexto completo não rotulado cego.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L14-L18",
+      "source_payload": {
+        "id": "IA-07",
+        "priority": "P2",
+        "title": "O protocolo de auditoria cega conflita com o bootstrap universal",
+        "observed": "CLAUDE manda toda tarefa ler CHANGELOG; GEMINI o importa antes da tarefa. O template de auditoria de sprint proíbe CHANGELOG, docs/auditoria, docs/sprints e histórico Git para independência.",
+        "impact": "Um auditor pode receber o racional que o protocolo dizia excluir. Pedir para esquecer depois não restaura independência; abrir aba nova não prova ausência de carga automática.",
+        "proposal": "Definir perfil/protocolo explícito de auditoria com corpus permitido, SHA, evidência e fresh session. Excluir histórico da carga universal; diferenciar revisão de contexto completo de auditoria independente cega. Não somar auxiliares como origens independentes.",
+        "evidence": [
+          {
+            "path": "CLAUDE.md",
+            "lines": "14-18",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/CLAUDE.md#L14-L18"
+          },
+          {
+            "path": "GEMINI.md",
+            "lines": "3-7",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/GEMINI.md#L3-L7"
+          },
+          {
+            "path": "docs/auditoria/templates/auditoria_sprint.md",
+            "lines": "13-23",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/auditoria/templates/auditoria_sprint.md#L13-L23"
+          },
+          {
+            "path": "docs/auditoria/templates/auditoria_sprint.md",
+            "lines": "48-58",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/auditoria/templates/auditoria_sprint.md#L48-L58"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T06",
+          "T22",
+          "T26"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T22"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-08",
+      "kind": "finding",
+      "path": "tools/render_simulado.py; tools/spark_smoke_test.py; tools/validate_assistant.py; .claude/skills/validar-assistant/SKILL.md; docs/testes/forward/template_resultados.md",
+      "target": "",
+      "primary_sprint": "S04",
+      "sprints": [
+        "S04",
+        "S05"
+      ],
+      "test_ids": [
+        "T14",
+        "T19",
+        "T27",
+        "T28",
+        "T31"
+      ],
+      "finding_ids": [
+        "IA-08"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Consumidores vivos, strings, rotas e loaders cobertos; histórico preservado por exceção estreita.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L42-L46",
+      "source_payload": {
+        "id": "IA-08",
+        "priority": "P2",
+        "title": "Há acoplamentos que um simples move não cobre",
+        "observed": "Renderer emite referência literal à regra .claude/fonte; smoke aponta à regra Free. Runbook e templates de forward referem as skills. ADR-0001 aceita os caminhos atuais. O link checker percorre Markdown rastreado, mas não valida toda referência em crase ou prosa nem a descoberta real de cada cliente.",
+        "impact": "Links podem funcionar e o carregamento falhar; links simples podem ser corrigidos enquanto strings de ferramenta, decisões e comandos ficam desatualizados.",
+        "proposal": "Migrar por mapa old→new, revisar links Markdown/imports/strings em código/testes e referências históricas. Adicionar verificação própria de controles e smoke por cliente; manter evidência histórica sem reescrita retroativa.",
+        "evidence": [
+          {
+            "path": "tools/render_simulado.py",
+            "lines": "42-46",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L42-L46"
+          },
+          {
+            "path": "tools/spark_smoke_test.py",
+            "lines": "109",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/spark_smoke_test.py#L109"
+          },
+          {
+            "path": "tools/validate_assistant.py",
+            "lines": "1515-1548",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/validate_assistant.py#L1515-L1548"
+          },
+          {
+            "path": ".claude/skills/validar-assistant/SKILL.md",
+            "lines": "48-51",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/skills/validar-assistant/SKILL.md#L48-L51"
+          },
+          {
+            "path": "docs/testes/forward/template_resultados.md",
+            "lines": "3-6",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/testes/forward/template_resultados.md#L3-L6"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T14",
+          "T19",
+          "T27",
+          "T28",
+          "T31"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T19"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-09",
+      "kind": "finding",
+      "path": ".claude/rules/multi-llm.md; AGENTS.md; .claude/templates/changelog-entry.md",
+      "target": "",
+      "primary_sprint": "S01",
+      "sprints": [
+        "S01",
+        "S02",
+        "S03"
+      ],
+      "test_ids": [
+        "T04",
+        "T09",
+        "T26",
+        "T33"
+      ],
+      "finding_ids": [
+        "IA-09"
+      ],
+      "disposition": "RESOLVER",
+      "action": "Contrato mínimo no clone, autoria real, papéis independentes do fornecedor e templates neutros.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/multi-llm.md#L3-L29",
+      "source_payload": {
+        "id": "IA-09",
+        "priority": "P2",
+        "title": "Governança reutilizável depende de contexto externo e papéis fixos",
+        "observed": "multi-llm encaminha a playbook no repositório irmão Verg_Alchemy_Hub e fixa Claude=implementação, Codex=auditoria, Gemini=pesquisa. O template de changelog ainda ilustra integração ao engine já supersedido.",
+        "impact": "Um clone isolado perde parte do contrato operacional; outra ferramenta compatível pode registrar autoria errada ou assumir papel sem relação com a tarefa.",
+        "proposal": "Trazer o mínimo normativo para documentação neutra, manter referência de origem opcional e distribuir papéis por capacidade/independência. Parametrizar exemplos e autoria; não exportar o restante do contexto pessoal para um template universal.",
+        "evidence": [
+          {
+            "path": ".claude/rules/multi-llm.md",
+            "lines": "3-29",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/multi-llm.md#L3-L29"
+          },
+          {
+            "path": "AGENTS.md",
+            "lines": "6-12",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/AGENTS.md#L6-L12"
+          },
+          {
+            "path": ".claude/templates/changelog-entry.md",
+            "lines": "7-25",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/templates/changelog-entry.md#L7-L25"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T04",
+          "T09",
+          "T26",
+          "T33"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-10",
+      "kind": "finding",
+      "path": "docs/historico/AGENTS_TEMPLATE.md; docs/historico/README.md; PLANO_HUB.md; PLANO_HUB.md; docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+      "target": "",
+      "primary_sprint": "S02",
+      "sprints": [
+        "S02",
+        "S05"
+      ],
+      "test_ids": [
+        "T24",
+        "T26",
+        "T30"
+      ],
+      "finding_ids": [
+        "IA-10"
+      ],
+      "disposition": "PRESERVAR_E_DELIMITAR",
+      "action": "Histórico/templates não viram regra ativa ou autorização; preservar decisões ainda válidas.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/historico/AGENTS_TEMPLATE.md#L1-L61",
+      "source_payload": {
+        "id": "IA-10",
+        "priority": "P2",
+        "title": "Histórico e templates de domínio não devem ser confundidos com controle ativo",
+        "observed": "AGENTS_TEMPLATE está em docs/historico e diz que não é auto-descoberto; é um molde de projeto analítico Databricks, não o contrato do mantenedor deste repo. PLANO_HUB mantém cronologia antiga e também referência durável da exceção da paleta. Modelos PARALELO têm launchable=false e declaração explícita de não autorização.",
+        "impact": "Importar tudo para AGENTS tornaria histórico comando vigente e modelos inativos permissões aparentes. Mover tudo em docs/sprints para arquivo morto pode quebrar schemas/owners atuais.",
+        "proposal": "Preservar histórico e contratos onde estão inicialmente. Se AGENTS_TEMPLATE virar produto reutilizável, criar versão nova em docs/ai/templates/projeto-databricks-AGENTS.md, manter o histórico e separar de template genérico de manutenção. PLANO recebe aviso/rota sem apagar decisões; templates PARALELO continuam não executáveis.",
+        "evidence": [
+          {
+            "path": "docs/historico/AGENTS_TEMPLATE.md",
+            "lines": "1-61",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/historico/AGENTS_TEMPLATE.md#L1-L61"
+          },
+          {
+            "path": "docs/historico/README.md",
+            "lines": "15-28",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/historico/README.md#L15-L28"
+          },
+          {
+            "path": "PLANO_HUB.md",
+            "lines": "3-13",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/PLANO_HUB.md#L3-L13"
+          },
+          {
+            "path": "PLANO_HUB.md",
+            "lines": "57-66",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/PLANO_HUB.md#L57-L66"
+          },
+          {
+            "path": "docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md",
+            "lines": "1-7",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/docs/sprints/skill_enforcement_rollout/PARALELO/templates/README.md#L1-L7"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "BLOCKED",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T24",
+          "T26",
+          "T30"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": [
+          "T24"
+        ]
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-11",
+      "kind": "finding",
+      "path": "tools/render_simulado.py; tools/project_policy.py; tools/tests/test_readme_integracao.py; ambiente_fonte/.assistant_instructions.md",
+      "target": "",
+      "primary_sprint": "S00",
+      "sprints": [
+        "S00",
+        "S05",
+        "S07"
+      ],
+      "test_ids": [
+        "T02",
+        "T30",
+        "T31",
+        "T32",
+        "T35"
+      ],
+      "finding_ids": [
+        "IA-11"
+      ],
+      "disposition": "PRESERVAR_E_VERIFICAR",
+      "action": "Produto, policy, manifests e payload congelados; integridade comparada à base aprovada.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L78-L81",
+      "source_payload": {
+        "id": "IA-11",
+        "priority": "P1",
+        "title": "Runtime e hashes não são duplicação editorial descartável",
+        "observed": "O produto tem .assistant_instructions,15 skills nativas,18 briefings,69 arquivos classificados como templates,22 contratos *contract.json e 11 manifests.691 contrapartes renderizadas conferem byte a byte.11 manifests possuem 159 bindings de Git blob válidos e 113 arquivos únicos protegidos, incluindo 8 Markdown.",
+        "impact": "Colocar essas instruções/templates em AGENTS remove descoberta Databricks, quebra publicação/consumidores e pode invalidar integridade mesmo por mudança textual. PASS14/14 do validador se refere aos 14 execution_contract.json primários, não a todos os 22 contratos.",
+        "proposal": "Congelar produto, espelho, policy e manifests durante migração do controle do repo. Qualquer melhoria runtime é mudança separada, com seus gates/hash updates legítimos e evidência por superfície. Nunca enfraquecer um gate para caber na nova organização.",
+        "evidence": [
+          {
+            "path": "tools/render_simulado.py",
+            "lines": "78-81",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L78-L81"
+          },
+          {
+            "path": "tools/project_policy.py",
+            "lines": "15-63",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/project_policy.py#L15-L63"
+          },
+          {
+            "path": "tools/tests/test_readme_integracao.py",
+            "lines": "103-117",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/tests/test_readme_integracao.py#L103-L117"
+          },
+          {
+            "path": "ambiente_fonte/.assistant_instructions.md",
+            "lines": "1-85",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/ambiente_fonte/.assistant_instructions.md#L1-L85"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "IMPLEMENTED_LOCAL",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T02",
+          "T30",
+          "T31",
+          "T32",
+          "T35"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Preserve original diagnosis/source payload; verification is limited to actual tests and explicitly blocked client gates."
+    },
+    {
+      "id": "IA-12",
+      "kind": "finding",
+      "path": "ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md; tools/render_simulado.py",
+      "target": "",
+      "primary_sprint": "S01",
+      "sprints": [
+        "S01",
+        "S03",
+        "S07"
+      ],
+      "test_ids": [
+        "T09",
+        "T30",
+        "T33"
+      ],
+      "finding_ids": [
+        "IA-12"
+      ],
+      "disposition": "ENCAMINHAR_ESCOPO_SEPARADO",
+      "action": "Explicar em docs/ai que o exemplar transportado não é skill operacional; texto runtime só muda em tarefa própria, com renderer/manifests/gates.",
+      "source": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md#L1-L20",
+      "source_payload": {
+        "id": "IA-12",
+        "priority": "P3",
+        "title": "A nomenclatura de um exemplar transportado pode induzir leitura errada",
+        "observed": "O SKILL de exemplo em hub_padroes/skill/exemplo se declara NÃO PUBLICADO, mas seus bytes são transportados pelo renderer por estarem dentro de .assistant. Ele não fica em .assistant/skills, portanto não é a 16ª skill operacional.",
+        "impact": "Contagem por qualquer arquivo SKILL.md ou interpretação literal do aviso confunde exemplar, implantação e descoberta.",
+        "proposal": "Em manutenção documental separada, esclarecer “exemplar transportado, fora do diretório de descoberta nativa”. Preservar a separação entre 15 skills operacionais e o exemplar.",
+        "evidence": [
+          {
+            "path": "ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md",
+            "lines": "1-20",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md#L1-L20"
+          },
+          {
+            "path": "tools/render_simulado.py",
+            "lines": "78-81",
+            "url": "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/tools/render_simulado.py#L78-L81"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "verification_status": "PENDING_FINAL_VALIDATION",
+      "action_status": "DEFERRED_SEPARATE_SCOPE",
+      "evidence": {
+        "obligation_ids": [],
+        "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+        "target": "docs/ai/README.md",
+        "tests": [
+          "T09",
+          "T30",
+          "T33"
+        ],
+        "static_review": "215 excerpt/anchor mappings reviewed independently; full candidate review pending",
+        "client_gaps": []
+      },
+      "implementation_notes": "Product exemplar bytes preserved. docs/ai and maintainer catalog explain it is transported template, not operational skill. Maintainer owns future product-documentation task; requires separate approval, renderer/manifests and product gates."
+    }
+  ],
+  "new_dependencies": [
+    {
+      "id": "D25",
+      "path": "README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D26",
+      "path": "docs/README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D27",
+      "path": "tools/README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D28",
+      "path": "docs/auditoria/README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D29",
+      "path": "docs/handoffs/README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D30",
+      "path": "docs/testes/spark/README.md",
+      "action": "Exact current navigation update",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D31",
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/01_MANDATO_DECISOES.md",
+      "action": "Dated routing note, original body preserved",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D32",
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "action": "Preserve frozen/historical reference with exact-line exception and replacement lookup",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D33",
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "action": "Preserve frozen/historical reference with exact-line exception and replacement lookup",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    },
+    {
+      "id": "D34",
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
+      "action": "Preserve frozen/historical reference with exact-line exception and replacement lookup",
+      "test_ids": [
+        "T26",
+        "T27",
+        "T30"
+      ],
+      "evidence": "control-map historical_exceptions; baseline hashes; full diff"
+    }
+  ]
+}

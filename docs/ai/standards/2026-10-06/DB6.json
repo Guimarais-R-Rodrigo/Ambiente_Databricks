@@ -1,0 +1,10 @@
+{
+  "id": "DB6",
+  "url": "https://learn.microsoft.com/en-us/azure/databricks/genie-code/memory",
+  "title": "Memory",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "Automatic cross-session memory is now documented; old categorical denial is retired, without claiming account observation.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

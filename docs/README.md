@@ -57,3 +57,8 @@ A iniciativa R00–R13 de READMEs por objeto foi encerrada em 14/09/2026 com 75/
 A [execução de 29/08](testes/2026-08-29_execucao-etapas-1-a-5.md) e o [redesenho posterior](testes/2026-08-29_etapa-6-redesenho-documental.md) continuam evidências históricas, não a última execução de todas as frentes.
 
 Volte ao [README raiz](../README.md#ciclo-de-contribuição) para o ciclo de contribuição.
+
+## Instruções de manutenção por IA
+
+O contrato canônico está em [AGENTS.md](../AGENTS.md). O [guia de manutenção](ai/README.md)
+reúne fontes neutras, cinco skills do mantenedor, integrações e limites de compatibilidade.

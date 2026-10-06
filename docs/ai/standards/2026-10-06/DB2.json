@@ -1,0 +1,10 @@
+{
+  "id": "DB2",
+  "url": "https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills",
+  "title": "Agent Skills",
+  "reviewed_at_utc": "2026-10-06T19:06:00Z",
+  "paraphrase": "SKILL name/description, workspace/personal locations, selection by description and mention; new chat after editing.",
+  "research_provenance": "Revalidated by documentation executor; official web research, not authenticated runtime evidence.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "Stable raw source hash unavailable; authored summary hash only."
+}

@@ -89,7 +89,7 @@ runtime atual do Free.
 testado" tem data de validade — nos dois sentidos. No mesmo dia em que o Prophet
 passou a funcionar, o `mlflow_run`, registrado aqui como aprovado em 14/08,
 deixou de abrir run. Reexecute antes de replicar; ver
-`.claude/rules/free-vs-trabalho.md`.
+`docs/ai/context/ambientes.md`.
 
 Três armadilhas confirmadas, válidas para todos os wrappers de treino:
 

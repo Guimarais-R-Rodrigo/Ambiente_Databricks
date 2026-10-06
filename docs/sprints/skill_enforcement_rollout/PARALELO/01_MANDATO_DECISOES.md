@@ -70,3 +70,9 @@ A política permanece por superfície, operação, tipo, host e efeito. Um helpe
 A implementação inicial deve ser biblioteca/CLI pequena, schemas, perfis e relatórios, usando Python e dependências já aceitas quando adequadas. Não criar serviço de fila, banco de dados, painel web, broker remoto, SDK próprio de agentes ou DSL com expressões. Se surgir necessidade de novo componente, documentar o problema que o exige e seu teste discriminante antes de expandir B0.
 
 O propósito é eliminar decisões improvisadas e repasses repetidos, não aumentar documentos sem consumidores. Toda regra normativa tem um dono; templates e resumos apontam para ele.
+
+## Nota de rota — 06/10/2026
+
+A hierarquia registrada em §1.2 descreve a baseline daquela campanha. A manutenção
+corrente segue AGENTS.md e docs/ai, conforme ADR-0025; esta nota não altera os
+resultados, autorizações, templates não executáveis ou demais decisões da campanha.

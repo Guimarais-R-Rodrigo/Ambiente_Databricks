@@ -1,7 +1,10 @@
 # Template — prompt de auditoria de sprint
 
-Toda sprint fecha com uma rodada em **aba nova**, sem o contexto de quem
-executou. Este arquivo monta o prompt.
+Este modelo prepara auditoria em sessão nova. Declare antes o modo: contexto
+completo ou cego. O rótulo cego exige corpus permitido e estado inicial comprovados;
+uma aba nova, sozinha, não prova ausência de histórico ou memória. Se houver
+contaminação, registre-a e continue como revisão de contexto completo, sem trocar
+o resultado observado. O contrato comum está em `docs/ai/rules/colaboracao.md`.
 
 ## Por que em sessão sem contexto
 
@@ -44,6 +47,11 @@ CONTEXTO
 - Repositório: <caminho>
 - O que a sprint entregou: <uma frase, sem justificativas>
 - Arquivos no escopo: <lista ou pasta>
+- Branch, SHA e tree: <identificadores conferidos>
+- Modo, corpus permitido/proibido e estado inicial da sessão: <evidência>
+- Nível A0–A3 e independência real: <origens e limitações>
+- Efeitos autorizados: <somente leitura; experimentos sintéticos temporários>
+- Este template não concede acesso, execução, publicação ou ampliação de permissão.
 
 O QUE VOCÊ PODE LER
 <pastas liberadas>
@@ -64,7 +72,7 @@ T3 — Teste toda afirmação técnica; confirmada, contradita ou não testável
 T4 — Divergência: onde dois executores competentes produziriam resultados
      diferentes? Cite o trecho, as duas leituras e a diferença no arquivo final.
 T5 — O que a sprint não menciona e vai atingir.
-T6 — Confronte com as regras do projeto em .claude/rules/.
+T6 — Confronte com AGENTS.md e as regras pertinentes em docs/ai/rules/.
 <T7+ específicos da sprint>
 
 FORMATO

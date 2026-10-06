@@ -34,7 +34,7 @@ flowchart LR
 ```
 
 Uma pasta por auditoria: `YYYY-MM-DD_<tema>/`, usando
-`.claude/templates/auditoria.md`. Preserve prompts, rodadas, evidência e consenso.
+`docs/ai/templates/auditoria.md`. Preserve prompts, rodadas, evidência e consenso.
 
 ## Classes de defeito que viraram guardas
 

@@ -33,7 +33,7 @@ Data: YYYY-MM-DD · De: <origem> · Para: <destino>
 <o que já foi tentado ou parece seguro, mas não é>
 ```
 
-O template completo está em `.claude/templates/handoff.md`.
+O template completo está em `docs/ai/templates/handoff.md`.
 
 ## Registros
 

@@ -890,3 +890,9 @@ Seis objetos `hub_snippets/ml` recebem README local no contrato 1.0.0: Kaplan–
 
 ### Checkpoint R08 — clusters, anomalias e explicabilidade
 Seis objetos `hub_snippets/ml` recebem README local 1.0.0, com correções exclusivamente didáticas nos notebooks e preservação das APIs. A leva deve fechar em 55/75 operacionais e pausar antes da R09 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R08.md`.
+
+## Nota administrativa de manutenção — 06/10/2026
+
+Os paths de instruções citados acima registram o contexto de cada decisão. Para
+a manutenção corrente, leia AGENTS.md e docs/ai/README.md (ADR-0025). A exceção
+de identidade da paleta em §2.2 continua válida; o histórico não foi reescrito.

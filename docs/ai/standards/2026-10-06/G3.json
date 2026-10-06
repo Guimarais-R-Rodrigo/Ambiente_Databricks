@@ -1,0 +1,10 @@
+{
+  "id": "G3",
+  "url": "https://support.google.com/gemini/answer/16972047?hl=en",
+  "title": "Organize your projects with notebooks in Gemini Apps",
+  "reviewed_at_utc": "2026-10-06T18:45:00Z",
+  "research_provenance": "Approved implementation plan official-source research, verified 2026-10-06; not a native client test.",
+  "paraphrase": "Notebook settings instructions and sources distinct from CLI loader.",
+  "upstream_content_hash": null,
+  "upstream_hash_limitation": "No stable raw-page digest retained by web retrieval; this digest identifies the authored source summary only."
+}

@@ -1,0 +1,985 @@
+{
+  "scope": "Whole tracked-plus-new text inventory; exact-line exceptions, no blanket historical path exclusions",
+  "matches": [
+    {
+      "path": "CHANGELOG.md",
+      "line": 2368,
+      "line_sha256": "69b65f61cd7e79e70f3bbae9d0f93acae2d2694ff7daa4e43adc89df8cb4628c",
+      "legacy_source": ".claude/context/ambiente-free.md",
+      "replacement": "docs/ai/context/ambientes.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "3. (Claude) `.claude/context/ambiente-free.md`: a cota de 01/09 vira fato datado e"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 2459,
+      "line_sha256": "3c8e9ada1eb8c5ce9bc5c8f7f7d8c09a0df77647d050b370980a3f4957b8fe16",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "   `.claude/rules/docs-e-readmes.md` agora define propriedade do assunto,"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 2736,
+      "line_sha256": "622ea8e9dcfca6d2aefa0338084b37261a80ad2ae87b927adb3dec204b1e57fd",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "1. (Claude) `.claude/rules/free-vs-trabalho.md` ganhou a linha e a seção sobre o"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 3458,
+      "line_sha256": "b01da005e0b249679661013ba2b10bc099385eda95faf59d55de4671ec5d8f96",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "2. (Claude) `.claude/rules/free-vs-trabalho.md`: a linha \"bibliotecas ML"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 3539,
+      "line_sha256": "2a4c9fdef961bb848e98d19de232a82deeb6f8182bd3c3174145cace8ac2d9f3",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  mudou. Linha nova na matriz de `.claude/rules/free-vs-trabalho.md`, com a"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 3681,
+      "line_sha256": "5ed6fe5eeb8bce1a72ba90c80eb98edabfcb110e5b9078f7e0a64b3f6db98223",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "2. (Claude) `.claude/CLAUDE.md` mandava \"não invente que já existem\" sobre"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 3758,
+      "line_sha256": "285e9e9c159068589c3cf0eff8e0cc830700e970209ac21ed2a92ba1461ab2a4",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "   `.claude/rules/genie-code-oficial.md` com a inversão que importa: o arquivo é"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 4210,
+      "line_sha256": "3b49e0c37b5690223a60e3d2803f5611e213e11f649ad5648b60d986ae63e320",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "2. (Claude) `.claude/skills/README.md`: explicita a distinção entre as duas"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 4331,
+      "line_sha256": "c2ba68417544be39d7c3ac2f44defff37acc9efaf2e0227721d4762bc8e3024e",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "3. (Claude) `.claude/rules/free-vs-trabalho.md`: nova matriz de diferenças de"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 4364,
+      "line_sha256": "5f6888731981645392d15697ce6e06717506da37ba3f97401b4045ba29faf795",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "   capacidade inexistente na plataforma (`.claude/rules/genie-code-oficial.md`)."
+    },
+    {
+      "path": "CHANGELOG.md",
+      "line": 4470,
+      "line_sha256": "eb132f0944e6dd63322aae88a6c952fccefae8f24f05447f09f30b55ed37952b",
+      "legacy_source": ".claude/context/ambiente-free.md",
+      "replacement": "docs/ai/context/ambientes.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "2. (Claude) `.claude/context/ambiente-free.md` atualizado com o novo estado do"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 28,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 45,
+      "line_sha256": "5a0612127cc4cbb3e9dce8b2fd48a735c3f3806a0a89662f7e9c6da07998e4d2",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [README.md, .claude/rules/fonte-de-verdade.md]"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 104,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 121,
+      "line_sha256": "18489602bec49efffff12720a3202f746b41b79755b0aa00995fd576b3f7e6ca",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 296,
+      "line_sha256": "4d360d512775d807b97689afd0b0c369c16c6704f979a0cf8b4c0d4ec9ee16eb",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/hub_scripts/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 334,
+      "line_sha256": "833f8aad36e7fa7545fd99c87f3e87f5a54f3336fc5f797457ec147d7aa51389",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/skills/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 375,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "PLANO_HUB.md",
+      "line": 614,
+      "line_sha256": "2d792709ad83cb7e6debcf34ecc0366dde6302e7cb327e42f7ba4e339dc39ecc",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "Atualização das regras que o plano contraria: `.claude/rules/genie-code-oficial.md`"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 28,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 45,
+      "line_sha256": "5a0612127cc4cbb3e9dce8b2fd48a735c3f3806a0a89662f7e9c6da07998e4d2",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [README.md, .claude/rules/fonte-de-verdade.md]"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 104,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 121,
+      "line_sha256": "18489602bec49efffff12720a3202f746b41b79755b0aa00995fd576b3f7e6ca",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 296,
+      "line_sha256": "4d360d512775d807b97689afd0b0c369c16c6704f979a0cf8b4c0d4ec9ee16eb",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/hub_scripts/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 334,
+      "line_sha256": "833f8aad36e7fa7545fd99c87f3e87f5a54f3336fc5f797457ec147d7aa51389",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "    fact_sources: [ambiente_fonte/.assistant/skills/README.md, .claude/rules/genie-code-oficial.md]"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 375,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim.",
+      "exact_line": "      - .claude/rules/genie-code-oficial.md"
+    },
+    {
+      "path": "docs/ai/compatibility.md",
+      "line": 26,
+      "line_sha256": "e4eecd10402c4735db5605c53f7fd0631430fa9ff1342cd0a126a1f26cb25d97",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "retired_loader_description",
+      "reason": "Explains deliberately removed second bootstrap; does not request loading it.",
+      "exact_line": "  settings para forçar fallback e não mantém .claude/CLAUDE.md concorrente."
+    },
+    {
+      "path": "docs/ai/context/observacoes-2026.md",
+      "line": 12,
+      "line_sha256": "fbc670b264820a6c9606e4194d311a6fed370c005b65341911d91f1a56037c65",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "historical_commit_url",
+      "reason": "Read-only citation of exact baseline content; URL names historical file, not active bootstrap.",
+      "exact_line": "Origem: [C07 na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L15-L86)."
+    },
+    {
+      "path": "docs/ai/context/observacoes-2026.md",
+      "line": 66,
+      "line_sha256": "94f8b54b4f613fe2eadf25f3aaac6666f88a554eaeeb9515a33370e107ee8434",
+      "legacy_source": ".claude/context/ambiente-free.md",
+      "replacement": "docs/ai/context/ambientes.md",
+      "category": "historical_commit_url",
+      "reason": "Read-only citation of exact baseline content; URL names historical file, not active bootstrap.",
+      "exact_line": "Fontes: [C10](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/context/ambiente-free.md#L9-L23)"
+    },
+    {
+      "path": "docs/ai/context/observacoes-2026.md",
+      "line": 67,
+      "line_sha256": "843d67c15bd5b32e83cef80c2ffbbab2b5569dc967a09c85570075a509cb097a",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "historical_commit_url",
+      "reason": "Read-only citation of exact baseline content; URL names historical file, not active bootstrap.",
+      "exact_line": "e [C07](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/free-vs-trabalho.md#L46-L67)."
+    },
+    {
+      "path": "docs/ai/references/databricks-genie-code.md",
+      "line": 110,
+      "line_sha256": "c4982704715045b1fcc2e9f190bf3a360c0636ba2e290626f3e9c56386422cdf",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "historical_commit_url",
+      "reason": "Read-only citation of exact baseline content; URL names historical file, not active bootstrap.",
+      "exact_line": "[controle C08 na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/f2843eafae84d44cd751f307101de84f11981bd7/.claude/rules/genie-code-oficial.md#L33-L37)."
+    },
+    {
+      "path": "docs/auditoria/2026-08-14_biblioteca-pit-join/01_contexto.md",
+      "line": 111,
+      "line_sha256": "b09235061b009740da7d3475ffdbd3d9e0e49c4b8d241785fb1d8687130bc118",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "pela documentação oficial, conforme `.claude/rules/genie-code-oficial.md`."
+    },
+    {
+      "path": "docs/auditoria/2026-08-15_documentacao-rodada2/01_rodada_e_consenso.md",
+      "line": 91,
+      "line_sha256": "9ec54fec5c212aabb0b0efddd9408a61abbd6f7eb182c14114f7eac87fd2e017",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "registrada em `.claude/rules/genie-code-oficial.md` com a inversão que importa:"
+    },
+    {
+      "path": "docs/auditoria/2026-08-18_consistencia-e-didatica/01_rodada_e_consenso.md",
+      "line": 6,
+      "line_sha256": "332885381c10b487a5fddc12da085d9934be8b3146858a12ddff56d4e5329f12",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  `.claude/rules/docs-e-readmes.md`, consistência residual entre artefatos, e o"
+    },
+    {
+      "path": "docs/auditoria/2026-08-19_leitura-contexto-longo/01_rodada_e_consenso.md",
+      "line": 37,
+      "line_sha256": "8dde743daade7b6dc2bb19a188e9412292eea3f9af1c54486a5573c21392e088",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `.claude/rules/docs-e-readmes.md` | *\"PT-BR na prosa; inglês em código, nomes técnicos e identificadores\"* |"
+    },
+    {
+      "path": "docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md",
+      "line": 67,
+      "line_sha256": "496a5f1164e802a80dee48f014387e11a2ff9a8cec06e99725f6f33ede48da35",
+      "legacy_source": ".claude/context/perfil-usuario.md",
+      "replacement": "docs/ai/context/projeto.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  `.claude/context/perfil-usuario.md:9`; um template congelado em"
+    },
+    {
+      "path": "docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md",
+      "line": 88,
+      "line_sha256": "5d2c48cdb1ef37c8b8a008604a97a4e62173ded25b53c7d28b6889d81f7faddd",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- **É:** `.claude/rules/genie-code-oficial.md:25-29` e"
+    },
+    {
+      "path": "docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md",
+      "line": 307,
+      "line_sha256": "50bf877e3e179a6d0354ffb7ba5580a2d0b2e4ba79c11d6187744a8f03707297",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- **Onde:** `.claude/rules/free-vs-trabalho.md:11` e"
+    },
+    {
+      "path": "docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md",
+      "line": 308,
+      "line_sha256": "feafb8945906692ec403e270949377776c7f0138b62c4e4cac62a88ec11013a1",
+      "legacy_source": ".claude/context/ambiente-free.md",
+      "replacement": "docs/ai/context/ambientes.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  `.claude/context/ambiente-free.md:6-7` contra `CLAUDE.md` e ADR-0005."
+    },
+    {
+      "path": "docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md",
+      "line": 360,
+      "line_sha256": "492a0ff27e78e5b1d4dbebe6c9d7d001e9bd18eeda07af2a7041b7a4d3858e37",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- **Onde:** `.claude/rules/docs-e-readmes.md`; ADR-0003, 0007 e 0008;"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/CAMINHOS.json",
+      "line": 3,
+      "line_sha256": "c6f59119f83ece65c9675d1b3a66b48f6f0b36a2bb6d79286adea5ac2c312fab",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/CAMINHOS.json",
+      "line": 5,
+      "line_sha256": "2b540d84c4de1a2f438ef5602508ace816064d8c1cb79bbed7825814a2d38692",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"canonical_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/CAMINHOS.json",
+      "line": 12,
+      "line_sha256": "e779962f2a78f48f0734cebb88d665846cb928943d50b4fc41a93f25e204e1a2",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"final_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.csv",
+      "line": 2,
+      "line_sha256": "13660b20aeb1864fa2f748de43372c684d257be2f761123a3f065a8bf5bea635",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "S1-0001,R0001,S1,CORRIGIDA_VERIFICADA,.claude/skills/README.md,Cinco SKILL.md existentes tornam-se navegáveis; rota de certificação local explícita.,197fa5ad67c4239fc9e1354bba4aa955aa52f14d,domain_core.json,/coverage/0/recommendation"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 7,
+      "line_sha256": "e779962f2a78f48f0734cebb88d665846cb928943d50b4fc41a93f25e204e1a2",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"final_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 12,
+      "line_sha256": "d10ec4eaabbeb971b91941c759e1e4d02c88b7238dfc5e9ddbb633af3fa1b96c",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        \"final_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 18,
+      "line_sha256": "d10ec4eaabbeb971b91941c759e1e4d02c88b7238dfc5e9ddbb633af3fa1b96c",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        \"final_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 21887,
+      "line_sha256": "9185304acfcc0072d6a4f60dfda9b0df945a3fc33c29be0a08fc1762da800a3e",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "          \"original_excerpt\": \"# TRES REGRAS QUE CUSTARAM UM AMBIENTE QUEBRADO:\\n#\\n# 1. Instale por notebook, so o que aquele objeto usa. Instalar pmdarima, shap\\n#    e umap-learn na MESMA sessao derruba o `import numpy` do proprio notebook\\n#    (\\\"numpy.dtype size changed... Expected 96 from C header, got 88\\\").\\n#    Isoladas, as tres funcionam.\\n# 2. Tres exigem pin; as outras nove resolvem sozinhas. Sem o pin, `shap` arrasta\\n#    numpy 2.4.6 por cima do 1.23.5 do runtime, e o que quebra sao as extensoes C\\n#    ja compiladas contra o numpy antigo:\\n#      ValueError: numpy.dtype size changed, may indicate binary incompatibility.\\n#      Expected 96 from C header, got 88 from PyObject\\n#    Verificado em sessao limpa, com `%pip install shap` e mais nada.\\n#    As regras 1 e 2 compartilham o SINTOMA; o que as separa e a causa — ali sao\\n#    tres pacotes brigando entre si, aqui e um pacote trocando o numpy do\\n#    ambiente. O diagnostico pela mensagem sozinha nao distingue os dois.\\n# 3. Nao fixe numpy/pandas por precaucao. O aviso anterior deste arquivo mandava\\n#    fixar numpy==1.26.4 sempre; o runtime hoje traz 1.23.5, e o pin gera\\n#    conflito em vez de evitar. A excecao esta anotada no pmdarima.\\n#\\n# Registro anterior, de 2026-08-14, dizia que instalar sem fixar versao derrubava\\n# o kernel e que `%pip` antes do primeiro comando Spark abortava a execucao.\\n# Nenhuma das duas coisas se reproduziu hoje. O registro nao estava errado:\\n# descrevia o runtime daquele dia. Reexecute antes de confiar neste arquivo —\\n# ver `.claude/rules/free-vs-trabalho.md`.\""
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 21904,
+      "line_sha256": "83013a040394828365c1476c331664821fc643c04bc546848f77e2d4826e668c",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"source_action\": \"{\\\"start_line\\\": 26, \\\"end_line\\\": 49, \\\"exact_text\\\": \\\"# TRES REGRAS QUE CUSTARAM UM AMBIENTE QUEBRADO:\\\\n#\\\\n# 1. Instale por notebook, so o que aquele objeto usa. Instalar pmdarima, shap\\\\n#    e umap-learn na MESMA sessao derruba o `import numpy` do proprio notebook\\\\n#    (\\\\\\\"numpy.dtype size changed... Expected 96 from C header, got 88\\\\\\\").\\\\n#    Isoladas, as tres funcionam.\\\\n# 2. Tres exigem pin; as outras nove resolvem sozinhas. Sem o pin, `shap` arrasta\\\\n#    numpy 2.4.6 por cima do 1.23.5 do runtime, e o que quebra sao as extensoes C\\\\n#    ja compiladas contra o numpy antigo:\\\\n#      ValueError: numpy.dtype size changed, may indicate binary incompatibility.\\\\n#      Expected 96 from C header, got 88 from PyObject\\\\n#    Verificado em sessao limpa, com `%pip install shap` e mais nada.\\\\n#    As regras 1 e 2 compartilham o SINTOMA; o que as separa e a causa — ali sao\\\\n#    tres pacotes brigando entre si, aqui e um pacote trocando o numpy do\\\\n#    ambiente. O diagnostico pela mensagem sozinha nao distingue os dois.\\\\n# 3. Nao fixe numpy/pandas por precaucao. O aviso anterior deste arquivo mandava\\\\n#    fixar numpy==1.26.4 sempre; o runtime hoje traz 1.23.5, e o pin gera\\\\n#    conflito em vez de evitar. A excecao esta anotada no pmdarima.\\\\n#\\\\n# Registro anterior, de 2026-08-14, dizia que instalar sem fixar versao derrubava\\\\n# o kernel e que `%pip` antes do primeiro comando Spark abortava a execucao.\\\\n# Nenhuma das duas coisas se reproduziu hoje. O registro nao estava errado:\\\\n# descrevia o runtime daquele dia. Reexecute antes de confiar neste arquivo —\\\\n# ver `.claude/rules/free-vs-trabalho.md`.\\\", \\\"action\\\": \\\"Retirar narrativa de ambiente quebrado, regras anteriores e comparação entre dias; preservar riscos concretos de incompatibilidade binária e dependências combinadas.\\\", \\\"user_facing_replacement\\\": \\\"Combinações de NumPy e extensões compiladas podem falhar por ABI. Use um conjunto de versões testado para o ambiente alvo; não atualize NumPy/pandas preventivamente nem combine todos os opcionais em uma sessão sem validação.\\\", \\\"destination\\\": \\\"docs/sprints/readmes_objetos/, como evidência ou registro de manutenção do exemplo; fora do pacote de uso.\\\", \\\"url\\\": \\\"https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt#L26-L49\\\"}\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 35051,
+      "line_sha256": "7f48627239f36cd4bcf2d4c5b4d10a05141853b74ec5193b1fee8d046b59f546",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"action\": \"{\\\"line_start\\\": 113, \\\"line_end\\\": 142, \\\"exact_excerpt\\\": \\\"# MAGIC ```text\\\\n# MAGIC ⚠️ NÃO EXECUTADO no laboratório\\\\n# MAGIC\\\\n# MAGIC O que rodaria : run_governado(...) com parametros, metricas e modelo\\\\n# MAGIC Por que não   : AnalysisException: [CONFIG_NOT_AVAILABLE.WITHOUT_SUGGESTION]\\\\n# MAGIC                 Configuration spark.mlflow.modelRegistryUri is not available.\\\\n# MAGIC                 `mlflow.start_run` instancia um MlflowClient, que resolve o\\\\n# MAGIC                 registry URI lendo essa config da sessão Spark. No\\\\n# MAGIC                 serverless, o Spark Connect recusa devolvê-la, e a exceção\\\\n# MAGIC                 acontece na ABERTURA do bloco — nenhum registro chega a ser\\\\n# MAGIC                 tentado.\\\\n# MAGIC Onde verificar: .claude/rules/free-vs-trabalho.md, matriz de runtime\\\\n# MAGIC O que falta   : compute clássico, ou uma versão do MLflow que não leia essa\\\\n# MAGIC                 config. Não é ajustável pelo helper.\\\\n# MAGIC ```\\\\n# MAGIC\\\\n# MAGIC **Como ler.** É impedimento de runtime, não de escopo: a biblioteca não\\\\n# MAGIC inicializa aqui. A célula acima captura a exceção em vez de escondê-la,\\\\n# MAGIC então o notebook continua sendo executável e se auto-verifica. Em outro runtime, inclusive clássico, execute novamente: o sucesso depende do tracking/configuração vigentes.\\\\n# MAGIC\\\\n# MAGIC **E há um detalhe que vale mais que o erro em si.** Este mesmo caminho foi\\\\n# MAGIC testado no laboratório em **14/08/2026** e passou:\\\\n# MAGIC `docs/testes/spark/resultados/` registra `mlflow_run.completo` como\\\\n# MAGIC `\\\\\\\"run completo aceito\\\\\\\"`. Três dias depois, no mesmo tipo de compute, ele\\\\n# MAGIC não abre. O registro de 14/08 não está errado — descreve o que era verdade\\\\n# MAGIC então. O que mudou foi o runtime do Free, por baixo, sem aviso.\\\\n# MAGIC\\\\n# MAGIC A lição é sobre método: **\\\\\\\"foi testado\\\\\\\" tem data de validade em ambiente\\\\n# MAGIC gerenciado.** Um teste de três dias atrás não é garantia de hoje, e é por\\\\n# MAGIC isso que a verificação vale mais que o registro dela.\\\", \\\"short_excerpt\\\": \\\"# MAGIC ```text\\\", \\\"replacement_text\\\": \\\"Se o registro falhar por configuração do tracking, anote a exceção e confira a configuração/versionamento do runtime. Não conclua que todo serverless ou todo compute clássico tem o mesmo suporte. Uma falha após abrir o run pode deixar artefatos parciais; consulte o backend antes de repetir. O histórico de ensaios está no relatório técnico vinculado.\\\", \\\"action\\\": \\\"realocar histórico e reescrever para o usuário\\\", \\\"relocate_to\\\": \\\"docs/sprints/readmes_objetos/RELATORIO_R09.md\\\", \\\"destination_url\\\": \\\"https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R09.md\\\", \\\"evidence_url\\\": \\\"https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/exemplo_mlflow_run.py#L113-L142\\\"}\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 35055,
+      "line_sha256": "cbf628536a7f4f13eeca709f21ec4e4a724dbb298069fa6c85be57acf6e31b16",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"source_action\": \"{\\\"line_start\\\": 113, \\\"line_end\\\": 142, \\\"exact_excerpt\\\": \\\"# MAGIC ```text\\\\n# MAGIC ⚠️ NÃO EXECUTADO no laboratório\\\\n# MAGIC\\\\n# MAGIC O que rodaria : run_governado(...) com parametros, metricas e modelo\\\\n# MAGIC Por que não   : AnalysisException: [CONFIG_NOT_AVAILABLE.WITHOUT_SUGGESTION]\\\\n# MAGIC                 Configuration spark.mlflow.modelRegistryUri is not available.\\\\n# MAGIC                 `mlflow.start_run` instancia um MlflowClient, que resolve o\\\\n# MAGIC                 registry URI lendo essa config da sessão Spark. No\\\\n# MAGIC                 serverless, o Spark Connect recusa devolvê-la, e a exceção\\\\n# MAGIC                 acontece na ABERTURA do bloco — nenhum registro chega a ser\\\\n# MAGIC                 tentado.\\\\n# MAGIC Onde verificar: .claude/rules/free-vs-trabalho.md, matriz de runtime\\\\n# MAGIC O que falta   : compute clássico, ou uma versão do MLflow que não leia essa\\\\n# MAGIC                 config. Não é ajustável pelo helper.\\\\n# MAGIC ```\\\\n# MAGIC\\\\n# MAGIC **Como ler.** É impedimento de runtime, não de escopo: a biblioteca não\\\\n# MAGIC inicializa aqui. A célula acima captura a exceção em vez de escondê-la,\\\\n# MAGIC então o notebook continua sendo executável e se auto-verifica. Em outro runtime, inclusive clássico, execute novamente: o sucesso depende do tracking/configuração vigentes.\\\\n# MAGIC\\\\n# MAGIC **E há um detalhe que vale mais que o erro em si.** Este mesmo caminho foi\\\\n# MAGIC testado no laboratório em **14/08/2026** e passou:\\\\n# MAGIC `docs/testes/spark/resultados/` registra `mlflow_run.completo` como\\\\n# MAGIC `\\\\\\\"run completo aceito\\\\\\\"`. Três dias depois, no mesmo tipo de compute, ele\\\\n# MAGIC não abre. O registro de 14/08 não está errado — descreve o que era verdade\\\\n# MAGIC então. O que mudou foi o runtime do Free, por baixo, sem aviso.\\\\n# MAGIC\\\\n# MAGIC A lição é sobre método: **\\\\\\\"foi testado\\\\\\\" tem data de validade em ambiente\\\\n# MAGIC gerenciado.** Um teste de três dias atrás não é garantia de hoje, e é por\\\\n# MAGIC isso que a verificação vale mais que o registro dela.\\\", \\\"short_excerpt\\\": \\\"# MAGIC ```text\\\", \\\"replacement_text\\\": \\\"Se o registro falhar por configuração do tracking, anote a exceção e confira a configuração/versionamento do runtime. Não conclua que todo serverless ou todo compute clássico tem o mesmo suporte. Uma falha após abrir o run pode deixar artefatos parciais; consulte o backend antes de repetir. O histórico de ensaios está no relatório técnico vinculado.\\\", \\\"action\\\": \\\"realocar histórico e reescrever para o usuário\\\", \\\"relocate_to\\\": \\\"docs/sprints/readmes_objetos/RELATORIO_R09.md\\\", \\\"destination_url\\\": \\\"https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R09.md\\\", \\\"evidence_url\\\": \\\"https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/exemplo_mlflow_run.py#L113-L142\\\"}\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/DISPOSICOES.json",
+      "line": 38595,
+      "line_sha256": "bb1e4a8d0e528bfb843828705ee741e4627eeb2caa9c03b9ff2bd064ffb0fe0f",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        \"quote\": \"# GERADO POR tools/render_simulado.py — NÃO EDITAR À MÃO\\n\\nEste diretório é derivado de `ambiente_fonte/`. Qualquer edição manual\\nserá perdida no próximo render. Fonte de verdade: o repositório git\\n(regra `.claude/rules/fonte-de-verdade.md`).\""
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/FONTES_LIDAS.json",
+      "line": 4,
+      "line_sha256": "2b540d84c4de1a2f438ef5602508ace816064d8c1cb79bbed7825814a2d38692",
+      "legacy_source": ".claude/skills/README.md",
+      "replacement": ".agents/skills/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "    \"canonical_path\": \".claude/skills/README.md\","
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S2_MANUAL_CONTEUDO_REALOCADO.md",
+      "line": 1403,
+      "line_sha256": "f30661f2caf9572d49a4b405484932a445b380bef86e88a51a637d9287621cc7",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- [`.claude/rules/docs-e-readmes.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/docs-e-readmes.md)"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S2_MANUAL_CONTEUDO_REALOCADO.md",
+      "line": 1403,
+      "line_sha256": "f30661f2caf9572d49a4b405484932a445b380bef86e88a51a637d9287621cc7",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- [`.claude/rules/docs-e-readmes.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/docs-e-readmes.md)"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S2_MANUAL_CONTEUDO_REALOCADO.md",
+      "line": 1404,
+      "line_sha256": "73cd3d4967f2831773d47132e8c4a72788fd08c5df0c8874559f0d27234f8979",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- [`.claude/rules/genie-code-oficial.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/genie-code-oficial.md)"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S2_MANUAL_CONTEUDO_REALOCADO.md",
+      "line": 1404,
+      "line_sha256": "73cd3d4967f2831773d47132e8c4a72788fd08c5df0c8874559f0d27234f8979",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- [`.claude/rules/genie-code-oficial.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/genie-code-oficial.md)"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S3_CONTEUDO_REALOCADO.md",
+      "line": 668,
+      "line_sha256": "e96f1f72fa2c662dc46c913ca3788c086fb275c1b07d6b55fd7655997a72ba10",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `CLAUDE.md`, `AGENTS.md` e `.claude/CLAUDE.md`: camadas e fluxo de trabalho."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S3_CONTEUDO_REALOCADO.md",
+      "line": 669,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S3_CONTEUDO_REALOCADO.md",
+      "line": 669,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S5_CONTEUDO_REALOCADO.md",
+      "line": 1116,
+      "line_sha256": "c61e5657698b566d1c4635d3ef795394e4c3fde3b2326afbc542bee2bbfb9d63",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "# ver `.claude/rules/free-vs-trabalho.md`."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S5_CONTEUDO_REALOCADO.md",
+      "line": 1545,
+      "line_sha256": "c61e5657698b566d1c4635d3ef795394e4c3fde3b2326afbc542bee2bbfb9d63",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "# ver `.claude/rules/free-vs-trabalho.md`."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/S6_CONTEUDO_REALOCADO.md",
+      "line": 810,
+      "line_sha256": "8ed033ada62e5aed5da7f7a37a9c0b9b5b82c5c62afc9eada43c6d357a71546e",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "# MAGIC Onde verificar: .claude/rules/free-vs-trabalho.md, matriz de runtime"
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/concierge/docs/fontes.md",
+      "line": 12,
+      "line_sha256": "e96f1f72fa2c662dc46c913ca3788c086fb275c1b07d6b55fd7655997a72ba10",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `CLAUDE.md`, `AGENTS.md` e `.claude/CLAUDE.md`: camadas e fluxo de trabalho."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/concierge/docs/fontes.md",
+      "line": 13,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    },
+    {
+      "path": "docs/auditoria/2026-10-06_readmes/concierge/docs/fontes.md",
+      "line": 13,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    },
+    {
+      "path": "docs/decisions/ADR-0001-arquitetura-multi-ia.md",
+      "line": 42,
+      "line_sha256": "66104c5ed006f46d95e78f9b3fc42d7aae2f2d74aba4010fa6113fd00f7b1683",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `README.md` (mapa e ciclo de vida), `.claude/rules/fonte-de-verdade.md`,"
+    },
+    {
+      "path": "docs/decisions/ADR-0002-engine-databricks-genie-hub.md",
+      "line": 46,
+      "line_sha256": "5d0bb6a5cd8173627de461341c4924f735d6fda898d3ae6a64a84c321394c96f",
+      "legacy_source": ".claude/rules/databricks-genie.md",
+      "replacement": "Historical predecessor; see ADR-0005 and docs/ai/README.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  `docs/playbooks/databricks-genie.md`, `.claude/rules/databricks-genie.md`."
+    },
+    {
+      "path": "docs/historico/readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md",
+      "line": 71,
+      "line_sha256": "5c15a915bf4ea79483735e1afa5ac476db261274cb393c9ea9dec2a54d09bfef",
+      "legacy_source": ".claude/templates/changelog-entry.md",
+      "replacement": "docs/ai/templates/changelog-entry.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- Entrada no `CHANGELOG.md` (template `.claude/templates/changelog-entry.md`)."
+    },
+    {
+      "path": "docs/historico/readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md",
+      "line": 92,
+      "line_sha256": "ec5046cdaa0aa07e0f911e29dc708a818d78b142c2d7fb5c1f8f9b91232269ef",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- Camadas e o que é editável: `.claude/rules/fonte-de-verdade.md`"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/EVIDENCIAS_R02.json",
+      "line": 61,
+      "line_sha256": "63f485bdacb4b3ff07036fc1056b6b4bbd809d73d2e7ba771f89e18fd1850d12",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "      \"path\": \".claude/CLAUDE.md\","
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/INTEGRACAO_R02.md",
+      "line": 75,
+      "line_sha256": "9cf945a367edf5460588ba8303d24bda46c08ccf799d501b27b2614a1b26e7d7",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "`.claude/rules/docs-e-readmes.md`, `docs/decisions/README.md`, a proposta"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R01.md",
+      "line": 11,
+      "line_sha256": "bcdd9b830fa2f4c6f3b13b7e4e429213e9670909919344dcb60949ec46f9a4a0",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `.claude/CLAUDE.md` | M | Outra documentação | Roteamento para o novo contrato e para o checkpoint. |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R01.md",
+      "line": 12,
+      "line_sha256": "855c9f2a4376c16c23f962a2cdcca9b1b5226d1b1e833211f9ffbf389e7bc02b",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `.claude/rules/docs-e-readmes.md` | M | Outra documentação | Camada Objeto e regras de autoria sem duplicar o Manual. |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R02.md",
+      "line": 9,
+      "line_sha256": "56849f165caabe32c713e1020dccfa5cd8de60fa84829ec1b96975bdc78806ec",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| M | `.claude/CLAUDE.md` | Navegação atualizada | Rota para pilotos/checkpoint R02, preservando estrutura existente. |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R03A.md",
+      "line": 7,
+      "line_sha256": "2d8f7ff338e1660bc9a0e65246f5fadf908193b3fbdb58f79c4708cbdabf6ba9",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| M | `.claude/rules/docs-e-readmes.md` | Governança/navegação | Estado estável, ratificação e rota para o lote; preservar conteúdo complementar do Concierge. |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_INTEGRACAO_R02.md",
+      "line": 17,
+      "line_sha256": "76cc3a8885e4f4be684a76f46696ad01cf00d16dfe51b1f43f9d82b01feb1205",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `.claude/CLAUDE.md` | M | = | Outra documentação | R01/R02 preservado |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/MATRIZ_INTEGRACAO_R02.md",
+      "line": 18,
+      "line_sha256": "f13457c565dc6e7ade76b53fff931a975695fa6a59e138c4dee00d19f8534903",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `.claude/rules/docs-e-readmes.md` | M | M | Outra documentação | Ajuste/registro da R02-I |"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/PLANO_R00.md",
+      "line": 521,
+      "line_sha256": "ed30e7eec4c4a2096fe6a332528882f301cdc44b14a31bbd35fb3bfdd92fb932",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "Fontes internas principais: `CLAUDE.md`; `.claude/CLAUDE.md`; `.claude/rules/docs-e-readmes.md`; `.claude/rules/multi-llm.md`; `docs/decisions/ADR-0007-catalogo-e-pasta-de-objeto.md`; `docs/decisions/ADR-0010-manual-tecnico-unificado.md`; `ambiente_fonte/.assistant/hub_padroes/readme/template.md`; `ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md`; `ambiente_fonte/.assistant_instructions.md`; trechos pertinentes do Manual e de `tools/validate_assistant.py`; `tools/ci_local.py`; `tools/render_simulado.py`; e a implementação de `train_xgboost`."
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/PLANO_R00.md",
+      "line": 521,
+      "line_sha256": "ed30e7eec4c4a2096fe6a332528882f301cdc44b14a31bbd35fb3bfdd92fb932",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "Fontes internas principais: `CLAUDE.md`; `.claude/CLAUDE.md`; `.claude/rules/docs-e-readmes.md`; `.claude/rules/multi-llm.md`; `docs/decisions/ADR-0007-catalogo-e-pasta-de-objeto.md`; `docs/decisions/ADR-0010-manual-tecnico-unificado.md`; `ambiente_fonte/.assistant/hub_padroes/readme/template.md`; `ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md`; `ambiente_fonte/.assistant_instructions.md`; trechos pertinentes do Manual e de `tools/validate_assistant.py`; `tools/ci_local.py`; `tools/render_simulado.py`; e a implementação de `train_xgboost`."
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/PLANO_R00.md",
+      "line": 521,
+      "line_sha256": "ed30e7eec4c4a2096fe6a332528882f301cdc44b14a31bbd35fb3bfdd92fb932",
+      "legacy_source": ".claude/rules/multi-llm.md",
+      "replacement": "docs/ai/rules/colaboracao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "Fontes internas principais: `CLAUDE.md`; `.claude/CLAUDE.md`; `.claude/rules/docs-e-readmes.md`; `.claude/rules/multi-llm.md`; `docs/decisions/ADR-0007-catalogo-e-pasta-de-objeto.md`; `docs/decisions/ADR-0010-manual-tecnico-unificado.md`; `ambiente_fonte/.assistant/hub_padroes/readme/template.md`; `ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md`; `ambiente_fonte/.assistant_instructions.md`; trechos pertinentes do Manual e de `tools/validate_assistant.py`; `tools/ci_local.py`; `tools/render_simulado.py`; e a implementação de `train_xgboost`."
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/evidencias_r10/aplicar_r10.py",
+      "line": 158,
+      "line_sha256": "020d0eba5a10f254f558873ad1fa654d86f248cc9541fd57980c465340971094",
+      "legacy_source": ".claude/templates/changelog-entry.md",
+      "replacement": "docs/ai/templates/changelog-entry.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        anchor = \"Template: `.claude/templates/changelog-entry.md`.\\n\\n\""
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/evidencias_r11/finalizar_r11.py",
+      "line": 41,
+      "line_sha256": "3b5e80df9bd2f80fa87d3a9731ca4cffdef582a40cd49a2168eaee86d0902769",
+      "legacy_source": ".claude/templates/changelog-entry.md",
+      "replacement": "docs/ai/templates/changelog-entry.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "  anchor='Template: `.claude/templates/changelog-entry.md`.\\n\\n'; entry=h+'\\n\\n- Documenta os nove Hub Prompts restantes no contrato 1.0.0.\\n- Preserva os nove briefings e limita notebooks a backlinks/erratas Markdown declaradas.\\n- Fecha `pending` e muda o controle para `phase=complete`; meta estrutural 75/75 sujeita ao validador.\\n- Sem publicação, homologação Databricks/Genie Code, auditoria independente, merge antecipado ou encerramento das etapas posteriores.\\n\\n'; write(ch,ct.replace(anchor,anchor+entry,1))"
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/evidencias_r12/registrar_r12.py",
+      "line": 54,
+      "line_sha256": "020d0eba5a10f254f558873ad1fa654d86f248cc9541fd57980c465340971094",
+      "legacy_source": ".claude/templates/changelog-entry.md",
+      "replacement": "docs/ai/templates/changelog-entry.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        anchor = \"Template: `.claude/templates/changelog-entry.md`.\\n\\n\""
+    },
+    {
+      "path": "docs/sprints/readmes_objetos/evidencias_r13/registrar_r13.py",
+      "line": 102,
+      "line_sha256": "020d0eba5a10f254f558873ad1fa654d86f248cc9541fd57980c465340971094",
+      "legacy_source": ".claude/templates/changelog-entry.md",
+      "replacement": "docs/ai/templates/changelog-entry.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "        anchor = \"Template: `.claude/templates/changelog-entry.md`.\\n\\n\""
+    },
+    {
+      "path": "docs/sprints/sistema_temas/V01/LEITURAS_E_DEPENDENCIAS.md",
+      "line": 28,
+      "line_sha256": "4113b58728b0f437d9b794375e4510dab0ef21441f823d390a6a14dddf06b696",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| `AGENTS.md`, `CLAUDE.md`, `.claude/CLAUDE.md`, regras e templates | Autoria, fonte única, proteção de dados, hierarquia documental e ADR. |"
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/01_MANDATO_DECISOES.md",
+      "line": 15,
+      "line_sha256": "9f99e17a430a25cea1d6a210089adba6a5b5ae5deabed4ea12764ee0cba517cc",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "Hierarquia preservada: `CLAUDE.md` → `.claude/CLAUDE.md` → regras pertinentes → decisões aceitas → especificação desta campanha → pacote executável de cada skill. `AGENTS.md` continua adapter fino. O novo adendo explicita a exceção de paralelismo e da divisão de papéis; não reescreve decisões aceitas nem cria autoridade maior que a do usuário."
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/12_FONTES.md",
+      "line": 14,
+      "line_sha256": "28f2252abc7d534f3b4e6aeed143294fdbaaf6ed71777a6d79d9dd325a83161e",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| R02 | `.claude/CLAUDE.md` | Índice operacional e rota de leitura. | READ_AT_BASE |"
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/12_FONTES.md",
+      "line": 15,
+      "line_sha256": "5631d5b04bfaa20ddda4f1c8a9c63681b2b44f5d5a6516f5051c43a6e8ccaa70",
+      "legacy_source": ".claude/rules/multi-llm.md",
+      "replacement": "docs/ai/rules/colaboracao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| R03 | `.claude/rules/multi-llm.md` | Papéis, adaptação de contexto e auditoria multi-IA. | READ_AT_BASE |"
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/12_FONTES.md",
+      "line": 16,
+      "line_sha256": "c7a154a3242729f2a555706f8d7b73e5a11326ff2d60f7ef3e34acb362ea6285",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "| R04 | `.claude/rules/docs-e-readmes.md` | Documento dono, estados verificáveis, ADR aceito e linguagem. | READ_AT_BASE |"
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/FONTES.json",
+      "line": 30,
+      "line_sha256": "63f485bdacb4b3ff07036fc1056b6b4bbd809d73d2e7ba771f89e18fd1850d12",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "      \"path\": \".claude/CLAUDE.md\","
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/FONTES.json",
+      "line": 38,
+      "line_sha256": "2b895aad8f85a45f45a10d074f377990d8f20491f5a667fa4373f8ff6b4077df",
+      "legacy_source": ".claude/rules/multi-llm.md",
+      "replacement": "docs/ai/rules/colaboracao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "      \"path\": \".claude/rules/multi-llm.md\","
+    },
+    {
+      "path": "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/FONTES.json",
+      "line": 46,
+      "line_sha256": "7d349a02ce4905bb4934f94a3092fb7446f1ff2470836b07d1eaf75251cc7319",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "      \"path\": \".claude/rules/docs-e-readmes.md\","
+    },
+    {
+      "path": "docs/sprints/sprint-2-renomeacao.md",
+      "line": 108,
+      "line_sha256": "d7207d1376633cc384e4cfd010ac2953d6755935d545df20883332926b4e818c",
+      "legacy_source": ".claude/rules/genie-code-oficial.md",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "- `.claude/rules/genie-code-oficial.md` e `rules/docs-e-readmes.md` definiam `x_`"
+    },
+    {
+      "path": "docs/sprints/sprint-7-ml-nucleo.md",
+      "line": 201,
+      "line_sha256": "710a8fe54e9a0d5963287746444fe5221cf55ef1e4aeab446411229526ac1264",
+      "legacy_source": ".claude/rules/free-vs-trabalho.md",
+      "replacement": "docs/ai/context/ambientes.md + evidência datada",
+      "category": "dated_historical_evidence",
+      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion.",
+      "exact_line": "A lição virou linha na matriz de `.claude/rules/free-vs-trabalho.md`: **\"foi"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
+      "line": 11,
+      "line_sha256": "e96f1f72fa2c662dc46c913ca3788c086fb275c1b07d6b55fd7655997a72ba10",
+      "legacy_source": ".claude/CLAUDE.md",
+      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
+      "category": "archived_prototype_source",
+      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product.",
+      "exact_line": "- `CLAUDE.md`, `AGENTS.md` e `.claude/CLAUDE.md`: camadas e fluxo de trabalho."
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
+      "line": 12,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/fonte-de-verdade.md",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "archived_prototype_source",
+      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
+      "line": 12,
+      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
+      "legacy_source": ".claude/rules/docs-e-readmes.md",
+      "replacement": "docs/ai/rules/documentacao.md",
+      "category": "archived_prototype_source",
+      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product.",
+      "exact_line": "- `.claude/rules/fonte-de-verdade.md` e `.claude/rules/docs-e-readmes.md`: isolamento e hierarquia editorial."
+    }
+  ]
+}

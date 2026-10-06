@@ -700,7 +700,7 @@ da rodada 2 e conclui o gate de roteamento.
 
 ## 8. Referências
 
-- Método e critérios de veredito: `.claude/skills/forward-test-skills/SKILL.md`
+- Método e critérios de veredito: `.agents/skills/forward-test-skills/SKILL.md`
 - Tabela de resultados (preenchida pelo Claude): `template_resultados.md` →
   `resultados/<data>_rodada<N>.md`
 - Se uma skill parecer "defasada" (descrição antiga), faça hard refresh no

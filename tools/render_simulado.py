@@ -43,7 +43,7 @@ MARKER = (
     "# GERADO POR tools/render_simulado.py — NÃO EDITAR À MÃO\n\n"
     "Este diretório é derivado de `ambiente_fonte/`. Qualquer edição manual\n"
     "será perdida no próximo render. Fonte de verdade: o repositório git\n"
-    "(regra `.claude/rules/fonte-de-verdade.md`).\n"
+    "(regra `docs/ai/rules/fontes-e-derivados.md`).\n"
 )
 
 

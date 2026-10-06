@@ -1516,7 +1516,7 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
     """Confere links relativos dos Markdown **fora** da raiz analisada.
 
     `check_markdown` cobre só `--root`. Sem isto, o README da raiz, `docs/` e
-    `.claude/` — que é onde vive a maior parte da documentação de navegação —
+    `docs/ai/` e `.agents/skills/` — documentação de manutenção e instruções —
     ficavam sem verificação de link algum.
     """
     verificados = 0

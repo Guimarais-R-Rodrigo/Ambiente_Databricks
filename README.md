@@ -6,6 +6,8 @@
 
 > **Procedência.** Agent Skills e instruções são mecanismos reconhecidos pela Genie Code. Pastas `hub_*` e skills `hub-*` são implementações e convenções deste projeto; não são produtos institucionais da Databricks.
 
+**Manutenção por IA:** [contrato e rotas de trabalho](docs/ai/README.md), com [compatibilidade e gates pendentes](docs/ai/compatibility.md).
+
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
 **B1:** [escopo A de perfis sintéticos](docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) aceito em 2026-10-01; orquestração Genie, promoção de policy e homologação integral permanecem separadas.
@@ -116,8 +118,8 @@ normas do molde    : 78 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 290 arquivos
 instrucoes         : 12624/20000 caracteres
-repo (identidade)  : 2243 arquivos varridos no repositório editável/derivado
-repo (links)       : 3387 links fora da raiz analisada
+repo (identidade)  : 2304 arquivos varridos no repositório editável/derivado
+repo (links)       : 3583 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)

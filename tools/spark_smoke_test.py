@@ -106,7 +106,7 @@ def run_case_bloqueado(name, fn, motivo, expected_exceptions, message_fragments)
     results[name] = {
         "status": "FAIL",
         "error": f"executou, e deveria estar bloqueado ({motivo}). "
-                 "O runtime mudou: revise `.claude/rules/free-vs-trabalho.md`",
+                 "O runtime mudou: revise `docs/ai/context/ambientes.md`",
     }
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-06 — Arquitetura neutra de instruções de IA
+
+- (Codex) Consolidado AGENTS autocontido, docs/ai e ADR-0025 de supersessão parcial. Preservadas 215 obrigações por trecho dos 22 controles; cinco skills canônicas de manutenção ficam separadas do produto.
+- (Codex) Geradas integrações Claude determinísticas, mantidos shims mínimos por cliente e acrescentados dois gates offline às 12 etapas existentes. Registro oficial distingue documentação de suporte observado; nenhuma permissão ou configuração de usuário foi alterada.
+- (Codex) Revalidadas fontes Databricks e corrigidas negativas obsoletas sem editar runtime. O espelho foi gerado duas vezes em cópia isolada; só o marcador mudou, com os 691 pares de payload preservados.
+- (Codex) Revisão de contexto completo encontrou e corrigiu falhas reais no novo guardião (inventário, frontmatter, recursos, symlinks, caixa, fim de linha e claims). Aceite nativo dos clientes e Windows permanece bloqueado; pacote local não significa publicação, merge ou homologação.
+
 ## 2026-10-06 — Readequação documental: entradas e percurso de uso
 
 - (Codex) Reconciliados os estados e as rotas de manutenção com o histórico Git e a policy vigente, preservando os fechamentos datados e suas falhas. O fluxo local-first separa revisão documental de publicação e execução autorizadas.
@@ -1045,7 +1052,7 @@
 Toda mudança relevante deste projeto é registrada aqui, em entradas curtas, sem
 expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
-entre parênteses. Template: `.claude/templates/changelog-entry.md`.
+entre parênteses. Template: `docs/ai/templates/changelog-entry.md`.
 
 
 ## 2026-09-21 — SE07: corretiva SUP-F04-01/02/03 (Codex)

@@ -126,7 +126,7 @@ assinatura esperada do erro.
 - [Ciclo de vida](../docs/playbooks/ciclo-de-vida.md)
 - [Testes e evidências](../docs/testes/README.md)
 - [Decisões arquiteturais](../docs/decisions/README.md)
-- [Skills operacionais](../.claude/skills/README.md)
+- [Skills operacionais](../.agents/skills/README.md)
 
 ## Escopos e evidência após a revisão
 
@@ -212,3 +212,11 @@ As dependências de validação estão em `requirements-temas-dev.txt`.
 O verificador V01 passa a consumir o schema do padrão do produto e as funções
 do núcleo. Os relatos anteriores não são reclassificados como execução de V02.
 Estado e procedimentos: [V02](../docs/sprints/sistema_temas/V02/README.md).
+
+## Controles de instruções de IA
+
+`python tools/ai_controls.py --check` confere núcleo, rotas, claims, adaptadores e paridade sem escrever ou usar rede.
+`--check --release` exige revisão oficial recente; não certifica sessões nativas.
+`--check --migration-freeze` confere os bytes congelados exclusivamente para a campanha de 06/10/2026.
+`--generate` atualiza somente adaptadores geridos e recusa cópia editada ou arquivo alheio.
+Fontes: [guia](../docs/ai/README.md), [padrões](../docs/ai/standards/README.md).

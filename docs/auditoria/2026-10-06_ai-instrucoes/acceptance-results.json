@@ -1,0 +1,648 @@
+{
+  "schema_version": "1.0",
+  "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+  "implementation_commit": "PENDING_FREEZE",
+  "tests": [
+    {
+      "id": "T01",
+      "sprints": [
+        "S00"
+      ],
+      "positive": "Refs, branch, HEAD/tree e escopo reconciliados antes de editar.",
+      "negative": "HEAD divergente/checkout sujo desconhecido bloqueia o lote; sem reset automático.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "NOT_RUN",
+      "positive_observed": "Remote refs verified read-only; clean authorized f284 baseline; dedicated branch preserves README work.",
+      "negative_observed_or_gap": "Dirty/foreign HEAD guard rehearsal pending.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T02",
+      "sprints": [
+        "S00",
+        "S05"
+      ],
+      "positive": "Inventário protegido e cobertura Git completos, não vazios.",
+      "negative": "Arquivo protegido ausente ou scan vazio reprova; não aceitar zero como êxito.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Nonempty 691 pairs and protected baseline; new files and tampered baseline rejected.",
+      "negative_observed_or_gap": "Mutants in test_ai_controls.py.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T03",
+      "sprints": [
+        "S00"
+      ],
+      "positive": "Cliente, versão/build, OS, superfície, CWD e modo reais registrados.",
+      "negative": "Marca sem produto/versão, acesso presumido ou destino obrigatório ausente bloqueia homologação.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Codex CLI 0.159.2 detected authenticated; Claude/Gemini/Grok absent.",
+      "negative_observed_or_gap": "Missing clients/versions/platforms block native acceptance.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T04",
+      "sprints": [
+        "S01",
+        "S02"
+      ],
+      "positive": "Cada obrigação C01–C22 possui owner/destino/carga/teste; invariantes no núcleo.",
+      "negative": "Remover uma restrição crítica na fixture deve falhar a cobertura/revisão semântica.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "215 excerpt-level obligations checked against exact baseline and target anchors by independent executor reviewer.",
+      "negative_observed_or_gap": "Critical invariant removal rejected in fixture; semantic review is same-origin A0.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T05",
+      "sprints": [
+        "S02",
+        "S06"
+      ],
+      "positive": "Núcleo dentro de alvo 150 linhas/12 KiB ou exceção; orçamento real compatível.",
+      "negative": "Arquivo acima do limite ou marcador final truncado dispara falha/revisão.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "AGENTS 72 lines and 4725 bytes.",
+      "negative_observed_or_gap": "Native effective context/truncation evidence unavailable.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T06",
+      "sprints": [
+        "S02",
+        "S05"
+      ],
+      "positive": "Sem import ou obrigação universal de ler CHANGELOG/sprints/auditorias.",
+      "negative": "Inserir import direto, transitivo ou link com leitura universal exige reprovação.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Only explicit single root Claude/Gemini imports; no universal history import.",
+      "negative_observed_or_gap": "Direct, transitive and universal prose mutants rejected.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T07",
+      "sprints": [
+        "S01",
+        "S05"
+      ],
+      "positive": "Claims têm fonte/data/escopo e gate release usa snapshot atual.",
+      "negative": "Claim sem fonte, data renovada sem revisão ou >30 dias no release bloqueia declaração atual.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "36 DOCUMENTED claims, dated summary snapshots, official sources and bindings.",
+      "negative_observed_or_gap": "Stale, incomplete, date-only, snapshot-drift and unsupported promotion mutants rejected; no native certification.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T08",
+      "sprints": [
+        "S02",
+        "S05"
+      ],
+      "positive": "Contexto sanitizado, acesso/quotas atuais sondados e dados pessoais minimizados.",
+      "negative": "Username/token/path corporativo ou autenticação presumida reprova; logs não retêm segredo.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Neutral contexts separate durable rules, dated observations and current probes; source excerpts are historical evidence.",
+      "negative_observed_or_gap": "Existing hygiene validator and scope review; no secrets or personal settings read into evidence.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T09",
+      "sprints": [
+        "S03"
+      ],
+      "positive": "Exatamente cinco fontes de manutenção válidas e catálogo fiel; nomes/frontmatter/recursos íntegros.",
+      "negative": "Sexta skill fantasma, name divergente, descrição vazia, recurso faltante ou exemplar contado como produto reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Exactly five canonical procedures plus five generated copies, portable frontmatter.",
+      "negative_observed_or_gap": "Ghost skill, duplicate keys, blank/invalid descriptions and missing resources rejected.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T10",
+      "sprints": [
+        "S03"
+      ],
+      "positive": "Skill de validação coincide com CLI/saída/retorno do owner vigente.",
+      "negative": "Contagens antigas promovidas a atuais ou PASS por check inexistente reprova revisão.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "NOT_RUN",
+      "positive_observed": "CLI output and flags compared to owners; final integrated validator required.",
+      "negative_observed_or_gap": "No fabricated PASS-per-check or current counts from historical scope.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T11",
+      "sprints": [
+        "S03",
+        "S06"
+      ],
+      "positive": "Render descreve preflight/destino/extras; preparação segura em clone isolado.",
+      "negative": "Extra alheio, fonte inválida ou --write sem autoridade para substituição bloqueia.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "BLOCKED",
+      "positive_observed": "Isolated renderer ran twice after 692-file preflight; 691 payload pairs equal.",
+      "negative_observed_or_gap": "Missing authority/extras procedural blocking not demonstrated in native client; static instruction assertions do not close this gate.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T12",
+      "sprints": [
+        "S03",
+        "S06"
+      ],
+      "positive": "Publicação distingue plano remoto/execute/verify/--conteudo e parcial.",
+      "negative": "Host incorreto, obsoleto alheio, ausência de autorização ou notebook mal classificado bloqueia; sem remoto real.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "BLOCKED",
+      "positive_observed": "Publisher owner regressions and command help checked; no remote calls.",
+      "negative_observed_or_gap": "Native authorization blocking and actual host identity not tested; remote plan/execute/verify not run.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T13",
+      "sprints": [
+        "S03",
+        "S05"
+      ],
+      "positive": "Forward/replicação preservam evidência de sessão e gates humanos; campanha nova identificada.",
+      "negative": "Converter 42 históricos em 45 PASS ou PENDENTE corporativo em PASS reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Historical forward 14/42 preserved; new campaigns remain NOT_RUN; runbook and human gates explicit.",
+      "negative_observed_or_gap": "Historical fixture/template immutability checked; no fabricated campaign PASS.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T14",
+      "sprints": [
+        "S04"
+      ],
+      "positive": "Geração determinística com fonte/hash/transformação explícita e segunda execução sem diff.",
+      "negative": "Editar corpo/frontmatter de cópia derivada ou omitir recurso faz --check falhar.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "PASS",
+      "positive_observed": "Deterministic generator executed twice; second changed list empty.",
+      "negative_observed_or_gap": "Edited body, changed metadata and missing resource rejected.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T15",
+      "sprints": [
+        "S04",
+        "S05"
+      ],
+      "positive": "Gerador escreve somente destinos geridos; check não escreve.",
+      "negative": "Path traversal, symlink de saída, arquivo alheio ou inventário vazio bloqueia sem mutação.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "PASS",
+      "positive_observed": "Fixed five mappings; ownership and whole-plan preflight; check read-only.",
+      "negative_observed_or_gap": "Traversal, source/destination/ancestor symlinks, foreign outputs, empty map and scan tested.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T16",
+      "sprints": [
+        "S04"
+      ],
+      "positive": "Clone Windows comum e Linux resolve case/LF/UTF-8/espaços sem symlink obrigatório.",
+      "negative": "Nome agents.md, path de caixa errada ou recurso quebrado reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "PLATFORM",
+      "status": "BLOCKED",
+      "positive_observed": "Linux sensitive-case and temporary path with spaces tested; no required symlinks in package.",
+      "negative_observed_or_gap": "No Windows executor/PowerShell available; native checkout on Windows BLOCKED.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T17",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Sessão nova na raiz carrega núcleo correto; não resta política legada concorrente.",
+      "negative": "AGENTS ausente/errado impede aceite; shim sem import efetivo reprova apenas perfil que depende dessa expansão.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Files and expected root bootstrap are structurally verified.",
+      "negative_observed_or_gap": "New native sessions and observed loader diagnostics incomplete.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T18",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Escopo de subdiretório/ancestrais segue contrato do perfil.",
+      "negative": "Regra de pacote irmão ou override ignorado produz falha; sem alterar settings pessoais.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Native precedence cases specified per host.",
+      "negative_observed_or_gap": "Root/subdirectory/ancestor native comparison not observed.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T19",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Imports e coexistência AGENTS/CLAUDE/GEMINI funcionam sem duplicação não explicada.",
+      "negative": "Import quebrado, ciclo, profundidade fora do limite ou família CLAUDE bloqueando fallback reprova o modo.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Exact root shims and static imports verified; no duplicate secondary Claude bootstrap.",
+      "negative_observed_or_gap": "Native coexistence/import expansion and mode-specific behavior not observed across required clients.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T20",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Grok Build mostra AGENTS nativo e regras compat efetivas; shim aceito somente com evidência.",
+      "negative": "Supor @import/dedup sem prova ou regra legada inesperada bloqueia; não criar GROK.md fictício.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "GROK_BUILD",
+      "status": "BLOCKED",
+      "positive_observed": "Grok native AGENTS documentation retained; no invented GROK.md or duplicate .grok skills.",
+      "negative_observed_or_gap": "Grok absent; grok inspect and behavioral probes BLOCKED.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T21",
+      "sprints": [
+        "S03",
+        "S04",
+        "S06"
+      ],
+      "positive": "Cinco skills aparecem uma vez por nome; positivo/negativo/acionamento explícito corretos.",
+      "negative": "Cópia Claude+Grok duplicada, ativação fora do escopo ou recurso indisponível reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Five source/adapter names and safe positive/negative/prerequisite cases documented.",
+      "negative_observed_or_gap": "Actual native skill discovery/activation per client is not proved by static tests.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T22",
+      "sprints": [
+        "S02",
+        "S06"
+      ],
+      "positive": "Auditoria cega usa corpus permitido e sessão inicial comprovada.",
+      "negative": "Histórico proibido pré-carregado invalida rótulo cego; revisão pode continuar como contexto completo.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Templates define initial corpus and contamination handling.",
+      "negative_observed_or_gap": "This implementation review is context-full, same-origin A0; no blind/native session claim.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T23",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Reinício, retomada e compactação suportadas preservam/restauram regras críticas.",
+      "negative": "Arquivo novo em sessão antiga apresentado como já recarregado reprova; exigir reinício conforme host.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Restart/resume/compaction cases specified.",
+      "negative_observed_or_gap": "No observed native session lifecycle trial.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T24",
+      "sprints": [
+        "S01",
+        "S03",
+        "S06"
+      ],
+      "positive": "Operações fora do escopo continuam bloqueadas pela autorização/controle real.",
+      "negative": "Prompt/skill/template pedindo publicação, exclusão ou concessão de acesso não cria permissão.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "No permission fields, settings, credentials or external writes added; independent effects review.",
+      "negative_observed_or_gap": "Text and fixtures do not prove client sandbox/approval refusal; native behavioral gate BLOCKED.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T25",
+      "sprints": [
+        "S01",
+        "S06"
+      ],
+      "positive": "Conflitos de segurança, fonte e instrução são declarados e escalam decisão.",
+      "negative": "Escolher variante mais permissiva ou dizer que texto altera ACL reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "Four conflict types and stop-dependent-work procedure documented.",
+      "negative_observed_or_gap": "Native conflict behavior not exercised.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T26",
+      "sprints": [
+        "S02",
+        "S05",
+        "S07"
+      ],
+      "positive": "Histórico/ADR/campanhas e modelos não executáveis preservados semanticamente.",
+      "negative": "Substituição global 75/42, reescrita de evidência ou true em autorização de template reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "ADR0001, historical AGENTS template, forward scope and non-executable templates protected; narrow administrative notes preserve old bodies.",
+      "negative_observed_or_gap": "Freeze rejects historical/template mutations; no blanket count replacement.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T27",
+      "sprints": [
+        "S04",
+        "S05"
+      ],
+      "positive": "Links, imports, strings e consumidores vivos resolvem com caixa correta.",
+      "negative": "Path legado em string ativa, âncora ausente ou link para documento errado existente reprova revisão.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "Whole tracked/new text scan; exact-line exceptions distinguish history and frozen fact_sources.",
+      "negative_observed_or_gap": "Live legacy, wrong-case, missing anchor/image and stale exception mutants rejected; whole-repo validator checks ordinary links.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T28",
+      "sprints": [
+        "S05"
+      ],
+      "positive": "Gate novo é aditivo, offline e inclui arquivos novos; todas as fixtures falham pelo motivo esperado.",
+      "negative": "Remover teste antigo, auto-instalar/rede no check ou fixture maliciosa que passa reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "PASS",
+      "positive_observed": "Original 12 CI stages retained; two offline stages appended.",
+      "negative_observed_or_gap": "54 synthetic tests include expected failure reasons; no installation/network/model call in gate.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T29",
+      "sprints": [
+        "S06"
+      ],
+      "positive": "Pacote/contexto de chat explicita branch/SHA/hash/data e conteúdo recuperável.",
+      "negative": "Snapshot velho, SHA errado, arquivo faltante ou connector sem prova de ref bloqueia alegação de conformidade.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CHAT",
+      "status": "BLOCKED",
+      "positive_observed": "Manual context package will bind branch/SHA/file hashes.",
+      "negative_observed_or_gap": "No chat upload or retrieved-content trial; consumer settings/accounts unchanged.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T30",
+      "sprints": [
+        "S00",
+        "S05",
+        "S07"
+      ],
+      "positive": "Payload de produto, policy, contratos, schemas/manifests e instrução irmã inalterados.",
+      "negative": "Qualquer delta fora da exceção do marcador bloqueia, mesmo se Markdown.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "PASS",
+      "positive_observed": "691 source/mirror pairs and protected bytes frozen against baseline.",
+      "negative_observed_or_gap": "One-side/both-side mutation, added protected file, hash-manifest tampering rejected.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T31",
+      "sprints": [
+        "S05"
+      ],
+      "positive": "Marcador atualizado pelo gerador isolado; payload continua idêntico.",
+      "negative": "Edição manual de derivado ou limpeza de extras no checkout real sem escopo reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "PASS",
+      "positive_observed": "Marker generated by real renderer in isolated copy, only marker copied back; payload identical.",
+      "negative_observed_or_gap": "No manual marker edit; destination extras absent in actual preflight.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T32",
+      "sprints": [
+        "S05",
+        "S07"
+      ],
+      "positive": "Validator e suítes existentes afetadas executados; agregado registrado quando disponível.",
+      "negative": "Dependência ausente, etapa skip/FAIL ou resultado de outro SHA não vira PASS global.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "NOT_RUN",
+      "positive_observed": "Baseline 12 stages PASS; final candidate 14 stages pending.",
+      "negative_observed_or_gap": "Existing skips remain explicitly recorded; no full Databricks/Spark/client runtime claim.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T33",
+      "sprints": [
+        "S06",
+        "S07"
+      ],
+      "positive": "Handoff reproduz objetivo/base/escopo/resultados/limites sem conversa anterior.",
+      "negative": "Link privado inacessível, evidência sem SHA ou pendência sem dono impede fechamento.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "ALL",
+      "status": "NOT_RUN",
+      "positive_observed": "Manual delivery instructions and exact freeze package pending independent reconstruction.",
+      "negative_observed_or_gap": "Self-contained content and blocked owners must be checked before closing local delivery.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T34",
+      "sprints": [
+        "S04",
+        "S06"
+      ],
+      "positive": "Compatibilidade Claude/Grok não ativa hook/plugin/MCP/permissão inesperada.",
+      "negative": "Campo allowed-tools ignorado ou compat hook com efeito potencial bloqueia até revisão e autorização; nenhum efeito destrutivo real.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CLIENT",
+      "status": "BLOCKED",
+      "positive_observed": "No hooks/plugins/MCP/settings/allowed-tools activated by migration.",
+      "negative_observed_or_gap": "Claude/Grok effective permissions and compatibility absent; native gate BLOCKED.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T35",
+      "sprints": [
+        "S07"
+      ],
+      "positive": "Rollback ensaiado restaura núcleo/adaptadores/rotas coerentes e preserva trabalho alheio.",
+      "negative": "Restaurar só AGENTS deixando loader/skills quebrados ou usar reset destrutivo reprova.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "LOCAL",
+      "status": "NOT_RUN",
+      "positive_observed": "Rollback rehearsal on disposable clone pending.",
+      "negative_observed_or_gap": "Must restore complete migration and preserve unrelated work; commands alone are insufficient.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    },
+    {
+      "id": "T36",
+      "sprints": [
+        "S07"
+      ],
+      "positive": "Se publicação autorizada: SHA remoto e CI desse SHA correspondem à candidata aceita.",
+      "negative": "PR aberto sem autorização, SHA diferente ou CI pendente impedem chamar publicado/ready.",
+      "evidence": [
+        "tools/tests/test_ai_controls.py",
+        "docs/auditoria/2026-10-06_ai-instrucoes/implementation-report.md"
+      ],
+      "scope": "CONDITIONAL_PUBLICATION",
+      "status": "NOT_RUN",
+      "positive_observed": "No remote GitHub writes performed; manual push package requested.",
+      "negative_observed_or_gap": "Remote SHA/CI remain NOT_RUN until user publishes and those refs/checks are verified.",
+      "scope_warning": "Static fixtures are not native-client execution."
+    }
+  ]
+}

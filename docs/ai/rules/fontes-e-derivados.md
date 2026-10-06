@@ -88,3 +88,11 @@ aplicável e limites. Só observação sustenta PASS. Preservado/encaminhado é
 disposição de rastreabilidade, não resultado executado. Static check não comprova
 Spark, forward test não comprova resultado numérico, Free não comprova ACL do
 trabalho. Falta de permissão/capacidade bloqueia somente a ação dependente.
+
+## Referências congeladas no produto
+
+Os metadados fact_sources de visual_contracts.yaml conservam nomes legados nesta
+campanha: seus bytes pertencem ao payload congelado. Consulte replacement_routes
+em [control-map.json](../control-map.json) para encontrar o owner novo. Isso não
+transforma paths antigos em loaders vivos nem autoriza editar o produto. O exemplar
+de skill transportado continua template, sem contar como procedimento operacional.

@@ -1,0 +1,25 @@
+{
+  "mode": "authorized isolated renderer; only generated marker copied back",
+  "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+  "preflight": {
+    "expected_files": 692,
+    "actual_files": 692,
+    "extras": [],
+    "missing": []
+  },
+  "runs": [
+    {
+      "round": 1,
+      "exit_code": 0,
+      "stdout": "fonte  : <isolated-copy>/ambiente_fonte\ndestino: <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free\n  copy file .assistant_instructions.md -> <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md\n  copy dir  .assistant -> <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free/.assistant\n\nOK: 692 arquivos renderizados em Novo_Ambiente_Simulado/\n"
+    },
+    {
+      "round": 2,
+      "exit_code": 0,
+      "stdout": "fonte  : <isolated-copy>/ambiente_fonte\ndestino: <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free\n  copy file .assistant_instructions.md -> <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md\n  copy dir  .assistant -> <isolated-copy>/Novo_Ambiente_Simulado/Users/usuario-free/.assistant\n\nOK: 692 arquivos renderizados em Novo_Ambiente_Simulado/\n"
+    }
+  ],
+  "idempotent": true,
+  "product_pairs_equal": 691,
+  "changed_allowed_marker_only": true
+}
