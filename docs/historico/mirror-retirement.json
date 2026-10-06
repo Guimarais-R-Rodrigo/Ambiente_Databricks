@@ -1,0 +1,3349 @@
+{
+  "schema_version": "1.0",
+  "base_commit": "de26c33410fb744c4cb618425188e758ab4fa6ff",
+  "base_control_map": "docs/ai/control-map.json",
+  "retired_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+  "reason": "The duplicate generated mirror is no longer tracked. Source metadata exceptions remain live; original historical provenance is preserved at base_commit/base_control_map. No generic directory exclusion was added.",
+  "before_records": 98,
+  "after_records": 91,
+  "retired_count": 7,
+  "retired_records_sha256": "a1173e8182abdfea4d90ee1a0c66f35ef3ca66706e44105d8584202694b2924e",
+  "remaining_records_sha256": "4c4b29dbf4305ec6b0ea29f1e3801da927559fd79464c04297defe760e37f4ff",
+  "retired_records": [
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 28,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 45,
+      "line_sha256": "5a0612127cc4cbb3e9dce8b2fd48a735c3f3806a0a89662f7e9c6da07998e4d2",
+      "legacy_source_sha256": "2a90fbacb563489332e7efc40037c5e4cfda079160cd0dec065fb9db590901d5",
+      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 28,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 121,
+      "line_sha256": "18489602bec49efffff12720a3202f746b41b79755b0aa00995fd576b3f7e6ca",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 296,
+      "line_sha256": "4d360d512775d807b97689afd0b0c369c16c6704f979a0cf8b4c0d4ec9ee16eb",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 334,
+      "line_sha256": "833f8aad36e7fa7545fd99c87f3e87f5a54f3336fc5f797457ec147d7aa51389",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "line": 28,
+      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
+      "legacy_source_sha256": "b5e5297b2f070d12b36a0681c66e7b772a74fc2a95b9a8b5e0a59bcf72b4ce85",
+      "replacement": "docs/ai/references/databricks-genie-code.md",
+      "category": "frozen_product_fact_sources",
+      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
+    }
+  ],
+  "removed_generated_files": [
+    {
+      "path": "Novo_Ambiente_Simulado/README_GERADO.md",
+      "bytes": 256,
+      "sha256": "7ee9d471d1697b5c05bc34afec71499cbffb9623e3efff5f498d0ef9d25064b0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md",
+      "bytes": 244333,
+      "sha256": "dfb4a042183d58a4100c6ef1f4b50a0aa5cc82aee605dae2886c164af068f513"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/README.md",
+      "bytes": 24101,
+      "sha256": "f9c983ef139323ca379c58302a1efaa73cd0c72e3ee657c5bbaa62db40069777"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/README.md",
+      "bytes": 5433,
+      "sha256": "46407926f440cc5b54adc98b382c1e18fcceb10c8fe65ea6cc038f6469512338"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/__init__.py",
+      "bytes": 39,
+      "sha256": "adccac1e569a183469652e17f95d68dd1764dca4de5962c8b1c951d7d987b05a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/contratos/README.md",
+      "bytes": 3955,
+      "sha256": "3750f59e5428852f994515a442b67858269a3ec3358b0ac346d1fe6cfc9b8ae1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/contratos/micromodelo.schema.json",
+      "bytes": 25752,
+      "sha256": "2e8d9a97d905ed591952086e3d845d61f4e618118b67c72973124879b8baddeb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/contratos/micromodelo.template.yaml",
+      "bytes": 3219,
+      "sha256": "69850f371181cf936c4402d05c9afce8f7033fab65f3f9ef7ea75c035fc3c168"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/README.md",
+      "bytes": 10498,
+      "sha256": "f7dd3ef35ca064dd4a72968ac5aec9ac817d749654f676321d694a5344de257c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/__init__.py",
+      "bytes": 63,
+      "sha256": "1cc54981a7abfdbd08bdba13ee68c0aeab83274532e1524e76695c877b044a29"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/artefatos.py",
+      "bytes": 12508,
+      "sha256": "1fcb49fbd353634e7b06c6fdb3bdafdee3702df8c43cbdbccaca36c23f10ee9b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/assinatura.py",
+      "bytes": 11780,
+      "sha256": "46518c1c1c906bbcc2d17c5aef4afe8cf3d0099703d5abb84ad3ea6dafbacd35"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/catalogo.py",
+      "bytes": 2589,
+      "sha256": "79f61a1638cbfcb252dc86306466b07c15dc75d48f63e5119f90b589688b30cb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/databricks.py",
+      "bytes": 12525,
+      "sha256": "acad11e0084bf78ee0b84135d982b5f3ef0803d84709e490be5852df461db240"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/entrega.py",
+      "bytes": 3441,
+      "sha256": "3212f5eae3d6746a7289972f40071836e41c4e90fb69cb18cc5f8e1dbb45eef1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/especificacao.py",
+      "bytes": 39172,
+      "sha256": "2adf493933c2cca59b09a824841395a5342da556c207db875c2d60f79429b2f8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/execucao.py",
+      "bytes": 15481,
+      "sha256": "4cf7e7dfd950214429537f201076df291a5f73ccc4ee7b22ec042e1890f0f4c1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/exemplo_execucao.py",
+      "bytes": 349,
+      "sha256": "9524ae01c40db24a35d6e8dbeaba88f8d7d44747b280934bc328279e12e10f3f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/fluxo.py",
+      "bytes": 20777,
+      "sha256": "ac705d9fbf6375c1627c78b56871308a816ae2dc0c1bd36937009244c7cd5fe3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/execucao/metadados.py",
+      "bytes": 18708,
+      "sha256": "a4b7239f30ef8dc6e6f7cdaa94606b8a75ef352ac8710b7aa6e68b0a5d3c3399"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/README.md",
+      "bytes": 1825,
+      "sha256": "dd3ed7e2d028f133c81f85c3bc5afd972295ca87f3692586ac0e9b2c74d999cc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/__init__.py",
+      "bytes": 57,
+      "sha256": "839a91776fb0697a24935fcdfc9cfb7585e14f8237019d0292b30800c7da7fd3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/catalogo_sintetico.json",
+      "bytes": 1883,
+      "sha256": "7f51c6da3c7ce6ddd94d43bd9793b414534cb712a6d6aa2d48029ccf4d58d237"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/migracao_simulada.py",
+      "bytes": 2687,
+      "sha256": "c9af016168d91caa2d2468e9e0c16b190f1b88c1bc2c8b062eedf9caa3c70822"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/README.md",
+      "bytes": 11358,
+      "sha256": "75bc3e3ff28df1635a115edb810119e2c171797f73e5d95261170fe8bc9c5240"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py",
+      "bytes": 2225,
+      "sha256": "20a98d3163e61f12d7295d1af58609e9a4d856aabbcfcd27335e7568eaffc657"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/dados_sinteticos.json",
+      "bytes": 1540,
+      "sha256": "2129e10817ebf39f9592a2764d8c6c38287ad37aba70ac3473e29f47cfa9b656"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py",
+      "bytes": 7088,
+      "sha256": "9992c4d7a618eb4597680366160cddb1bd1b0ebe679b41e6d6bee3249ad8dfd0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/micromodelo.yaml",
+      "bytes": 9628,
+      "sha256": "be3dfcdffe5b72cc1918268f26ca9f0959c5138ec69d2fc692fe66ebfc9ffba9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/exemplos/recencia_contato/resultado_esperado.json",
+      "bytes": 1779,
+      "sha256": "66017b93c3a68452671286639e0725e70f17a5606b9716c0c4b4a3e6b41548c1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_micromodelos/guias/README.md",
+      "bytes": 5174,
+      "sha256": "b52dbb6967efb710aa5f328408283998437ea07e732b7b2d2eec5601e17bfb27"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/README.md",
+      "bytes": 4661,
+      "sha256": "68a0b79a80ac83fd2173b812d4965a83b84ce6b85417892c28bb1adc0579f0bc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/auditoria/template.md",
+      "bytes": 1314,
+      "sha256": "ab4e61396e459f24169ab88126f4da826f09659415775a47e5e9fc0b4bb64817"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/ERROS.md",
+      "bytes": 3893,
+      "sha256": "78372a004bf7d14ee9062567f400b3a7c933a888a4655d381976a80e87d10e4d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md",
+      "bytes": 8359,
+      "sha256": "e5ee08f82ef269a0081893e40837d58ee089b900e0b4dc1f3204453b5641d91f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/README.md",
+      "bytes": 4446,
+      "sha256": "5e61d8e21ae1d2349bc8bf54619bc58b13e0294460c52c421e86d031a98a76e1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/TOKENS.md",
+      "bytes": 66360,
+      "sha256": "e7d92b609f2d7a2210f8a54c4c438061652533b250b394fc58c7f67f80faf713"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/GUIA_PRIMEIRO_USO.md",
+      "bytes": 3593,
+      "sha256": "9e8de9fdb77619a3c569e20b21b174b7f62decdf26af178c095c66a0050dfe64"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/README.md",
+      "bytes": 3514,
+      "sha256": "8d2dada83cde642dabd3d0f9dfcec320e222f29ffa620459c27eda32f41533fa"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/_aibi_theme_impl.py",
+      "bytes": 17399,
+      "sha256": "bab385daa0fc66fee178723b72494a59918dcf2537de295381d4fde783df0652"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json",
+      "bytes": 15448,
+      "sha256": "98dba3149203a174c7ef76f5aac5636e9c3ab34fcd37ae120200347da831996f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py",
+      "bytes": 1882,
+      "sha256": "d219d32df4547f3b391fb87397a89eeed71283511059dc8f54cea76be07e09fb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/dashboard_sintetico.json",
+      "bytes": 1735,
+      "sha256": "d0ab3bdaa977c2284ac86c0456277c9ffa64fe1e834950a4de8b3ea9cc9c01ee"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/assets.json",
+      "bytes": 2581,
+      "sha256": "8a57ddea7a2bc5407726d02d75786d4611e464c99f8ab3a6ecfe89c10bff4905"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
+      "bytes": 606,
+      "sha256": "514637d0411d1b8326a154e69db8fac9b8ae9df4412d571b66bb301d473a8f88"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/GUIA_PRIMEIRO_USO.md",
+      "bytes": 4077,
+      "sha256": "483b52d77273b2047fe2e4c0be183b8e8582727732c33944c6785d919f8e2df9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/README.md",
+      "bytes": 9767,
+      "sha256": "f2dcea529e9dfbbb4c3f5efd4392aef94638ad36dc2e1dd10ac8cc4f8c6f8b4c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/app.py",
+      "bytes": 7881,
+      "sha256": "0ccc2d9b9072efd1795af226afea09331672924416cfb3636be7b942eafcbdc5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/app.yaml",
+      "bytes": 214,
+      "sha256": "2dbfd83c852cb0812d972de29281dd309e5958569162837ae15bbd99c5b3ac67"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py",
+      "bytes": 9375,
+      "sha256": "aad9040cc8c5e6401b800fb1e71f3434ffeeaefb58394a880677dcff311d5b22"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt",
+      "bytes": 106,
+      "sha256": "7006a9c5c4cc62463960863f852858cc1b13e9b24d9bc56d83a3e81156b8c63b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/exemplos/apresentacao_exemplo.json",
+      "bytes": 1717,
+      "sha256": "e2724bcc31f7b4f5398c51db1f671aec1f2ba022bb1ae006c8b56fdceaed79d0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/exemplos/executivo_claro_exemplo.json",
+      "bytes": 2430,
+      "sha256": "53429a210fd024c35e6b99c3917b04ec437787379ea50227a7fa37cdb5dc5438"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/exemplos/legado_editorial.json",
+      "bytes": 1698,
+      "sha256": "0ac57489a92a1e8006a09797e326890e44f3f24de81df0ae0afe6df0e7f371df"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/exemplos/legado_notebook.json",
+      "bytes": 2435,
+      "sha256": "c820c56416af38cbf1faf29d924ae199dc2ece8570026394325c93567d4bc207"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/theme.schema.json",
+      "bytes": 83095,
+      "sha256": "4fa814190590f28e88ec03ad1459b96aa2eb01be0762773a1b27e329ae8fc81e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/notebook/template.py",
+      "bytes": 7742,
+      "sha256": "f0c43bdfa3e468212c2516c2a3df9746885af9cdbc456fc099561ce71af2bc29"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/output/proveniencia.md",
+      "bytes": 1365,
+      "sha256": "1ee8d0663dc8005574e1d81295061186bf48f2f1786d8c09c32c54cb4733a955"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/prompt/analisar_campanha/README.md",
+      "bytes": 9671,
+      "sha256": "a358f4f316f3d95bb2fe3bd4dc861bec7de81c12ffbca49bc4304945e657af9c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/prompt/analisar_campanha/analisar_campanha.md",
+      "bytes": 3190,
+      "sha256": "2fce828e6328e1de7e8e7cf0f6d21d81ed19bf3a4ac616af282305a21e680287"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/prompt/analisar_campanha/exemplo_analisar_campanha.py",
+      "bytes": 6751,
+      "sha256": "1565c42abd8513b6ec3d53f760b587999a8d297c9f68c5f6b93dda835c2a0c47"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/prompt/template.md",
+      "bytes": 4797,
+      "sha256": "69c53dbfaf3c07c51ad5d8a273149d95c4c9799c4fb1e0ebb31c8d2596b8b3d9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/readme/checklist_objeto.md",
+      "bytes": 4033,
+      "sha256": "055534b25f3641be477dec9240cd697048e46ddb81b6a89505b4a9adcbe39514"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/readme/exemplo.md",
+      "bytes": 5135,
+      "sha256": "16eb0d9693d1bf70203c8d6358b3b254e37da8daa97d71fdf4684e24efeb9520"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/readme/template.md",
+      "bytes": 4039,
+      "sha256": "a85ea207db9318a64b3075287f5a6f01fdf0dae629a7d611a42e801b3b4c9b1f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/readme/template_objeto.md",
+      "bytes": 8882,
+      "sha256": "a9c802872a305cc62426531dbc0216f36e1644b7f41209a6266f57352140890f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/checar_base_campanha/README.md",
+      "bytes": 10151,
+      "sha256": "ce1926705408624dafd27b71ebebd84990ae710200c7c1b8c209f5393e35bc7f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/checar_base_campanha/__init__.py",
+      "bytes": 137,
+      "sha256": "9d0933fdfeb7bc252a5c39d58661641fdd1c760f5eef95e2c78bc551b8fd10a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/checar_base_campanha/checar_base_campanha.py",
+      "bytes": 4725,
+      "sha256": "7cce726bddd4d28fa6117440145958617944d2c8ba57febd908a5da78057d410"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/checar_base_campanha/exemplo_checar_base_campanha.py",
+      "bytes": 7297,
+      "sha256": "53e45fa2eda83a44fec3470cb646e63ea2a22791649486ea9d6c664f0e85c987"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/script/template.md",
+      "bytes": 3359,
+      "sha256": "d348cf05c85c40ba296034a685be2ddb61cbb3b3a049f497d95c57cd255d1ace"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill/exemplo/SKILL.md",
+      "bytes": 3859,
+      "sha256": "934a22b970ebef4f52c11017ed12f9ed5facb3398f7982809e5df09a95c5b755"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill/template.md",
+      "bytes": 5476,
+      "sha256": "a82f3ebf1d1436445014411dd9fe7f51c9ed394d84cfa8b66f61bd52f81ef77e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill_enforcement/README.md",
+      "bytes": 2957,
+      "sha256": "8fc79351a7be74bae0702870fb84a69c92fb5a90b712a7158ec73e7ed536be3d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill_enforcement/policy.json",
+      "bytes": 16552,
+      "sha256": "4d8c4981f7b728b5c83d467d2d4d2e047b21f2f47299ec125e961906e22e05fc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/taxa_resposta_campanha/README.md",
+      "bytes": 10262,
+      "sha256": "34ca4b336d2911cb39fbd4098c824266868d27c24409acd6f926b475543878b8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/taxa_resposta_campanha/__init__.py",
+      "bytes": 153,
+      "sha256": "86d2d3223ca0beef2179871fe38e1a14456071dafab5269cbe197ff154c10055"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/taxa_resposta_campanha/exemplo_taxa_resposta_campanha.py",
+      "bytes": 9431,
+      "sha256": "6c8f4f0f257168741c2f9ad931a4ca1c79d391244cf4604c9c1a1fbcbd456091"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/taxa_resposta_campanha/taxa_resposta_campanha.py",
+      "bytes": 4396,
+      "sha256": "33bc18a6ea61aca3c73be45b3676050c3d9f5fc17efe1ec3197e839fb3c1708b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/template.md",
+      "bytes": 4794,
+      "sha256": "0b8a59b3a542172b5b5ca4476d0206c33591bf40ae41e3b7df441868f11246ea"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/README.md",
+      "bytes": 29458,
+      "sha256": "aa94aadf56e53a5b0eb6a31ab223ea1e2ba584361b939969d46478c8f28e58b0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/auditoria_skills/README.md",
+      "bytes": 5320,
+      "sha256": "981468d0ee5738d111a2ad41e392e8bbe78870115f9d53689e9fc266e5082124"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/auditoria_skills/auditoria_skills.md",
+      "bytes": 5659,
+      "sha256": "645a509feb6411c9d02f33b3cc8abfd19e443e41ea8ee3965fc92dc91c7c5a62"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/auditoria_skills/exemplo_auditoria_skills.py",
+      "bytes": 8033,
+      "sha256": "d8ee872968da35d2600157c766b213b984f16446dbb076e021cd43fc6df88d5e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/baseline_orchestration/README.md",
+      "bytes": 5067,
+      "sha256": "fe2a90b99b0a6d6ff9d2d2d5e39751dd3b9b117086d964d256c54b65431859d1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/baseline_orchestration/baseline_orchestration.md",
+      "bytes": 6703,
+      "sha256": "c8dd946262471d8d0301205ff04e476ce59c51d94843eaeeb401f5285f6135a6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/baseline_orchestration/exemplo_baseline_orchestration.py",
+      "bytes": 8908,
+      "sha256": "722a8b43987db597da9841d134eb7c6d9551186a3b575c142eab2231f270cc87"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comentar_notebook/README.md",
+      "bytes": 4664,
+      "sha256": "0c8bd648e2a3dac5481ef4004e5814528dd3a55fbc28865062158d5f8908d455"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comentar_notebook/comentar_notebook.md",
+      "bytes": 4871,
+      "sha256": "835597c221efb2ee1cff242c2cb09a7491a1c36a456e8d45cf9d104f051d812e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comentar_notebook/exemplo_comentar_notebook.py",
+      "bytes": 7306,
+      "sha256": "ebe739d6739e97a79c44b5abc4f284013131b9173295e09a496888d4c555e23b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comparar_tabelas/README.md",
+      "bytes": 10264,
+      "sha256": "d2a86929f2ba2a83b8a707d017143f64e41ad01ca16bee5142f3c01fee1b26d3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comparar_tabelas/comparar_tabelas.md",
+      "bytes": 5523,
+      "sha256": "af1d821b637d88f0f52a3ba01ee402c5f2ed4f51761f7b358f7626da4a30e33f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/comparar_tabelas/exemplo_comparar_tabelas.py",
+      "bytes": 8167,
+      "sha256": "d8c38d69ec30484ca8ecddbbf3341c5f81c2ed4a8c58ffa38f7042c9e08b22e5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/cross_eda/README.md",
+      "bytes": 6911,
+      "sha256": "f92db522fcb0d907dec2eb92b05ee30e4dd280f42f3478828f7b13fb1e0ef19f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/cross_eda/cross_eda.md",
+      "bytes": 5511,
+      "sha256": "5905110855b0aa6eb7fc3b3e9d8221e3ea92226575645b4e322b24c880e05126"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/cross_eda/exemplo_cross_eda.py",
+      "bytes": 8253,
+      "sha256": "96281155b05c03aa4cad9a31c6142ae4d68a08648a72e14a3404b1ee96a198a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/data_quality/README.md",
+      "bytes": 6483,
+      "sha256": "5bbd94e5889cddd47899f57578a3b7c0bbc10443445e3cc9e1b803975198243c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/data_quality/data_quality.md",
+      "bytes": 6091,
+      "sha256": "ad424fc67611f495a3a0cf0f20815192db90c91aae06953857167a85784a37ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/data_quality/exemplo_data_quality.py",
+      "bytes": 8262,
+      "sha256": "743a88a62255919bf6b13f57d3b7eefce399d476a2ddaee2e3b25788a16ffb7b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/descobrir_micromodelos/README.md",
+      "bytes": 6150,
+      "sha256": "48faa47976db351b5bae9601d03d1cec19713ae5c1c0daf34fc43a7d11168740"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
+      "bytes": 4345,
+      "sha256": "ed55ee8217ae8f7e72ba49be517c6b94ce0b824cb49c032c92c1ef3d05377ea0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/descobrir_micromodelos/exemplo_descobrir_micromodelos.py",
+      "bytes": 6423,
+      "sha256": "531141be882e5895638d53c2a142a73be94f2fff130dcb8c8da65373a454469c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_completa/README.md",
+      "bytes": 7020,
+      "sha256": "340f2deac6c23c7db65d1a0c9d3d5b31483e019fd027acb0605ea0eb6d29700a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_completa/eda_completa.md",
+      "bytes": 6867,
+      "sha256": "7c615e96aba0811f0a33a1c9e75e7b84f88119b18233ea58b7383436bc6c74ac"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_completa/exemplo_eda_completa.py",
+      "bytes": 8859,
+      "sha256": "c40437402fcc6827d57800d7830b6c75af2ab672fd9ad4e6071a6a875cb50a8d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_rapida/README.md",
+      "bytes": 12526,
+      "sha256": "fad7aa19f269a969e55de5822057e5e355cf7041f82b42989e60e67bb6d15390"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_rapida/eda_rapida.md",
+      "bytes": 5647,
+      "sha256": "61f74307122b8274d7d1e479651d16b02864ed326d42a1db3db1d68ebab78507"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_rapida/exemplo_eda_rapida.py",
+      "bytes": 8356,
+      "sha256": "5a733b7ce0ed36e9e963a61bf91c87a32a192d307620da3efa5774f1c1ac7c2a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/explainability/README.md",
+      "bytes": 5185,
+      "sha256": "106ebf9750f92cc1693ab7d203728b7d446ce8665a72f2693da2726f55f6efb8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/explainability/exemplo_explainability.py",
+      "bytes": 7972,
+      "sha256": "37647a68ea52dd29fbb0647f9205d76567fbb4499578d6a9294134a972a39f9b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/explainability/explainability.md",
+      "bytes": 5217,
+      "sha256": "500831378c148c240a5dafbc58f6f4741810406f52288b7a25b449e808c788d4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/feature_engineering/README.md",
+      "bytes": 7179,
+      "sha256": "df4848b2d8fb07ea784cf382ca8a315f110d5b450e9a1d9adf6efefa750256d4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/feature_engineering/exemplo_feature_engineering.py",
+      "bytes": 8455,
+      "sha256": "b072a78171500421a4a285b374b211b187ffef18e493d7930362ecec6685d687"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/feature_engineering/feature_engineering.md",
+      "bytes": 5690,
+      "sha256": "2d1e53e6eea5551ccbe9304991c5f3642e26701d1b449bec530408528f4cf7a9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/micromodelo_novo/README.md",
+      "bytes": 6791,
+      "sha256": "db7c5c4829accbbd2f345f7be3c1206002174401343c6677135abcadca1e91da"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/micromodelo_novo/exemplo_micromodelo_novo.py",
+      "bytes": 6092,
+      "sha256": "b14845477bb268b5a7767821d8cbdbc9c418737b3080f09a9600c5957f3671c2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md",
+      "bytes": 5056,
+      "sha256": "27336a5d84f612ba14420818c813469e2efc27729299176e528b38ad0b8ce86b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/monitoramento_modelo/README.md",
+      "bytes": 5253,
+      "sha256": "285b1d8b72319942218aca9289f40240c5a18eba2550acfc995f7a6d3f943add"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/monitoramento_modelo/exemplo_monitoramento_modelo.py",
+      "bytes": 8751,
+      "sha256": "15c7fc48b5abd95f2430550f4be4123ac11e8744e36e5b9aea7bbcb0817a718e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/monitoramento_modelo/monitoramento_modelo.md",
+      "bytes": 5555,
+      "sha256": "fd8e497e5bf883c1ebf2293f3d364927f168ea00ea996ba3ac0657c5c86b8582"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/novo_projeto/README.md",
+      "bytes": 5108,
+      "sha256": "d955942410bc9ca73dc7b27a81438e767b2f517c36c3146208b61d145163cbda"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/novo_projeto/exemplo_novo_projeto.py",
+      "bytes": 8019,
+      "sha256": "7fb6ed4749265284302663b0d8050814c2189b6754152250b8e3222c569649e1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/novo_projeto/novo_projeto.md",
+      "bytes": 5554,
+      "sha256": "1f1598c681a461cfd3f6d9bfa192785ec450edab31dc3606107b31e916438808"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/pipeline/README.md",
+      "bytes": 5221,
+      "sha256": "25d19e98c6b24ece803fe63a58f17b611177cc189d276bbd1589030f18235dc7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/pipeline/exemplo_pipeline.py",
+      "bytes": 8318,
+      "sha256": "88ddfb4dff61e4a681d24c9cf06d20389e3e66bc490d8a2c3f201b077c288dc6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/pipeline/pipeline.md",
+      "bytes": 5894,
+      "sha256": "7c6123a1e950b9cdde82e2b2d61648aaba17be01eeab3e39b51af768044fac3c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/safra/README.md",
+      "bytes": 4988,
+      "sha256": "cbcf50eef201086fde1c7932d6baddcf63d56f3c6665054345b56962e431c9d7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/safra/exemplo_safra.py",
+      "bytes": 7939,
+      "sha256": "ea4b09dfc0887f3baea45860ba6ab429570ad7fd6254e2c4c3989884e3c6e385"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/safra/safra.md",
+      "bytes": 5485,
+      "sha256": "e02f2cd83d8cf0c3b35600a50d8a7844b6ab84d25689a107f0270dd1d8c6054f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/stat_check/README.md",
+      "bytes": 7343,
+      "sha256": "811fc174b0752662881a495e05b8bc192737c0e60cf4ec51dc1adcd69b76284a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/stat_check/exemplo_stat_check.py",
+      "bytes": 8446,
+      "sha256": "6410675f82ce9dc0264d41006b2465c930e2790f129186025775f92d8c7a87f3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/stat_check/stat_check.md",
+      "bytes": 6239,
+      "sha256": "14fa8913d4c5ef8653161cd791df525388dc28fd7ccfdcd315eeedaf43247988"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/tutor_explicar/README.md",
+      "bytes": 4626,
+      "sha256": "b1efec3da4871f54aa511626b168c69836d53df102cfba2a0d65fcec76acf113"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/tutor_explicar/exemplo_tutor_explicar.py",
+      "bytes": 7221,
+      "sha256": "d48758a1330560bc8e1aa04e380f5c2b5a0f0b2b8ecd0af28098cd707620ffcb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/tutor_explicar/tutor_explicar.md",
+      "bytes": 4483,
+      "sha256": "589725ff78cb677eb1506a2a7d3e7d09605ec4688a716b3608399fac8607be98"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md",
+      "bytes": 19232,
+      "sha256": "915d6b414bd3c0a7a3f040ec614d5e5f7c1bc612b1971fae7a9daa51e541c569"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/README.md",
+      "bytes": 4344,
+      "sha256": "491e03a373a05634d42b082d938c03f64cd2ad003ba8448a12999e66038362df"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/headers/README.md",
+      "bytes": 3758,
+      "sha256": "8cccfe46411cbeed74d99f833d7ae13d431050a21a5dbc1e2ff138b67f78eafb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/headers/manifest.json",
+      "bytes": 4412,
+      "sha256": "035b6eba9da3c6555ad563de1c9048532529b54dd5bc32af55b65ddeaa6df780"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png",
+      "bytes": 746615,
+      "sha256": "705a2c35c5182401edc6874fae6de56ed1f5d48891cb2e6dd995682b415ffca2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_squad.png",
+      "bytes": 752761,
+      "sha256": "bc7d804c3127924ad7838dcc8fe1bc0a573daafb7c4512d335210540f3ef7a05"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/licenses/Inter-OFL.txt",
+      "bytes": 4477,
+      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/licenses/Lucide-ISC.txt",
+      "bytes": 3208,
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/manifest.yaml",
+      "bytes": 32568,
+      "sha256": "5e93a1638050cfa7302de11c119e9e1fd17b511d9717831b16b02fcb3f98f817"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/png/01_escolha_ponto_de_partida.png",
+      "bytes": 144261,
+      "sha256": "ab9c7a55fc765ccaf86a1b885002858159f6e36f54b05f2be5b616085cdedb65"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/png/02_arquitetura_de_uso.png",
+      "bytes": 172529,
+      "sha256": "7658823d3d1f5e8a75813861e9e61acebe4aca1185d60ccf8f43d31565c311a7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png",
+      "bytes": 184682,
+      "sha256": "2cf9fcab2d591084ddab32b7b694132670102e9888dac458041aba5b992d59f2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/sources/01_escolha_ponto_de_partida.svg",
+      "bytes": 140696,
+      "sha256": "b96af0bffc087ed3067c416929750b35b2e066fe3515e0bc11311f7ba98c1a66"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/sources/02_arquitetura_de_uso.svg",
+      "bytes": 185661,
+      "sha256": "d87b7fe83debc547e3ebc368e339f3720371ebe45d71e7f30972e37154695715"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/assistant/sources/03_contexto_e_execucao.svg",
+      "bytes": 198357,
+      "sha256": "8f61160d66ce45a774321a1d299deeb6398b726b586c08826310a32ba68d6965"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/png/01_mapa_familias.png",
+      "bytes": 189504,
+      "sha256": "69a92fcb91281dc981ad38194a696c7ed2d244bb505a1de5d19052626972b1fc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/png/02_fluxo_operacional.png",
+      "bytes": 167960,
+      "sha256": "71e442aea13c567a51a1636db3457e9eb7547e1424a7383beb314cf6959ec8a9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/png/03_anatomia_briefing.png",
+      "bytes": 163257,
+      "sha256": "5b974251dc505780429f66024c78de68259b9e5f6c50e95a4595e0bc972ebaa8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/sources/01_mapa_familias.svg",
+      "bytes": 228693,
+      "sha256": "6f708d7c2b823ca0e6f3e594ab3453eec797e971eccc956da14db1d6d06dc3d7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/sources/02_fluxo_operacional.svg",
+      "bytes": 201240,
+      "sha256": "af2c279b153c710a0d7d183c05f3d40bc45911e3094aba471610e017f594350c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/prompts/sources/03_anatomia_briefing.svg",
+      "bytes": 267910,
+      "sha256": "f237a8a719a2adcc59e83b59640f5d04b0a9ca78541a2427d97555618c3fb1ff"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png",
+      "bytes": 201196,
+      "sha256": "476743d24837ac6392ff32d8cb73a86ab2811baf38a56e20a2b47c4ea34cc45a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png",
+      "bytes": 137582,
+      "sha256": "d6882c0b60257cae22b6deaef0aedfb02f21f8dc1b21163bd4f5f5d98c0e4775"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png",
+      "bytes": 164615,
+      "sha256": "4e28ed3934dbf9787f6d845726ff215a34acdc3c74605b9ac982ac69f1a6e1c4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/sources/01_mapa_ecossistema.svg",
+      "bytes": 216978,
+      "sha256": "dafab3d97b08af3b68ff24a2e8a881e225559bf5c9638466d95159b8a382d143"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/sources/02_arquitetura_ecossistema.svg",
+      "bytes": 156992,
+      "sha256": "14db7ed43cecd236befab63b6b24b266599012bcc60cfabf69ab40aeeba38bbc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/raiz/sources/03_ciclo_de_vida.svg",
+      "bytes": 159773,
+      "sha256": "39804c6b86e92db8d4d9b4991af6c47e77bc4e59d56b4ed43e6cf1ae14dedd11"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/png/01_anatomia_pasta.png",
+      "bytes": 152432,
+      "sha256": "4628da25d3770d7573cb8f4230a4af73b8e54009ae2b5725079773ae50fa93da"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png",
+      "bytes": 162180,
+      "sha256": "4cb42c2bea4af614dcd8de4b9fa676a92f64a784a57da2f71d4c0964c74a3444"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/png/03_panorama_retornos.png",
+      "bytes": 174080,
+      "sha256": "e64d2176875d7cfa5144bfa538dd9caab72de76221fdcb1939d8ed307fbe5534"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/png/04_diagnostico_vs_enforcement.png",
+      "bytes": 183095,
+      "sha256": "5805f98ed09a8f5c6f46cc43151f396fc1d170c1efb4c7ad5dcdff89891bef96"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/png/05_veredito_data_quality.png",
+      "bytes": 185530,
+      "sha256": "df6a4e5f5d375589ac761b602dfb9d14f6e2cfc7e00021966a7c34e3bfe69b3c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/01_anatomia_pasta.svg",
+      "bytes": 213375,
+      "sha256": "440c99fe89fb4ba99bf99b07409f05f35a2ebb26e449885c9dbd2e499f88a8b3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/02_catalogo_diagnosticos.svg",
+      "bytes": 257598,
+      "sha256": "b50bfe5f2bbda9761314dca4c6cc7fa7b2c41dd739fc36a63c8a572534cc136f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/03_panorama_retornos.svg",
+      "bytes": 239214,
+      "sha256": "a00f8e078cc8c10f354c8905f64140723ce0e7c5e8c26a6b354bf3347fc3a2ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/04_diagnostico_vs_enforcement.svg",
+      "bytes": 191834,
+      "sha256": "d04b2a16b3ed53edd07e59fdb323b536a25a579d81fd16856d67175f48ce2906"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/05_veredito_data_quality.svg",
+      "bytes": 204462,
+      "sha256": "f0ba4453368bea52bfebd42640d32b6daceaee6f5e59708518a9f78cd2cd5246"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/png/01_descoberta_e_selecao.png",
+      "bytes": 186468,
+      "sha256": "0f62869eba0c57794aacf4d444e20ef9a1e77cd9f2b585da76219ab75e1d1928"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/png/02_skill_helpers_runtime.png",
+      "bytes": 145408,
+      "sha256": "43df2534087eb148369457223c11cc6d67bb3229874e9310022fb3b81d8c4774"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/png/03_anatomia_skill.png",
+      "bytes": 161237,
+      "sha256": "0edd08059de6dea5f21a8b6cb9f83bc835cf9e89ca42257d418c76bb6af5c390"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/sources/01_descoberta_e_selecao.svg",
+      "bytes": 198931,
+      "sha256": "fa114d57182a1b62f4296ec36ebfaf1125c17931a967c06353ef3a37349152a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/sources/02_skill_helpers_runtime.svg",
+      "bytes": 191958,
+      "sha256": "207c2a3894a1151ef66d76ab74d6c92c0c35548164d82b71c86fb2deff1b7fc5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/skills/sources/03_anatomia_skill.svg",
+      "bytes": 224116,
+      "sha256": "f194a10380639c90a33964003593de188a4288cfe77ea799c3b59736110da14a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png",
+      "bytes": 176249,
+      "sha256": "864a6c0727f8bbd51b353d95eaf6c7fd0a3eeb42ce343d4f924bd3485b1d93cd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/png/02_mapa_categorias.png",
+      "bytes": 181065,
+      "sha256": "e9a2d1669d3b9efad94bf6d9e3bdb579c4d48608ece02478e0f3694ca5c87b51"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/png/03_fluxo_operacional.png",
+      "bytes": 143761,
+      "sha256": "a9122675eb66d828bce735c38b463b9a4d77014d96702f4714fa0f8ee22c8c75"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/png/04_contrato_de_reuso.png",
+      "bytes": 178248,
+      "sha256": "2fce8543a1201bf03b51ac46c265e55ba750c62107bf7e01a3762a9157f20c40"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/01_anatomia_pasta.svg",
+      "bytes": 250059,
+      "sha256": "422145074a1334b555e721888078c59d080843b891730dbb04e7f48940ba8cfe"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/02_mapa_categorias.svg",
+      "bytes": 184326,
+      "sha256": "e08088e7de20bfd6f106bb7b1d794e5f7c80f412c1525247d104acf3b9775021"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/03_fluxo_operacional.svg",
+      "bytes": 188103,
+      "sha256": "c6ddd9cd6739c7ce7380427225b3347c259e6c9f597ec1a70ce2489d3969d4c2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/04_contrato_de_reuso.svg",
+      "bytes": 187437,
+      "sha256": "54844f3aaa170ec0826726616bc2595f52e4da03de49b50603a9183fd5c0a616"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/approved_headers.json",
+      "bytes": 263,
+      "sha256": "3f1b7f56014b8f884fb21923fe3153047dc62910802a8a15451042ff8230ce9a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/approved_signatures.json",
+      "bytes": 39396,
+      "sha256": "0ddbe98dc5046493553ba507cea70a72ce48e075eac3192fcda178667090888d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/editorial_corrections.json",
+      "bytes": 658,
+      "sha256": "ee8cf7eeb5b932d6202767ab5e501ef1615611d8b169e7c17ce294184aa53226"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/prototype_copy.yaml",
+      "bytes": 5995,
+      "sha256": "efe513c51b37bed7f3eb3fbac13efbecd25a01547f57615ec2a2b3d8cd0f8493"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/theme_generation.yaml",
+      "bytes": 2669,
+      "sha256": "83aeda05ffbe262c7993b66563ab32615bae66fa51760faa1dd8044b9b7616ba"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
+      "bytes": 25347,
+      "sha256": "a7c70ca4d17435c8fe7ae8347ffa1c684b10f67a105a66c0ab1934c3c096c339"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/visual_system/archetypes.yaml",
+      "bytes": 2842,
+      "sha256": "0aec174e57a7e5c82f67af56ecb52d9498054c66ea79555ca95d41727e7d987b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/visual_system/guia_visual.md",
+      "bytes": 1752,
+      "sha256": "f54e9d25bfa60646c066081ec697eaa42971244d28663bb7f37bb1842610aef6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/visual_system/licencas.md",
+      "bytes": 1065,
+      "sha256": "d3bf841420f2ece1d31ae7d7a8d36f044c21ff3fe98818982fc9d711bde56664"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/visual_system/semantic_roles.yaml",
+      "bytes": 1271,
+      "sha256": "40885ddf7cb2c44747d3f3d4e40cc21bbde33028e2ee8c1e94d5c8e2f05483ce"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/visual_system/tokens.yaml",
+      "bytes": 1423,
+      "sha256": "f397e639d45f4c1db5206982a12ebfbfdf3bb3e34ed78531863f9456056edbdd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/README.md",
+      "bytes": 23024,
+      "sha256": "6098b27f6dc55e7dfdd392531f988c9d5db75de8ce3a6facb075084e631a30c0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/data_quality_check/README.md",
+      "bytes": 12458,
+      "sha256": "8e5ae207c42434b5f3a26ea717c9bdd2ddccdf290b679fe45244ba37659965ef"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/data_quality_check/__init__.py",
+      "bytes": 139,
+      "sha256": "35e58c046ce8cc5e81ae7d20925471baecebc835e7e67ce7b465cc17a391dcf1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/data_quality_check/data_quality_check.py",
+      "bytes": 5229,
+      "sha256": "8cb820c26f9380627bfcad5491b192a4510aa65ab46622382c699d453bb904eb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/data_quality_check/exemplo_data_quality_check.py",
+      "bytes": 7146,
+      "sha256": "fadae78b9d8c77e8b186794c5aeb619627f5536fa61d4ae9280c5870abb67d87"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/doc_coverage/README.md",
+      "bytes": 9998,
+      "sha256": "ae590cfa06b21f36c1bde52fabbeffc0d4f05f5af0c7167df79bf33325fef8fc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/doc_coverage/__init__.py",
+      "bytes": 113,
+      "sha256": "8dc651f7a2022cb2c9d4637f8f1b9fdad7094298397302b9cb375b01710adc78"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/doc_coverage/doc_coverage.py",
+      "bytes": 3108,
+      "sha256": "c9fd2d438c4e4abf406a4253f3fdf7b2f58d414ab3ae61d326b6e341f1db689c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/doc_coverage/exemplo_doc_coverage.py",
+      "bytes": 7288,
+      "sha256": "5f8d0180a43fccc5682d46c7144f674190d7132f8ac3cde688e8e4ca64b72a52"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/drift_detector/README.md",
+      "bytes": 11235,
+      "sha256": "d1f22feccc951979bdead7e879fbabeb025b6c231a7c2feaabf282dad83bd3ba"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/drift_detector/__init__.py",
+      "bytes": 81,
+      "sha256": "3a8c39fd78e40828bc4bfa1d6c56137ad62459177f89979648d773a89a25043a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/drift_detector/drift_detector.py",
+      "bytes": 6610,
+      "sha256": "92263a25e672b74fbb72538c4a8dc6366c1dc299e7a4f69345dadfe0d6934244"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/drift_detector/exemplo_drift_detector.py",
+      "bytes": 5983,
+      "sha256": "61a414b89005525b22a0a281940588bdb22f70d61b0ce2a9d4c904283221d2ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/naming_checker/README.md",
+      "bytes": 9944,
+      "sha256": "c197c85319d6fe43ae9a5a5dc3cfdf014a2a9526526b9571b6bab3e5602f5aec"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/naming_checker/__init__.py",
+      "bytes": 81,
+      "sha256": "5fa3bd5d7a2f3a6fc60a83fcc943c7751ef1181df57d5a2401af960ad81ffec3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/naming_checker/exemplo_naming_checker.py",
+      "bytes": 6653,
+      "sha256": "d038c136ddaafaa607764d4f7ee4079746fbcc1200b1b2b603b2894be0a0a381"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/naming_checker/naming_checker.py",
+      "bytes": 2787,
+      "sha256": "778ffcca7c38547ea8a422da5ed36376396aaff042ad51aa4fe8689a16b1e482"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/quick_profile/README.md",
+      "bytes": 14041,
+      "sha256": "3346942cba442a39dd17ea642a84c85055e037ed1c46f8d278ec114d58618b7c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/quick_profile/__init__.py",
+      "bytes": 78,
+      "sha256": "b81a6312e38b4dbcc42477ae22c99e5a3eaa8da5aa7586a04a2108970990e7bd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/quick_profile/exemplo_quick_profile.py",
+      "bytes": 6159,
+      "sha256": "dec6dc9fd218f4475d5cb1f133cfcba05847ae7991a66608d5c703320267a064"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/quick_profile/quick_profile.py",
+      "bytes": 4969,
+      "sha256": "13b34c9ef0c402f53e10487efe97df84436445711d86c4556bb48d651cb7d391"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/rfv_calculator/README.md",
+      "bytes": 10880,
+      "sha256": "a73719a5175b1ace29092b265d6d63687b0e974fc28603841ce0094213bd2fb2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/rfv_calculator/__init__.py",
+      "bytes": 81,
+      "sha256": "47a003958e716b371ef430dc18440b232160bd0b3c37b91321d16f9f7bf2b196"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/rfv_calculator/exemplo_rfv_calculator.py",
+      "bytes": 11847,
+      "sha256": "b2d9438e94e5fd88ff8f95b0d6b8c1eb07c666f85b4c0c6e1938293f0d699637"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/rfv_calculator/rfv_calculator.py",
+      "bytes": 2239,
+      "sha256": "ea6305a7fbe724d668a9b077d77a899993c36cbbc3b89e30f02fc29a11463646"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/schema_to_yaml/README.md",
+      "bytes": 10900,
+      "sha256": "b5e6f6d17debc9ce87d463663d122f7a527f77fa927664501ebdc99aaf3bc737"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/schema_to_yaml/__init__.py",
+      "bytes": 119,
+      "sha256": "db3dd2fb208358ed8a596c2abbfca7b65ec8434da4ccfb25ef5e6f67e9a000f1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/schema_to_yaml/exemplo_schema_to_yaml.py",
+      "bytes": 6747,
+      "sha256": "fcfde4981aec23b9d1e004ca5c4088d5248222d4f03583d0a9695a18350244f1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/schema_to_yaml/schema_to_yaml.py",
+      "bytes": 2678,
+      "sha256": "621aad423ccf89b083c3308dfc13d62bb44fc1a99d1ba7ac4a2dcd68719388b7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/README.md",
+      "bytes": 11274,
+      "sha256": "f88bdacbd1979106d6f533c4b417c416f40b21634d1e56079e69d77b8f9081ec"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/__init__.py",
+      "bytes": 767,
+      "sha256": "68a7018cd9f326a5730b26be73d2b0d7888eae07c272ff175d507f192b908b00"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/README.md",
+      "bytes": 6308,
+      "sha256": "060cacfbf0988509b29adf79ede31b96645214ca9d53d23e087fb043dc96e463"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/__init__.py",
+      "bytes": 5429,
+      "sha256": "f8a2450b9eb9934fba2ac3271e32ca4423838adde4e222e2cc38319dca48a66b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/exemplo_domain_context.py",
+      "bytes": 1160,
+      "sha256": "53d545307a1694b893aa79d41c388b541ad8d9ddb6d6459ff265b06d8bad0c23"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/release.py",
+      "bytes": 2383,
+      "sha256": "756b4d647b975ca7e7446a8a173230e320021baa3209f71c58a21bb73d462264"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/temporal.schema.json",
+      "bytes": 936,
+      "sha256": "2f2399c5e6d1e5c70f1699fc8d1460c8d5f8cc1ac30f7d0bde8859309e4c5dcd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/exemplo_skill_execution.py",
+      "bytes": 1932,
+      "sha256": "da7103c367d90bb310c38c6ab4160d415ed4fe490d1cf60cf81820409a832ee6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/postflight/__init__.py",
+      "bytes": 19963,
+      "sha256": "dd4ffda5745985eede929b708bd48735e7bfcc421c3f4c83885f2cb4ca008e27"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/receipt/__init__.py",
+      "bytes": 18251,
+      "sha256": "c82c20066dee1c5da5bee83ab914f7bd6ecd0508bc5d392f4c9ecaecda0d234a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/skill_execution.py",
+      "bytes": 25385,
+      "sha256": "acce61cd91998ddf22d98807f4ea0859b9a59e83115012f19921f520161d7563"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/README.md",
+      "bytes": 19957,
+      "sha256": "932eb0656beafcfd6da29a63493dcae341d1f93f18af36ebd2722b5054e86b28"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/README.md",
+      "bytes": 2510,
+      "sha256": "28c1e94748f4fd41a24083934e0966c950897b3256a1c4ebfe6076e785840831"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/colors/README.md",
+      "bytes": 9666,
+      "sha256": "138b13d014b3afc225b7cccb8bd2ab906d90abf436db1c8c8ab7edb3004b5f93"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/colors/__init__.py",
+      "bytes": 737,
+      "sha256": "3ddf21642eb05aec62841e75ae581f02120555e1e4caf6917d0b12aee6f804ac"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/colors/colors.py",
+      "bytes": 839,
+      "sha256": "f9a6605aa1ef5a92863d728570013a91d4475952381e699e2d0b3daa29f2e8ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/colors/exemplo_colors.py",
+      "bytes": 8032,
+      "sha256": "c6c7daf5ce68afc7125092e8e9bbb55e7dae6515616979ffc4f93f7784d83e64"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/README.md",
+      "bytes": 8653,
+      "sha256": "073207dd3a55e1a6bf02ac683de1fc89d3cc71c0b352a335543a74c6961e191a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/__init__.py",
+      "bytes": 93,
+      "sha256": "a41c9a67aa6ac7a57c00c4359cba12794624e355d8d085220bbad5e316b2b62d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/emojis.py",
+      "bytes": 1609,
+      "sha256": "ca2ede85dfac855684709e9721053ee5706dfd9f946957180fa0625eb4612f65"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/exemplo_emojis.py",
+      "bytes": 5407,
+      "sha256": "5e1fa3bc2be507c7dbe227427fef79a479938f803c5103b33202578419bc525f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/format_br/README.md",
+      "bytes": 11533,
+      "sha256": "bca82432b6e87750f91496aaaa428288fe936bf472613eb448ae2e4ae44c1d32"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/format_br/__init__.py",
+      "bytes": 204,
+      "sha256": "681856750444fd4326add451654d07d81ce46646f2bbd54d6f9daf34c1644367"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/format_br/exemplo_format_br.py",
+      "bytes": 6839,
+      "sha256": "38bf1f015e7d4d7e40dd413d2e6e32f8f3215badfa7b7cbeb622d74fa4ab638d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/format_br/format_br.py",
+      "bytes": 3736,
+      "sha256": "1f373e07c86d2a953dd434aea58c0bcddc048dffbb6bb67a9c7e04d3831e0597"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/styles/README.md",
+      "bytes": 9642,
+      "sha256": "7f75167d343ea2ae68a102ab8bb34596dde3ef4dc2bfcb52068f7ab40694f05c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/styles/__init__.py",
+      "bytes": 1144,
+      "sha256": "960ce63db40087c617f6a234756fe6bec9e8d0b58ae591a91ca7a4db6b29140f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/styles/exemplo_styles.py",
+      "bytes": 5523,
+      "sha256": "65efc37970d140fd30898befc1189a138f78381c2cc08fd8a2abbf053c2e7f3b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/styles/styles.py",
+      "bytes": 7629,
+      "sha256": "ef86380dc5660cdc9bb8c9df8eed5b2b81934e63092ebdab19e194d9d51064a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/README.md",
+      "bytes": 2694,
+      "sha256": "ac75a9c84049ffb1f3be5837bcb9b78cd826cb156eb0065269c05428f6bd6655"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/README.md",
+      "bytes": 13092,
+      "sha256": "ee58d8ad026389c51600dba3a3a4bfa788e341739573fb313379e5cef26e2abd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/__init__.py",
+      "bytes": 282,
+      "sha256": "f67caa6a601fdc8c0a352f12024af26b2d9ee0d158137ce4d3d4a4831b6d0637"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
+      "bytes": 3451,
+      "sha256": "7aba392554c266e69c30ddbe9c7f968c2d7752e5916c44fff7bb36c69951ba48"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/exemplo_correlation_matrix.py",
+      "bytes": 4754,
+      "sha256": "336d58f7ea10b69896238a931d4f3c771580902e61cf489408a25d72baf79a55"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/dataframe_styled/README.md",
+      "bytes": 10873,
+      "sha256": "91b3ebcb1abfd0375ece7e344090b3910855afba006f57162a58b3e3362da9d5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/dataframe_styled/__init__.py",
+      "bytes": 140,
+      "sha256": "f848eb2fdc6bcfb78a0a7ff83817e6d0291380a31b2bf70cd6e51b363b679e96"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py",
+      "bytes": 2629,
+      "sha256": "77bfd3e3564d9bae85938bb09f5d84dcbea31c3c4d4a413450c8393a02c686f6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/dataframe_styled/exemplo_dataframe_styled.py",
+      "bytes": 4926,
+      "sha256": "16b3c8c66829882f7fb3cd4cdf2504dfa178198bb443148881ac74b3ec0aed3c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/README.md",
+      "bytes": 12554,
+      "sha256": "707f7340104735ebf7e82da8545914e4855cd6d03361dd7d1e057218f722f31c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/__init__.py",
+      "bytes": 285,
+      "sha256": "fa39750e0b0c36c9f9bc8101f14fd7b6c9a00f35519bcafcb99be38e295fa3c9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
+      "bytes": 2889,
+      "sha256": "a2caaef6318753bb744022e3491946354c8e216e31bbc160892c9ad8db2bd420"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/exemplo_distribution_grid.py",
+      "bytes": 4636,
+      "sha256": "e63c479294c433e735f8679e4b3a855a269d6e9e49637af0f8ba9d5b2a62eb95"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/README.md",
+      "bytes": 9537,
+      "sha256": "4d59d92d5e35b3a42f94db09273502a3e45754311df55eb6672d62afc3b8f6bb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/arima_wrapper/README.md",
+      "bytes": 10929,
+      "sha256": "7e9654e159a8153f9c79cdbfb4b4bc98c42d099827dda34e1ff0a4195c58c5c7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/arima_wrapper/__init__.py",
+      "bytes": 92,
+      "sha256": "2da192b59cf2d505a7a94b6a02bc0f06c012978f4c9790133dadfb88477ed853"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/arima_wrapper/arima_wrapper.py",
+      "bytes": 2082,
+      "sha256": "6f5914712ad2552f891d7ed5f3d63f948bf736b4e281028837b901b2efd9d1ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/arima_wrapper/exemplo_arima_wrapper.py",
+      "bytes": 5529,
+      "sha256": "ef3df0ef27a97e6033e3589e3700e982c07d013374cfae5fef3dae7fb6e1bdad"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/autoencoder_anomaly/README.md",
+      "bytes": 10285,
+      "sha256": "737d7568ecee171bc668155b3693c67078aaab8f064bc19cff0cfbcac2ab89d8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/autoencoder_anomaly/__init__.py",
+      "bytes": 158,
+      "sha256": "bfe6424835f0bee7bd490c8f4273dc1ffd2f05ece0f1ff87520e62b6fcc133eb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/autoencoder_anomaly/autoencoder_anomaly.py",
+      "bytes": 6824,
+      "sha256": "d4a7ea89c695782faf13c123930244a4583ddba01e298c7e2d19c9895b342e6f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/autoencoder_anomaly/exemplo_autoencoder_anomaly.py",
+      "bytes": 7754,
+      "sha256": "2f1d1418c515331840cf26215badd517a85de8452daa7734df1e962aa1a0bafb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/cluster_profiling/README.md",
+      "bytes": 8802,
+      "sha256": "c74ddb718a4dda76e6d49b249b7d6bcf4ca5202ce005d539e90618dfe6ed8e84"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/cluster_profiling/__init__.py",
+      "bytes": 136,
+      "sha256": "2d9e3bf8dd37f40c960c6716ecd0009c20254a2158b98d622c00c952279bb48e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/cluster_profiling/cluster_profiling.py",
+      "bytes": 2778,
+      "sha256": "88680467a361f4ad9590ab1a391f25e343db9467928de23cc69f82780e7b477e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/cluster_profiling/exemplo_cluster_profiling.py",
+      "bytes": 5077,
+      "sha256": "bba166db5c5b0e1d1045466560630c33fd700a56699301a6049a93fd30818449"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/clustering_suite/README.md",
+      "bytes": 9150,
+      "sha256": "82b0e48e59b461cbbc2a560a3a70f276d6e867b516eee1b8bc2eee4679061b24"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/clustering_suite/__init__.py",
+      "bytes": 145,
+      "sha256": "d97843f4c57663a0477f52a8d6809fb384432bdae30e121160210fb61f3dfc07"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/clustering_suite/clustering_suite.py",
+      "bytes": 5824,
+      "sha256": "937f8875982a634298f1f0209b1924bd406ca149e05aa2e55ec8e8ab010ed058"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/clustering_suite/exemplo_clustering_suite.py",
+      "bytes": 4560,
+      "sha256": "337d1657f269ffc2e381ca76b2ba7e3f82d4bfc09bbc25c4155cae3a8786342a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/curves_plotly/README.md",
+      "bytes": 7038,
+      "sha256": "a96d8c7fbe9d8d9dab783a2799f7dc06d0ca3798f20b0430432e77f2179fd767"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/curves_plotly/__init__.py",
+      "bytes": 581,
+      "sha256": "ef21643765651d58902388bdd9bdc73aad8a0fc322677b64c4245257679f4873"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
+      "bytes": 10998,
+      "sha256": "eadc20c905079d6d15df8ff1c982e4af69db5558214c9cb270bc1daee30ec4f9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/curves_plotly/exemplo_curves_plotly.py",
+      "bytes": 4759,
+      "sha256": "8f571fdfeed7f691d86c9f3ab8bc1d4a021f485b4277eb043c87254a5324a1ff"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/drift_detection/README.md",
+      "bytes": 8016,
+      "sha256": "dd9544763a184a9f3d6aa549682ad2454e2ead88e2111ea241778767577b2be6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/drift_detection/__init__.py",
+      "bytes": 252,
+      "sha256": "7a9c6c0a658041bd80d3d05069d9ab20bcdb8d89935e40b35961636cf9031a56"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/drift_detection/drift_detection.py",
+      "bytes": 6858,
+      "sha256": "eabf3b4159702862b88aa4f15f87b6667e9f09363cdfaffeb0c7c7d5ec789f6c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/drift_detection/exemplo_drift_detection.py",
+      "bytes": 8663,
+      "sha256": "a917e1ee14441856a8f31cfb7056acaa02abeca8317fe9a96a243582badb8ef4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/explainability_report/README.md",
+      "bytes": 9483,
+      "sha256": "9c511b42ecc1a20d6002701969464cc1c74bba827d8d6fd7cfd220f1543a25da"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/explainability_report/__init__.py",
+      "bytes": 172,
+      "sha256": "817dce086d59b89bf85526b4059be7bec863d0e7b0b5943ee5e50cfb07f1e97e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/explainability_report/exemplo_explainability_report.py",
+      "bytes": 5248,
+      "sha256": "bbcb491d2e6e3efd67b6ec71098cad13943dea83b9bfb7029e7fb12f9054337c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/explainability_report/explainability_report.py",
+      "bytes": 4875,
+      "sha256": "3a17ccfb09318b03d0c538882c5d5d8fab1c89fcf93d0683c1637174c1522bf7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/isolation_forest/README.md",
+      "bytes": 14420,
+      "sha256": "407bb59296230016594624eb839afcba634408f60eb316e08efa8122b43ef665"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/isolation_forest/__init__.py",
+      "bytes": 161,
+      "sha256": "203bb7b2664aa2635048e64d76a6bd53269f5a812b61a950bf4be4a10ffa9521"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/isolation_forest/exemplo_isolation_forest.py",
+      "bytes": 5109,
+      "sha256": "0aaa05227e708f10aa5fdbb541c770a6b40b1173ff199cb7ef234a208e436c99"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/isolation_forest/isolation_forest.py",
+      "bytes": 4879,
+      "sha256": "4cebf50694b3fda8e9ebd02f3d7bc71a39caf7fa7efa76a94fe72adfd7fec380"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/README.md",
+      "bytes": 9289,
+      "sha256": "0a155c5acec91a5cdd4279ee9b0daa8df867be091821e9cb8a40836bfac83c41"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/__init__.py",
+      "bytes": 121,
+      "sha256": "6946860eb60cb64abff5a7c23b97b95dee09e26aa27d18465bdd44097aec82c9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/exemplo_kaplan_meier.py",
+      "bytes": 6489,
+      "sha256": "a670dd2248f48049214eee3756057447ed75f090c62a5fc5288e8ce55db1d555"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
+      "bytes": 5842,
+      "sha256": "e89b63f89b17cf09d9eb3b58c56168a6196ed09c6a7d5e281a26ab64f01f9c3d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_ranker/README.md",
+      "bytes": 12160,
+      "sha256": "424eb92e0934d1d9e73bc01f2b75cf78c1c4fadcbd5aad65f0d3dfb79bb415e8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_ranker/__init__.py",
+      "bytes": 144,
+      "sha256": "720d1b2863bb0da7a11e318b88933533a7865dd0f6f4f9d8ee3f967b6a5ffa7c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_ranker/exemplo_lgbm_ranker.py",
+      "bytes": 5614,
+      "sha256": "48736168f6353c8531d6b045b5bf528795e7143154387eee7e8d58c13a314646"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_ranker/lgbm_ranker.py",
+      "bytes": 5230,
+      "sha256": "029c2922f6acd754405ac207a9a9d735dc26cd732dbf35b54be716566d13b5cd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_temporal/README.md",
+      "bytes": 10858,
+      "sha256": "0e3a66807bb2818706ddf9dc4760da42ea384816a83859304c1d2c713d20c777"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_temporal/__init__.py",
+      "bytes": 118,
+      "sha256": "69105e70a8e8267751f4a5193abdd040c1386dda1799e5550e7006c90d4b3000"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_temporal/exemplo_lgbm_temporal.py",
+      "bytes": 7633,
+      "sha256": "8912cf78c1c76be1210d5b5490c0488ebce083cf4f588a8c0089e10c0de84423"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/lgbm_temporal/lgbm_temporal.py",
+      "bytes": 12334,
+      "sha256": "45db43d8c29058f6a6e1d8c35e722613b4f8714fdd46a4914482ab9d88f3f627"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/metrics_report/README.md",
+      "bytes": 6882,
+      "sha256": "37e9b5018ca99b449127d71d953bf9650a8dcd9583ab0b85089cc3c5f10b3965"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/metrics_report/__init__.py",
+      "bytes": 167,
+      "sha256": "552c785d512c611db8b7914e3db26efc524261288020a6a6787263d7bf7117c8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/metrics_report/exemplo_metrics_report.py",
+      "bytes": 4775,
+      "sha256": "9d72bb84262bd7dbc94cfb3950c2178a40bbd8d088b07e35f1c8b344f1f10a52"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/metrics_report/metrics_report.py",
+      "bytes": 4406,
+      "sha256": "78d26f18e2c9fb25148fad1a76e6a946b884c66936b432bec47e698106d8c38a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlflow_run/README.md",
+      "bytes": 13679,
+      "sha256": "50c597b99f66ab4e0df2aa9b83efe1dfba8ddf26759ea42b426ec3d334eaa7a5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlflow_run/__init__.py",
+      "bytes": 114,
+      "sha256": "182b6b8946afe0fe61ccfb72f8157cc8ff36048d74510753d9511cf423388d9e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlflow_run/exemplo_mlflow_run.py",
+      "bytes": 6217,
+      "sha256": "69b5a0f3684223f4a5a835ad2ee1cfc7fb63e09c670540bb571f092d2a18de65"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlflow_run/mlflow_run.py",
+      "bytes": 16977,
+      "sha256": "230043dfaba0284042efcd4e7f40bc9795d7f68cbca2e2c50b375f0272a59a16"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlp_embeddings/README.md",
+      "bytes": 12915,
+      "sha256": "137a9ae50c9bd5adf4fa4fd85b4e133ddabf25364f3e6fc6207a6492b5dba26b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlp_embeddings/__init__.py",
+      "bytes": 143,
+      "sha256": "7cc020279dba75c7d01cf8abef491c89c9234b5208a13629d7dcd89ad2421faf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlp_embeddings/exemplo_mlp_embeddings.py",
+      "bytes": 5208,
+      "sha256": "1361c0a58ba512f8b58e4892cb0710cc94fa8426806d607645b46639ce1d18ea"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/mlp_embeddings/mlp_embeddings.py",
+      "bytes": 8651,
+      "sha256": "de12962cbe1b1e4d3848aaad367d8a30c94fbd0406ecd650a969b01475194708"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/optuna_lgbm/README.md",
+      "bytes": 12918,
+      "sha256": "7692f30aee1c265ea04dfd50e37324a66e40ddbce60d2141e5f9d9c9c9afd630"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/optuna_lgbm/__init__.py",
+      "bytes": 94,
+      "sha256": "9164e00bc97d2ae7b80d14ee646eea96437838ea50db1e8d8bf16e28f80843d3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/optuna_lgbm/exemplo_optuna_lgbm.py",
+      "bytes": 4561,
+      "sha256": "df699526eb28c9999290822939f1b4984e6fce1604fb705caa1f797e17ec3d99"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/optuna_lgbm/optuna_lgbm.py",
+      "bytes": 4148,
+      "sha256": "c773d2c0aea663863f0ae403a05259d97574328cea9faa062a69ecdd7325e629"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/performance_monitor/README.md",
+      "bytes": 8054,
+      "sha256": "306bc2dc9848132acef639951afbbf25ffd8dfbc356cc04932cd62fa95965adb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/performance_monitor/__init__.py",
+      "bytes": 341,
+      "sha256": "14c33b8e31ae993a7ed36c7669c98e1c2bba2acf628af96700dd22b8e59d4121"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/performance_monitor/exemplo_performance_monitor.py",
+      "bytes": 5292,
+      "sha256": "44a47e72183325b63ec9ee690958cdde3907706d237d2ac1a3849eef21374173"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
+      "bytes": 14171,
+      "sha256": "1686810d97f0e1eef406c71d47d3bdbb9ac862fac6ca7f96a401eeb3c0b65f21"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/prophet_wrapper/README.md",
+      "bytes": 11612,
+      "sha256": "c1bb856c216366b5a218e6e4ccab5e963e52964c8c0033051f9205d312c9bc60"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/prophet_wrapper/__init__.py",
+      "bytes": 98,
+      "sha256": "8b66b00568ea81cdb1e8c759ea9d445deed61287d4ae6658c935a6fc3d6be0d9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/prophet_wrapper/exemplo_prophet_wrapper.py",
+      "bytes": 6566,
+      "sha256": "ca784e2072a89a501c37bfc6089b0531260742f191962c969120d5c1c9bc4014"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/prophet_wrapper/prophet_wrapper.py",
+      "bytes": 2571,
+      "sha256": "9b46169cf489095a59f052e932515d84d893189b84a6ae01e67235e1c9518a77"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/README.md",
+      "bytes": 8228,
+      "sha256": "598bf60963af52c5f4fd49cc1bd49dd72bd45902598184580c465c1219726d65"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/__init__.py",
+      "bytes": 90,
+      "sha256": "00765270e7afccfac442243d630f74ed959abab62bce46cb492e2d80f273138a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/exemplo_score_bands.py",
+      "bytes": 5804,
+      "sha256": "af191964bed68c6763dd22d4edee39bae3ac0a25150de275b4146692f2a15bb6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/score_bands.py",
+      "bytes": 2929,
+      "sha256": "3e0b91f4264d52b1399e733d1523fb8a83b92f7590781c3d6c8a2fabb0d38fdd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/README.md",
+      "bytes": 9218,
+      "sha256": "4849f3a0f09b4a20d1ad1c70f9a4a6fe5e7b55a5b247490516f1eb196bfd1ac6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/__init__.py",
+      "bytes": 86,
+      "sha256": "ea64ff441ab69e7ddfd9cc66e2a37ab12acec5e9892a98b23363bb8fb77eb3c2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/exemplo_scorecard_builder.py",
+      "bytes": 4895,
+      "sha256": "0ba7463096bda52983d50a0d8d934f10f7fada9300baabf74e98c8125156031d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/scorecard_builder.py",
+      "bytes": 3765,
+      "sha256": "215022c045c03ca52887834284aadaff65169dce1522576fbbabc46e115e15a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/shap_explainer/README.md",
+      "bytes": 9944,
+      "sha256": "6c11e19694502087120d41e962e4f0dec7e3f1606dd908579201a9a77778396d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/shap_explainer/__init__.py",
+      "bytes": 241,
+      "sha256": "115ae0d664b59656d630540f2c43ae714c5b6db8d3abcc7f10b5b4af26f50243"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/shap_explainer/exemplo_shap_explainer.py",
+      "bytes": 6403,
+      "sha256": "af31216a8b0195958736593da5485613cf2813d827e86aa91bb5c35151c6b1b4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
+      "bytes": 10104,
+      "sha256": "251ee374d851fa4aa5419c619fa1e45fef9cbd8457f5c5574246ad29ebd97600"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/split_temporal/README.md",
+      "bytes": 10200,
+      "sha256": "7236faf53086d94fb92e53e5081f308a3a1affbbd045e1cc224f44dc61632d86"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/split_temporal/__init__.py",
+      "bytes": 81,
+      "sha256": "a9195d2c7c0f0a4391fd60c384e69f8b86c50026bedd5c0f5fcb35f340fa51a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/split_temporal/exemplo_split_temporal.py",
+      "bytes": 7626,
+      "sha256": "8f24c66278201c9701c8796fe83f33d21a0b8f23aec05ee58eb13baf75a3f881"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/split_temporal/split_temporal.py",
+      "bytes": 2761,
+      "sha256": "0fb4192af2a6a8eb209a88d981a44a1a8bb20a803557500d84eeed072fda1bef"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/README.md",
+      "bytes": 8827,
+      "sha256": "659fba64af60ef5d62a077f54f902de56871bdbe3aa18f6d93e38f7ff1db145e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/__init__.py",
+      "bytes": 151,
+      "sha256": "09d3b254cfe2f5d1b3231c7d65edde8acf88b2055894ecc596a226f6d40f2518"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/exemplo_survival_cox.py",
+      "bytes": 6576,
+      "sha256": "9bb3c17148e1bd6ce95870e1e95c641ec10a183f23bdb24ca2a14bc8b1a97e91"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/survival_cox.py",
+      "bytes": 4387,
+      "sha256": "75b4a5acc8969852fdcdee167e2e23fe32198c0dc54122d70bc01caa570ff8f8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/tabnet_wrapper/README.md",
+      "bytes": 13756,
+      "sha256": "4f08826cc8ea0f8dca9948c249ba819d4da5c724b36caf48a39db404d6267c31"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/tabnet_wrapper/__init__.py",
+      "bytes": 95,
+      "sha256": "b03213d3a8c6b01c5ffd618781bcf77d576e5529c9e0272bf9bc8c982abb06ba"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/tabnet_wrapper/exemplo_tabnet_wrapper.py",
+      "bytes": 5770,
+      "sha256": "04356473a4a6561cab36c7ce4bbb25e3ee2505bf41b10748e14eab6bb80657e1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/tabnet_wrapper/tabnet_wrapper.py",
+      "bytes": 5198,
+      "sha256": "90a8344eddc6c679685c58f5d0299b9af27fa1aad54bd2f5c902af32ae286624"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_catboost/README.md",
+      "bytes": 11986,
+      "sha256": "4847b67ece5613f6a671b14c4cddd4b8c67a36e94f044216dd1596ce62f9f137"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_catboost/__init__.py",
+      "bytes": 117,
+      "sha256": "6204991a4c352547336cde5b0246c33089b4cd806f8f492b354dfd8e507396a5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_catboost/exemplo_train_catboost.py",
+      "bytes": 5755,
+      "sha256": "efa1945508d856111c7b155303d392d42364edb22605ef9b251f2576be98f7b3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_catboost/train_catboost.py",
+      "bytes": 3982,
+      "sha256": "e11f97f03c44b7393f6759bfaed3d0144727b732e90612dc3e988df8a2359ebf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_lgbm/README.md",
+      "bytes": 13388,
+      "sha256": "c6418f20472c56b7bba77aa7432dd2be88a25963d83273133b07075ff0253619"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_lgbm/__init__.py",
+      "bytes": 285,
+      "sha256": "3aa32e321053c9ae9a27fae1dd6b6d8c25fe3eab758aaa197f3de138f0b424b1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_lgbm/exemplo_train_lgbm.py",
+      "bytes": 5965,
+      "sha256": "02fc5e8f181a40928c6a6d3989c75cce6758dd2f021d837a8b2579e5aa74d6d2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_lgbm/train_lgbm.py",
+      "bytes": 5329,
+      "sha256": "3f1b80ce1dc4bf39351fe3156c71aa72dacff9293a57c3c103b4b6e125a9bc77"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_xgboost/README.md",
+      "bytes": 15395,
+      "sha256": "6083352134cffeaaac43e2d23b5f4911a6c87e99f9b39bf13ff3f0d234e9a7ab"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_xgboost/__init__.py",
+      "bytes": 152,
+      "sha256": "f819ac6b004d1b5bbe21736693a406640f57f1721df9cfe957c228bd0b11b0b4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_xgboost/exemplo_train_xgboost.py",
+      "bytes": 5417,
+      "sha256": "336e5a53e5bfef6eff172475230a9cd3217f05da2af61f372b8e6da6e144ec57"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/train_xgboost/train_xgboost.py",
+      "bytes": 4076,
+      "sha256": "601f5e275c55326a2413769288681c1fefbf36e27f694b6ab5e5112cbcd79373"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/umap_viz/README.md",
+      "bytes": 8796,
+      "sha256": "12e19595a779d0e6d5cd7ded93b04193d143acd1acb61109f2201be5c9b09b8c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/umap_viz/__init__.py",
+      "bytes": 302,
+      "sha256": "2348a18323c0b1cfbe068f4d4e381c6620ffdafbccda4291067ddf9135242e54"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/umap_viz/exemplo_umap_viz.py",
+      "bytes": 5042,
+      "sha256": "976e4b14b868c9ff83aab8dd87c8e49618f9760ddd3ba77a015192ce405f66f5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
+      "bytes": 3895,
+      "sha256": "5b24447bc4b13a1f8033a485f9a3fee2a22cca4f528b5401ca02af1b8d907b69"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/README.md",
+      "bytes": 9650,
+      "sha256": "bafd5321376e90bd21827ed700bb575f8be0fdc5e7a7cf6f508a955d47d7b375"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/__init__.py",
+      "bytes": 512,
+      "sha256": "e25e2ca625092fe2e44a9b6ac887e9f30f6250b1d3a938b23dd40174ea0315c0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/exemplo_vintage_analysis.py",
+      "bytes": 10778,
+      "sha256": "9d75b575946a2ec2e293b0302e8d23cf9b465ce15c6fb40bb95363a6c59213f6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
+      "bytes": 9199,
+      "sha256": "4740d1885d9fb7056c30c833f406141be12116034f58301e987954b8c1d72051"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/walk_forward/README.md",
+      "bytes": 9930,
+      "sha256": "e74ad526a25a9f0c98f214899ac70ea3477708abcc0da010f9b40f651b284f7d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/walk_forward/__init__.py",
+      "bytes": 81,
+      "sha256": "261a315bf0e1c58e79ed62726836df01078c7010395c10e06e5ee8f21e4af02e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/walk_forward/exemplo_walk_forward.py",
+      "bytes": 5038,
+      "sha256": "4bc2e0a27f6e006e51f8ea88f9acc16c59920cfae58ff95f54f90c8a08c9383a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/walk_forward/walk_forward.py",
+      "bytes": 2756,
+      "sha256": "fb8f2b1d1718de2de7fc0f4ae8cd41e30c6dd332a233af63de80ef503b2cce9a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/README.md",
+      "bytes": 9816,
+      "sha256": "a03ef9afc892e523d432f0c59ff2a3cdf22a7f490217a7a9abf3e6d49a132c15"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/__init__.py",
+      "bytes": 120,
+      "sha256": "885f4f2e809005247a810ef0afbdcabacf58382d9fa998a90dd983d4037e0275"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/exemplo_woe_iv_calculator.py",
+      "bytes": 6586,
+      "sha256": "cd1060cc0645f5abd638475024278b4eeadf4ce578d812fb8d0e50a9b32f07a8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/woe_iv_calculator.py",
+      "bytes": 3668,
+      "sha256": "8e8733ab3ef88e51e0045afdde9f4bdb5fc0af3773d2b7471103707689ab6de7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/requirements-optional.txt",
+      "bytes": 1732,
+      "sha256": "2ed4536b353a63ff9e167581c8c2107499e5215ef1978df6c3983d6f030a5fbe"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/requirements-temas.txt",
+      "bytes": 138,
+      "sha256": "36323a6dff39c4d5e90486dcdae68dea7c0fe0ea5c55455efe8c54959431c49e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/README.md",
+      "bytes": 2922,
+      "sha256": "0e051130d41c89219f39b8ecad311763cef24596f0ee84c61380049700b1c29b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/date_features/README.md",
+      "bytes": 11718,
+      "sha256": "0fdc64ad83ac63e1e0371d657636cd871759aeae3701e4dbaade5181fcf8305e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/date_features/__init__.py",
+      "bytes": 200,
+      "sha256": "385285031fd38866c4d04c27a1e2e42fdea24ff2150a67e3cb705a23f1e43503"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/date_features/date_features.py",
+      "bytes": 1991,
+      "sha256": "9e09e10c9488815641a1fa8e8dc3e60eafa3a3d2d86e665dd0e074df3de6f984"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/date_features/exemplo_date_features.py",
+      "bytes": 9400,
+      "sha256": "2a44f7fef0f503a61c21e266274be3a474db1ad85b10ec3ba90ff25f5c6fea9f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/join_diagnostics/README.md",
+      "bytes": 10789,
+      "sha256": "8b40eed23aaa29aaed9e857c920090f34a2dc1920aaf0e6fe388b6c693486576"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/join_diagnostics/__init__.py",
+      "bytes": 89,
+      "sha256": "bc696f2416196604686ad9149c89e0388be27caef80e15f44c767e986148ca9e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/join_diagnostics/exemplo_join_diagnostics.py",
+      "bytes": 9478,
+      "sha256": "b2f7e9bd6721ddc277b591654326772dc37d1f982cfa8423adb28a4ef88b0dc8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/join_diagnostics/join_diagnostics.py",
+      "bytes": 6487,
+      "sha256": "2f51ac7d402d90ed97ee556658e40df2fe64f78a55c8853081f667c0fdd821e4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/null_summary/README.md",
+      "bytes": 9354,
+      "sha256": "3700927e12695ef49a16960a2060850c8a7e2b84db70695e90afadfcb4e92977"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/null_summary/__init__.py",
+      "bytes": 75,
+      "sha256": "6b5ecda7e69c96be1c901847beb4184376197b18e92eef7311b4f66e4faddb1b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/null_summary/exemplo_null_summary.py",
+      "bytes": 6923,
+      "sha256": "022399babbb8150c791325e4840fd7fad0affa6498e80be34bef4d13c99df803"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/null_summary/null_summary.py",
+      "bytes": 1060,
+      "sha256": "18d3d1c16708d78f08087fc3da6a69c938d2da83f7d094cfa69312ca954e3f6f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/pit_join/README.md",
+      "bytes": 15218,
+      "sha256": "86f0d1125943e1cc1b9a5bbc81bfad52296993bb8faf58425c648a12196b4d6f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/pit_join/__init__.py",
+      "bytes": 105,
+      "sha256": "f6291911f56cc2b10d293693e1c592c2ccc29219961c96fdccc7c9c3eac978d7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/pit_join/exemplo_pit_join.py",
+      "bytes": 11662,
+      "sha256": "50e66e5f2b28e8fcd29f57241e39823a3b57c8cbe1660d2a23612e9a2ef92772"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/pit_join/pit_join.py",
+      "bytes": 11809,
+      "sha256": "02b381ad11a12664060015fa79eb00d08aec4df524d3a4701000acdc992c3218"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/psi_calculator/README.md",
+      "bytes": 11109,
+      "sha256": "35ef54a619d87c8fe31d0f35e564c8d10cdf93c89e3309bf5f5e657c61c5b1a6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/psi_calculator/__init__.py",
+      "bytes": 202,
+      "sha256": "cc0df26a3ca7927928cdbe512ed16f85c527fb3dbc8b72aeed95994046300d6b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/psi_calculator/exemplo_psi_calculator.py",
+      "bytes": 8878,
+      "sha256": "53eba9de8b64ae3362424f008f8e6c260a1664cc6c9c7787af1008a0c1900a18"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/psi_calculator/psi_calculator.py",
+      "bytes": 8397,
+      "sha256": "5ef35326f875a6c1f5844ef52f73c6437c1a16db46fcadda79f7cc46e196e065"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/safe_display/README.md",
+      "bytes": 8410,
+      "sha256": "7796a591c68b01530ceabeddb8ab78eaf46c1acaf9eb5c65b019082c623553b7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/safe_display/__init__.py",
+      "bytes": 75,
+      "sha256": "f3e7b8a6f53ef1c787ac8101d278f5a411cd7886158fb5890cc913495d32557b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/safe_display/exemplo_safe_display.py",
+      "bytes": 6023,
+      "sha256": "705babdeadb8dacd0008fc0903118767f3bb64f3008e676204a32fda3b8720fd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/safe_display/safe_display.py",
+      "bytes": 1091,
+      "sha256": "7d494b5730f65719e3c488c2b2bd96ad6a517b2c132f7b9983e1d65c646ddb55"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/smart_sample/README.md",
+      "bytes": 10145,
+      "sha256": "cbae918298d7b924fe2f2bd374692e7ed2e82d28f0ada2525cd055f2dc4df753"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/smart_sample/__init__.py",
+      "bytes": 75,
+      "sha256": "24c5b9f4360a693e84aab9806876ee00e0020c61baf85838f429c2d85220deba"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/smart_sample/exemplo_smart_sample.py",
+      "bytes": 6136,
+      "sha256": "cafb6778e86168e4d8f1db05e26a56ea12844963e10aa65f3638684c891822f8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/spark/smart_sample/smart_sample.py",
+      "bytes": 3654,
+      "sha256": "ce2cb190897901a26192b65126012ad33ed3e2d3a7643192d27843281876e971"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/README.md",
+      "bytes": 2491,
+      "sha256": "b17cd60c4a5b169fda2d8fbe221f44b2cefc65f8604d175884ae0810e8ad8f8f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/__init__.py",
+      "bytes": 89,
+      "sha256": "7b70c400ae1ee3257bf3e0dfbeb6c24a19f41454f0e63bcd152ea7ea6b0db97c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/fixtures/README.md",
+      "bytes": 12058,
+      "sha256": "9ae14c42dc8bb2a9db98af0df32b6c451999f806d2129b45fc71772f543154dc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/fixtures/__init__.py",
+      "bytes": 173,
+      "sha256": "f292accdcc3c008bf96dbccf619afc65e8e69f443e1604e368798cabdbd2fc98"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/fixtures/exemplo_fixtures.py",
+      "bytes": 9415,
+      "sha256": "e836306ad7801c0af11cdd2ea998479289cc948006d5df2ee2a5eea9ed4fd8f6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/testing/fixtures/fixtures.py",
+      "bytes": 7708,
+      "sha256": "e9685f1e86821555a675e37e585dbbf9a89edaaf3a6d89f3677ae83c7f03b3be"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/README.md",
+      "bytes": 3200,
+      "sha256": "8c56bcfed48f710e3f9f5f9fb2768ed05f828692bad484f3df3abef2c795a928"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/__init__.py",
+      "bytes": 57,
+      "sha256": "041655c508ce21d4699325c4de5efbea685dffef0efed4b52f2109288661f459"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/badge/README.md",
+      "bytes": 9779,
+      "sha256": "c8f6cb9552e0a9004caf2a67794115b2478ef35eb9bb912bc63cb2818716a468"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/badge/__init__.py",
+      "bytes": 293,
+      "sha256": "6940e2e4ea38e982def76a64d887995005f6544476916ecfcc2ebefbb53c25ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/badge/badge.py",
+      "bytes": 2378,
+      "sha256": "88d9c430d548e8dc990585345d3c70c17241c1c33991c704d61157a083c84cde"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/badge/exemplo_badge.py",
+      "bytes": 5810,
+      "sha256": "89fe6c0944272ccb5eeeddfa706ac5e3739edf98d222339c65427640d893b4fb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/divider/README.md",
+      "bytes": 8976,
+      "sha256": "e4488ccfdcf78d1c23a442dbf53d030c2856928c1a23c71ad2d4b63f6e6aa016"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/divider/__init__.py",
+      "bytes": 415,
+      "sha256": "a88279b341b7d61999a511f4c9e2899da31176ed1df1dfed2e260ba8ea0d597a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/divider/divider.py",
+      "bytes": 1689,
+      "sha256": "732b7ec9d3316d939f7beae353d41c0880b70f2d6d3cca433a57c2b484371c75"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/divider/exemplo_divider.py",
+      "bytes": 4047,
+      "sha256": "ee70c50b17211c3ca9ab74ab9ae3f1b620ed87b12dc343fe703a011cfb5343ea"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/index_generator/README.md",
+      "bytes": 9912,
+      "sha256": "95c6fcd75699e270b1c1c28ce8799d91323565d5c74f55f3561a12d95b13add8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/index_generator/__init__.py",
+      "bytes": 147,
+      "sha256": "0efa9beb9ca6c6b4263ea698e5c5511660a9a3ca044f0c487c2c6546d969b36f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/index_generator/exemplo_index_generator.py",
+      "bytes": 3495,
+      "sha256": "179a1b6737e36a0f86e59253526540d062971234e7f5c03bdf5a80a5e00fc7b0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/index_generator/index_generator.py",
+      "bytes": 2464,
+      "sha256": "d9387cfa063b9e645d74081e972807cd38a05d57af24b112b156585dbd4f15e5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/README.md",
+      "bytes": 9727,
+      "sha256": "2c00548e057286e36326828d61c2a3d0b7354ff6b5b48a5c64359854f88ce2d5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/__init__.py",
+      "bytes": 172,
+      "sha256": "100c68cde71eafa2bb847ae4aca4733817209657b36e8ea391f36cfb0e7aaa12"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/exemplo_kpi_card.py",
+      "bytes": 3484,
+      "sha256": "c4d375a9a88a481a3f4f29ea2f21c018cba7a3748acd8fbd0dd0de16c7adb642"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/kpi_card.py",
+      "bytes": 1693,
+      "sha256": "22e98c547a0ad73dac5cccdfedeb7d90a8636b637241173f166de3e2fb9bb4c0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/README.md",
+      "bytes": 10535,
+      "sha256": "d54fcdece2183bc04f0e1fbb54201f689ee53192673708f254ce1c3746b95eb1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/__init__.py",
+      "bytes": 158,
+      "sha256": "30bbfb1b70a66c9759fb213454a3baa201258e922c21f48159e4919641580f3d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/exemplo_section_header.py",
+      "bytes": 3776,
+      "sha256": "ed6e729986ef7ef32c8357cf47e1b0c3cbfd82425d5203bbc19394d7e32c1aa9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/section_header.py",
+      "bytes": 2686,
+      "sha256": "c1b641311281544aa5545688453eee0a9aa04cb9f08ef034d62cc44549ea92bb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/tema/README.md",
+      "bytes": 10431,
+      "sha256": "6f26744fc428e4d79861595a6f2cc3c30b2d51f3f884144888c35bb16f1ec185"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/tema/__init__.py",
+      "bytes": 288,
+      "sha256": "d5e53daa73b46f62c6b4a1501a8927c3f621625c187be8820eb40cae40294055"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/tema/exemplo_tema.py",
+      "bytes": 2978,
+      "sha256": "a51f6e9a1d0141c800f9e5806c917d47f20f6273e1e80f0b6d9c2dc396d64676"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/tema/tema.py",
+      "bytes": 20066,
+      "sha256": "4ec1bdf49aeab0526ca234577cfb760da6c377e5d97abbaf3b9e9f2f154ccc33"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md",
+      "bytes": 6990,
+      "sha256": "0fa38a96a5f04f116f1125894feb6b349ef4e9441aedba60b5dc0fabaa84cdc9"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_lab/README.md",
+      "bytes": 15584,
+      "sha256": "d2fd63525896476bf8573b9695f9e1baaa5452b70cc96beb858e25912d290d83"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_lab/__init__.py",
+      "bytes": 1201,
+      "sha256": "dbe871002f5e5feba3d99889ef27300e97e40568dbf32bffcf142df88df14f46"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_lab/exemplo_theme_lab.py",
+      "bytes": 5689,
+      "sha256": "fd0fc2dc67e6fe104c8b7a595ea1219d56de332aa0eb28a17cfa06e76a26a0d6"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_lab/theme_lab.py",
+      "bytes": 52255,
+      "sha256": "1a12b898a705bb96d43ae15cd918d6b069edbee0f7b6512b8599f85e731ad665"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/README.md",
+      "bytes": 15474,
+      "sha256": "a43d0a8c0776c0932a358d2687df83b29b2cbb965b8193856a2817a01b686646"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/__init__.py",
+      "bytes": 386,
+      "sha256": "f9adaaae5242514d9519a98c38c94a54dd6d88684e126127b0a3cde371b1143a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py",
+      "bytes": 6941,
+      "sha256": "9bf72cfb269a30c3235b029c0e7e58bf99fa8ba278d9083265c1f86ee2bfe323"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py",
+      "bytes": 9635,
+      "sha256": "b32ca5b996c3ff21302fa1f0e87125130a73189f61a60ad30390c889d57047bf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/README.md",
+      "bytes": 31793,
+      "sha256": "75c13bc29b9f3bcd665fc80e6e99fccf8eeb18ba52ce4658219563e46e00c8dc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/SKILL.md",
+      "bytes": 10528,
+      "sha256": "410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/execution_contract.json",
+      "bytes": 948,
+      "sha256": "c9b2c4f0fa544e12cd0d34fca2a4ad5c612de789565dc136e7d0fd6d0ada60f3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/input.schema.json",
+      "bytes": 2838,
+      "sha256": "c08f671b19fe67d3a4312b9e5e6ac183014ad684c88bbaed39e20252323c98f4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/release_manifest.json",
+      "bytes": 1850,
+      "sha256": "930318415098e83727c655766717044813c9a267a600b53fcfedd2914bf55ef8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/README.md",
+      "bytes": 4143,
+      "sha256": "ca0c76ac82654df1846a3feb9612b8bf71ab9b0ce5a77dbca92848aa763ce391"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
+      "bytes": 7923,
+      "sha256": "3f9505c491c4aa9d78d2d55cfaa02b0f39cd4a1c4b694582ee6ec4fe6aa4e614"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/run.py",
+      "bytes": 9017,
+      "sha256": "47897413f735a21a1942b4f1d93a20e5d5fdbcaf1ac7962ae3a873778dbad609"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/verify.py",
+      "bytes": 5454,
+      "sha256": "37b2c9af377e890a8e73d82bd7b912b50e051e70da8ee70103d54ccfe8d0d81d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/templates/relatorio_safra.md",
+      "bytes": 2649,
+      "sha256": "1f103484e6c4309ba6421a6cb8e173c2bdaae0510730382b4ec0143eff5afdbf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/SKILL.md",
+      "bytes": 15530,
+      "sha256": "2774133b9f123a18a3c91b10dab912172d299126a0f7c48539613ebd30c43a59"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/execution_contract.json",
+      "bytes": 2469,
+      "sha256": "a01b2c24b2ffebc06a4eeb40e33ed482a4078731839abc4e05a91a20190c2345"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/release_manifest.json",
+      "bytes": 809,
+      "sha256": "a4e2b2154af100029b5f279358dde5487adccc0f67b766035cc1cc8740c6b4cf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/scripts/preflight.py",
+      "bytes": 7441,
+      "sha256": "0d65d96261f99db08e8184b460274023883f62888d22c247e922635b4c19c1de"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/scripts/run.py",
+      "bytes": 24437,
+      "sha256": "497fe2e93de92ab9eb40e515261058b0ac299cc0f5b60cefcb99c3220514a565"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/templates/checkpoints_por_skill.md",
+      "bytes": 5757,
+      "sha256": "64cad0ca6479c3c431d25f3a1575eb11b195c5b4c9af34a26045ba43a9806a5a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
+      "bytes": 4847,
+      "sha256": "c28dcd620c529b78771d7b7ad13cdadbbf38b8f09a4779a0e6ec26682511ec1a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/templates/rubrica_universal.md",
+      "bytes": 8288,
+      "sha256": "d9c82026b9264b08ebcbc096ad4d26f0fc03c561d4d3358e4deabbab96cda925"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
+      "bytes": 12880,
+      "sha256": "ae4dda1856809ad3dc88625daf326d981e86707685fdaf32306057cd24f94149"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/execution_contract.json",
+      "bytes": 927,
+      "sha256": "6fc76b43cbd15bfde9a28fe028d74199538967074d1e26db6de386d66a8d4fcc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/input.schema.json",
+      "bytes": 1384,
+      "sha256": "f4b68ab46278b1af4e8f054e5d5abc0de0884260ea72e69dc91948be0324a55b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/release_manifest.json",
+      "bytes": 2828,
+      "sha256": "8e882dfef0c0513f379d5d74b074ccfbf0b446d4ab8596dc89526f9a34f661ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/README.md",
+      "bytes": 6570,
+      "sha256": "d19aeeaf0d584665627a1afa854237f01ead67467c6144d2a7ab1ca87c3196ca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/preflight.py",
+      "bytes": 5178,
+      "sha256": "7ef329053d9a84b55f4a7f261a4d29a6fd08ddc47565370d3fad6cca666e3c52"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/run.py",
+      "bytes": 9795,
+      "sha256": "2864a3747ee4ebba9ec4933db98351fe5546a959b247f3da0fcbca0f47a0df2f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/run_tracking.py",
+      "bytes": 14997,
+      "sha256": "48591413936233c4c69445de998a16bad11b4f7ae4c82f6fe4a39abda5850b2b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/verify.py",
+      "bytes": 8454,
+      "sha256": "cefe5f9126c50c6918d61f49d288a570e89328458bc9368ef7a2e79b5d09434a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/scripts/verify_tracking.py",
+      "bytes": 20110,
+      "sha256": "b8dcc6ef9a72caf0566ff487100cfb461a2bf6aacdbb2d250da617e7ef70f92f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/anomaly_profiling.md",
+      "bytes": 3009,
+      "sha256": "cca5fbd20e6818fff14f3eb8b789bf13a648e669fb324e4926b0d9663245252f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/cluster_profiling.md",
+      "bytes": 2232,
+      "sha256": "c103030266e7d20257d997c355238bb82bd3b2d5ababef6decdb6e18c71cc940"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/dl_vs_lgbm_justificativa.md",
+      "bytes": 2419,
+      "sha256": "5cc7575a779dd5d72175a9fefe996983c55c7b2810f17da4761e7638145731a7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/metricas_classificacao.md",
+      "bytes": 2344,
+      "sha256": "3765b7959e65a54473407bf2f275949f26ca1e62c0fcb1783fb5baeb7e953bc8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/metricas_ranking.md",
+      "bytes": 1961,
+      "sha256": "016531dfe3716a4737c616b0ebf3d16869820111da9c2b011c02ed84275134ed"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/metricas_regressao.md",
+      "bytes": 2222,
+      "sha256": "8ba5f3f200bcc14f25c45137dde938d8d207eed3607a9a2910df65335216e036"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/metricas_report.md",
+      "bytes": 2770,
+      "sha256": "91bef48d5d15280329aae3a7f13a720167934ae661f46d43f95f4f8e36d72acb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/metricas_series_temporais.md",
+      "bytes": 2596,
+      "sha256": "3eb4d85186053221ef41a2720eb977dd87b43c3e09a77c4cd168cb9079288b4f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/mlflow_checklist.md",
+      "bytes": 2438,
+      "sha256": "69622f6767a28697c903bbbe0f16a35aea0b28452d7ed84a5cbdae90e633015a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/notebook_output_baseline.md",
+      "bytes": 2504,
+      "sha256": "99c77201f618065335b19a75d74355f43a2711029c21a32170fa42de28f4fc28"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/relatorio_executivo_baseline.md",
+      "bytes": 2012,
+      "sha256": "9e18278a2a424071f44303caa1133b046c01577cbd4d9c0b7ba12eda5dafacfd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/score_bands_table.md",
+      "bytes": 2046,
+      "sha256": "c686d8bca88c4989eb86a8e99042215298d73749369b4a8b3d3875629030cb69"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/scorecard_report.md",
+      "bytes": 2384,
+      "sha256": "6faec1b33cf9c8af9947e0cd1e2c436cfd77591582728b24a90bed96a0ac2942"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/split_strategy.md",
+      "bytes": 2821,
+      "sha256": "c92eb39adffbf20efdeb3af218cae6f0f4dc2236a10bae07b7c72efd61af7e78"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/suite_selection_guide.md",
+      "bytes": 1986,
+      "sha256": "d02491a116ad9f93a62a8594713521379802d8abe956ab10043fde3b19720123"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/survival_interpretation.md",
+      "bytes": 3158,
+      "sha256": "3631c795ddc9bb8bd3ef673a89bec55c423173374ea172c1f495ea71f1390484"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/templates/walk_forward_guide.md",
+      "bytes": 2641,
+      "sha256": "a67e8d99e10f527e315f9d85c8ea7820bb98eb41b2344e7e2847ea2934091fec"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-baseline-ml/tracking_contract.json",
+      "bytes": 702,
+      "sha256": "26f489675255d62fc3f87c301dfcc59c9c6cefe159aed3819b6998275a788775"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
+      "bytes": 6074,
+      "sha256": "0c91f15313ba49ab7240be2cc1fb35e4676a46e2549c3d6c11cdf09a080d6974"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/execution_contract.json",
+      "bytes": 1283,
+      "sha256": "498c34d45b154dea4beaacb5424a4e5c0b2e611c796c97961d15096b9b6624c7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/templates/bloco_markdown_pos_codigo.md",
+      "bytes": 3463,
+      "sha256": "b294c74f3182d6d32efdc1372d3b2951721a76c8f0faef1bddedcfcf45755eca"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/templates/bloco_markdown_pos_compacto.md",
+      "bytes": 1681,
+      "sha256": "6947e00b978ae751b09b399211a42994071a8f2ba6254fc1bd201fbb635abb87"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/templates/bloco_markdown_pre_codigo.md",
+      "bytes": 1159,
+      "sha256": "a9a95a887147bcfe693710b12097ccdd4c4def089bed6c722e2b856cb45a7f9b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/templates/bloco_markdown_pre_compacto.md",
+      "bytes": 1947,
+      "sha256": "a05fce28a396a6fe38f4949c03979b012be50600770036f006779d4e71f22b89"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-comentar-notebook/templates/cabecalho_notebook.md",
+      "bytes": 2495,
+      "sha256": "df85f57ce3e2713179d1a96d5c66a756e18294287bece5d33803838f520b66e0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/README.md",
+      "bytes": 4514,
+      "sha256": "49fc2e86392ca93898f87912d888d90d954b186ad4a18f8800e49e4dba4fbb2f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/SKILL.md",
+      "bytes": 11649,
+      "sha256": "0898977483ad548f0801553cd9829d721886d7d03cf1e4f9f83dac9490fd639f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/docs/arquitetura_e_decisao.md",
+      "bytes": 1224,
+      "sha256": "cd06d6998c7c0848ac9e645b5c0e6a404446b0df55821a4efd4612b07871ddf7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/docs/fontes.md",
+      "bytes": 2269,
+      "sha256": "f7a4c878420f0808020aa2d1f07b57d053d499c9c142fd8d29c87ce4509293be"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/docs/instalacao_testes_promocao.md",
+      "bytes": 1219,
+      "sha256": "5d141d2349e188c15babeed690ef2f45bccb31cfc721a051700a78c589cb2eb3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/execution_contract.json",
+      "bytes": 912,
+      "sha256": "78e6f7f5e5bb0c1ef8843898690c5f2e92d084de7e3779ee207137aae3903d45"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/references/composicao.md",
+      "bytes": 3251,
+      "sha256": "f2194b98119701c34c1a41c15f821bb27b845e4e97da4940824e397d6a4871b8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/references/descoberta.md",
+      "bytes": 5250,
+      "sha256": "b281090d19886d2306e77b0abd5a250ceb8a8b183609dd9f712e1336ec00ad5c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/references/exemplos.md",
+      "bytes": 3957,
+      "sha256": "eb46e765327fe0b561ba8232fe451a66d4e62cdb485aec6f6f3fa7dbc9af1d3b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/templates/handoff.md",
+      "bytes": 1625,
+      "sha256": "a4ef3170130e0aac85493921d453c32bf41b05daccd99b89121f2708229bb1db"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/templates/recomendacao.md",
+      "bytes": 1985,
+      "sha256": "9af5577daa965743ba6e635dfda8342117bd43c997f5eb106fd314ea4b07c8db"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/templates/registro_busca.md",
+      "bytes": 1638,
+      "sha256": "381c7bfb5dec236a306aaccb5bbbb985dd9a0dbe59f9482216c34eb48c174f07"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/tests/README.md",
+      "bytes": 896,
+      "sha256": "2cd8e91fdad14ae95ac440e68385ee1c4f9d3b1e8bea04e0492f417d0af40aab"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/tests/RESULTADOS.md",
+      "bytes": 666,
+      "sha256": "a7121493db6a77cd230f37634e77d09b476e8dbdb0a8dacdf389235e2ae13b3d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/tests/casos_aceite.json",
+      "bytes": 14729,
+      "sha256": "c7bd6a4ed9a1fb1c87e6daf80dfacd9de89ba5f201fae2e5d957d8821043d287"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/tests/test_validador.py",
+      "bytes": 4932,
+      "sha256": "faeafff22efa4746b78e4e7437d3c84891e8c9cee453ce9703d6a11c15c1997e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge/tests/validar_pacote.py",
+      "bytes": 8904,
+      "sha256": "d224136c44967a8d62a822f4547ec6b442095c20cfc9dd851bb086b67628e4bc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
+      "bytes": 23439,
+      "sha256": "1073ef7f381ea354edfcc374cd8ba4905a47b82da8615ee9d26d3a1a9b5f809b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/execution_contract.json",
+      "bytes": 2674,
+      "sha256": "717838b0a6e70f86c93bd675f8f173d39d5d7e7e24e523807155b4e4abaffc7a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/release_manifest.json",
+      "bytes": 1694,
+      "sha256": "4ce69ac18ab40df021ef5e1cf01f49e0316d0136979cab646d4bfb8677c14db5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/scripts/_windows_writer.py",
+      "bytes": 5302,
+      "sha256": "794c06ccd6dc48c61a0b766d4bca8cd242fe46c592b238903b2c939548d0487e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/scripts/object_validation.py",
+      "bytes": 10468,
+      "sha256": "48089c6a90dcb66ffa2d7fe8afd070f4bfa7fda4e46557bf2a161be11a69349c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/scripts/preflight.py",
+      "bytes": 16296,
+      "sha256": "edee31045a1749ee962c180f3618bf7807ea6cef575c3968193033b31b6e6c30"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/scripts/run.py",
+      "bytes": 23992,
+      "sha256": "4eef76769d38a9f88cdbbb60014c19ccb54fc8020c373d2173561cc2f09de985"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
+      "bytes": 4943,
+      "sha256": "8c33f25b5f9f1b78a89712891931eb8eb81f3c0dfd50f75ec21c3d6a6096f7ce"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "bytes": 10796,
+      "sha256": "d1cbee03b68977a76a1eab9f40f1631aefab76ecf35004cdad0e693701a10cc0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/diagnostic_contract.json",
+      "bytes": 872,
+      "sha256": "98659037ac1c89eb0d3b846bc554cf319d0d98dcceb17a8b6c093ce670a0d711"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/execution_contract.json",
+      "bytes": 922,
+      "sha256": "29cef49e0fd7c8b98eb603a40881263207f12b2868fcbf28e0f4c7efb4f303f4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
+      "bytes": 2593,
+      "sha256": "e1572c9122df89a0b6d91b052036124fb2a6070ddc42b035c64e264c50343c40"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/pit_contract.json",
+      "bytes": 940,
+      "sha256": "9fdfc701f25e45c329b76f6d6db63cb5e30d95cd0a77ad132c0ef9c8e020e988"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/release_manifest.json",
+      "bytes": 2867,
+      "sha256": "d760fbd72c77ed3a8117e31e9d0d11a33139cd92817189658a86eeecdb85b7b0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/README.md",
+      "bytes": 6676,
+      "sha256": "05911f2a3a5170821dbf402d3b2e9acadb68a541bcad09f27640e15f637fbe3e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+      "bytes": 7476,
+      "sha256": "02cc1a674b9efb115e8d1d8634d7b0872533c497605d11224d64ea56632b5464"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/run_diagnostic.py",
+      "bytes": 8573,
+      "sha256": "c15c728a901ac5a27211f94f2b4433f4de2a6f7010d240628c7906556e710c1c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/run_pit.py",
+      "bytes": 12781,
+      "sha256": "1925612cf9d4b7f35516ae776c0c4373a8df7e6d25724b3b2a05e72ce39c95b1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/verify_diagnostic.py",
+      "bytes": 3788,
+      "sha256": "7313dac642aebf28a60e944b7f797812d80b20ebb107267e9fdd156c7219d184"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/verify_pit.py",
+      "bytes": 10411,
+      "sha256": "cbc5640951596bf137675637400a3769f4489c7a39c7b9d344907107d565890c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/coverage_matrix.md",
+      "bytes": 3083,
+      "sha256": "ce4b9b661a8b6f5a75d87db33f28095c8ce790ffbeb88721235cd53000252bcf"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/inventario_edas.md",
+      "bytes": 2103,
+      "sha256": "955c3b53c7b0b9664a4a862a362ec614be80937afb29d42786090cc246a22f28"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/join_feasibility.md",
+      "bytes": 3684,
+      "sha256": "addc20f48491a66e4edb4903720ef1bf109c7cba2556405ed075aaedb7264b8c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/notebook_output_cross_eda.md",
+      "bytes": 6434,
+      "sha256": "3d58c5468843db8310268677e3ebac2e4dfbf77eb346e0783e752d78fcc0a4bd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/readiness_scorecard.md",
+      "bytes": 2245,
+      "sha256": "e38901739076014366f086ef36865b96d02c9f2146c83ab994ec3e3e13d486d5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/relatorio_executivo_cross_eda.md",
+      "bytes": 3589,
+      "sha256": "8fce584affde9cb20828964b11af6bc28c52958d85af184eea255d377c42aff0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
+      "bytes": 15930,
+      "sha256": "9478d7f83a09b0d7fad9a3882070b730e781bbbc5129862fd71784dc907b7cdd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/execution_contract.json",
+      "bytes": 3827,
+      "sha256": "b24f5aefc8e090870fd9654335942da84a593c47a736f94523d38f888bb08829"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/release_manifest.json",
+      "bytes": 1716,
+      "sha256": "693f6a3b879b9ccf2eec0785f87c2e548ffde82294e92efb6ad7b82fc727f63b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/scripts/postflight.py",
+      "bytes": 9971,
+      "sha256": "43f972435f4fcb8e7a5da3c4407ff9d2a3e076f7c028c2f224bca40037480e0a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/scripts/preflight.py",
+      "bytes": 2459,
+      "sha256": "a48d4a3986cd4523bf1c04d0c96b8e2ec7aa413cdef792f97df1d3a1c5e10bae"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/scripts/run.py",
+      "bytes": 19785,
+      "sha256": "f4153e62a4e11d6d1ecbd6c9ff13821e17dbc6c7f3c00f8fce860d9a2716f641"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/scripts/run_enforced.py",
+      "bytes": 23132,
+      "sha256": "9af22d9850ed6c2a7243686fad20f57250f77b6eb1e5030d5c2a045fead071d1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/estilo_visual_eda.md",
+      "bytes": 10978,
+      "sha256": "56911be214f9ada470d6ccce50c4e4fd6db4f2189412a88d543be69296d57792"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/matriz_graficos_eda.md",
+      "bytes": 5616,
+      "sha256": "ac2aba5ea41073e1a2176146fe9171b555c64ae4cd504f577f0195a5c9920aa5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/relatorio_executivo_eda.md",
+      "bytes": 3595,
+      "sha256": "7934e12bfed8fd1d9c6ef17f9f810c1bd6895748c657b136fd8628fb44ec158c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/roteiro_eda.md",
+      "bytes": 4786,
+      "sha256": "62b87e6d9cbc52bae4711be53feaf2c542f9c8f5154df5b0831823096f79e411"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/SKILL.md",
+      "bytes": 8236,
+      "sha256": "2ee6b58853e36cc0b99ab67d48d38d7e514732c55148f99d0a97318f94eac0dc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/execution_contract.json",
+      "bytes": 976,
+      "sha256": "e0a716a7be0135d82368e07c370dd353b1ccd8f81018f8de61fd48ef7da09ffb"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/input.schema.json",
+      "bytes": 2625,
+      "sha256": "d6e933376e3886142c39024626e7a3166c14f146643e050f237b7944c47d1fe1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/release_manifest.json",
+      "bytes": 1850,
+      "sha256": "42ad1de39f2953b2b4f21a38be76ceddb1d2fb4aafe902b719f6a6e90dac548e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/scripts/README.md",
+      "bytes": 3500,
+      "sha256": "4943b52fb6420c3a47da7f963f1cb63bc10f56a0835d7bbe168029c41711cf5c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/scripts/preflight.py",
+      "bytes": 6051,
+      "sha256": "5feafa7b706f4080a2915097ee965ff61e91c06ac9ca356324709a147d269320"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/scripts/run.py",
+      "bytes": 10590,
+      "sha256": "3d5a65625c5cd14f6b9cbf67d3e126b4a465ffc792461b2f78356756d2001d80"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/scripts/verify.py",
+      "bytes": 5204,
+      "sha256": "873a33f9a0e7f082e24dc5c6d6f9f3769012fd1aa2273e3a0100a02e68eac57e"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/templates/relatorio_executivo_explainability.md",
+      "bytes": 2453,
+      "sha256": "9fb84601c907099d6c25868438a5f0504aa986bc9b6ca2da6cc4eb865398b7db"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/templates/shap_analysis_technical.md",
+      "bytes": 4796,
+      "sha256": "60c5621cf6d6d2964d33008660fc8d3138b0d18dff86fe94d73f40fa411555bc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-explainability/tests/linear_fixture.json",
+      "bytes": 617,
+      "sha256": "160284e2147bcab285cdfad16cb08f7e2b9c845a7e8c7324fb5d91ff4a555532"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/SKILL.md",
+      "bytes": 10563,
+      "sha256": "e22ce16d5a9a09e35d79f2e7fbc7a70919c13e48ede557db72ff7dbddc25d0dc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/execution_contract.json",
+      "bytes": 958,
+      "sha256": "69c79beac69f02bae9912bf41edc3573a73d81f81a3038518611054604269339"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/pit_materialization_contract.json",
+      "bytes": 887,
+      "sha256": "524e87660b4486dd7e3fe405219343a8036e4507a8e78a5c50b79a6e0bd792a7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/pit_view_contract.json",
+      "bytes": 531,
+      "sha256": "64d4f0f14a9dea3398602cd401c6d43f1825b5d7a648fbf06dfdb245fcc8387c"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/release_manifest.json",
+      "bytes": 2523,
+      "sha256": "625a7ca5a237ab7735e1b2392f4fa6413dc2a818145b249e57c72af390bb8699"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/scripts/README.md",
+      "bytes": 7169,
+      "sha256": "833f419658e1c72a7b6dd1e0183215a96d88c55e51ac4965c2e304e13c3b88af"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/scripts/run.py",
+      "bytes": 11125,
+      "sha256": "d80115710f0656a029380529760941cb48a9e3d76078379efd56575136015dfa"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/scripts/run_pit_features.py",
+      "bytes": 9747,
+      "sha256": "9cf314fc9949cdbb194354cf228a77a0f49ccf68353e2b7202e79107284f036d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/scripts/run_pit_materialization.py",
+      "bytes": 8875,
+      "sha256": "ba8f1efe23a405427498bd297d88c752ddf00ad417cbb91087e592c65d2638be"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/scripts/verify.py",
+      "bytes": 4185,
+      "sha256": "ec92d734968435b7c79410fe6fc916027b97ba88fdc4311ef87b876319e7a203"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/checklist_validacao_features.md",
+      "bytes": 3121,
+      "sha256": "fdeccd5e957a2b5737783938c07e606fd3907e6f180162991b726d515882010f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/feature_backlog_tiers.md",
+      "bytes": 2337,
+      "sha256": "c108bf1e2ad64906e3d6a490e4dd9bd051b0bdc3dcef62442c9e117a9bcb1631"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/feature_spec_core.md",
+      "bytes": 2461,
+      "sha256": "15dccc985a775266382d6df00b660415edabf72e37a2e3140baa858d0af40b60"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/feature_spec_risco_validacao.md",
+      "bytes": 2506,
+      "sha256": "b023854315000e79d8615e9d17303b63f02527b2e1fde3aee5165d2cdd542dbe"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/feature_taxonomy_cross_source.md",
+      "bytes": 3454,
+      "sha256": "9c814fc210d196b2d0564cefa2726aec175ff7f3e4d92c0820cc3277c75f2829"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/mapa_notebooks_alvo.md",
+      "bytes": 1475,
+      "sha256": "487ba2f27f4f75a7ccf24c6d39dd38c6d3ef24654563bbc5b3e513a48e209b31"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-feature-engineering/templates/notebook_output_structure.md",
+      "bytes": 9309,
+      "sha256": "fb2d3d672b583941d2c5e66f1b26d5f969a93eb18804b5d8b609c7821a521ea1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-micromodelos/README.md",
+      "bytes": 1555,
+      "sha256": "763ed6714979f65022a372b915b0bc73fa980ae1708cec8ff818bb58ae9519e1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-micromodelos/SKILL.md",
+      "bytes": 11865,
+      "sha256": "55f36afa110b8f021143df3e6c485ded45a2d94622205f71f24dcd1f1eaadbc4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-micromodelos/execution_contract.json",
+      "bytes": 615,
+      "sha256": "73649097eea918543dc0117556432b064ad3a455ea647facf7e94aaf8c4dae22"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
+      "bytes": 10666,
+      "sha256": "dd1002ee6e8dae3f38324bda504b16d5481a53e3c7ef1b74a1e11b2fba3a537d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/execution_contract.json",
+      "bytes": 785,
+      "sha256": "f663f043844f359d4823e211434f90e4bcc048e2fb472bd3bdccf8f7a7920cab"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/input.schema.json",
+      "bytes": 1476,
+      "sha256": "c8ebce5ed44fce4c3e32c959c72fb5e902203a98ff2ba8ef29116f89a2f8cab4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/performance_contract.json",
+      "bytes": 1604,
+      "sha256": "93e639c4aba8f5fa590ea74e550ba01801b5637fccb524f4f19ce0752a0e0d15"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/performance_input.schema.json",
+      "bytes": 3039,
+      "sha256": "34b9a754b6aecc5aa3f044cbf3b659e534939bd58d7812433d8c841707740d31"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/release_manifest.json",
+      "bytes": 4242,
+      "sha256": "ee72b87fefba6c9c33a3a4131aa56244830554f4e16b9140ac2cda35cd505361"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/README.md",
+      "bytes": 6247,
+      "sha256": "c50244fd7e9548061fdb989980ecb7dfd8e0854f40a77cfdfc802ffed56a80b4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/preflight.py",
+      "bytes": 4549,
+      "sha256": "b1ab8e5e69731e57f658b757f1e197169c2012e63ef2c60dc4c63614c5582414"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/preflight_performance.py",
+      "bytes": 6323,
+      "sha256": "3f433df14128f9128ba379f96b37c7bc64a005ee64d6ee6d1fdb4999a2616fff"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/run.py",
+      "bytes": 8377,
+      "sha256": "d48573638f56c789a5b2f68188c632b30afd0346666161286da91f1afd81620b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/run_performance.py",
+      "bytes": 9592,
+      "sha256": "281b14f137ed279b8bf95f6780da01a09e3db26f9cb0dfa24db37b6e16568d2a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/verify.py",
+      "bytes": 7126,
+      "sha256": "9956f0ed0f5ea82e8617306773247322c83be4d3263a9b149f39279023f006fe"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/scripts/verify_performance.py",
+      "bytes": 11686,
+      "sha256": "639b001d8ddff865af2fe1825460c21a8a05bf2f2b5dca47780f95d31a0e7890"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/templates/drift_report.md",
+      "bytes": 1618,
+      "sha256": "b5ada27b35f6ce2dc5f5f40bbb47428e93e83f209ff18b3169e64abae8e8f027"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-monitoramento-modelo/templates/retreino_decision.md",
+      "bytes": 2186,
+      "sha256": "543935a9497e3efa3adf54fe5e35e0ebe2d20755f60b4767242ff8a53f23a4fa"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "bytes": 8824,
+      "sha256": "5cff01d7919f9a0774c843db276bcbd59d8d297b609b707c598e02c48bb1617b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/delta_execution_contract.json",
+      "bytes": 812,
+      "sha256": "ce4a5e6aedcfe5f62bde0be2e72b4496e51bcc8e53e176d84ebcb8d72c0a7c7a"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/execution_contract.json",
+      "bytes": 610,
+      "sha256": "44ad7d1ae02d76e6682aa71187ce64202a837afd55e0aba5928866f9b6248106"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/input.schema.json",
+      "bytes": 1991,
+      "sha256": "cde4a9cc1ea6cbcff7ad0bc0a28d9f2efde5d29b7e8374127595b96d1488af92"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/local_execution_contract.json",
+      "bytes": 606,
+      "sha256": "6387b291ccba4fc52d03d531da035cc1b8ca2c45663bf6b6b8b59befc9530aa8"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/release_manifest.json",
+      "bytes": 2494,
+      "sha256": "3b697b2094281b50a657bfb9e02e82bc93869b46d27a612463c82e7fbcbab1d0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/scripts/README.md",
+      "bytes": 7963,
+      "sha256": "a18330f5f9619f2f3ac7954a5348a5cb7b33c78bf47fa4ac66951878072170b5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/scripts/preflight.py",
+      "bytes": 5469,
+      "sha256": "139d50e09cc90d64539ec263411d9d8f507c4db22b267ee7474f5312b01665c7"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/scripts/run_delta.py",
+      "bytes": 22178,
+      "sha256": "f41fd08f900f65e99ffbba9be66d5fcda6747dc56116cfb37dc4a1df6ca7c115"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/scripts/run_local.py",
+      "bytes": 11433,
+      "sha256": "d740486aacba4c6cc303f3e554577e9875acf35e02c1e8e1b72c2bee3676c341"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/scripts/verify_local.py",
+      "bytes": 4445,
+      "sha256": "e7767597006b46ead4557766275b74ab7032fa822ab667784f9f88a10c3fe0fd"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-pipeline-builder/templates/pipeline_spec.md",
+      "bytes": 3710,
+      "sha256": "ddf24fcdfceb1743eb99a0da84d930f1c8d8384778a05da608fbfe86ae0348e5"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-tutor-databricks/SKILL.md",
+      "bytes": 5921,
+      "sha256": "8034dfcb390f2f4ab891ed9f9515446dc2f24e41afd45b5931adbd5d01153c7d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-tutor-databricks/templates/analogias_banking_crm.md",
+      "bytes": 5596,
+      "sha256": "3de6a3ba353d09467ef71cb93aa3442ce77c207c32ab71503600408b197eb73b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_bloco_codigo.md",
+      "bytes": 1847,
+      "sha256": "d11d5c34b37e3437a075889cf92ccc2412517c4cd6dd6e87ae41e9dfbe35ee41"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_notebook.md",
+      "bytes": 2371,
+      "sha256": "54ddef509cf66d5b2fedba6663330b5238540f9c1fcf0b51b5498e9c74b5f5a1"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/SKILL.md",
+      "bytes": 12033,
+      "sha256": "fde7164bd1131397550a6f5848c8611c41fa5bda09ae5cb09d56c7d82a4c2e42"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/execution_contract.json",
+      "bytes": 1047,
+      "sha256": "b489b12fc70882f83ea5526533b36814f816c50d3700a43ec2f256ea8a925927"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/fixtures/ks_separated_request.json",
+      "bytes": 646,
+      "sha256": "f5a5e21dec02ee2425e48fff80063c8c24a3ddbb023497842923e527e59dfb7b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/input.schema.json",
+      "bytes": 1615,
+      "sha256": "b079c1cee9225aa18a8f8df6b033e1a4e69b6f6926e0dd5ecb21788d472cb93b"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/release_manifest.json",
+      "bytes": 2353,
+      "sha256": "8e03669f1494d569745e3b86efa1fb5b8449a28b72f16da45e751200982a8d01"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/scripts/README.md",
+      "bytes": 3075,
+      "sha256": "08096edf113a4da6c914995ed578c820f718a7fbe630ec6ca7bedb2167208a28"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/scripts/preflight.py",
+      "bytes": 5204,
+      "sha256": "a7f79593a6102775f9717b6af362b207b5d365068cbfbca612a3ddb55878f584"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/scripts/run.py",
+      "bytes": 7955,
+      "sha256": "f6a62f5f96ecc7d9fbf65f9a06c118d335c807560eab28335eda00eadd4228fc"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/scripts/verify.py",
+      "bytes": 6941,
+      "sha256": "fc8291c9c3d990f74c42b6c4629c5c2c204a6f2442e87610b5146549d4b85bd4"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/decisao_pressupostos.md",
+      "bytes": 5998,
+      "sha256": "de0f36550b7493e375b372de675bef37fd6919729cf7c82b270a163d765281a3"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/notebook_output_stat.md",
+      "bytes": 6328,
+      "sha256": "a9894dd435d26131cfec7076bad0b232b6ad93246728a53fc86d97c235980c8f"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/relatorio_diagnostico.md",
+      "bytes": 4653,
+      "sha256": "fccf1d7b2cef52bad4915dec9446b4913a8b27f4227e19db4015f0cc515fb886"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/severity_rubric.md",
+      "bytes": 2598,
+      "sha256": "c2b4376dbddd0fbf57e826fd56d6d8b3910065f539080b07e85946a6017f4a3d"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/test_plan.md",
+      "bytes": 3849,
+      "sha256": "444704c4ede11d83333104a459e52cc50b1f44e6541d0d0e41c34400e271b2a0"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/test_result_card.md",
+      "bytes": 5505,
+      "sha256": "26aee1779398aa9fb8fb1ba24467be11f4d7b19445a1c4d17287b3c8f8a21372"
+    },
+    {
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md",
+      "bytes": 12990,
+      "sha256": "5acc1977b59cc886f4c89711ad49e96ae0b9629673c4756fad2f9a5cb44bc644"
+    }
+  ]
+}

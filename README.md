@@ -119,7 +119,7 @@ skills             : 15 · 15/15 com as 5 seções estruturais
 skill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy
 prompts            : 18 · 174 campos com guia e contrato humano
 helpers citados    : 101 caminhos verificados
-markdown / links   : 245 arquivos / 1882 links relativos
+markdown / links   : 244 arquivos / 1881 links relativos
 notebooks / links  : 84 notebooks / 108 links relativos
 readmes de objeto  : 79/79 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
@@ -130,10 +130,10 @@ saída colada       : 83 notebooks com bloco real, 0 sem
 idioma da docstring: 63 módulos, 0 com docstring em inglês
 normas do molde    : 78 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 290 arquivos
+python (AST)       : 289 arquivos
 instrucoes         : 12624/20000 caracteres
-repo (identidade)  : 2305 arquivos varridos no repositório editável/derivado
-repo (links)       : 3583 links fora da raiz analisada
+repo (identidade)  : 1697 arquivos varridos no repositório editável/derivado
+repo (links)       : 1846 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)

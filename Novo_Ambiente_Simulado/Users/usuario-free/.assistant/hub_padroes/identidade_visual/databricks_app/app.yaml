@@ -1,8 +1,0 @@
-command: ['streamlit', 'run', 'app.py']
-env:
-  - name: HUB_THEME_VOLUME
-    valueFrom: theme_storage
-  - name: HUB_THEME_APP_MODE
-    value: authoring_only
-  - name: STREAMLIT_GATHER_USAGE_STATS
-    value: 'false'

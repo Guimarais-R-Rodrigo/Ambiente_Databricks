@@ -7958,69 +7958,6 @@
       "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
     },
     {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 45,
-      "line_sha256": "5a0612127cc4cbb3e9dce8b2fd48a735c3f3806a0a89662f7e9c6da07998e4d2",
-      "legacy_source": ".claude/rules/fonte-de-verdade.md",
-      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 121,
-      "line_sha256": "18489602bec49efffff12720a3202f746b41b79755b0aa00995fd576b3f7e6ca",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 296,
-      "line_sha256": "4d360d512775d807b97689afd0b0c369c16c6704f979a0cf8b4c0d4ec9ee16eb",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 334,
-      "line_sha256": "833f8aad36e7fa7545fd99c87f3e87f5a54f3336fc5f797457ec147d7aa51389",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
       "path": "PLANO_HUB.md",
       "line": 614,
       "line_sha256": "2d792709ad83cb7e6debcf34ecc0366dde6302e7cb327e42f7ba4e339dc39ecc",

@@ -9,7 +9,7 @@ Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem
 
 ## 2026-10-06
 
-- (Codex) Navegação por tarefa e histórico reversível: 198 entradas preservadas; Concierge atual separado do protótipo. Mudança local, sem publicação ou homologação de destino. [ADR-0026](docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md) · [Prova de preservação](docs/historico/changelog/README.md).
+- (Codex) Arquitetura por tarefa: 198 entradas preservadas, recortes explícitos de contexto, 38 arquivos de manutenção extraídos do payload e espelho gerado fora do Git. Cobertura B0 mede identidades/coleta; CI compartilha suítes somente entre ambientes equivalentes, mantendo checks. Mudança local, sem publicação ou homologação de destino. [ADR-0026](docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md) · [Prova de preservação](docs/historico/changelog/README.md).
 - (Codex) Documentação e instruções de manutenção passam a rotas por tarefa, núcleo AGENTS, cinco skills canônicas e adaptadores mínimos, com história preservada. Compatibilidade nativa e Windows ainda não certificadas. [ADR-0025](docs/decisions/ADR-0025-arquitetura-instrucoes-ia.md) · [Evidência READMEs](docs/auditoria/2026-10-06_readmes/README.md).
 
 ## 2026-10-01
