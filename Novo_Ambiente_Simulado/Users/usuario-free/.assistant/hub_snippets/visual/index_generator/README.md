@@ -8,7 +8,7 @@
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Gerador de índice descritivo de EDA. |
+| O que é? | `gerar_indice_eda` e `gerar_indice_eda_resolvido`: índice descritivo de EDA. |
 | Para que serve? | Apresentar o roteiro adotado e a numeração canônica. |
 | Use quando... | O notebook segue as etapas do Hub e você informa as que estão presentes. |
 | Evite quando... | É preciso descobrir células, medir conclusão ou gerar links clicáveis. |
@@ -45,7 +45,7 @@ Para um documento que exige navegação clicável, prefira um sumário apropriad
 
 A entrada é uma sequência de números de etapas. Para cada número, a função consulta `SECOES_EDA` e adiciona emoji, título e descrição. Se `etapas_ativas` for `None`, ela percorre os números de 0 a 8. Se for uma lista, conserva a ordem e as repetições recebidas.
 
-O parâmetro `markdown` muda apenas o formato da string. Não há varredura de células, ordenação automática, deduplicação ou acompanhamento de progresso. A rota legada usa estilos históricos; `gerar_indice_eda_resolvido` obtém os estilos HTML da materialização V04. Em `markdown=True`, o tema é validado, mas nenhum CSS é inserido no texto.
+O parâmetro `markdown` muda apenas o formato da string. Não há varredura de células, ordenação automática, deduplicação ou acompanhamento de progresso. A rota legada usa estilos históricos; `gerar_indice_eda_resolvido` obtém os estilos HTML da materialização de estilos. Em `markdown=True`, o tema é validado, mas nenhum CSS é inserido no texto.
 
 ## 6. Exemplo de situação
 
@@ -58,6 +58,13 @@ O índice mantém esses quatro números, em vez de renumerar como 1, 2, 3 e 4. I
 O cálculo do texto usa Python e os módulos de constantes do Hub, sem pandas, Plotly ou Spark. Configure o caminho de importação. Para visualizar HTML é necessário um renderizador, como `displayHTML` no notebook Databricks; para apenas obter o texto, não.
 
 Use uma lista de inteiros correspondentes às chaves de `SECOES_EDA`. Uma etapa inexistente resulta em `KeyError`, não é descartada. Texto como `"3"` não é automaticamente convertido no inteiro 3. Não use um conjunto quando a ordem for importante.
+
+APIs públicas (retorno `str`; `theme` é um `ResolvedTheme` de contexto `notebook` nas variantes resolvidas):
+
+- `gerar_indice_eda(etapas_ativas: Optional[Iterable[int]]=None, markdown: bool=False)`
+- `gerar_indice_eda_resolvido(theme: ResolvedTheme, etapas_ativas: Optional[Iterable[int]]=None, markdown: bool=False)`
+
+A geração legada usa Python e o Hub. As rotas resolvidas revalidam o tema e exigem as [dependências de validação](../../requirements-temas.txt), sem instalação automática.
 
 ## 8. O que este recurso entrega?
 
@@ -80,7 +87,7 @@ print(indice)
 
 Para a versão visual, obtenha `gerar_indice_eda([1, 3, 4, 8])` e apresente a string com `displayHTML`. O [notebook completo](exemplo_index_generator.py) usa a sessão Spark somente na preparação do caminho de importação; a função não precisa de Spark para montar o índice. Não há escrita persistente.
 
-### Caminho V04 — índice HTML com tema explícito
+### Tema explícito — índice HTML com tema explícito
 
 `gerar_indice_eda_resolvido(theme, etapas_ativas=..., markdown=False)` preserva a ordem, repetições e conteúdo de `SECOES_EDA`. O tema controla fonte, cor principal, superfície de item e texto secundário somente na saída HTML.
 
@@ -110,10 +117,12 @@ Quando faltar uma etapa, revise a lista antes de concluir que a análise está i
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](index_generator.py) define a montagem; a [fachada](__init__.py) exporta a função. O [exemplo](exemplo_index_generator.py) mostra versão completa e filtrada. O [mapa de etapas](../../constants/emojis/README.md) é a origem do vocabulário; o [guia da coleção](../../README.md) explica a preparação.
+A [implementação](index_generator.py) define a montagem; a [fachada](__init__.py) exporta `gerar_indice_eda` e `gerar_indice_eda_resolvido`. O [exemplo](exemplo_index_generator.py) mostra versão completa e filtrada. O [mapa de etapas](../../constants/emojis/README.md) é a origem do vocabulário; o [guia da coleção](../../README.md) explica a preparação.
 
 ## 15. Referências
 
-O contrato específico é verificado em [index_generator.py](index_generator.py) e no [mapa](../../constants/emojis/emojis.py), base `c60f1e5`. A documentação oficial [Organize Databricks notebook cells](https://learn.microsoft.com/en-us/azure/databricks/notebooks/notebook-cells) descreve o sumário nativo e seus títulos; consultada em 2026-09-12.
+O contrato específico é verificado em [index_generator.py](index_generator.py) e no [mapa](../../constants/emojis/emojis.py). A documentação oficial [Organize Databricks notebook cells](https://learn.microsoft.com/en-us/azure/databricks/notebooks/notebook-cells) descreve o sumário nativo e seus títulos; consultada em 2026-09-12.
 
-Os testes R03-B conferem ordem, repetições, formato e recusa de chave inexistente. Isso não é teste de navegação no workspace nem auditoria de um notebook real. Revisão própria de ChatGPT, sem auditoria independente.
+A [implementação](index_generator.py) e a [fachada](__init__.py) delimitam o contrato. Confira conteúdo, escape e aparência no destino: gerar uma string não homologa a interface nem acessibilidade.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03B.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

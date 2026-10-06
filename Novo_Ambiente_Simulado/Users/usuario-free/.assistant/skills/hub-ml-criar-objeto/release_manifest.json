@@ -6,7 +6,7 @@
     {
       "path": "hub_padroes/readme/template.md",
       "role": "template",
-      "git_blob_sha1": "522f6cb4bd6b23d8190aae6e16aed0f81fb393b0"
+      "git_blob_sha1": "701ebd4389be3262948920ae144075a3bdc4a7f6"
     },
     {
       "path": "hub_scripts/skill_execution/receipt/__init__.py",
@@ -16,7 +16,7 @@
     {
       "path": "skills/hub-ml-criar-objeto/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "58c926f12b0e2621f20294890675e6583410d469"
+      "git_blob_sha1": "2d84c8d4954f527278830bc7f082a6d9764fe72f"
     },
     {
       "path": "skills/hub-ml-criar-objeto/execution_contract.json",
@@ -41,7 +41,7 @@
     {
       "path": "skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
       "role": "checklist",
-      "git_blob_sha1": "dbd56f4fa6013d2245cc4945ca92600ca56198b9"
+      "git_blob_sha1": "fc70cbdc9290101845425f3032118ae765c6228c"
     },
     {
       "path": "skills/hub-ml-criar-objeto/scripts/object_validation.py",

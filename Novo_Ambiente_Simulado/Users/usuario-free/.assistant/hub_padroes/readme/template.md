@@ -19,10 +19,7 @@ perguntas de conceito e escolha próprias, atendidas pelo molde específico.
 | **Padrão** | pasta de seção (`hub_snippets/spark/`, `hub_scripts/`) | as 9 |
 | **Longa** | raiz do repositório e `.assistant/` | as 9 + extras posicionadas |
 
-**Conte pastas de objeto, não arquivos.** `hub_snippets/display/` tem 3 objetos
-(curta); `hub_snippets/spark/` tem 7 (padrão); `hub_padroes/` tem 7 subpastas
-(padrão). A dúvida é real e produz READMEs de tamanhos diferentes para a mesma
-pasta.
+**Escolha a escala pela complexidade da decisão e pela quantidade de objetos a explicar**, sem fixar contagens mutáveis de categorias. Um índice deve levar ao guia certo; uma coleção maior precisa explicitar grupos e critérios de escolha.
 
 Na escala curta, "visão estrutural" e "o que existe aqui" viram o mesmo conteúdo
 em dois formatos — mantenha só a tabela. E FAQ com menos de três perguntas reais
@@ -46,8 +43,7 @@ Na escala longa, seções extras entram entre a 7 e a 9, nunca antes da 5.
 
 ### Sobre a seção 2
 
-Depois da reestruturação, quase tudo que tem README é do Hub. Repetir "isto é
-customizado" em vinte pastas é ruído. Ela é obrigatória apenas onde alguém pode
+A distinção entre nativo e conteúdo do Hub evita ambiguidade. Ela é obrigatória apenas onde alguém pode
 se confundir de verdade: em `skills/`, que é estrutura **nativa** com conteúdo
 nosso, e nos dois READMEs de topo.
 

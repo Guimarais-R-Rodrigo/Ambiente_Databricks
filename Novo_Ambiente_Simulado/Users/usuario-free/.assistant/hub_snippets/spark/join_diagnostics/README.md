@@ -71,6 +71,7 @@ O retorno é um dicionário. Os campos principais são:
 |---|---|
 | `linhas_esquerda`, `linhas_direita` | contagens de linhas de cada entrada |
 | `chaves_nulas_*` | linhas com ao menos um componente nulo da chave |
+| `linhas_descartadas_chave_nula` | nulas da esquerda descartadas pelo `inner`; são preservadas pelo `left` |
 | `linhas_com_match` | linhas válidas da esquerda que encontram chave na direita |
 | `linhas_sem_match_chave_valida` | linhas válidas da esquerda sem correspondência |
 | `cobertura_pct_chaves_validas` | match / linhas válidas da esquerda, em % |
@@ -89,7 +90,12 @@ O retorno é um dicionário. Os campos principais são:
 ```python
 from hub_snippets.spark.join_diagnostics import diagnosticar_join
 
-diag = diagnosticar_join(fatos, cadastro, ["id_cliente", "safra"])
+fatos = spark.createDataFrame([(1,), (2,), (None,)], "id_cliente int")
+cadastro = spark.createDataFrame([(1,), (1,)], "id_cliente int")
+diag = diagnosticar_join(fatos, cadastro, "id_cliente")
+assert diag["linhas_apos_join_left"] == 4
+assert diag["linhas_apos_join_inner"] == 2
+assert diag["linhas_descartadas_chave_nula"] == 1
 print(diag["expansao_prevista_left"])
 print(diag["cobertura_pct_chaves_validas"])
 ```
@@ -104,6 +110,8 @@ Compare `expansao_prevista_left` e `expansao_prevista_inner`. O primeiro inclui 
 
 O helper restringe a multiplicidade às chaves presentes na esquerda. Duplicidades de chaves que existem **somente** na direita não afetam a estimativa, porque não participariam daquele join.
 
+A cobertura é arredondada para duas casas decimais; multiplicidade média e expansões, para três. A sequência executa múltiplas ações: fixe a mesma versão/snapshot das entradas durante a conferência. Cache não é solução universal e pode não ser aceito pelo compute.
+
 ## 11. Limitações, riscos e armadilhas
 
 O diagnóstico executa contagens, agregações, `left_semi`, `inner`, `left_anti` e pequenas coletas. O custo depende de volume, distribuição das chaves, partições e plano; não assuma tempo fixo.
@@ -114,7 +122,7 @@ Em esquerda vazia, as expansões retornam `1.0` por convenção do código; isso
 
 ## 12. Quais são as alternativas?
 
-Para conferir uma tabela nomeada, chave primária candidata, nulidade e recência, [`data_quality_check`](../../../hub_scripts/data_quality_check/data_quality_check.py) responde outra pergunta. Para disponibilidade temporal, [`pit_join`](../pit_join/README.md) escolhe a versão histórica elegível.
+Para conferir uma tabela nomeada, chave primária candidata, nulidade e recência, [`data_quality_check`](../../../hub_scripts/data_quality_check/README.md) responde outra pergunta. Para disponibilidade temporal, [`pit_join`](../pit_join/README.md) escolhe a versão histórica elegível.
 
 Contagens manuais com `groupBy` e `left_anti` são adequadas quando você precisa de um diagnóstico específico que não cabe no contrato desta função.
 
@@ -130,11 +138,13 @@ Verifique a identidade `linhas_com_match + linhas_sem_match_chave_valida + chave
 - [Fachada](__init__.py): exporta `diagnosticar_join`.
 - [Notebook](exemplo_join_diagnostics.py): quatro cenários sintéticos.
 - [`pit_join`](../pit_join/README.md): join com elegibilidade temporal.
-- [`data_quality_check`](../../../hub_scripts/data_quality_check/data_quality_check.py): qualidade de tabela nomeada, não efeito de join.
+- [`data_quality_check`](../../../hub_scripts/data_quality_check/README.md): qualidade de tabela nomeada, não efeito de join.
 - [Coleção](../../README.md): demais operações Spark do Hub.
 
 ## 15. Referências
 
 A descrição foi confrontada com `join_diagnostics.py`, `__init__.py` e o notebook desta pasta. Relação, cobertura e expansão são definições do helper local, não conceitos universais com esses nomes exatos.
 
-A R04-A registra testes sintéticos com Spark separadamente do gate estrutural. Não há benchmark de escala, publicação Databricks ou auditoria independente nesta entrega.
+As expectativas sintéticas verificam contagens; não constituem benchmark de escala nem homologação Databricks.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R04A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

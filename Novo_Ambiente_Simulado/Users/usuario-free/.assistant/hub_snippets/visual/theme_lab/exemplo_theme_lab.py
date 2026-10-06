@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Aparência do Hub — prévia pessoal V05
+# MAGIC # Aparência do Hub — prévia pessoal
 # MAGIC
 # MAGIC Comece pelo [guia de primeiro uso](GUIA_PRIMEIRO_USO.md) e pelo
 # MAGIC [README](README.md). Este notebook não consulta dados corporativos,
@@ -64,8 +64,7 @@ print("JSON somente em memória:", isinstance(payload, bytes))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Saída da célula acima, executada com a candidata V05; é evidência Python,
-# MAGIC não captura da interface Databricks:
+# MAGIC Saída sintética observada em Python; não é captura da interface Databricks:
 # MAGIC
 # MAGIC ```text
 # MAGIC presets demonstrativos: ['legado_notebook', 'executivo_claro']
@@ -144,10 +143,6 @@ for painel in (comparacao.current, comparacao.proposal):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 7. O que este notebook não comprova
+# MAGIC ## 7. Conferir o ambiente de uso
 # MAGIC
-# MAGIC O [guia](GUIA_PRIMEIRO_USO.md) descreve fallback `dbutils.widgets`,
-# MAGIC salvamento, reabertura e erros. GitHub Actions testa os objetos Python,
-# MAGIC mas não homologa navegador Databricks, acessibilidade, p95, ACL da pasta
-# MAGIC ou uso autônomo por pessoa iniciante. Submeter/aprovar/publicar continuam
-# MAGIC fora da V05, assim como recoloração de PNGs e consumidores não integrados.
+# MAGIC O [guia](GUIA_PRIMEIRO_USO.md) descreve fallback `dbutils.widgets`, salvamento, reabertura e erros. Confirme prévia, acessibilidade e permissões no destino. Testes Python não comprovam navegador Databricks, p95, ACL ou uso autônomo. Este notebook não submete, aprova, publica, recolore PNGs ou altera consumidores externos.

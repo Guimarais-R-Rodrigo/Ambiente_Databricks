@@ -46,8 +46,7 @@ Identifique a raiz do Hub que está realmente acessível, denominada `HUB_ROOT`:
 - com anexos, somente o subconjunto efetivamente recebido.
 
 Esses nomes são convenções do procedimento, não variáveis nativas da Databricks.
-A cópia histórica em `novas_funcionalidades/` não é a raiz dos helpers nem
-a versão de manutenção desta skill.
+Use somente a raiz confirmada da instalação autorizada; uma cópia histórica não é a versão operacional.
 Não misture repositório, simulado e instalação remota em uma única evidência.
 Se a raiz não puder ser determinada, peça seu caminho ou o índice do Hub.
 
@@ -88,9 +87,9 @@ Quando o pedido mencionar tema, identidade visual, paleta, Visual Lab, aparênci
 
 - autoria/comparação em notebook: `hub_snippets.visual.theme_lab`;
 - Plotly: `hub_snippets.visual.theme_plotly` e rotas `_resolvido` dos consumidores;
-- HTML/tabelas: rotas `_resolvido` documentadas pelos componentes V04;
-- assets editoriais: contrato V06, sem promoção automática;
-- consumidores V07: confirmar a função `_resolvido` concreta antes de recomendar.
+- HTML/tabelas: rotas `_resolvido` documentadas pelos componentes HTML/tabelas;
+- assets editoriais: contrato editorial vigente, sem promoção automática;
+- consumidores temáticos: confirmar a função `_resolvido` concreta antes de recomendar.
 
 Explicite limites: **SHAP/Matplotlib** e **Kaplan–Meier** permanecem exceções ao theming V07. Um tema válido não significa publicado, aprovado ou homologado no browser Databricks. Se a solicitação for somente escolher cores, encaminhe ao fluxo de autoria/contrato em vez de inventar uma paleta na resposta.
 

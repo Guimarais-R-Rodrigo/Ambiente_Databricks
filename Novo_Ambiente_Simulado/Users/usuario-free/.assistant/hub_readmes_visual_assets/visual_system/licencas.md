@@ -5,9 +5,7 @@ Inter e ícones Lucide. A Inter é distribuída sob SIL Open Font License; os í
 Lucide, sob ISC. Os avisos integrais acompanham o pacote em
 [Inter-OFL.txt](../licenses/Inter-OFL.txt) e [Lucide-ISC.txt](../licenses/Lucide-ISC.txt).
 
-O código de composição fica em `tools/readme_visuals/`. Dependências, fontes e
-ícones têm versões fixadas no lockfile; a tipografia dos SVGs é convertida em
-paths para evitar substituição por fontes da máquina leitora.
+A tipografia dos SVGs é convertida em paths para evitar substituição por fontes da máquina leitora. Reconstrução e versões de dependências são administradas pelo mantenedor; os avisos integrais acima continuam acompanhando os assets.
 
 Os cabeçalhos incorporam uma arte-base criada pela ferramenta nativa de geração
 de imagem, sem logotipo solicitado ou introduzido. Essa origem é distinta das

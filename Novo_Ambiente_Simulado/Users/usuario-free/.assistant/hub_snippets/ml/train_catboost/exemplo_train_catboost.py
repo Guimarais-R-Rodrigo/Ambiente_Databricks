@@ -2,9 +2,9 @@
 # MAGIC %md
 # MAGIC # `train_catboost` — o baseline para quando há categórica de verdade
 # MAGIC
-# MAGIC **O problema.** Codificar categórica de alta cardinalidade com one-hot explode a dimensão; com *target encoding* feito à mão, vaza o alvo. As duas saídas usuais são ruins.
+# MAGIC **O problema.** One-hot pode tornar uma matriz de alta cardinalidade muito larga. Target encoding sem separação adequada pode vazar o alvo; ambos continuam sendo alternativas quando preparados e avaliados corretamente.
 # MAGIC
-# MAGIC **O que este helper faz.** Treina CatBoost, que trata categórica nativamente com codificação ordenada — construída para não vazar.
+# MAGIC **O que este helper faz.** Treina CatBoost com tratamento categórico declarado. As estatísticas ordenadas/permutadas reduzem fontes de viés, mas não garantem ausência de leakage temporal ou de entidade.
 
 # MAGIC
 # MAGIC **Guia local completo:** [README deste modelo](README.md).
@@ -48,15 +48,7 @@ from hub_snippets.ml.train_catboost import train_catboost_baseline
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## Por que `log_mlflow=False` em tudo
-# MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
-# MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
+# MAGIC Este exemplo passa log_mlflow=False para desativar apenas o registro explícito do helper. Antes de habilitar tracking, confirme dependência, experimento, permissões, configuração do runtime e autologging da sessão. Uma falha numa configuração de serverless não determina o suporte em outras configurações.
 
 # COMMAND ----------
 # MAGIC %md
@@ -119,18 +111,7 @@ for chave, valor in metricas.items():
 # MAGIC    coluna. A mensagem é longa e não diz "converta para inteiro" — diz que
 # MAGIC    o array é de ponto flutuante, "o que significa nenhuma feature
 # MAGIC    categórica".
-# MAGIC 2. O CatBoost escreve `catboost_info/` no diretório de trabalho por
-# MAGIC    padrão. No Databricks isso é a **pasta do notebook**, e a primeira
-# MAGIC    execução deste exemplo deixou dez arquivos de log publicados dentro de
-# MAGIC    `.assistant/hub_snippets/ml/train_catboost/`. Foi o `--verify` da
-# MAGIC    publicação que apanhou.
-# MAGIC
-# MAGIC    A correção ficou **no módulo**, não aqui: `train_catboost.py` agora
-# MAGIC    define `allow_writing_files=False` por padrão. A primeira versão desta
-# MAGIC    correção estava nesta célula, e isso deixava a mina armada para
-# MAGIC    qualquer outro chamador — inclusive as skills, que recomendam o módulo
-# MAGIC    por caminho de import. Quem quiser os logs sobrescreve com
-# MAGIC    `params_override={"allow_writing_files": True}`.
+# MAGIC O wrapper usa allow_writing_files=False para evitar arquivos auxiliares como catboost_info no diretório de trabalho. params_override={"allow_writing_files": True} habilita essa escrita; só use essa opção com um destino de trabalho e efeito pretendidos.
 
 # COMMAND ----------
 # MAGIC %md

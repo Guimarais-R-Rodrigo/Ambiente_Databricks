@@ -68,9 +68,7 @@ print(card.to_string(index=False))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o bloco histórico abaixo é **abreviado**: o código
-# MAGIC imprime também as linhas de `tempo_woe`, mas o output colado antigo não as contém.
-# MAGIC O bloco é preservado como evidência histórica, não como schema completo do retorno.
+# MAGIC A saída abaixo é abreviada e omite as linhas de tempo_woe. O retorno contém uma contribuição por feature × faixa; confira todas as features antes de somar pontos.
 # MAGIC
 # MAGIC ```text
 # MAGIC        feature  faixa   woe  coef  pontos  event_is_bad

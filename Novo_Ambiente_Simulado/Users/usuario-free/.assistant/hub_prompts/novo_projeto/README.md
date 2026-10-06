@@ -4,6 +4,8 @@
 
 Briefing para charter, árvore de projeto, contexto local e backlog antes de criar recursos. O prompt organiza o pedido, mas não executa a tarefa sozinho.
 
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -11,7 +13,7 @@ Briefing para charter, árvore de projeto, contexto local e backlog antes de cri
 | O que é? | Briefing para charter, árvore de projeto, contexto local e backlog antes de criar recursos. |
 | Para que serve? | Evitar arquitetura prematura e tornar objetivo, owners, métricas e ambientes verificáveis. |
 | Use quando... | Há problema/decisão e stakeholders a organizar. |
-| Evite quando... | É usado como substituto da descoberta com negócio ou sem owner/prazo. |
+| Evite quando... | É usado para assumir decisões/compromissos sem descoberta ou responsável. |
 | Precisa de... | Nome, objetivo, donos, métricas, fontes, entidade/target, entregáveis, ambientes, repo e modo. |
 | Entrega... | Briefing estruturado; evidências dependem da interação real. |
 
@@ -31,7 +33,7 @@ Use quando há problema/decisão e stakeholders a organizar. Evitar arquitetura 
 
 ## 4. Quando não usar?
 
-Evite quando é usado como substituto da descoberta com negócio ou sem owner/prazo. Gerar texto ou código não valida premissas ausentes.
+Não use para substituir a descoberta com negócio nem assumir compromisso sem responsável. Owner, aprovador ou prazo ausentes são lacunas úteis ao plano condicionado; bloqueiam apenas compromissos e execução que dependam dessas decisões.
 
 ## 5. Como funciona, intuitivamente?
 
@@ -39,7 +41,7 @@ Defina charter e limites, proponha estrutura simples e use `AGENTS.md` apenas no
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, público e objetivo explícitos.
+Estruturar um projeto fictício de propensão a resposta, com fonte sintética conhecida e backlog de EDA. Time e consumidor são propostos; dono e aprovador efetivos, ambiente e repositório continuam pendentes. Os marcos pedidos são estimativas para revisão, não compromissos assumidos ou arquitetura aprovada.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +49,11 @@ Tenha nome, objetivo, donos, métricas, fontes, entidade/target, entregáveis, a
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi proposto, executado ou validado.
+Solicita charter mensurável, árvore justificada, `AGENTS.md` para revisão, backlog com dependências, critérios de aceite e lista de ações que exigem autorização. Gerar texto ou arquivos não significa deploy, publicação nem criação automática de recursos.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [novo_projeto.md](novo_projeto.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_novo_projeto.py) demonstra o preenchimento. O exemplo cria `workspace.default.hub_exemplo_clientes` só como contexto sintético; o modo pedido é somente plano.
+O [briefing](novo_projeto.md) pode ser usado sem executar a Parte 1. O [preparo](exemplo_novo_projeto.py) **sobrescreve** `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`; pedir “somente plano” no chat não impede essa escrita preparatória. A Parte 3 permanece **NÃO EXECUTADO**. Não há associação obrigatória 1:1 a uma skill: escolha a rota depois de definir o resultado.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +65,7 @@ Duplicar instruções globais, incluir segredos, criar recursos cedo ou confundi
 
 ## 12. Quais são as alternativas?
 
-Para pipeline definido use `pipeline`; para baseline use `baseline_orchestration`.
+Use [Pipeline](../pipeline/README.md), [Baseline](../baseline_orchestration/README.md) ou [Micromodelo Novo](../micromodelo_novo/README.md) conforme o objetivo. O [Concierge](../../skills/hub-ml-concierge/SKILL.md) ajuda a descobrir recursos sem inventar acesso.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +77,4 @@ O [briefing](novo_projeto.md), o [notebook](exemplo_novo_projeto.py) e o [catál
 
 ## 15. Referências
 
-A descrição foi confrontada com [novo_projeto.md](novo_projeto.md) e [exemplo_novo_projeto.py](exemplo_novo_projeto.py) na base R11. Para comportamento atual de Genie Code, Agent Skills e instruções, consulte a documentação oficial do Databricks antes de operar em produção.
+O [briefing](novo_projeto.md) define os campos e a entrega; o [notebook](exemplo_novo_projeto.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

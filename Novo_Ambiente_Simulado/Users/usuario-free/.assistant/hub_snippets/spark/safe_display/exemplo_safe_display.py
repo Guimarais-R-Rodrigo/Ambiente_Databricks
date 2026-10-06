@@ -20,11 +20,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e APIs compatíveis; confira runtime, permissões e comportamento no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | o helper não usa `cache()`, então não há diferença |
+# MAGIC | Diferença Free × trabalho | não usar cache não garante equivalência; confira plano, runtime e renderer |
 
 # COMMAND ----------
 
@@ -63,10 +63,7 @@ except RuntimeError as erro:
 # MAGIC o Databricks injeta vive no escopo do notebook e nunca é visível de dentro
 # MAGIC da biblioteca.
 # MAGIC
-# MAGIC É a mesma família do `NameError: name 'spark' is not defined` que derrubou
-# MAGIC seis módulos deste projeto no primeiro teste de runtime: **o notebook tem
-# MAGIC globais que o módulo não herda**. Vale como regra ao escrever helper — se
-# MAGIC ele precisa de algo que só existe no notebook, esse algo é parâmetro.
+# MAGIC Globais do notebook não são herdados por um módulo importado. Passe `display_fn=display` explicitamente. A ausência do renderer só é detectada depois da contagem limitada; a tentativa pode ter custo mesmo ao falhar.
 # MAGIC
 # MAGIC A recusa é o comportamento certo. A alternativa seria não exibir nada em
 # MAGIC silêncio, e aí o helper pareceria funcionar.

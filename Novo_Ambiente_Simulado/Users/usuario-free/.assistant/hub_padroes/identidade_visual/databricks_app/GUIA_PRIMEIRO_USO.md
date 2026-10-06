@@ -1,4 +1,4 @@
-# Guia de primeiro uso — App de Gestão Visual V10
+# Usar o App de autoria visual
 
 Este guia é para quem nunca usou o Sistema de Temas. Ele descreve o que a interface faz sem pressupor conhecimento de Python.
 
@@ -9,7 +9,7 @@ Confirme com o responsável pelo ambiente que:
 1. você recebeu acesso ao Databricks App de autoria visual;
 2. o App está ligado ao Unity Catalog Volume de sessões;
 3. você está no ambiente correto;
-4. ninguém pediu que você publique ou altere o padrão da equipe — a V10 não faz isso.
+4. ninguém pediu que você publique ou altere o padrão da equipe — o App não faz isso.
 
 Se o App exibir erro de identidade ou armazenamento, não tente contornar o bloqueio. Copie somente o código da mensagem e procure o mantenedor; não envie tokens nem dados internos.
 
@@ -67,7 +67,7 @@ Não existe botão para:
 - ativar como padrão;
 - apagar histórico.
 
-Essas ausências são intencionais. A política de papéis do projeto separa autoria, aprovação e publicação; a V10 implementa somente autoria/persistência.
+Essas ausências são intencionais. A política de papéis do projeto separa autoria, aprovação e publicação; o App implementa somente autoria/persistência.
 
 ## Se aparecer erro
 

@@ -4,7 +4,7 @@
 
 
 ## Uso
-Tabela padronizada de métricas por tipo de problema. Inclui camada executiva e técnica.
+Tabela padronizada de métricas por tipo de problema. Inclui camada executiva e técnica. Preencher somente resultados calculados; usar NÃO CALCULADO, NÃO EXECUTADO ou NÃO APLICÁVEL com motivo. IC e testes comparativos dependem do método suportado e do nível definido no estudo.
 
 ## Classificação Binária
 
@@ -14,7 +14,8 @@ Tabela padronizada de métricas por tipo de problema. Inclui camada executiva e 
 | Ordenação de risco | AUC = [X] | [✅/🟡/🔴] | "Em pares positivo-negativo, ordena o positivo acima do negativo em aproximadamente [X]%" |
 | Separação bons/maus | KS = [X] | [✅/🟡/🔴] | "Separa os grupos em [X] pontos" |
 | Ganho no top-10% | Lift = [X]x | [✅/🟡/🔴] | "Top 10% concentra [X]x mais eventos" |
-| Calibração | Brier = [X] | [✅/🟡/🔴] | "Probabilidades [confiáveis/razoáveis/ruins]" |
+| Erro probabilístico | Brier = [X] | [critério ou NÃO CLASSIFICADO] | "Erro quadrático das probabilidades; isoladamente não demonstra calibração" |
+| Calibração | [curva/intercepto/slope ou NÃO AVALIADA] | [critério do caso] | [desvio observado, população e incerteza] |
 
 ### Camada técnica
 | Métrica | Treino | Val | Teste | IC 95% | Faixa ref. | Gap T-Te |
@@ -38,7 +39,8 @@ Tabela padronizada de métricas por tipo de problema. Inclui camada executiva e 
 ### Camada executiva
 | O que mede | Resultado | Qualidade | Em linguagem simples |
 |---|---|---|---|
-| Erro típico | RMSE = [X] | [✅/🟡/🔴] | "Erra em média R$ [X] para cima ou baixo" |
+| Erro quadrático | RMSE = [X] | [critério ou NÃO CLASSIFICADO] | "Raiz do erro quadrático médio: [X] na unidade do target, sensível a erros grandes" |
+| Erro absoluto médio | MAE = [X] | [critério ou NÃO CLASSIFICADO] | "Erro absoluto médio de [X] na unidade do target" |
 | Erro percentual | MAPE = [X]% | [✅/🟡/🔴] | "Erra [X]% em média" |
 | Variância explicada | R² = [X] | [✅/🟡/🔴] | "Explica [X]% da variação" |
 

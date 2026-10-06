@@ -22,11 +22,11 @@ escrita | log | visualização | diagnóstico]
 - quais validações.]
 
 **Funções, APIs e conceitos envolvidos**:
-- `[função/API 1]`: [breve menção do propósito]
+- `[função/API 1]`: [símbolo realmente usado no código e breve propósito; não inventar API para completar o campo]
 - `[função/API 2]`: ...
 
 **Resultado esperado**:
-[Volume aproximado, schema, métricas-alvo.]
+[Schema e critérios esperados. Volume estimado só com fundamento identificado; nunca apresentá-lo como observado.]
 
 **Pontos de atenção**:
 - ⚠️ [Risco/premissa/cuidado 1].

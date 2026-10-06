@@ -4,6 +4,8 @@
 
 Briefing para safra/vintage com coorte, idade, numerador, denominador e censura. O prompt organiza o pedido, mas não executa a tarefa sozinho.
 
+**Preparo persistente:** o exemplo sobrescreve `workspace.default.hub_exemplo_safras`. Confira destino e autorização antes de executar; o briefing pode ser estudado sem criar a tabela.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -39,7 +41,7 @@ Crie grade safra×idade, preserve células não observáveis e compare idades eq
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, período e unidade de análise explícitos.
+Compare duas safras de contratação: uma observada até M6 e outra até M3. A comparação comum é M3; M4–M6 da mais recente continuam não observáveis. Não converta ausência de maturação ou cobertura em taxa zero. Esse exemplo de interpretação não é um resultado medido do notebook.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +49,13 @@ Tenha dataset, entidade/chave, safra, idade, evento, denominador, métrica e cen
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi apenas proposto, executado ou validado.
+Solicita dicionário da métrica e linha do tempo; matriz safra×maturidade com numerador, denominador, volume e taxa; curvas/heatmap; alertas de baixo N; e limitações de censura, composição e dados incompletos. Gráficos e métricas observados dependem de execução real.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [safra.md](safra.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_safra.py) demonstra o preenchimento. O exemplo sobrescreve `workspace.default.hub_exemplo_safras`; base sintética não cria regra regulatória.
+Preencha [safra.md](safra.md). Siga a [skill correspondente](../../skills/hub-ml-analise-safra/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. O perfil sintético `MONTHLY_BINARY_PILOT_V1` tem contrato delimitado de roster fixo, maturidade e cobertura. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing.
+
+O [notebook](exemplo_safra.py) sobrescreve `workspace.default.hub_exemplo_safras`. Criar a fixture não executa a análise nem valida norma regulatória. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,11 +67,11 @@ Somar taxas cumulativas, dupla contagem e atribuir causa a mix/maturação. A in
 
 ## 12. Quais são as alternativas?
 
-Use `vintage_analysis` para cálculo reutilizável; survival para censura mais formal.
+Use [vintage_analysis](../../hub_snippets/ml/vintage_analysis/README.md) para entender o cálculo reutilizável e [Baseline](../baseline_orchestration/README.md) para discutir uma análise survival apropriada à censura.
 
 ## 13. Como saber se o resultado faz sentido?
 
-Reconcilie entidades, numerador, denominador, células imaturas e maturidade comum. Separe fatos observados, hipóteses e recomendações.
+Reconcilie entidades e recalcule manualmente uma célula completa. No perfil de roster fixo, preserve o denominador da coorte: cobertura `1/2` não autoriza taxa provisória com denominador 1. Uma célula incompleta não recebe taxa final como se tivesse exposição completa. Distinga estimativa rotulada, falta de observação e zero verdadeiro; compare somente maturidade comum.
 
 ## 14. Arquivos relacionados e próximos passos
 
@@ -75,4 +79,4 @@ O [briefing](safra.md), o [notebook](exemplo_safra.py) e o [catálogo](../README
 
 ## 15. Referências
 
-A descrição foi confrontada com [safra.md](safra.md) e [exemplo_safra.py](exemplo_safra.py) na base R11. Para comportamento de plataforma, consulte a documentação oficial atual do Databricks antes de operar em produção.
+O [briefing](safra.md) define os campos e a entrega; o [notebook](exemplo_safra.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

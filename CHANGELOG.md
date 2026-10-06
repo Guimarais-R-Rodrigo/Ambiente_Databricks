@@ -9,6 +9,9 @@
 - (Codex) Reescritos os guias de runners com APIs e oráculos completos, rotas de efeito distintas, exemplos locais e limites de dependências. Receitas Safra, Baseline, features, drift/performance e Micromodelos executadas localmente; Spark e SHAP integral não executados por dependências opcionais ausentes.
 - (Codex) Separada a projeção operacional de TOKENS da emissão histórica; saída padrão, snapshot V01, schema e testes históricos preservados. A documentação de assets distingue uso de autoria sem regenerar imagens ou alterar licenças.
 
+- (Codex) Integrados os lotes de prompts/scripts, snippets gerais/ML e 61 templates, com 1.135 disposições e 497 registros de origem. Revisor independente conferiu contratos, contas, efeitos e conteúdo realocado. Sete hashes documentais em quatro manifests foram regenerados sem alterar schema, allowlist, roles ou hashes de implementação.
+- (Codex) Espelho integral regenerado na árvore isolada após inventário de 692 arquivos e zero extras; a certificação integrada está registrada em `docs/auditoria/2026-10-06_readmes/TESTES.md`.
+
 ## 2026-10-01 — Integração do aceite técnico B1 A
 
 - (Codex) O PR #122 foi integrado em `main` no commit `43dac176`, após

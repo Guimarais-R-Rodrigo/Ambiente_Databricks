@@ -7,7 +7,8 @@
 
 Não há uma skill analítica única nesta etapa. O objetivo é criar o charter e o
 `AGENTS.md`; depois, mencione com `@` a skill que corresponde ao trabalho
-definido. O mapa de capacidades e helpers está em
+definido; consulte então a [policy da skill](../../hub_padroes/skill_enforcement/policy.json)
+e sua rota antes de executar. O mapa de capacidades e helpers está em
 [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 ## Como preencher cada campo

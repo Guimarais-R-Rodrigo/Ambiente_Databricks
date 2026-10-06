@@ -1,6 +1,13 @@
 <!-- Template: roteiro completo de EDA (skill hub-ml-eda-profissional) -->
 
-# Roteiro EDA — Checklist completo
+# Roteiro EDA — Checklist por aplicabilidade
+
+Selecionar itens pertinentes ao pedido e ao contrato da [skill](../SKILL.md).
+Reaproveitar evidência do mesmo snapshot/run já produzida pela rota canônica;
+não repetir scans/contagens por ritual. Registrar fonte, estado e motivo de
+NÃO EXECUTADO ou NÃO APLICÁVEL. Itens opcionais não dispensam `run_enforced`,
+Receipt, handoff, Postflight e `completion.authorized=true` reverificado.
+Bloqueio canônico não autoriza continuar manualmente este checklist.
 
 ## 🎯 Etapa 0 — Contexto da Análise
 
@@ -18,12 +25,12 @@
 
 > Reconhece estrutura, volume, tipos e perfil geral dos dados.
 
-- [ ] `df.count()` executado 
-- [ ] `df.printSchema()` executado.
+- [ ] Volume obtido pela rota canônica, com fonte e recorte; distinguir contagem de estimativa
+- [ ] Schema observado e tipos conferidos, sem repetir exibição se já registrada.
 - [ ] Tipos de colunas categorizados (numéricas, categóricas, datas, booleanas).
 - [ ] Comentários de tabela e colunas recuperados (Unity Catalog).
 - [ ] Amostra controlada exibida (`display(df.limit(N))`).
-- [ ] `dbutils.data.summarize` executado (em amostra se necessário).
+- [ ] Resumo adicional somente se necessário, suportado e autorizado; registrar amostra/custo ou N/A.
 
 ## 🔑 Etapa 2 — Granularidade e Chaves
 
@@ -43,7 +50,7 @@
 - [ ] % preenchimento.
 - [ ] Duplicidades por chave.
 - [ ] Colunas constantes (variância zero) identificadas.
-- [ ] Colunas quase vazias (>95% nulos) identificadas.
+- [ ] Colunas quase vazias segundo limite definido no estudo e significado dos nulos.
 - [ ] Tipos inconsistentes detectados.
 - [ ] Datas inválidas/fora de domínio detectadas.
 - [ ] Valores negativos inesperados detectados.
@@ -88,7 +95,7 @@
 
 ## 🎨 Etapa 6 — Visualizações
 
-> Gráficos interativos do relatório final com Plotly.
+> Visuais pertinentes ao contrato, com Plotly quando disponível e útil.
 
 - [ ] Matriz de gráficos consultada.
 - [ ] Agregação prévia em Spark feita.

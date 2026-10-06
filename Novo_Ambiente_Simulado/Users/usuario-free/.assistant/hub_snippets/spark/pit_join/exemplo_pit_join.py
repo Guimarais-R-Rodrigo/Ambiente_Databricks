@@ -12,7 +12,7 @@
 # MAGIC que **já estava disponível** naquele momento — considerando também o atraso
 # MAGIC de publicação, que é a parte que quase todo mundo esquece.
 
-# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas abaixo são referências sintéticas observadas; não representam execução atual do seu ambiente.
 # MAGIC
 # COMMAND ----------
 # MAGIC %md

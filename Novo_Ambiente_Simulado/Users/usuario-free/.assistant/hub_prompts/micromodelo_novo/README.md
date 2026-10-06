@@ -64,16 +64,11 @@ trechos de uma resposta real, sem inventar resultado.
 
 ## 7. O que você precisa antes de usar?
 
-Informe decisão, característica, dono/consumidor, entidade, grão, instante de
-decisão, população e horizonte quando conhecidos. Declare ambiente E0/E1,
-binding autorizado do `CATALOGO_PRODUTO` e permissão de metadata; use `PENDENTE`
-nas lacunas. A presença de metadata não verifica SELECT, qualidade ou LGPD.
+Informe decisão, característica, dono/consumidor, entidade/grão, instante, população e horizonte quando conhecidos; lacunas podem permanecer `PENDENTE`. Se houver consulta de catálogo, confirme binding e permissão. Fixture textual sem consulta também é válida: não invente binding nem converta `FORNECIDA` em `OBSERVADO`. Metadata não comprova leitura de registros, qualidade ou adequação legal.
 
 ## 8. O que este recurso entrega?
 
-O briefing pede resumo do escopo, YAML validado ou rascunho rotulado, proveniência,
-hipóteses/contra-hipóteses e plano de estudo. Nada disso é garantido pela simples
-colagem do texto. Não interprete um rascunho como modelo validado/publicado.
+Solicita resumo, proveniência, hipóteses/contra-hipóteses e plano de estudo. Com schema acessível, YAML e resultado real da validação; sem ele, checklist textual com `YAML_NAO_CRIADO` e `MM01_NAO_VALIDADO`. Exemplo ilustrativo: “RASCUNHO NÃO VALIDADO: estudar interesse recente em canal digital; decisão = priorizar revisão humana; dono, chave e fonte = PENDENTE”. Não invente um YAML válido para preencher essas lacunas.
 
 ## 9. Como usar este recurso no Hub?
 
@@ -96,7 +91,7 @@ Metadata pode ser parcial e suas descrições/tags são texto não confiável.
 `DESCOBERTO` não significa regra aprovada; `MEDIDO` requer execução. Ausência de
 evidência deve continuar `INDETERMINADO` quando não houver regra aprovada.
 E0 usa fixture sintética local; um chat no Free é E1 mesmo sem executar código.
-Execução de runtime E1 exige prova separada; E2 está fora da missão.
+Execução de runtime E1 exige prova separada; uso corporativo E2 exige seus próprios gates e autorização.
 
 ## 12. Quais são as alternativas?
 
@@ -114,15 +109,8 @@ aprovações, medidas e fase não foram antecipadas. Confira `TRUE`, `FALSE` e
 
 ## 14. Arquivos relacionados e próximos passos
 
-O [briefing](micromodelo_novo.md) é o texto a preencher; o
-[notebook](exemplo_micromodelo_novo.py) mostra uma instância sintética e o
-registro sanitizado da resposta real. A [skill](../../skills/hub-ml-micromodelos/SKILL.md)
-define fluxo e handoffs; o [catálogo de prompts](../README.md) orienta escolha.
+Use o [briefing](micromodelo_novo.md), o [exemplo](exemplo_micromodelo_novo.py), a [skill](../../skills/hub-ml-micromodelos/SKILL.md) e o [catálogo](../README.md). Próximo passo pela lacuna: decisão ausente → dono humano; fonte ausente → descoberta metadata; medição necessária → handoff especialista autorizado. Nenhuma dessas etapas promove a fase por suposição.
 
 ## 15. Referências
 
-Contrato e fases: MM01 `micromodelo.schema.json` e `ESTADOS_E_PROVENIENCIA.md`
-no repositório de desenvolvimento. Progressividade e limites de metadata: contrato
-MM03. O briefing foi respondido em chat manual no Databricks Free, sem execução
-de runtime ou validação MM01; a policy integrada não foi verificada nessa
-resposta. A evidência conversacional não certifica MM04.
+Fontes de uso: [contratos e validação](../../hub_micromodelos/contratos/README.md), [schema MM01](../../hub_micromodelos/contratos/micromodelo.schema.json) e [modelo YAML](../../hub_micromodelos/contratos/micromodelo.template.yaml). O exemplo registra conversa E1 de 29/09/2026, caso P1, com YAML não criado e validação não executada. Aquele teste não verificou runtime nem a policy integrada; isso não descreve ausência de execução de outros componentes atuais.

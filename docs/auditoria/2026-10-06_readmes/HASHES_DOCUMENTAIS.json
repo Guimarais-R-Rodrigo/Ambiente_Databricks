@@ -1,0 +1,44 @@
+[
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/release_manifest.json",
+    "path": "skills/hub-ml-validacao-estatistica/scripts/README.md",
+    "old_git_blob_sha1": "77bcc603f4d67fc11f356658f24d38ce1ba3bcb1",
+    "new_git_blob_sha1": "d5f699b77d9ff795bc5397c806261a2e7971436a"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/release_manifest.json",
+    "path": "skills/hub-ml-validacao-estatistica/SKILL.md",
+    "old_git_blob_sha1": "e7f158147425d5bc7379ead51a881dc8fbcc4b78",
+    "new_git_blob_sha1": "4d59e623363d06d2ea304df7bfc9d642a3f4286f"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/release_manifest.json",
+    "path": "hub_padroes/readme/template.md",
+    "old_git_blob_sha1": "522f6cb4bd6b23d8190aae6e16aed0f81fb393b0",
+    "new_git_blob_sha1": "701ebd4389be3262948920ae144075a3bdc4a7f6"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/release_manifest.json",
+    "path": "skills/hub-ml-criar-objeto/SKILL.md",
+    "old_git_blob_sha1": "58c926f12b0e2621f20294890675e6583410d469",
+    "new_git_blob_sha1": "2d84c8d4954f527278830bc7f082a6d9764fe72f"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/release_manifest.json",
+    "path": "skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
+    "old_git_blob_sha1": "dbd56f4fa6013d2245cc4945ca92600ca56198b9",
+    "new_git_blob_sha1": "fc70cbdc9290101845425f3032118ae765c6228c"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/release_manifest.json",
+    "path": "skills/hub-ml-eda-profissional/SKILL.md",
+    "old_git_blob_sha1": "74912269afda07ba3bb856021004cbea3fc65c37",
+    "new_git_blob_sha1": "4845eccfe080a8df5d84f291648b9ced17322784"
+  },
+  {
+    "manifest": "ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/release_manifest.json",
+    "path": "skills/hub-ml-pipeline-builder/templates/pipeline_spec.md",
+    "old_git_blob_sha1": "0020a82956993bf22cc26df560733a3f886b4bde",
+    "new_git_blob_sha1": "212fb6987f8242b083c3b90101ce38103a6173ca"
+  }
+]

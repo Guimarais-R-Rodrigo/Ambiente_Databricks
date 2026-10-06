@@ -118,8 +118,7 @@ Os helpers visuais escapam a entrada antes de renderizar HTML; montar HTML por c
 - **Descrever o que o código faz** quando isso já está legível. O valor está no
   **porquê**, na armadilha e no próximo passo.
 - **Escrever número que você não viu executar.** Se a leitura cita um valor, ele
-  vem da saída real — foi assim que uma tabela rotulada "saída real" nasceu com
-  valores extrapolados.
+  vem da saída real. Rotule números ilustrativos como ilustração; nunca como captura observada.
 - **Encher o notebook.** Markdown demais afoga o fluxo tanto quanto Markdown de
   menos.
 

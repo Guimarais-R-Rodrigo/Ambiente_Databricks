@@ -51,6 +51,18 @@ Regressão exige valores finitos. Defina previamente a unidade do target: RMSE/M
 
 ## 8. O que este recurso entrega?
 
+`auc_pr` é o nome compatível da **Average Precision (AP)** calculada por `average_precision_score`; não é uma integração trapezoidal genérica da curva PR.
+
+| Campo | Unidade/escala | Casas decimais |
+|---|---|---:|
+| `ks_pct` | KS bilateral, 0–100 | 1 |
+| `auc_roc`, `auc_pr`, `brier_score`, `f1`, `precision`, `recall`, `prevalence` | adimensional, 0–1 | 4 |
+| `gini` | adimensional, −1 a 1 | 4 |
+| `lift_10pct` | razão sobre a prevalência | 2 |
+| `rmse`, `mae` | unidade do alvo | 4 |
+| `mape` | percentual, apenas alvos diferentes de zero | 2 |
+| `r2` | adimensional; pode ser negativo | 4 |
+
 Classificação: `auc_roc`, `ks_pct`, `gini`, `auc_pr`, `brier_score`, `f1`, `precision`, `recall`, `lift_10pct` e `prevalence`.
 
 **Atenção à unidade:** `ks_pct` está em pontos percentuais, escala 0–100. Não divida por 100 ao passar para consumidores que também esperam `ks_pct`.
@@ -65,7 +77,20 @@ from hub_snippets.ml.metrics_report import calculate_binary_metrics
 metricas = calculate_binary_metrics(y_true, y_prob, threshold=0.30)
 ```
 
-Para regressão, importe `calculate_regression_metrics`.
+Exemplo sintético de regressão, sem treino ou tracking:
+
+```python
+import math
+from hub_snippets.ml.metrics_report import calculate_regression_metrics
+
+reg = calculate_regression_metrics([0, 2, 4], [1, 1, 5])
+assert reg["rmse"] == 1.0 and reg["mae"] == 1.0
+assert reg["mape"] == 37.5  # média de 50% e 25%; exclui o alvo zero
+sem_denominador = calculate_regression_metrics([0, 0], [1, 1])
+assert math.isnan(sem_denominador["mape"])
+```
+
+MAPE totalmente indefinido é `NaN`. Registre a ausência de evidência; não o envie ao monitor que exige métricas finitas nem o substitua silenciosamente por zero.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -97,6 +122,4 @@ A saída pode ser traduzida para a política de [`performance_monitor`](../perfo
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base R09. Referências primárias: documentação de métricas do scikit-learn (`sklearn.metrics`) e SciPy (`scipy.stats.ks_2samp`).
-
-Os valores retornados são evidência estatística; sua adequação depende do desenho de avaliação e da decisão de negócio.
+Consulte sklearn.metrics e scipy.stats.ks_2samp para as definições. AUC/AP, KS, perdas e métricas com threshold respondem perguntas distintas; compare resultados apenas sob população, unidade e avaliação compatíveis.

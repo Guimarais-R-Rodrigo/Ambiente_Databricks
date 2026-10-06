@@ -17,9 +17,19 @@
 | Features com drift severo | [N]/[M] | [limiar aprovado] | [excede/OK] |
 | Janelas consecutivas com alerta | [N] | [limiar aprovado] | [excede/OK] |
 
-## Decisão: [RETREINAR / MANTER / INVESTIGAR]
+## Recomendação técnica: [RETREINAR / MANTER / INVESTIGAR / PENDENTE]
 
-### Se RETREINAR:
+Esta tabela não dispara retreino. Drift não prova degradação; performance exige
+labels maduras e comparação coerente. Sem dados ou limiares aprovados, usar
+NÃO CALCULADO/NÃO CLASSIFICADO e registrar a evidência faltante.
+
+- **Tomador de decisão**: [responsável identificado ou NÃO INFORMADO]
+- **Aprovação**: [PENDENTE/aprovada/recusada; fonte, data e escopo]
+- **Execução autorizada**: [ação, dados, ambiente, destino e limites; ou NÃO AUTORIZADA]
+- **Execução observada**: [NÃO EXECUTADO/parcial/executado, com evidência]
+- **Promoção/alias/deploy**: decisão separada, nunca consequência automática deste parecer.
+
+### Plano proposto se a autoridade decidir retreinar:
 | Aspecto | Decisão |
 |---|---|
 | Estratégia | [Full retrain / Incremental / Sliding window] |
@@ -28,11 +38,11 @@
 | Timeline | [dias] |
 | Validação | [métricas a atingir] |
 
-### Se MANTER:
+### Plano proposto se a autoridade decidir manter:
 - Próxima revisão em [N] dias
 - Monitorar especialmente: [features / métricas]
 
-### Se INVESTIGAR:
+### Plano proposto para investigar:
 - Causa raiz provável: [mudança de negócio / bug / seasonalidade]
 - Ações: [lista]
 

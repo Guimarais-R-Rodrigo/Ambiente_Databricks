@@ -94,14 +94,7 @@ print("primeira data que sobrou, por entidade:",
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Sem a entidade declarada — bloco histórico e política atual
-# MAGIC
-# MAGIC O código abaixo foi escrito antes da política atual de duplicatas. Hoje, com várias
-# MAGIC entidades na mesma data e `on_duplicate_dates='raise'` (default), a chamada sem
-# MAGIC `entity_cols` é recusada antes de produzir o resultado histórico. Para estudar
-# MAGIC conscientemente a sequência única com empates, seria necessário optar por
-# MAGIC `on_duplicate_dates='keep'`; o código executável e o output antigo são preservados
-# MAGIC aqui como evidência, não como receita vigente.
+# MAGIC Sem entity_cols, datas repetidas são recusadas pelo default on_duplicate_dates="raise". A próxima chamada é um contraexemplo intencional e deve ser executada esperando ValueError. Para uma demonstração separada da contaminação entre entidades, use keep deliberadamente e compare lags por entidade; não adote essa configuração para o painel real.
 
 # COMMAND ----------
 
@@ -121,7 +114,10 @@ print(f"primeira linha de B, sem entidade : dt={b_sem['dt'].date()}  lag_1={b_se
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Executado no laboratório:
+# MAGIC **Como ler.** Saída preservada de um ensaio com implementação anterior à
+# MAGIC recusa padrão de datas repetidas. A chamada acima, com o default atual,
+# MAGIC lança ValueError e não produz as 33 linhas mostradas abaixo. O bloco
+# MAGIC ilustra o risco de misturar entidades, não um resultado atual garantido.
 # MAGIC
 # MAGIC ```text
 # MAGIC Features temporais: 3 linhas removidas por NaN de lags
@@ -162,5 +158,4 @@ print(f"primeira linha de B, sem entidade : dt={b_sem['dt'].date()}  lag_1={b_se
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ### Contrato atualizado em 09/09/2026
-# MAGIC O helper normaliza datas antes de ordenar e preserva colunas do chamador, inclusive nomes internos __hub_ordem e __hub_data. Datas ambíguas exigem date_format; lag_n significa observações anteriores, não períodos de calendário.
+# MAGIC Contrato de entrada: datas são normalizadas antes da ordenação; date_format é obrigatório para texto ambíguo. lag_n significa n observações anteriores da entidade, não n períodos de calendário. A função preserva colunas do chamador e verifica colisões com novas features.

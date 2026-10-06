@@ -29,7 +29,9 @@ flowchart LR
   T -.->|"recusa"| E["resposta nula<br/>ou fora de 0/1"]
 ```
 
-## Como usar
+## Exemplo conceitual, não executável
+
+O import abaixo pertence à coleção fictícia deste molde; não o copie como API instalada. Para estudo de implementação, use o [exemplar real](../snippet/taxa_resposta_campanha/README.md).
 
 ```python
 from hub_snippets.campanha.taxa_resposta_campanha import taxa_resposta_campanha
@@ -72,9 +74,7 @@ pasta — é o que o checklist exige.
 
 ## Limites e armadilhas
 
-- **Significância não é relevância.** O segmento de 28 contatos tem intervalo que
-  não se sobrepõe a nenhum outro: a diferença é real. E é irrelevante — são 28
-  pessoas, e o teto absoluto são 17 respostas.
+- **Incerteza não é decisão.** O segmento tem apenas 28 contatos. O limite superior de Wilson não é teto absoluto de respostas futuras; os intervalos apresentados não constituem teste ajustado de comparação nem provam retorno incremental. Avalie desenho, precisão e relevância do caso.
 - **O intervalo pressupõe contatos independentes.** Mesma pessoa duas vezes, ou
   contato em ondas que se influenciam, produz precisão otimista.
 - **Não projete a próxima campanha sobre as mesmas pessoas.** Resposta a um

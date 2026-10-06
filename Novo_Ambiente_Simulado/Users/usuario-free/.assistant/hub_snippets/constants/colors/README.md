@@ -73,7 +73,17 @@ paleta_local = PALETA_CATEGORICA.copy()
 print(AZUL_CAIXA, len(paleta_local))
 ```
 
-Saída do trecho portátil conferido nesta sprint: `#005CA9 10`. Para preparar a importação, siga a [coleção](../../README.md); não presuma um caminho de usuário diferente do ambiente confirmado.
+Saída de referência do trecho portátil: `#005CA9 10`. Para preparar a importação, siga a [coleção](../../README.md); não presuma um caminho de usuário diferente do ambiente confirmado.
+
+Para manter categorias estáveis, declare a ordem e reutilize o mesmo mapa:
+
+```python
+canais = ["aplicativo", "agencia", "telefone"]
+cores_por_canal = dict(zip(canais, PALETA_CATEGORICA.copy()))
+assert len(cores_por_canal) == len(canais)
+```
+
+Este exemplo usa três categorias; para mais categorias que cores, decida outra codificação antes de criar o mapa.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -85,11 +95,11 @@ Verifique também o par texto/fundo. `TEXTO_PRINCIPAL` não é uma aprovação a
 
 A paleta categórica reutiliza cores que também têm nomes semânticos. Um vermelho usado para um produto não deve parecer uma reprovação desse produto. Legenda e contexto precisam resolver a ambiguidade.
 
-Pelo cálculo de contraste da WCAG, texto branco sobre `COR_ALERTA` apresenta aproximadamente **1,73:1** e sobre `COR_POSITIVO`, **2,04:1**, abaixo de 4,5:1 para texto comum. A conferência foi numérica, não uma auditoria visual completa. Os valores não foram alterados nesta sprint. A [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contém o critério e suas exceções; [uso da cor](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) exige que informação não dependa apenas dela.
+Pelo cálculo de contraste da WCAG, texto branco sobre `COR_ALERTA` apresenta aproximadamente **1,73:1** e sobre `COR_POSITIVO`, **2,04:1**, abaixo de 4,5:1 para texto comum. A conferência foi numérica, não uma auditoria visual completa. A [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contém o critério e suas exceções; [uso da cor](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) exige que informação não dependa apenas dela.
 
 ## 12. Quais são as alternativas?
 
-Para aplicação automática a figuras compatíveis, examine [theme_plotly](../../visual/theme_plotly/theme_plotly.py), em vez de distribuir ajustes manuais pelo notebook. Para um rótulo de estado, [badge](../../visual/badge/README.md) pode fornecer o HTML, mas tem estilos próprios.
+Para aplicação automática a figuras compatíveis, examine [theme_plotly](../../visual/theme_plotly/README.md), em vez de distribuir ajustes manuais pelo notebook. Para um rótulo de estado, [badge](../../visual/badge/README.md) pode fornecer o HTML, mas tem estilos próprios.
 
 Uma apresentação monocromática com rótulos pode ser mais clara do que uma paleta com muitos grupos. Mudar a identidade visual compartilhada é outra tarefa, não consequência de consultar este README.
 
@@ -103,8 +113,12 @@ Se a combinação falhar, não declare a página acessível: registre o par, o t
 
 [colors.py](colors.py) contém valores e relações; [__init__.py](__init__.py) expõe os nomes; [exemplo_colors.py](exemplo_colors.py) demonstra as combinações. A [coleção](../../README.md) mantém a navegação e o [Manual](../../../MANUAL_TECNICO.md#catalogo-helpers) mantém o catálogo integrado.
 
+Continue pelo [índice constants](../README.md).
+
 ## 15. Referências
 
 O [código local](colors.py) sustenta os valores e a composição das paletas. A [WCAG — contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) sustenta a aferição texto/fundo; a regra de [uso da cor](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) sustenta a orientação de redundância textual. Fontes consultadas em 12/09/2026.
 
-Revisão R03-A: leitura de implementação, fachada e exemplo; testes portáteis e cálculo de contraste. O notebook Databricks não foi reexecutado, e não houve auditoria independente ou alteração de paleta.
+Aferir contraste numericamente não certifica acessibilidade nem renderização no notebook de destino. Confira as combinações usadas e preserve rótulos textuais.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

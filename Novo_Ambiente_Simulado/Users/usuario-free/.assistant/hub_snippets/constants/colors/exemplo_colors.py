@@ -19,7 +19,7 @@
 # MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
+# MAGIC | Diferença Free × trabalho | confira compatibilidade e renderização no destino; a demonstração não homologa todo runtime |
 
 # COMMAND ----------
 
@@ -143,18 +143,9 @@ for n, v in [("COR_POSITIVO", COR_POSITIVO), ("COR_NEGATIVO", COR_NEGATIVO),
 # MAGIC relatório em que vermelho às vezes é alerta e às vezes é só a sexta série
 # MAGIC da paleta categórica ensina o leitor a ignorar a cor.
 # MAGIC
-# MAGIC **E há uma decisão de design que faltava neste notebook: contraste.**
-# MAGIC Duas das quatro cores **reprovam** o mínimo AA (4,5:1) com texto branco —
-# MAGIC `COR_ALERTA` em 1,73:1 e `COR_POSITIVO` em 2,04:1. São amarelo e verde
-# MAGIC claros; branco em cima deles é praticamente ilegível.
+# MAGIC **Confira o contraste texto/fundo.** O cálculo com texto branco resulta em 1,73:1 para `COR_ALERTA` e 2,04:1 para `COR_POSITIVO`, abaixo de 4,5:1 para texto comum. Não use branco sobre esses fundos nessa condição; mantenha rótulos e escolha uma combinação validada.
 # MAGIC
-# MAGIC A regra que decorre disso: **`COR_ALERTA` e `COR_POSITIVO` são cores de
-# MAGIC preenchimento — barra, ponto, borda —, nunca fundo para texto branco.**
-# MAGIC Para selo ou chip com essas duas, o texto vai em `TEXTO_PRINCIPAL`. A
-# MAGIC célula acima faz essa escolha sozinha, medindo antes de pintar.
-# MAGIC
-# MAGIC Isso é diferente de daltonismo, que o "quando não usar" menciona: contraste
-# MAGIC é aferível no valor, e portanto não tem desculpa para ficar sem verificação.
+# MAGIC A célula mede o par antes de escolher texto claro ou escuro. Contraste numérico não certifica daltonismo, leitor de tela ou acessibilidade da página inteira.
 # MAGIC
 # MAGIC Repare, por fim, que `COR_POSITIVO` **é** o `VERDE` da paleta categórica, e
 # MAGIC `COR_NEGATIVO` **é** o `VERMELHO`. Ou seja, um gráfico categórico com seis

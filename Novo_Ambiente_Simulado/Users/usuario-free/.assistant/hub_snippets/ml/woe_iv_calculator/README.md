@@ -43,6 +43,15 @@ Não selecione features automaticamente por `classify_iv`. As faixas codificadas
 
 ## 5. Como funciona, intuitivamente?
 
+Para `B = n_bins` faixas e `s = smoothing`, as proporções completas são:
+
+- `pct_bom_i = (n_bom_i + s) / (total_bom + s * B)`
+- `pct_mau_i = (n_mau_i + s) / (total_mau + s * B)`
+- `woe_i = ln(pct_bom_i / pct_mau_i)`
+- `iv_partial_i = (pct_bom_i - pct_mau_i) * woe_i`; `iv_total = soma(iv_partial_i)`
+
+Conta manual sintética: duas faixas A/B com bons `[3,1]`, maus `[1,3]` e `s=0.5`. Cada classe soma 4; o denominador suavizado é `4 + 0.5*2 = 5`. Em A, proporções `0.7/0.3`, WOE `ln(7/3) ≈ 0,84729786` e IV parcial `0.4*ln(7/3) ≈ 0,33891914`. B inverte as proporções e o sinal do WOE; seu IV parcial é igual. Total: aproximadamente `0,67783829`. É uma conta de fórmula, não um resultado de execução Spark apresentado como observado.
+
 Primeiro a função faz uma agregação global e coleta `total_bom`, `total_mau` e quantidade de targets inválidos. Depois agrega por `feature_col`, conta o número de bins, calcula proporções com smoothing e o WOE/IV distribuídos. Por fim coleta a soma de `iv_partial` para produzir o `float` total.
 
 Há portanto ações Spark reais, inclusive `collect()` de escalares agregados e `count()` dos bins; “sem `toPandas`” não significa “sem ação ou sem coleta alguma”.
@@ -69,6 +78,22 @@ A coluna da faixa **mantém o nome de `feature_col`**, não `faixa`. Para usar c
 
 ## 9. Como usar este recurso no Hub?
 
+Ponte para pandas **somente do agregado** `woe_df`; `limite_faixas` deve ser definido conforme a memória e a política de coleta do seu ambiente:
+
+```python
+import math
+feature = "faixa_renda"
+limite_faixas = 100  # limite ilustrativo de coleta, não regra do helper
+n_faixas = woe_df.count()  # ação Spark sobre o resultado agregado
+assert 0 < n_faixas <= limite_faixas
+pequena = woe_df.select(feature, "woe", "iv_partial").toPandas()
+assert math.isclose(float(pequena["iv_partial"].sum()), float(iv), rel_tol=1e-9, abs_tol=1e-12)
+ponte = pequena.rename(columns={feature: "faixa"})[["faixa", "woe"]]
+woe_tables = {feature: ponte}
+```
+
+A tolerância só acomoda aritmética de ponto flutuante na soma, não divergências de população ou fórmula. Use `woe_tables` com coeficientes/intercepto de um modelo treinado sobre esse WOE conforme [scorecard_builder](../scorecard_builder/README.md). Não faça `sdf.toPandas()` na base original para esta ponte; o `count` e a coleta acima têm custo/efeito de leitura reais.
+
 ```python
 from hub_snippets.ml.woe_iv_calculator import calculate_woe_iv, classify_iv
 
@@ -84,6 +109,18 @@ print(iv, classify_iv(iv))
 Para alimentar scorecard pandas, colete apenas a tabela agregada se ela tiver cardinalidade compatível com o driver.
 
 ## 10. Decisões e configurações que mais importam
+
+Faixas de `classify_iv`, todas **heurísticas locais**, não regras universais:
+
+| Intervalo de IV | Rótulo |
+|---|---|
+| `[0, 0.02)` | Inútil |
+| `[0.02, 0.10)` | Fraca |
+| `[0.10, 0.30)` | Média |
+| `[0.30, 0.50)` | Forte |
+| `[0.50, infinito)` | Elevada; investigar concentração/binning/leakage |
+
+O texto retornado no último ramo escreve `> 0.50`, mas o código inclui exatamente `0.50`. Valores negativos ou não finitos são recusados.
 
 A definição das faixas domina o IV. Dois binnings diferentes da mesma variável podem produzir IVs diferentes. O helper não persiste nem aplica regras de binning fora da base recebida.
 
@@ -117,6 +154,4 @@ Depois do diagnóstico, documente regras de binning e faça validação temporal
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. A fórmula, smoothing e faixas de classificação descritas aqui são as que o código do Hub implementa; as faixas de IV não são apresentadas como norma externa obrigatória.
-
-Este README não presume seleção automática de variável, aprovação regulatória, publicação no Databricks nem auditoria independente.
+WOE, smoothing e classificação de IV seguem as fórmulas e faixas locais descritas neste guia. O diagnóstico não faz binning, seleção automática de features nem aprovação de modelo; aplique validação temporal e critérios próprios de negócio.

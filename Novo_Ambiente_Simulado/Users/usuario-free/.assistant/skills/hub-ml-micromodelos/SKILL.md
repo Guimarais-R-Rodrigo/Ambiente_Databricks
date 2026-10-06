@@ -41,8 +41,8 @@ recurso do Hub escolher, `hub-ml-concierge` é a entrada apropriada.
    ambiente para E0 e não é metadata observada. Separe ambiente do chat,
    origem da fixture e evidência de execução. Nesta entrega, só trate E0 como
    executável quando os componentes locais estiverem presentes e forem
-   realmente rodados. Execução de runtime E1 exige pacote e prova separada;
-   E2 fica fora da missão.
+   realmente rodados. Execução no laboratório autorizado exige pacote e prova separados;
+   execução corporativa não é autorizada por esta skill.
 2. Consulte a `policy.json` integrada em
    `.assistant/hub_padroes/skill_enforcement/policy.json` antes de uma rota
    protegida. `current_level` e artefatos presentes governam a capacidade atual;
@@ -139,8 +139,8 @@ recurso do Hub escolher, `hub-ml-concierge` é a entrada apropriada.
 
 No modo metadata-only são proibidos `count(*)`, profiling de registros,
 amostragem de clientes e consultas de valores. A leitura analítica é outra etapa:
-exige necessidade, permissão, plano de minimização e, nesta missão, dados
-sintéticos. Metadata MM03 não fornece linha, contagem ou autorização de acesso.
+exige necessidade, permissão, plano de minimização e, neste perfil, dados
+sintéticos. Metadata não fornece linha, contagem ou autorização de acesso.
 
 ## Usar helpers da biblioteca
 
@@ -174,7 +174,7 @@ etapa posterior: governança externa conserva a autoridade institucional.
 - Hipóteses, contra-hipóteses, `INDETERMINADO`, incertezas, decisões humanas
   pendentes e especialista seguinte.
 - Evidência executada classificada como `E0_VALIDADO`, `E1_PREPARADO` ou
-  `E1_EXECUTADO` conforme o caso real; `E2_NAO_EXECUTADO`. Inspeção textual de
+  `E1_EXECUTADO` conforme o caso real; `E2_NAO_EXECUTADO`. Esses códigos registram ensaio local, laboratório preparado/executado e execução corporativa não realizada; não são níveis de policy. Inspeção textual de
   skill/prompt não demonstra roteamento Genie Code, runtime Databricks nem ACL.
   Uma resposta textual no Free deve declarar ambiente **E1**, fixture textual
   `FORNECIDA` e runtime E1 não executado; não é validação MM01 nem E0 validado.

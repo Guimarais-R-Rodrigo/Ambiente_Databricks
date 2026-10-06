@@ -47,7 +47,7 @@
     },
     {
       "path": "skills/hub-ml-validacao-estatistica/scripts/README.md",
-      "git_blob_sha1": "77bcc603f4d67fc11f356658f24d38ce1ba3bcb1"
+      "git_blob_sha1": "d5f699b77d9ff795bc5397c806261a2e7971436a"
     },
     {
       "path": "skills/hub-ml-validacao-estatistica/scripts/run.py",
@@ -59,7 +59,7 @@
     },
     {
       "path": "skills/hub-ml-validacao-estatistica/SKILL.md",
-      "git_blob_sha1": "e7f158147425d5bc7379ead51a881dc8fbcc4b78"
+      "git_blob_sha1": "4d59e623363d06d2ea304df7bfc9d642a3f4286f"
     }
   ],
   "manifest_version": "0.1",

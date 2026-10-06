@@ -4,9 +4,9 @@
 # MAGIC
 # MAGIC 📘 Guia local: [`README.md`](./README.md)
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Aqui somente o preparo
+# MAGIC executa código. O briefing é texto para a interação autorizada, e a
+# MAGIC resposta real deve ser registrada com evidência; continua pendente neste exemplo.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -20,14 +20,18 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | sessão Spark compatível com as fixtures e permissões de escrita no destino confirmado |
+# MAGIC | Bibliotecas | PySpark e pacote Hub importável; dependências de análise dependem da rota escolhida |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria/sobrescreve as tabelas `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features` para o chat poder consultá-las |
-# MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
+# MAGIC | Escrita | **sim, overwrite** — sobrescreve `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features` |
+# MAGIC | Diferença Free × trabalho | fonte real exige autorização, revisão de dados sensíveis e contrato próprio; este preparo é sintético |
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC **Antes de executar a Parte 1 ou Run all:** o preparo sobrescreve `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`
+# MAGIC com `mode("overwrite")`. Confira destino e autorização; pode substituir dados
+# MAGIC existentes. Você pode usar o briefing sem executar o preparo. Os mesmos destinos são usados pelo exemplo de Cross-EDA; não há materialização governada de features neste preparo.
+# MAGIC
 # MAGIC ## Parte 1 — preparo: a base que o prompt vai citar
 
 # COMMAND ----------
@@ -118,20 +122,20 @@ print("atraso de publicação plantado: 3 dias | features com data futura: ~20%"
 # MAGIC
 # MAGIC O que falta   : colar aqui a resposta que o Genie Code deu ao prompt
 # MAGIC                 da Parte 2, num chat novo, com a base da Parte 1 criada.
-# MAGIC Por que não   : prompt produz resposta de assistente, e nenhum job
-# MAGIC                 reproduz isso. Resposta inventada é pior que resposta
-# MAGIC                 nenhuma — ensina que o assistente faz algo que ele não faz.
+# MAGIC Evidência    : nenhuma resposta desta interação foi registrada e revisada.
+# MAGIC                Não invente conteúdo para completar o exemplo. O preparo
+# MAGIC                não prova execução nem conclusão canônica da skill.
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `workspace.default.hub_exemplo_fatos`.
+# MAGIC 1. Se o preparo for necessário, confirme destino e autorização: ele sobrescreve `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre contexto e skill selecionados com evidência disponível.
+# MAGIC    Relato do assistente não comprova sozinho leitura, importação, chamada
+# MAGIC    ou conclusão; confira os artefatos exigidos pela rota da skill.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC

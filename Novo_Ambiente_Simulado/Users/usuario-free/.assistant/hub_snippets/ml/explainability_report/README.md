@@ -55,6 +55,8 @@ O helper organiza essas duas camadas, mas a revisão metodológica continua fora
 
 ## 7. O que você precisa antes de usar?
 
+Para calcular direção, forneça `X` como `np.ndarray` 2D, pois o código usa `X[:, feat_idx]`; `shap_values` deve ter o mesmo shape e a mesma ordem de linhas/colunas. O merge técnico é uma interseção por `feature`, não a união: valide nomes únicos nos dois lados e registre features excluídas, pois duplicatas multiplicam pares. Correlações zero, quase zero ou indefinidas exigem revisão; uma seta é apenas uma heurística de associação.
+
 A visão executiva exige `shap_importance` não vazia com `feature` e `pct_importance`. Se a ordem importa, **ordene antes de chamar**: a função não reordena.
 
 Para direção, `X` e `shap_values` precisam estar alinhados por linha/feature e `feature_names` precisa conter os nomes usados no top 5.
@@ -68,6 +70,26 @@ As duas funções retornam `str` em Markdown. Nenhuma escreve arquivo, publica a
 A porcentagem exibida é `pct_importance` fornecida pelo chamador. O helper não verifica se soma 100 nem se veio de mean |SHAP|.
 
 ## 9. Como usar este recurso no Hub?
+
+Resumo técnico mínimo com importâncias sintéticas, `tabulate` disponível e ranks preparados sobre as tabelas completas, antes de qualquer `top_n`:
+
+```python
+import pandas as pd
+import tabulate  # pré-requisito de DataFrame.to_markdown()
+from hub_snippets.ml.explainability_report import generate_technical_summary
+
+shap_full = pd.DataFrame({"feature": ["a", "b", "c"],
+                          "mean_abs_shap": [0.6, 0.3, 0.1]})
+native_full = pd.DataFrame({"feature": ["a", "b", "c"],
+                            "importance": [9.0, 2.0, 1.0]})
+for frame, col in [(shap_full, "mean_abs_shap"), (native_full, "importance")]:
+    assert frame["feature"].is_unique
+    frame["rank"] = frame[col].rank(method="average", ascending=False)
+assert set(shap_full["feature"]) == set(native_full["feature"])
+texto_tecnico = generate_technical_summary(shap_full, native_importance=native_full)
+```
+
+O texto é retornado em memória. Este preparo não corrige automaticamente a célula do notebook adjacente que ainda omite `rank`: com três ou mais features em comum ela pode falhar com `KeyError`, mesmo após instalar `tabulate`.
 
 ```python
 from hub_snippets.ml.explainability_report import generate_executive_report
@@ -119,6 +141,6 @@ Calcule as importâncias com [`shap_explainer`](../shap_explainer/README.md) e s
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. Para a semântica de Tree SHAP e a dependência do espaço de saída do modelo, consulte a documentação oficial do SHAP: <https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html>.
+Consulte a documentação do SHAP para o espaço de saída explicado e o significado das atribuições. Este gerador recebe importâncias prontas e devolve texto; o relatório não constitui evidência causal nem aprovação de decisão.
 
-A revisão R08 não presume causalidade, publicação Databricks, homologação regulatória nem auditoria independente.
+Referências primárias de conceito/API: [Documentação primária de explainability_report](https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html).

@@ -4,6 +4,8 @@
 
 Briefing para explicabilidade global/local de modelo. O prompt organiza o pedido, mas não executa a tarefa sozinho.
 
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -39,19 +41,21 @@ Fixe modelo e população, escolha a pergunta explicativa e o método, então ap
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, período e unidade de análise explícitos.
+Planejar explicação global e um caso local de um modelo de resposta a campanha, no holdout temporal e na população declarada. O exemplo cita um LightGBM pretendido, mas **não o treina**: até existir artefato verificável, a entrega é plano/código, sem valores SHAP observados.
 
 ## 7. O que você precisa antes de usar?
 
-Tenha modelo/run, dataset/split, target, objetivo, público, método e amostra. Use `NÃO INFORMADO` para lacunas em vez de inventar defaults.
+Exija modelo/run verificável, dataset e split, transformação e ordem das features, target/classe positiva, espaço da saída e background quando aplicável. Declare amostra e público. Sem modelo ou população confirmados, mantenha o plano e as lacunas; dependência SHAP não informa presença de PII.
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi apenas proposto, executado ou validado.
+Solicita resumo; achados globais e locais separados; evidência e incerteza; limitações; validações pendentes; e código opcional. Contribuição na previsão não é efeito causal, fairness nem conformidade. Valores só são observados depois de computação e verificação compatíveis com a rota.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [explainability.md](explainability.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_explainability.py) demonstra o preenchimento. O exemplo sobrescreve `workspace.default.hub_exemplo_clientes`; SHAP é dependência opcional.
+Leia [explainability.md](explainability.md). Siga a [skill correspondente](../../skills/hub-ml-explainability/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. O perfil `LINEAR_REGRESSION_SYNTHETIC_V1` suporta SHAP linear escalar sintético, com verificador e entradas independentes; não comprova o cenário LightGBM do briefing. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing.
+
+O [exemplo](exemplo_explainability.py) apenas prepara dados, sobrescrevendo `workspace.default.hub_exemplo_clientes`. Não cria modelo, treino ou SHAP. Instalação, quando necessária, é etapa separada e autorizada. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +67,7 @@ Explicar versão errada, tratar SHAP como efeito causal ou expor PII. A instruç
 
 ## 12. Quais são as alternativas?
 
-Para performance use baseline/monitoramento; para hipótese estatística use `stat_check`.
+Para performance, use [Baseline](../baseline_orchestration/README.md) ou [Monitoramento](../monitoramento_modelo/README.md). Para hipóteses estatísticas, use [Stat Check](../stat_check/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +79,4 @@ O [briefing](explainability.md), o [notebook](exemplo_explainability.py) e o [ca
 
 ## 15. Referências
 
-A descrição foi confrontada com [explainability.md](explainability.md) e [exemplo_explainability.py](exemplo_explainability.py) na base R11. Para comportamento de plataforma, consulte a documentação oficial atual do Databricks antes de operar em produção.
+O [briefing](explainability.md) define os campos e a entrega; o [notebook](exemplo_explainability.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

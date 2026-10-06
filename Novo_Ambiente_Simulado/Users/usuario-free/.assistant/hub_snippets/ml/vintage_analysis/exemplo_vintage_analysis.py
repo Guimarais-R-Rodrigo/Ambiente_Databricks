@@ -144,13 +144,7 @@ print(f"convertido: {len(painel_pd)} linhas (volume controlado)")
 # MAGIC - **Sem conferir o tamanho de cada safra.** Uma safra pequena produz curva
 # MAGIC   errática que parece tendência.
 # MAGIC
-# MAGIC ### Nota de cor — resolvida em 18/08/2026
-# MAGIC
-# MAGIC Este módulo **redeclarava** `PALETA_CATEGORICA`, `AZUL_CAIXA` e
-# MAGIC `PALETA_SEQUENCIAL` com literais idênticos aos de
-# MAGIC `hub_snippets.constants.colors`. Hoje ele os **deriva** de lá, e a paleta
-# MAGIC tem uma fonte só. Os nomes continuam na API pública do módulo, então nada
-# MAGIC que importava daqui quebrou.
+# MAGIC As constantes visuais reexportadas por este módulo vêm de hub_snippets.constants.colors. Use os nomes públicos para compatibilidade; para aparência explícita das figuras, prefira as funções *_resolvido com um tema suportado.
 
 # COMMAND ----------
 # MAGIC %md

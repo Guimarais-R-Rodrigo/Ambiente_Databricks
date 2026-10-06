@@ -97,27 +97,14 @@ print(fixture_textual)
 # MAGIC %md
 # MAGIC ## Parte 3 — resposta real e limites
 # MAGIC
-# MAGIC Capturada em 29 set 2026 no Genie Code Free, com carregamento da skill
-# MAGIC confirmado pelo usuário. A transcrição tem SHA-256
-# MAGIC `7ae1b9679881f7d34ecdd5466533133627989fc98151b3ea3134bb7d2d72081e`.
-# MAGIC O notebook `x2.ipynb` entregue como evidência tem SHA-256
-# MAGIC `c75a3bceb43c52164addc2d073a0cb072968439d5c604c5d12aba85c334757b8`.
-# MAGIC Os arquivos brutos permanecem fora do Git.
+# MAGIC Conversa E1 de 29/09/2026, caso P2c, com fixture textual fornecida.
 # MAGIC
-# MAGIC - A resposta consultou a entrada de `hub-ml-micromodelos` na policy integrada
-# MAGIC   e declarou `current_level=L1`, `target_level=L3`, `rollout_mode=audit`.
-# MAGIC - Classificou o chat como E1, a fixture textual como `FORNECIDA`,
-# MAGIC   `ESCOPO_OBSERVADO` vazio e runtime E1 não executado.
-# MAGIC - Propôs três candidatas para revisão humana, sem detecção de fraude ou
-# MAGIC   fabricação; marcou viabilidade, qualidade temporal e leakage
-# MAGIC   `INDETERMINADO`, sem score, YAML ou publicação alegados.
-# MAGIC - Ressalvas: chamou as candidatas de “viáveis” em uma passagem apesar da
-# MAGIC   viabilidade indeterminada; escreveu seis células Markdown no notebook,
-# MAGIC   embora o roteiro de teste pedisse resposta no chat. O arquivo ainda contém
-# MAGIC   uma célula de código vazia, com zero execuções e zero outputs.
-# MAGIC - Veredito: PASS para as guardas centrais e a correção E1/policy, com
-# MAGIC   ressalvas editoriais e de formato. A transcrição não audita todas as
-# MAGIC   chamadas internas do Genie nem certifica MM04.
+# MAGIC - A resposta declarou consulta da policy; esse relato não audita todas as chamadas internas.
+# MAGIC - Separou chat E1 de fixture `FORNECIDA`, com `ESCOPO_OBSERVADO` vazio e runtime E1 não executado.
+# MAGIC - Propôs três candidatas para revisão humana, sem detecção de fraude ou fabricação.
+# MAGIC - Viabilidade, qualidade temporal e leakage ficaram `INDETERMINADO`, sem score, YAML ou publicação.
+# MAGIC - Ressalva: usou “viáveis” apesar da viabilidade indeterminada. Leia como hipóteses a estudar.
+# MAGIC - A saída teve seis células Markdown apesar do pedido de resposta no chat, além de célula de código vazia, sem execuções ou outputs.
 # MAGIC
-# MAGIC A avaliação completa está em
-# MAGIC `docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md`.
+# MAGIC A resposta conversacional não prova leitura de catálogo, análise de registros,
+# MAGIC execução de runtime, validação MM01 nem homologação corporativa.

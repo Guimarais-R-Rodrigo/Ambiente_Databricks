@@ -48,15 +48,7 @@ from hub_snippets.ml.train_lgbm import DEFAULT_PARAMS_BINARY, train_lightgbm_bas
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## Por que `log_mlflow=False` em tudo
-# MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
-# MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
+# MAGIC Este exemplo passa log_mlflow=False para desativar apenas o registro explícito do helper. Antes de habilitar tracking, confirme dependência, experimento, permissões, configuração do runtime e autologging da sessão. Uma falha numa configuração de serverless não determina o suporte em outras configurações.
 
 # COMMAND ----------
 # MAGIC %md
@@ -127,7 +119,7 @@ for chave, valor in DEFAULT_PARAMS_BINARY.items():
 # MAGIC n_estimators             500
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** O bloco histórico acima é um extrato: a constante atual também contém `objective`, `metric`, `random_state` e `verbose`, que a célula Python imprime. Use `DEFAULT_PARAMS_BINARY` e `model.get_params()` como inventário técnico; não conte o bloco colado como lista completa. Alguns valores coincidem com defaults da biblioteca e outros são escolhas locais.
+# MAGIC O bloco mostra apenas parte dos parâmetros. Consulte DEFAULT_PARAMS_BINARY e model.get_params() para a configuração completa, incluindo objective, metric, random_state e verbose.
 # MAGIC
 # MAGIC `learning_rate` 0,05, `n_estimators` 500, regularização e `colsample_bytree=0,8` são escolhas locais a revisar. Um detalhe importante: `subsample=0,8` **não habilita sozinho bagging de linhas** porque o wrapper não define `subsample_freq` e o default LightGBM é 0 (desabilitado). A amostragem de colunas em 0,8, por outro lado, está ativa.
 # MAGIC

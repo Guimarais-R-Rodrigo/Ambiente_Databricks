@@ -11,7 +11,7 @@
 # MAGIC `_full_table` e `_sample`. Os metadados, como total de linhas e schema,
 # MAGIC não seguem esse sufixo e também precisam ser interpretados.
 
-# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. A saída mostrada pertence ao cenário observado; não é reexecução no seu ambiente.
 # MAGIC
 # COMMAND ----------
 # MAGIC %md
@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | sessão Spark compatível; tenta usar cache e continua sem ele quando a chamada falha |
+# MAGIC | Compute | sessão Spark compatível; tenta cache e continua sem ele quando a chamada falha |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | a guarda trata a tentativa de cache, não garante sucesso de todas as operações ou compatibilidade universal |
+# MAGIC | Diferença Free × trabalho | cache não prova compatibilidade universal; limite exposição de categorias sensíveis |
 
 # COMMAND ----------
 

@@ -1,5 +1,7 @@
 # Micromodelos — contrato L1
 
+Esta pasta contém a skill conversacional L1/audit, sem runner protegido L3. O [módulo de domínio](../../hub_micromodelos/README.md) contém validação, adapter metadata-only e exemplos; seu uso exige chamada explícita e permissões próprias. [Jornada](../../hub_micromodelos/guias/README.md): em `OBJETIVO_CONHECIDO`, informe decisão, entidade e tempo; em `DESCOBRIR_OPORTUNIDADES`, forneça catálogo/escopo autorizado para hipóteses com origem e incerteza.
+
 A skill [hub-ml-micromodelos](SKILL.md) orienta a especificação progressiva de
 `micromodelo.yaml` e a descoberta de oportunidades a partir de metadata. O
 [contrato estático](execution_contract.json) declara L1 em modo audit. L2/L3
@@ -16,8 +18,4 @@ não conheço chave, instante de decisão ou disponibilidade da fonte. Entregue 
 rascunho de requisitos e pendências sem consultar registros ou afirmar medição.
 ```
 
-A origem desta candidata foi a publicação pessoal no Databricks Free, preservada
-por solicitação do usuário e incorporada à fonte em 2026-09-29. Sua presença no
-pacote não prova seleção no Genie, execução no Free ou aceite completo de MM04.
-O registro de reconciliação do repositório distingue a incorporação da
-certificação da sprint.
+Esta skill orienta planejamento e especificação. A biblioteca de domínio e os exemplos têm chamadas explícitas; sua disponibilidade não aprova dados, modelos ou publicação.

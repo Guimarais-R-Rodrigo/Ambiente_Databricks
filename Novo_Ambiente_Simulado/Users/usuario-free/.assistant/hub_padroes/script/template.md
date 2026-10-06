@@ -1,27 +1,10 @@
 # Template — pasta de script
 
-> Um dos **seis** tipos de objeto do Hub, e a lista é fechada. Se o seu objeto
-> recebe **DataFrame** e devolve dado para o fluxo seguir, ele é snippet e não
-> script — veja [`../snippet/template.md`](../snippet/template.md). O que estiver
-> em `checar_base_campanha/` é referência de forma, **não biblioteca**.
-
-Use quando o objeto for **diagnóstico**: algo que se aponta a uma tabela do
-workspace e que devolve um veredito legível, tipicamente antes de alguém confiar
-naquele objeto.
+Um dos seis tipos do Hub. Um script atende uma tarefa explícita de inspeção, transformação ou governança. O exemplo `checar_base_campanha/` ensina forma; não é biblioteca de produção.
 
 ## Script ou snippet?
 
-A diferença é de papel, não de tamanho, e ela decide a assinatura da função:
-
-| | Snippet | Script |
-|---|---|---|
-| Papel | peça de cálculo dentro de um fluxo | diagnóstico que roda sozinho |
-| Entrada | `DataFrame` | **nome de tabela** (`catalogo.schema.tabela`) |
-| Saída | `DataFrame` | dicionário com `status`, `checagens` e `alertas` |
-| Quem chama | outro código, ou o notebook do analista | uma pessoa, antes de decidir |
-
-Script recebe nome de tabela porque existe para ser apontado a algo que já está
-publicado. Snippet recebe DataFrame porque entra no meio de uma transformação.
+O papel distingue um utilitário de tarefa de uma peça reutilizável de cálculo. A assinatura depende do contrato: um script pode receber nome de tabela, arquivo, conteúdo ou objeto; não imponha DataFrame, nome de tabela ou um dicionário universal como regra. Declare entradas, retorno, permissões, custo, estado e efeitos reais, inclusive escrita quando houver.
 
 ## Estrutura da pasta
 
@@ -30,7 +13,7 @@ Idêntica à de snippet — README, fachada, implementação e notebook:
 ```text
 hub_scripts/<nome_do_script>/
 ├── README.md                       # conceito, escolha e uso seguro
-├── __init__.py                     # gerado por tools/api_publica.py
+├── __init__.py                     # fachada pública do objeto
 ├── <nome_do_script>.py
 └── exemplo_<nome_do_script>.py
 ```
@@ -38,7 +21,9 @@ hub_scripts/<nome_do_script>/
 Vale tudo que o [template de snippet](../snippet/template.md) exige de docstring,
 validação de entrada e resolução de sessão Spark. O que muda é específico:
 
-## O contrato de saída
+## Exemplo de saída de diagnóstico
+
+O formato abaixo pertence ao exemplar; não define todas as APIs de scripts.
 
 ```python
 {
@@ -52,7 +37,7 @@ validação de entrada e resolução de sessão Spark. O que muda é específico
 }
 ```
 
-Quatro regras que o contrato carrega:
+Quatro regras deste exemplar de diagnóstico, sem impor o mesmo retorno a outros scripts:
 
 1. **`status: "fail"` não significa dado ruim.** Significa que algo precisa de
    decisão humana antes de a medição valer. Diga isso na docstring, porque o
@@ -72,17 +57,7 @@ O checklist é **um só para os seis tipos**, e mora em
 Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
 tem um bloco específico para script.
 
-A lista abaixo era a antiga, preservada porque um item dela não estava no
-canônico — os demais foram absorvidos:
-
-```text
-[ ] a função recebe nome de tabela, não DataFrame
-[ ] não escreve nada, e a docstring diz isso
-[ ] a docstring diz quantas varreduras faz, para quem avalia custo
-[ ] o notebook demonstra um caso pass/warn E um caso fail
-[ ] __init__.py saiu da ferramenta
-[ ] o README da seção lista este script
-```
+Registre custo de varreduras/coletas, tipos de falha e efeitos. Mostre casos de sucesso e limitação sem fabricar execução. Nunca corrija dados sem autorização explícita.
 
 O exemplo preenchido está em
 [`checar_base_campanha/checar_base_campanha.py`](checar_base_campanha/checar_base_campanha.py).

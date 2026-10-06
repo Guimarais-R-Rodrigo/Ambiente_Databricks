@@ -114,5 +114,4 @@ print(f"decisão de retreino: {monitor.should_retrain()}")
 # MAGIC %md
 # MAGIC **Leia `should_retrain()` pelo conteúdo do retorno:** o nome é legado e `automatic_retrain_authorized` permanece `False`.
 # MAGIC
-# MAGIC ### Contrato atualizado em 09/09/2026
-# MAGIC Seleção de métricas: valores inválidos selecionados pela política agora geram erro. Use metricas_obrigatorias para exigir auc e ks_pct; para excluir uma métrica deliberadamente, forneça uma política sem essa chave. KS antigo em 0–100 mantém o valor ao migrar para ks_pct.
+# MAGIC Compatibilidade de métricas: use selecionar_metricas_do_relatorio com metricas_obrigatorias para exigir auc e ks_pct. Uma métrica só é excluída deliberadamente quando fica fora da política fornecida. O antigo campo ks já usava 0–100; ao adotar ks_pct, preserve o valor sem multiplicar nem dividir por 100.

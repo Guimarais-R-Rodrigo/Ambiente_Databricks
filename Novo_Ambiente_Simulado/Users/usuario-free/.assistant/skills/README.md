@@ -1,5 +1,16 @@
 ![CRM — Missão Modelos Analíticos CRM](../hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
 
+## Escolher método e execução
+
+Comece pela finalidade, leia o `SKILL.md` e consulte a [policy vigente](../hub_padroes/skill_enforcement/README.md). `current_level` é o nível admitido; `target_level` não cria capacidade. Carregar instruções não executa código. Uma rota com runner exige chamada explícita e pode executar helpers, emitir Receipt e exigir Postflight; outras rotas usam imports diretos, conforme o contrato.
+
+Runners documentados: [Safra](hub-ml-analise-safra/scripts/README.md), [Cross-EDA](hub-ml-cross-eda-ml/scripts/README.md), [Explainability](hub-ml-explainability/scripts/README.md), [Feature Engineering](hub-ml-feature-engineering/scripts/README.md), [Baseline](hub-ml-baseline-ml/scripts/README.md), [Monitoramento](hub-ml-monitoramento-modelo/scripts/README.md), [Pipeline](hub-ml-pipeline-builder/scripts/README.md) e [Estatística](hub-ml-validacao-estatistica/scripts/README.md). Escolha a rota antes de autorizar efeitos.
+
+### Micromodelos: especificar ou descobrir
+
+A [skill](hub-ml-micromodelos/README.md) orienta `OBJETIVO_CONHECIDO` ou `DESCOBRIR_OPORTUNIDADES`, com decisão, entidade, tempo, fontes e restrições. Permanece L1/audit. O [módulo de domínio](../hub_micromodelos/README.md) contém biblioteca, adapter metadata e exemplos, chamados separadamente. Nenhuma dessas peças aprova fontes, lê registros ou publica automaticamente.
+
+
 # Agent Skills
 
 > O cérebro metodológico do ecossistema no Databricks Genie Code: diretrizes de engenharia, guardrails e fluxos analíticos passo a passo para orientar trabalhos de Machine Learning.
@@ -151,10 +162,7 @@ Um modo mais rígido não deve ser inferido do risco da tarefa nem de uma respos
 bem-sucedida. A política é consultável pela API pública de
 `hub_scripts.skill_execution`.
 
-Na operação SE08, policy e contratos integram os validadores permanentes do Hub.
-Isso ainda não transforma CI local em teste de comportamento do Genie Code:
-seleção, uso de recursos e resistência a bypass precisam de evidência própria no
-ambiente alvo.
+A presença de contratos e scripts não comprova que foram usados na conversa. Confira a skill carregada e a evidência da rota executada.
 
 ---
 
@@ -182,7 +190,7 @@ Skills podem **recomendar** consumidores visuais, mas não são fonte de paleta,
 2. use a rota `_resolvido` do consumidor quando ela existir;
 3. mantenha dados, métricas, thresholds e decisões analíticas independentes da aparência;
 4. não presuma publicação ou homologação no Databricks;
-5. preserve limites declarados — por exemplo, SHAP/Matplotlib e Kaplan–Meier não possuem theming V07 homologado.
+5. preserve limites declarados — por exemplo, SHAP/Matplotlib e Kaplan–Meier mantêm limites próprios no theming atual.
 
 `estilo_visual_eda.md` continua útil para decisões **editoriais da EDA** (estrutura, escolha de gráfico, anotações e leitura), mas não pode redeclarar a paleta do Hub.
 
@@ -242,50 +250,47 @@ dividido por etapa para permanecer legível em painéis estreitos do workspace.
 | [hub-ml-concierge](hub-ml-concierge/README.md) | Localizar e combinar recursos existentes sem exigir que o usuário conheça o catálogo. |
 | [hub-ml-micromodelos](hub-ml-micromodelos/SKILL.md) | Especificar micromodelo novo ou descobrir oportunidades via metadata, com decisões pendentes explícitas. |
 
-Integrada ao produto; publicação e testes conversacionais no destino pendentes.
-É uma entrada opcional, não substitui o especialista explicitamente selecionado.
+O Concierge é opcional: use-o para escolher recursos. Micromodelos orienta especificação e descoberta; consulte a área de domínio para exemplos e código.
 
 ### 🔍 Exploração & Diagnóstico
 
 | Skill | Objetivo principal |
 |---|---|
-| `hub-ml-eda-profissional` | EDA univariada e bivariada com qualidade e síntese executiva. |
-| `hub-ml-cross-eda-ml` | Cruzamento de fontes e avaliação de prontidão para modelagem. |
-| `hub-ml-validacao-estatistica` | Hipóteses, pressupostos, efeito e inferência sob incerteza. |
+| [hub-ml-eda-profissional](hub-ml-eda-profissional/SKILL.md) | EDA univariada e bivariada com qualidade e síntese executiva. |
+| [hub-ml-cross-eda-ml](hub-ml-cross-eda-ml/SKILL.md) | Cruzamento de fontes e avaliação de prontidão para modelagem. |
+| [hub-ml-validacao-estatistica](hub-ml-validacao-estatistica/SKILL.md) | Hipóteses, pressupostos, efeito e inferência sob incerteza. |
 
 ### 🧱 Engenharia de Dados & Risco
 
 | Skill | Objetivo principal |
 |---|---|
-| `hub-ml-feature-engineering` | Features e joins temporais com instante de decisão explícito. |
-| `hub-ml-analise-safra` | Curvas de safra, denominadores e maturação comparável. |
+| [hub-ml-feature-engineering](hub-ml-feature-engineering/SKILL.md) | Features e joins temporais com instante de decisão explícito. |
+| [hub-ml-analise-safra](hub-ml-analise-safra/SKILL.md) | Curvas de safra, denominadores e maturação comparável. |
 
 ### 📈 Modelagem & Explicabilidade
 
 | Skill | Objetivo principal |
 |---|---|
-| `hub-ml-baseline-ml` | Baselines por tipo de problema, validação e tracking. |
-| `hub-ml-explainability` | Interpretação global/local e comunicação de limitações. |
-| `hub-ml-micromodelos` | Especificação e descoberta por metadata, com contrato estático L1 e sem execução protegida. |
+| [hub-ml-baseline-ml](hub-ml-baseline-ml/SKILL.md) | Baselines por tipo de problema, validação e tracking. |
+| [hub-ml-explainability](hub-ml-explainability/SKILL.md) | Interpretação global/local e comunicação de limitações. |
 
-A candidata de Micromodelos veio da cópia pessoal do Free; sua incorporação ao
-catálogo não certifica a sprint MM04 nem a execução de descoberta no Databricks.
+A skill Micromodelos mantém especificação e proveniência; a execução requer os recursos, permissões e verificações da etapa escolhida.
 
 ### ⚙️ MLOps & Produção
 
 | Skill | Objetivo principal |
 |---|---|
-| `hub-ml-monitoramento-modelo` | Performance, drift, fairness, custo e decisão de retreino. |
-| `hub-ml-pipeline-builder` | Pipelines modulares, qualidade, observabilidade e automação. |
+| [hub-ml-monitoramento-modelo](hub-ml-monitoramento-modelo/SKILL.md) | Performance, drift, fairness, custo e decisão de retreino. |
+| [hub-ml-pipeline-builder](hub-ml-pipeline-builder/SKILL.md) | Pipelines modulares, qualidade, observabilidade e automação. |
 
 ### 🛡️ Governança & Engenharia
 
 | Skill | Objetivo principal |
 |---|---|
-| `hub-ml-comentar-notebook` | Documentação técnica e executiva de notebooks. |
-| `hub-ml-tutor-databricks` | Explicação didática de código, Spark, Databricks e ML. |
-| `hub-ml-auditoria-skills` | Auditoria da implementação de skills e das entregas produzidas. |
-| `hub-ml-criar-objeto` | Criação orientada de objetos no padrão do Hub. |
+| [hub-ml-comentar-notebook](hub-ml-comentar-notebook/SKILL.md) | Documentação técnica e executiva de notebooks. |
+| [hub-ml-tutor-databricks](hub-ml-tutor-databricks/SKILL.md) | Explicação didática de código, Spark, Databricks e ML. |
+| [hub-ml-auditoria-skills](hub-ml-auditoria-skills/SKILL.md) | Auditoria da implementação de skills e das entregas produzidas. |
+| [hub-ml-criar-objeto](hub-ml-criar-objeto/SKILL.md) | Criação orientada de objetos no padrão do Hub. |
 
 > **Como ler o catálogo:** a etapa organiza o ponto de entrada, mas não limita a
 > composição. Uma análise pode combinar skills desde que objetivo, ordem e
@@ -477,7 +482,7 @@ Sim. Atualize `SKILL.md` e os recursos relacionados, valide o frontmatter e exec
 
 ### 6. A skill executa os helpers citados automaticamente?
 
-Não. Ela orienta a Genie Code e pode recomendar caminhos. O notebook precisa configurar `sys.path`, importar o módulo e executar a chamada, respeitando dependências, permissões e aprovações.
+Carregar uma skill não executa código. Quando a rota documentada possui runner, sua chamada explícita pode importar e executar helpers e produzir Receipt/Postflight no escopo definido. Em outras rotas, o notebook importa os helpers diretamente. Em ambos os casos, confirme contrato, dependências, permissões e evidência observada.
 
 ---
 

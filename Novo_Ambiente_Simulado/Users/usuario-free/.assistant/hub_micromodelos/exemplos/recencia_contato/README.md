@@ -1,13 +1,13 @@
 # Micromodelo fictício de recência de contato
 
-Este caso mostra **todos os blocos do contrato** com sete pessoas e seis eventos inteiramente inventados. A pergunta didática é: “há contato recente verificável nos sete dias que terminam em 2026-09-30?”. `TRUE`, `FALSE` e `INDETERMINADO` são estados de evidência; nenhum deles é decisão sobre uma pessoa real.
+Este caso mostra **todos os blocos do contrato** com sete pessoas e seis eventos inteiramente inventados. A pergunta didática é: “há contato recente verificável com idade de zero a sete dias, inclusive, em 2026-09-30?”. `TRUE`, `FALSE` e `INDETERMINADO` são estados de evidência; nenhum deles é decisão sobre uma pessoa real.
 
 ## Roteiro para avaliar
 
 1. Leia [micromodelo.yaml](micromodelo.yaml), depois [dados_sinteticos.json](dados_sinteticos.json).
 2. Execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir` a partir da pasta `.assistant`, com Python, `jsonschema`, `regex` e `PyYAML` disponíveis.
 3. Compare as sete linhas e o resumo com [resultado_esperado.json](resultado_esperado.json). O comando `--conferir` faz essa comparação automaticamente e falha se houver divergência.
-4. Troque `classificacao.limiares[0].valor` de `7` para `2` no YAML e execute sem `--conferir`: `pessoa_f` deixa de ser `TRUE`, pois seu contato tem sete dias. A assinatura material também muda. Restaure `7` para repetir o oráculo.
+4. Preserve os arquivos originais. Se houver autorização para explorar, faça uma cópia de trabalho da pasta do exemplo e edite nela `classificacao.limiares[0].valor` de `7` para `2`; execute a cópia sem `--conferir`. `pessoa_f` deixa de ser `TRUE`, pois seu contato de 23/09 tem sete dias; a assinatura material muda. `--conferir` e `conferir_entrega.py` validam o contrato original. Não altere o oráculo só para obter PASS.
 5. Execute `python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py` para reconciliar o mesmo resultado e ver o rascunho de handoff. Esse comando exige o YAML original e o oráculo inalterado.
 
 Os scripts leem somente os arquivos desta pasta, não consultam o Databricks e não gravam saídas ou tabelas. O hash no resultado é a assinatura dos campos materiais calculada pelo módulo [assinatura](../../execucao/assinatura.py).

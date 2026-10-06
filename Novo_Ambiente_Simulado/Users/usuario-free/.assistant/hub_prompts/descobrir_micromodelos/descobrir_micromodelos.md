@@ -4,6 +4,9 @@
 > `@hub-ml-micromodelos` no modo `DESCOBRIR_OPORTUNIDADES`. O prompt não possui
 > policy, Receipt, autorização ou acesso próprios; a rota efetiva vem da skill.
 
+Contratos locais: [Hub Micromodelos](../../hub_micromodelos/README.md) e
+[schema/modelo/validação](../../hub_micromodelos/contratos/README.md).
+
 ## Quando usar
 
 Há uma decisão ou área a explorar, mas ainda não uma característica escolhida.
@@ -14,7 +17,7 @@ Com objetivo já definido, use [micromodelo_novo](../micromodelo_novo/micromodel
 | Campo | Como preencher | Por que importa | Exemplo sintético |
 |---|---|---|---|
 | `{{AREA_DECISAO}}` | Decisão, área e consumidor. | Evita shortlist sem uso claro. | Priorizar revisão humana de campanhas sintéticas |
-| `{{ESCOPO}}` | Binding explícito do catálogo configurado e schemas permitidos, sem credencial em texto. | Impede extrapolação do escopo visível. | `CATALOGO_PRODUTO`; schema sintético autorizado |
+| `{{ESCOPO}}` | Binding e schemas permitidos quando houver consulta; ou fixture textual sem consulta. Nunca inclua credencial. | Impede extrapolação do escopo visível. | `CATALOGO_PRODUTO`; schema sintético autorizado |
 | `{{POPULACAO}}` | Entidade/população e exclusões conhecidas. | Torna variantes comparáveis. | Clientes sintéticos elegíveis |
 | `{{RESTRICOES}}` | E0/E1, permissões, privacidade, custo e limite de candidatas. | Limita coleta e interpretação. | E0; metadata somente; até cinco ideias |
 | `{{CRITERIOS}}` | Critérios qualitativos para priorização. | Explica escolhas sem inventar score. | Utilidade, explicabilidade, risco temporal |
@@ -65,8 +68,8 @@ SAÍDA
 ## O que conferir na resposta
 
 Cada candidata deve distinguir observação de interpretação. Uma shortlist não
-é `micromodelo.yaml`, aprovação ou prova de viabilidade em dados. E1 exige teste
-no Databricks Free pelo usuário; E2 não é executado nesta missão.
+é `micromodelo.yaml`, aprovação ou prova de viabilidade em dados. E1 identifica o contexto Free; execução de runtime requer prova separada. Uso
+corporativo E2 exige gates e autorização próprios.
 
 ## Limites
 

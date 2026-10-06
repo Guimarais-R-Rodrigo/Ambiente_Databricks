@@ -2,13 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 <!-- sistema-temas-v07: consumidores -->
-> **Atualização V07 — estado atual.** Cada curva legada possui agora uma rota
-> opt-in `*_resolvido`: ROC, Precision–Recall, Lift e KS. A aparência usa o token
-> dedicado `palette.curves_legacy`, preservando a decisão do contrato V01 de
-> manter a família histórica de seis cores separada da paleta categórica geral.
-> AUC, AP, lift, KS, eixos e séries continuam calculados pela mesma lógica. A
-> figura Plotly resolvida pode ser serializada localmente para HTML; PNG Plotly,
-> PDF e PPTX não são formatos homologados pela V07.
+Para usar um tema explícito, escolha plot_roc_curve_resolvido, plot_pr_curve_resolvido, plot_lift_curve_resolvido ou plot_ks_curve_resolvido e passe um ResolvedTheme compatível com notebook/light. As funções legadas continuam disponíveis. A rota temática conserva a paleta específica de seis cores e os cálculos; pode produzir HTML local. PNG Plotly, PDF e PPTX não estão homologados nesse contrato.
 
 Este objeto produz quatro visualizações diagnósticas para classificação binária com tema local do Hub. Ele facilita leitura e comunicação, mas não escolhe threshold, não mede calibração e não substitui validação estatística ou de negócio.
 
@@ -61,6 +55,24 @@ O argumento `n` altera apenas o N exibido no rodapé; não subamostra os dados.
 
 ## 9. Como usar este recurso no Hub?
 
+Para tema explícito, obtenha um `ResolvedTheme` pela [rota de resolução](../../visual/tema/README.md). As assinaturas públicas são:
+
+```python
+plot_roc_curve_resolvido(y_true, y_prob, theme, title="Curva ROC", show_auc=True, n=None)
+plot_pr_curve_resolvido(y_true, y_prob, theme, title="Curva Precision-Recall", n=None)
+plot_lift_curve_resolvido(y_true, y_prob, theme, title="Curva de Lift", n_bins=10, n=None)
+plot_ks_curve_resolvido(y_true, y_prob, theme, title="Curva KS", n=None)
+```
+
+Com `theme` já resolvido e compatível com notebook/light:
+
+```python
+from hub_snippets.ml.curves_plotly import plot_pr_curve_resolvido
+fig = plot_pr_curve_resolvido(y_true, y_prob, theme=theme)
+```
+
+Essas chamadas retornam figuras em memória. `fig.write_html(destino)` é uma ação separada de escrita local que exige escolher e conferir o destino.
+
 ```python
 from hub_snippets.ml.curves_plotly import plot_pr_curve
 
@@ -72,15 +84,15 @@ A chamada acima usa todos os elementos de `y_true` e `y_prob`; `n`, quando infor
 
 ## 10. Decisões e configurações que mais importam
 
-Em lift, `n_bins` define os pontos cumulativos e deve estar entre 2 e o tamanho da amostra. O primeiro ponto equivale a `1/n_bins` da base; com `n_bins=10`, é top-10%.
+Em lift, `n_bins` define os pontos cumulativos e deve estar entre 2 e o tamanho da amostra. O primeiro corte é nominalmente `1/n_bins`: seleciona `k = ceil(N/n_bins)` linhas, com cobertura real `k/N`. Para `N=21` e `n_bins=10`, usa três observações, `3/21 ≈ 14,29%`; a anotação top-10% é nominal, não a cobertura efetiva.
 
-A paleta local tem seis cores, enquanto a paleta compartilhada do Hub tem dez. Isso é dívida conhecida e pode mudar aparência se for unificada.
+A família de curvas usa deliberadamente seis cores próprias, diferentes das dez cores da paleta categórica geral. Essa separação é parte do contrato visual; não substitua uma pela outra implicitamente.
 
 ## 11. Limitações, riscos e armadilhas
 
 `n` não limita custo. Para bases grandes, amostre explicitamente antes de chamar. As funções não calculam intervalos de confiança.
 
-A curva KS deste helper usa o mesmo eixo FPR para desenhar TPR e diagonal; não confunda sua apresentação com a convenção de KS em pontos percentuais de `metrics_report`.
+O KS da figura é unilateral: `max(TPR − FPR)`, em escala 0–1, desenhado sobre FPR. Já `metrics_report.ks_pct` usa a distância bilateral absoluta de `ks_2samp`, multiplicada por 100. Não reconcilie os dois apenas multiplicando a figura por 100. Com `y_true=[0,0,1,1]` e `y_prob=[0.9,0.8,0.2,0.1]`, o ranking está perfeitamente invertido: o KS da figura é 0 e o bilateral é 100. Nenhum desses valores, isolado da direção do score, aprova o modelo.
 
 A paleta local repete cores depois da sexta série se for reutilizada para gráficos com mais séries.
 
@@ -100,6 +112,4 @@ Depois da avaliação visual, registre métricas com [`metrics_report`](../metri
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da R09. Referências primárias: documentação do scikit-learn para ROC, Precision-Recall, AUC/AP e documentação do Plotly para `graph_objects`.
-
-As curvas descrevem comportamento na amostra fornecida; não estabelecem causalidade, calibração ou aprovação de produção.
+Consulte as definições de ROC, Precision-Recall e Average Precision do scikit-learn e a API graph_objects do Plotly. Os gráficos descrevem apenas a amostra recebida; não validam calibração nem aprovam o uso do modelo.

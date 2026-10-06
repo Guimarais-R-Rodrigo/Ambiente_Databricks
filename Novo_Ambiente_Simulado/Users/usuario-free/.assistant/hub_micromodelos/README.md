@@ -1,5 +1,11 @@
 # Hub Micromodelos
 
+## Conferir o primeiro resultado
+
+Os comandos abaixo partem da raiz `.assistant`, que contém `hub_micromodelos/`, e leem a fixture original. Saída esperada: população 7, `TRUE=2`, `FALSE=1`, `INDETERMINADO=4`, três scores, handoff `DRAFT_NOT_SUBMITTED` e `published=false`. Imprimem em stdout; não consultam nem gravam tabelas. Se divergir, compare YAML, dados e oráculo antes de adaptar o caso. Este quickstart é aprendizado, não validação de uso real.
+
+Dependências: Python com `jsonschema`, `regex` e `PyYAML`. O ensaio local de documentação foi conferido em Python 3.12.14; isso não estabelece uma faixa universal de runtimes suportados.
+
 Micromodelo é uma **característica delimitada, com regra, evidências e incerteza explícitas**, usada para apoiar uma decisão. Esta área do Hub guarda o contrato e o código de estudo. Cada micromodelo concreto é descrito em um `micromodelo.yaml`; a [skill conversacional](../skills/hub-ml-micromodelos/SKILL.md) orienta a Genie Code, mas não executa automaticamente a biblioteca. Os briefings continuam em `hub_prompts/`.
 
 ## Por onde começar
@@ -45,6 +51,6 @@ As pastas correspondem a trabalhos diferentes. `contratos/` define **o que um mi
 4. **Registrar e revisar.** MLflow guarda histórico de runs quando uma rota o utiliza; o YAML continua sendo a especificação. Uma run não aprova o micromodelo. O handoff apenas prepara evidências e pendências para a governança externa.
 5. **Publicar, se autorizado.** Produto de Dados, permissões, retenção e aceite pertencem à autoridade institucional; este módulo não faz autopublicação.
 
-## Estado desta entrega
+## Uso e limites
 
-O módulo e o exemplo sintético estão instaláveis no pacote do Hub. A skill permanece `L1/audit`; seu `target_level=L3` é plano, não capacidade presente. O código de laboratório, o ensaio local e o readback de arquivos no Free não homologam comportamento no Genie Code, dados reais, execução do módulo recém-distribuído no Free ou uso corporativo. O [Manual Técnico](../MANUAL_TECNICO.md#micromodelos) explica o lugar de Micromodelos no ecossistema; o [guia de jornada](guias/README.md) informa a ação e a evidência exigida em cada etapa.
+A skill ajuda a especificar e revisar o caso. A biblioteca e os exemplos são chamados explicitamente. O exemplo usa dados fictícios e não demonstra validade sobre dados reais, autorização institucional ou publicação. Consulte também a policy da skill: seu nível atual e o escopo protegido continuam sendo contrato operacional. Código importável não concede execução protegida, Receipt ou promoção de nível. A skill permanece `L1/audit`; `target_level=L3` não é capacidade presente. Consulte a [policy](../hub_padroes/skill_enforcement/README.md), o [Manual](../MANUAL_TECNICO.md#micromodelos) e a [jornada](guias/README.md).

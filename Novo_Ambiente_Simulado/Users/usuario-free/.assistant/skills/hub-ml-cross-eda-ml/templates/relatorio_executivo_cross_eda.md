@@ -9,7 +9,7 @@
 | **Target pretendido** | [evento] ou `PENDENTE/DECISAO` |
 | **Horizonte** | [N dias] ou `PENDENTE/DECISAO` |
 | **Data da análise** | YYYY-MM-DD |
-| **Decisão** | [🟢 GO / 🟡 CONDICIONAL / 🔴 NO-GO] (Score: [X.X]) |
+| **Decisão** | [GO / CONDICIONAL / NO-GO / NÃO AVALIADO] (score e evidência, se disponíveis) |
 
 ## 1. Resumo executivo
 
@@ -35,15 +35,21 @@ oportunidade e próximo passo recomendado.]
 
 ## 4. ML Readiness Score
 
-| Dimensão | Score | Status |
+Derivar do [scorecard vigente](readiness_scorecard.md), com os mesmos pesos,
+evidências e critérios. Vetos de leakage, chave, representatividade e governança
+prevalecem sobre a média. Sem dados/execução suficientes, estado NÃO AVALIADO.
+GO técnico não substitui decisão humana nem autoriza treino ou promoção.
+
+| Dimensão | Score (0–4) ou NÃO AVALIADO | Evidência / veto / ação e owner |
 |---|---|---|
-| Integrabilidade | [X]/5 | [✅/🟡/🔴] |
-| Cobertura | [X]/5 | [✅/🟡/🔴] |
-| Qualidade combinada | [X]/5 | [✅/🟡/🔴] |
-| Diversidade de sinal | [X]/5 | [✅/🟡/🔴] |
-| Profundidade temporal | [X]/5 | [✅/🟡/🔴] |
-| Disponibilidade de target | [X]/5 | [✅/🟡/🔴] |
-| **Score final (ponderado)** | **[X.X]/5** | **[GO/CONDICIONAL/NO-GO]** |
+| Unidade, entidade e chave | [X] | [fonte] |
+| Alinhamento point-in-time | [X] | [fonte] |
+| Cobertura e representatividade | [X] | [fonte] |
+| Qualidade combinada | [X] | [fonte] |
+| Sinal incremental | [X] | [fonte] |
+| Target e avaliação | [X] | [fonte] |
+| Governança e operação | [X] | [fonte] |
+| **Score ponderado, se calculável** | **[X]/4** | [vetos primeiro; pesos e critérios aprovados] |
 
 ## 5. Principais oportunidades (o que se ganha cruzando)
 
@@ -69,7 +75,7 @@ oportunidade e próximo passo recomendado.]
 
 ## 8. Próximos passos
 
-1. [Ação imediata — geralmente "executar FE Plan com Modo B"]
+1. [Encaminhar objetivo, fontes, contrato temporal, evidência e pendências à skill de Feature Engineering; modo autorizado pelo pedido]
 2. [Ação de mitigação — resolver gap principal]
 3. [Ação de validação — confirmar premissa pendente]
 
@@ -77,4 +83,4 @@ oportunidade e próximo passo recomendado.]
 
 **Notebook fonte**: `[caminho completo do notebook Cross-EDA]`
 **Input para FE**: Este relatório + scorecard servem como input direto
-para `hub-ml-feature-engineering` (Modo B).
+para `hub-ml-feature-engineering`, conforme objetivo e entradas confirmadas. O handoff não executa FE nem amplia autorização.

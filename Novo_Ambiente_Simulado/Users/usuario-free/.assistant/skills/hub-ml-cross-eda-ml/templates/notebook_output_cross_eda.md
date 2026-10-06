@@ -4,6 +4,10 @@
 
 > Este template define a sequência de células que o agente deve criar.
 > Adaptar ao número de fontes e ao risco: compacto, padrão ou expandido.
+> É plano de organização, não perfil executado. Listar somente análises e visuais
+> pertinentes e autorizados; NÃO EXECUTADO, NÃO CALCULADO e NÃO APLICÁVEL são
+> estados legítimos. Contexto L2 não comprova leitura, coverage ou readiness;
+> perfis diagnósticos/PIT exigem seus Receipt, Postflight e oráculos independentes.
 
 ## Modo Padrão (~18–24 células)
 
@@ -22,24 +26,15 @@
 | **Autor/owner** | [nome ou equipe fornecida] |
 ```
 
-### Célula 2 — Setup visual [code]
-```python
-try:
-    from hub_snippets.visual.theme_plotly import registrar_template_plotly, aplicar_tema
-    from hub_snippets.visual.section_header import section_header_html
-    from hub_snippets.constants.colors import PALETA_CATEGORICA
-    registrar_template_plotly()
-except ImportError:
-    # Fallback autônomo: hub_snippets é uma extensão visual opcional.
-    PALETA_CATEGORICA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333"]
+### Célula 2 — Preparação visual (se aplicável)
 
-    def aplicar_tema(fig, **kwargs):
-        fig.update_layout(template="plotly_white")
-        return fig
-
-    def section_header_html(etapa=None, emoji="📌", titulo="Seção", descricao=""):
-        return f"## {emoji} {titulo}\n\n{descricao}"
-```
+Consultar o [contrato visual](../../../hub_padroes/identidade_visual/README.md)
+e o [guia EDA](../../hub-ml-eda-profissional/templates/estilo_visual_eda.md).
+Usar consumidor compatível com `ResolvedTheme` quando o tema tiver sido
+selecionado; manter a rota legada quando esse for o contrato. Não registrar
+um template global por padrão nem redefinir paleta/funções após `ImportError`.
+Se faltar recurso obrigatório, preservar o bloqueio. Se o visual for opcional,
+registrar visual indisponível e usar a saída tabular permitida, sem fabricar gráfico.
 
 ### Célula 3 — Inventário dos EDAs [%md]
 ```markdown
@@ -164,7 +159,7 @@ except ImportError:
 
 ### Célula 17 — Radar de Readiness [code]
 ```python
-# === VISUALIZAÇÃO: radar chart do scorecard (6 dimensões) ===
+# === VISUALIZAÇÃO: radar opcional do scorecard (7 dimensões, escala 0–4, vetos explícitos) ===
 # [código Plotly scatterpolar]
 ```
 
@@ -197,8 +192,8 @@ Join + Coverage (1 célula + 1 código), pular Etapas 5-7 detalhadas,
 ir direto para Scorecard → Recomendações → Relatório.
 
 ## Modo Expandido (~25–30 células)
-Adicionar:
-- Célula de código para CADA par de fontes (Jaccard, Overlap, PSI)
+Adicionar somente se relevante e autorizado:
+- Diagnóstico para os pares necessários (Jaccard, Overlap e PSI somente se semanticamente aplicável)
 - Diagrama Mermaid para fluxo de joins
 - Análise de subconjuntos (ex.: "se usar só A+B sem C, o que muda?")
 - Célula com cálculo de Mutual Information entre top variáveis

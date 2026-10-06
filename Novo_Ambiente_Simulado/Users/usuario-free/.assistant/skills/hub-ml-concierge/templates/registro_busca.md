@@ -14,6 +14,7 @@ Este registro permite conferir a busca sem reproduzir raciocínio privado. Use a
 | Scripts | [fonte ou não acessado] | [caminhos e símbolos] | [limite] |
 | Prompts | [fonte ou não acessado] | [caminhos] | [limite] |
 | Padrões | [fonte ou não acessado] | [templates] | [limite] |
+| Área de domínio, quando pertinente (ex.: `hub_micromodelos/`) | [índice consultado ou não acessado] | [candidatos efetivamente lidos] | [limite ou NÃO APLICÁVEL] |
 
 **Consultas relevantes:** [termos originais e expansões usadas].
 **Escolhas descartadas relevantes:** [recurso e incompatibilidade verificável].

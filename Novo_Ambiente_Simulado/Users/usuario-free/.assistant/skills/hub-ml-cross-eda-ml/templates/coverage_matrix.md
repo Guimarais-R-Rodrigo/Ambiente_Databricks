@@ -43,7 +43,7 @@ Não classificar MCAR/MAR/MNAR apenas por comparação descritiva e não conclui
 
 | Estratégia de join | N final | % da âncora | Nulos médios por linha |
 |---|---|---|---|
-| INNER (todas as fontes) | [N] | [X%] | 0 |
+| INNER (todas as fontes) | [N] | [X%] | [medir; match de chave não elimina NULL original] |
 | LEFT (âncora + lefts) | [N] | [X%] | [Y colunas com NULL] |
 | Híbrido (inner B, left C) | [N] | [X%] | [Y colunas com NULL] |
 
@@ -51,20 +51,18 @@ Não classificar MCAR/MAR/MNAR apenas por comparação descritiva e não conclui
 
 ---
 
-**Código de validação** (célula Python no notebook):
+**Plano de validação** (pseudocódigo; não executar como célula):
+A cobertura de chave não mede completude dos atributos. Declarar denominador,
+filtros, política de chaves nulas, grão e disponibilidade temporal. Usar a rota
+canônica da skill e `diagnosticar_join` quando aplicável; o perfil somente de
+contexto não consulta dados nem mede coverage. Contagens Spark têm custo.
+Cache/persist só se permitidos pelo compute e pela política, com liberação
+prevista; não adicionar cache obrigatório a esta validação.
 
-```python
-# Substitua os placeholders antes de executar.
-chave = "[chave]"
-ancora = spark.table("[catalog.schema.ancora]").select(chave).distinct().cache()
-n_ancora = ancora.count()
-if n_ancora == 0:
-    raise ValueError("A fonte âncora está vazia após os filtros")
-
-for nome, tabela in [("B", "[catalog.schema.b]"), ("C", "[catalog.schema.c]")]:
-    fonte = spark.table(tabela).select(chave).distinct()
-    n_match = ancora.join(fonte, chave, "left_semi").count()
-    print(f"Coverage {nome}: {n_match / n_ancora:.2%} ({n_match}/{n_ancora})")
-
-ancora.unpersist()
+```text
+confirmar fontes, chaves, grão, filtros, denominador e autorização de leitura
+usar diagnóstico canônico de cardinalidade e cobertura, sem substituir o runner
+se âncora vazia: registrar indefinição, sem dividir por zero
+medir match de chave e, separadamente, NULL por atributo na população pós-join
+reportar valores observados, Receipt/verificador aplicáveis e limites
 ```

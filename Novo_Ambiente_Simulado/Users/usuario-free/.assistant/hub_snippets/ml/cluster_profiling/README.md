@@ -49,15 +49,19 @@ Primeiro calcula média e desvio-padrão globais. Depois percorre cada valor dis
 
 Uma segmentação produziu três grupos de clientes. Dois parecem ter renda, idade e produtos quase iguais; o terceiro é claramente diferente. O profiling permite mostrar essa semelhança antes de criar nomes distintos para os dois primeiros.
 
-O notebook R08 usa exatamente esse cenário sintético.
+O notebook de exemplo usa três grupos sintéticos, dois com perfis semelhantes, para mostrar por que a posição no ranking não basta para nomear segmentos.
 
 ## 7. O que você precisa antes de usar?
+
+Rejeite IDs nulos e assegure que sejam mutuamente ordenáveis; `sorted(...)` não resolve IDs heterogêneos. Nulos podem produzir perfil vazio/incoerente enquanto o `groupby` impresso omite esses IDs. Defina uma política de missingness antes de chamar, em vez de confundir uma linha omitida com grupo de tamanho zero.
 
 O DataFrame precisa conter `cluster_col` e todas as `feature_cols`. As operações são pandas e rodam no processo Python/driver.
 
 A implementação não faz uma camada explícita de validação de tipos, vazio, NaN ou IDs heterogêneos. Erros de colunas chegam pelo pandas e valores ausentes podem propagar para as estatísticas. IDs precisam ser ordenáveis entre si porque o loop usa `sorted(...)`.
 
 ## 8. O que este recurso entrega?
+
+`n` é o tamanho total do grupo, não o denominador de cada média: pandas ignora nulos por feature. `n` e `pct_total` se repetem em cada linha cluster×feature; não some essas colunas sobre toda a tabela longa. Com missingness, compute também `base.groupby("cluster")[features].count()` para conhecer o número não nulo de cada média.
 
 `profile_clusters` retorna DataFrame longo com `cluster`, `n`, `pct_total`, `feature`, `cluster_mean`, `global_mean`, `index` e `z_score`. A função também imprime uma tabela de distribuição dos clusters.
 
@@ -66,6 +70,24 @@ Quando a média global é zero, `index` vira `None` para aquela feature. Quando 
 `top_differentiators` devolve `feature`, `cluster_mean`, `global_mean`, `index` e `z_score` para as maiores magnitudes absolutas.
 
 ## 9. Como usar este recurso no Hub?
+
+Integração com DBSCAN, optando explicitamente por excluir ruído da referência do perfil:
+
+```python
+from hub_snippets.ml.cluster_profiling import profile_clusters
+
+base = df.copy()
+base["cluster"] = labels  # mesma ordem física das linhas usadas no ajuste
+assert base["cluster"].notna().all()
+ruido = base.loc[base["cluster"] == -1].copy()
+base = base.loc[base["cluster"] != -1].copy()
+assert not base.empty
+features = ["renda", "idade"]
+profiles = profile_clusters(base, features, cluster_col="cluster")
+contagens_validas = base.groupby("cluster")[features].count()
+```
+
+A alternativa é manter `-1` identificado como **ruído**, separadamente dos segmentos: nesse caso o helper inclui suas linhas nas médias globais. `clustering_suite` exclui `-1` das métricas geométricas; portanto registre a população de referência de cada análise.
 
 ```python
 from hub_snippets.ml.cluster_profiling import profile_clusters, top_differentiators
@@ -110,6 +132,4 @@ Depois do profiling, valide estabilidade e utilidade de negócio antes de consol
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. As métricas aqui são cálculos locais definidos no código; não há uma norma estatística externa que transforme o campo chamado `z_score` em teste de hipótese.
-
-A revisão R08 não presume publicação Databricks, homologação de segmentação nem auditoria independente.
+As definições de index e z_score são as fórmulas locais descritas neste guia. z_score é diferença padronizada de médias, sem teste de hipótese. Confirme estabilidade e utilidade dos grupos antes de adotá-los operacionalmente.

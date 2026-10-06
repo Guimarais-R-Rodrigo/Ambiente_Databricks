@@ -4,7 +4,7 @@
 
 Reúne valores e convenções reutilizáveis para formatação brasileira, cores, estilos e símbolos usados por outros componentes do Hub.
 
-Este é um **índice de categoria**, não um README de objeto. Ele organiza a navegação entre os guias locais já validados; a implementação continua definida pelos módulos Python e cada objeto mantém seu próprio exemplo.
+Este é um **índice de categoria**, não um README de objeto. Ele organiza a navegação entre os guias locais com contrato e evidência delimitada por objeto; a implementação continua definida pelos módulos Python e cada objeto mantém seu próprio exemplo.
 
 ## Quando começar por esta categoria?
 
@@ -19,12 +19,16 @@ Entre aqui quando a dúvida for sobre apresentação padronizada, formatação m
 
 ## Objetos disponíveis
 
-| Objeto | Papel resumido | Documentação |
+| Objeto | Entrada/API | Retorno e efeito |
 |---|---|---|
-| [`colors`](colors/README.md) | cores com significado consistente | [guia local](colors/README.md) |
-| [`emojis`](emojis/README.md) | símbolos para orientar a leitura | [guia local](emojis/README.md) |
-| [`format_br`](format_br/README.md) | apresentar números sem mudar o que eles significam | [guia local](format_br/README.md) |
-| [`styles`](styles/README.md) | aparência reutilizável para blocos HTML | [guia local](styles/README.md) |
+| [`colors`](colors/README.md) | Sem dados; constantes | strings e listas mutáveis; sem Spark |
+| [`emojis`](emojis/README.md) | Chave do mapa | strings/dicionários mutáveis; sem Spark |
+| [`format_br`](format_br/README.md) | Escalar e unidade/escala | string brasileira; sem cálculo analítico |
+| [`styles`](styles/README.md) | Constantes ou `get_styles_resolvidos(theme)` | CSS/string ou dicionário novo; sem renderização automática |
+
+Antes do primeiro import, siga a [preparação da biblioteca](../README.md#passo-a-passo-operacional-como-usar-um-snippet).
+
+As constantes legadas não mudam ao carregar um tema. `get_styles_resolvidos` recebe um `ResolvedTheme` notebook e cria estilos para uso explícito.
 
 ## Cuidados da categoria
 

@@ -57,6 +57,8 @@ Esse cenário ensina por que olhar apenas média pode ser insuficiente. O valor 
 
 ## 7. O que você precisa antes de usar?
 
+A assinatura aceita `method="psi"` como único método implementado; defaults: `num_bins=10`, `relative_error=0.001`, `epsilon=1e-6`. Um limiar isolado não levanta erro nem classifica: devolve `not_classified`.
+
 `table_name` deve ser legível por `spark.table`. `date_col` deve existir e conter valores que possam ser comparados diretamente com `date_ref` e `date_comp`. As duas coortes resultantes precisam ser não vazias.
 
 `cols`, quando informado, deve conter colunas numéricas existentes. Se omitido, o código seleciona tipos cujo dtype textual contém `tinyint`, `smallint`, `int`, `bigint`, `float`, `double` ou `decimal`, excluindo a coluna de coorte.
@@ -78,6 +80,8 @@ O retorno é um dicionário por coluna. Cada item contém:
 A classificação não aparece automaticamente em 0,1 ou 0,25. Sem os dois limiares fornecidos pelo consumidor, o código devolve `not_classified`.
 
 ## 9. Como usar este recurso no Hub?
+
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
 
 ```python
 from hub_scripts.drift_detector import drift_detector
@@ -103,9 +107,20 @@ A escolha da referência é estrutural: os bins nascem dela. Trocar referência 
 
 `epsilon` altera a contribuição de buckets ausentes em um dos lados. Não compare execuções com epsilon diferente como se fossem a mesma métrica.
 
-Limiar de classificação deve ser calibrado para variável, amostra, processo e risco. O código se recusa a classificar quando a política está incompleta.
+Limiar de classificação deve ser calibrado para variável, amostra, processo e risco. Com política incompleta, o retorno é `not_classified`, não uma exceção antecipada.
 
 ## 11. Limitações, riscos e armadilhas
+
+Referência constante ou quantis repetidos reduzem as faixas efetivas; inspecione `boundaries` em vez de presumir dez bins informativos. Para schemas complexos, prefira lista explícita de colunas escalares.
+
+| Condição | Tratamento |
+|---|---|
+| Método inválido, coluna ausente, `date_col` também selecionada ou nenhum campo numérico | `ValueError` |
+| Uma coorte vazia | `ValueError` após contagens |
+| Ambos os limiares presentes sem `0 <= warning < critical` | `ValueError` na classificação |
+| Tipo incompatível, falha de acesso ou expressão Spark | erro de runtime |
+
+A classificação ocorre dentro do loop, depois de leituras, quantis e agregações. Validar thresholds não é um preflight que evita todo custo.
 
 PSI depende de discretização. Mudanças dentro de um mesmo bucket podem não aparecer; limites repetidos reduzem o número efetivo de faixas.
 
@@ -117,7 +132,7 @@ O alisamento por `epsilon` evita infinito em buckets vazios, porém as proporç�
 
 ## 12. Quais são as alternativas?
 
-Para PSI/CSI em DataFrames e comparação mais ampla, consulte a implementação de [`hub_snippets.ml.drift_detection`](../../hub_snippets/ml/drift_detection/drift_detection.py). Para um cálculo pontual de PSI/CSI já documentado na camada Spark, consulte [`psi_calculator`](../../hub_snippets/spark/psi_calculator/README.md).
+Para PSI/CSI em DataFrames e comparação mais ampla, consulte a implementação de [`hub_snippets.ml.drift_detection`](../../hub_snippets/ml/drift_detection/README.md). Para um cálculo pontual de PSI/CSI já documentado na camada Spark, consulte [`psi_calculator`](../../hub_snippets/spark/psi_calculator/README.md).
 
 Se a pergunta for performance, use métricas do modelo com target realizado. Se for apenas mudança de média/quantil, uma agregação Spark dirigida pode ser mais transparente e barata.
 
@@ -137,6 +152,4 @@ Após detectar mudança, identifique origem e impacto. A decisão de reentreinar
 
 ## 15. Referências
 
-O comportamento específico foi conferido na implementação e no exemplo locais durante a R04-B em 12/09/2026. O Apache Spark documenta [`DataFrame.approxQuantile`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.approxQuantile.html), incluindo o papel do erro relativo; essa API sustenta o cálculo dos limites, não os limiares de PSI.
-
-Os thresholds de monitoramento permanecem política local. A validação da R04-B registra a execução com Spark real após o fechamento técnico. Revisão do próprio autor não é auditoria independente nem homologação Databricks.
+Contrato: [implementação](drift_detector.py), [fachada](__init__.py) e [exemplo](exemplo_drift_detector.py). A documentação de [`approxQuantile`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.approxQuantile.html), consultada em 12/09/2026, fundamenta o erro relativo dos quantis; não define os limiares locais de PSI.

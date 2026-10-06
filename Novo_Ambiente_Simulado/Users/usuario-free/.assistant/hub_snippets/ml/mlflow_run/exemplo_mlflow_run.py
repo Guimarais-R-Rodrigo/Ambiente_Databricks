@@ -76,10 +76,7 @@ except ValueError as erro:
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. O registro completo — e a observação histórica deste runtime
-# MAGIC
-# MAGIC Esta é a seção que importa: o caminho feliz do helper, com parâmetros,
-# MAGIC métricas e assinatura. A célula abaixo tenta executá-lo de verdade.
+# MAGIC Registro completo: confirme primeiro tracking, experimento e permissões. O bloco seguinte registra parâmetros, métricas e modelo no backend configurado; não é uma operação só em memória.
 
 # COMMAND ----------
 
@@ -110,36 +107,15 @@ except Exception as erro:
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ```text
-# MAGIC ⚠️ NÃO EXECUTADO no laboratório
+# MAGIC Exceção registrada no ensaio de referência do Free em 17/08/2026;
+# MAGIC descreve aquela configuração, sem determinar suporte no seu runtime:
 # MAGIC
-# MAGIC O que rodaria : run_governado(...) com parametros, metricas e modelo
-# MAGIC Por que não   : AnalysisException: [CONFIG_NOT_AVAILABLE.WITHOUT_SUGGESTION]
-# MAGIC                 Configuration spark.mlflow.modelRegistryUri is not available.
-# MAGIC                 `mlflow.start_run` instancia um MlflowClient, que resolve o
-# MAGIC                 registry URI lendo essa config da sessão Spark. No
-# MAGIC                 serverless, o Spark Connect recusa devolvê-la, e a exceção
-# MAGIC                 acontece na ABERTURA do bloco — nenhum registro chega a ser
-# MAGIC                 tentado.
-# MAGIC Onde verificar: .claude/rules/free-vs-trabalho.md, matriz de runtime
-# MAGIC O que falta   : compute clássico, ou uma versão do MLflow que não leia essa
-# MAGIC                 config. Não é ajustável pelo helper.
+# MAGIC ```text
+# MAGIC AnalysisException: [CONFIG_NOT_AVAILABLE.WITHOUT_SUGGESTION]
+# MAGIC Configuration spark.mlflow.modelRegistryUri is not available.
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** É impedimento de runtime, não de escopo: a biblioteca não
-# MAGIC inicializa aqui. A célula acima captura a exceção em vez de escondê-la,
-# MAGIC então o notebook continua sendo executável e se auto-verifica. Em outro runtime, inclusive clássico, execute novamente: o sucesso depende do tracking/configuração vigentes.
-# MAGIC
-# MAGIC **E há um detalhe que vale mais que o erro em si.** Este mesmo caminho foi
-# MAGIC testado no laboratório em **14/08/2026** e passou:
-# MAGIC `docs/testes/spark/resultados/` registra `mlflow_run.completo` como
-# MAGIC `"run completo aceito"`. Três dias depois, no mesmo tipo de compute, ele
-# MAGIC não abre. O registro de 14/08 não está errado — descreve o que era verdade
-# MAGIC então. O que mudou foi o runtime do Free, por baixo, sem aviso.
-# MAGIC
-# MAGIC A lição é sobre método: **"foi testado" tem data de validade em ambiente
-# MAGIC gerenciado.** Um teste de três dias atrás não é garantia de hoje, e é por
-# MAGIC isso que a verificação vale mais que o registro dela.
+# MAGIC Se o registro falhar por configuração do tracking, anote a exceção e confira a configuração/versionamento do runtime. Não conclua que todo serverless ou todo compute clássico tem o mesmo suporte. Uma falha após abrir o run pode deixar artefatos parciais; consulte o backend antes de repetir. O histórico de ensaios e seus links estão nas referências do [README](README.md).
 # MAGIC
 # MAGIC **Uma dependência que não aparece no `import`:** quando o run abre,
 # MAGIC `run.modelo()` chama `mlflow.sklearn.log_model`, e `import mlflow` **não**

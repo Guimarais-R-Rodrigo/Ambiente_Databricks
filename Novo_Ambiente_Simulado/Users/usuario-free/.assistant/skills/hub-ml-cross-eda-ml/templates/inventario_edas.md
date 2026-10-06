@@ -2,6 +2,10 @@
 
 # 📋 Etapa 1 — Inventário dos EDAs
 
+Preencher com fonte/versão e evidência de cada EDA consultada. Sem observação,
+registrar NÃO INFORMADO; sem execução, NÃO EXECUTADO. Semáforo exige critério
+aprovado, não mera presença do relatório. Este inventário não executa joins.
+
 | Campo | Fonte A | Fonte B | Fonte C |
 |---|---|---|---|
 | **Tabela** | `[catalog.schema.tabela_a]` | `[catalog.schema.tabela_b]` | `[catalog.schema.tabela_c]` |

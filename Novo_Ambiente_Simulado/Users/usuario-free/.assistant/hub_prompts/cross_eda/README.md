@@ -47,13 +47,13 @@ Preencha os campos do [briefing](cross_eda.md): recursos, entidade/granularidade
 
 ## 8. O que este recurso entrega?
 
-O prompt solicita mapa de fontes e joins, matriz de compatibilidade, scorecard de readiness, lista de riscos e uma recomendação de prosseguir, condicionar ou bloquear. Esses itens são solicitados à interação; não são resultados garantidos pelo arquivo Markdown.
+Solicita mapa de fontes e joins, cardinalidade esperada versus observada por join, matriz de compatibilidade, scorecard de readiness com critérios e itens não observáveis, riscos e recomendação condicionada à evidência. Vetos não são neutralizados por uma média. Sem ponto no tempo, entregue plano; não conclua “sem leakage”.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [cross_eda.md](cross_eda.md), preencha o briefing e selecione os recursos reais no Genie Code. O formulário indica `@hub-ml-cross-eda-ml` como skill recomendada.
+Preencha [cross_eda.md](cross_eda.md) e siga a [skill correspondente](../../skills/hub-ml-cross-eda-ml/SKILL.md) para selecionar a superfície suportada e seus inputs. Perfis sintéticos de contexto e PIT têm escopos separados; sua existência não amplia a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) nem comprova todo Cross-EDA.
 
-O [notebook](exemplo_cross_eda.py) prepara **duas** tabelas com `mode("overwrite")`: `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`. O cenário inclui atraso de publicação e features futuras de propósito. Executar a Parte 1 pode substituir tabelas existentes com esses nomes; estudar o prompt não exige essa execução.
+O [notebook](exemplo_cross_eda.py) sobrescreve `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features` com `mode("overwrite")`. Feature Engineering usa os mesmos destinos. O preparo planta risco temporal; não executa a análise. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -65,7 +65,7 @@ Cobertura alta de join não prova ausência de viés nem ganho preditivo. Timest
 
 ## 12. Quais são as alternativas?
 
-Para uma fonte, use [eda_rapida](../eda_rapida/README.md) ou [eda_completa](../eda_completa/eda_completa.md). Para duas versões da mesma informação, use [comparar_tabelas](../comparar_tabelas/README.md). Quando a compatibilidade já estiver resolvida e a tarefa for especificar atributos, use [feature_engineering](../feature_engineering/feature_engineering.md).
+Para uma fonte, use [eda_rapida](../eda_rapida/README.md) ou [eda_completa](../eda_completa/README.md). Para duas versões da mesma informação, use [comparar_tabelas](../comparar_tabelas/README.md). Quando a compatibilidade já estiver resolvida e a tarefa for especificar atributos, use [feature_engineering](../feature_engineering/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -77,6 +77,6 @@ O [briefing](cross_eda.md) é o ponto de uso; o [notebook](exemplo_cross_eda.py)
 
 ## 15. Referências
 
-A descrição local foi confrontada com [cross_eda.md](cross_eda.md) e [exemplo_cross_eda.py](exemplo_cross_eda.py). Esta revisão foi estática e não executou o notebook nem uma conversa real com Genie Code.
+O [briefing](cross_eda.md) define os campos e a entrega; o [notebook](exemplo_cross_eda.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
 
-Para seleção de recursos no Genie Code, consulte [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code). Para o conceito de point-in-time, consulte [Point-in-time feature joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series). Consultadas em 13/09/2026.
+Referências de plataforma: [seleção de recursos no Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code) e [Point-in-time feature joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series). Elas fundamentam contexto e temporalidade; não demonstram execução deste cenário.

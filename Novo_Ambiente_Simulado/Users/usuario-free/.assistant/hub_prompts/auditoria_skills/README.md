@@ -35,27 +35,27 @@ Evite quando a auditoria seria feita de memória ou correção foi autorizada se
 
 ## 5. Como funciona, intuitivamente?
 
-Escolha IMPLEMENTAÇÃO ou OUTPUT, fixe o contrato e percorra frontmatter, recursos, segurança e testes antes do veredito.
+Escolha dois eixos independentes: **objeto** `IMPLEMENTAÇÃO` ou `OUTPUT`; **ação** `AUDITORIA`, `PLANO DE CORREÇÃO` ou `CORRIGIR AUTORIZADO`. Fixe o contrato e percorra estrutura, recursos, segurança e evidência. Escolher OUTPUT não autoriza editar o artefato.
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, público e objetivo explícitos.
+Auditar [hub-ml-criar-objeto](../../skills/hub-ml-criar-objeto/SKILL.md), anexando o `SKILL.md` e suas dependências, sem alterar `description`. Conferir criação de snippet e possível colisão com um pedido de cálculo de PSI. O preparo do notebook lê o arquivo publicado; essa leitura não executa o runner de auditoria.
 
 ## 7. O que você precisa antes de usar?
 
-Tenha modo, skill alvo, output/pedido quando aplicáveis, casos de uso, prompts de teste e dependências. Use `NÃO INFORMADO` para lacunas em vez de inventar defaults.
+Informe o objeto da auditoria e a ação permitida separadamente. Anexe skill alvo, dependências e casos positivos/negativos de descoberta. Em OUTPUT, inclua ainda pedido original e contrato da skill produtora. Campos ausentes ficam `NÃO INFORMADO`; testes e arquivos não acessados não podem ser presumidos.
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi proposto, executado ou validado.
+A entrega solicitada contém inventário; achados P0–P3 com caminho, evidência e impacto; matriz requisito→evidência→status; e plano de testes de descoberta. Diff e validações após correção só cabem quando a correção tiver sido autorizada. Um veredito editorial não substitui o verificador da skill produtora.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [auditoria_skills.md](auditoria_skills.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_auditoria_skills.py) demonstra o preenchimento. O exemplo apenas lê um `SKILL.md`; não cria tabela.
+Preencha [auditoria_skills.md](auditoria_skills.md) e siga a [skill Auditoria](../../skills/hub-ml-auditoria-skills/SKILL.md), incluindo preflight, runner e consulta da [policy vigente](../../hub_padroes/skill_enforcement/policy.json). O [notebook](exemplo_auditoria_skills.py) apenas lê um `SKILL.md`, sem criar tabela. Registre separadamente `citado → localizado → lido → importado → chamado → concluído`; um degrau não prova o seguinte. PASS persistido é estado observado; só a execução do verificador canônico sobre o artefato atual sustenta reverificação.
 
 ## 10. Decisões e configurações que mais importam
 
-Modo, contrato produtor, escopo user/workspace, dependências, severidade e autorização para corrigir.
+Objeto auditado, ação autorizada, contrato produtor, escopo user/workspace, dependências e severidade. Alterar `description` exige retestar descoberta; não é consequência de pedir auditoria.
 
 ## 11. Limitações, riscos e armadilhas
 
@@ -63,7 +63,7 @@ Confundir palavra-chave com descobribilidade, editar description sem reteste ou 
 
 ## 12. Quais são as alternativas?
 
-Para explicar uma skill use `tutor_explicar`; para documentação use `comentar_notebook`.
+Use [Tutor](../tutor_explicar/README.md) para aprender e [Comentar Notebook](../comentar_notebook/README.md) para revisar documentação. Para OUTPUT, a [skill produtora](../../skills/README.md) é dona do contrato técnico.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +75,4 @@ O [briefing](auditoria_skills.md), o [notebook](exemplo_auditoria_skills.py) e o
 
 ## 15. Referências
 
-A descrição foi confrontada com [auditoria_skills.md](auditoria_skills.md) e [exemplo_auditoria_skills.py](exemplo_auditoria_skills.py) na base R11. Para comportamento atual de Genie Code, Agent Skills e instruções, consulte a documentação oficial do Databricks antes de operar em produção.
+O [briefing](auditoria_skills.md) define os campos e a entrega; o [notebook](exemplo_auditoria_skills.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

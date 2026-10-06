@@ -48,11 +48,7 @@ displayHTML(
 # MAGIC cabeçalho e cabeçalho **consistente** — dois notebooks que declaram a etapa
 # MAGIC 3 exibem exatamente o mesmo texto, sem que ninguém precise combinar.
 # MAGIC
-# MAGIC O acoplamento é intencional e vale registrar: este módulo **importa** de
-# MAGIC `constants.emojis` e de `constants.colors`. Novas chamadas usam o mapa
-# MAGIC disponível no processo. Uma string já produzida ou saída já exibida não
-# MAGIC se atualiza sozinha; reinicie/recarregue e execute conscientemente após
-# MAGIC mudanças de biblioteca. Valores explícitos podem sobrescrever o mapa.
+# MAGIC O cabeçalho usa `constants.emojis` e `constants.styles`. Novas chamadas leem o mapa disponível no processo; strings já produzidas ou exibidas não mudam automaticamente. Valores explícitos podem substituir os textos do mapa.
 
 
 # COMMAND ----------
@@ -83,15 +79,7 @@ print(section_header_html(etapa=3)[:180], "...")
 # MAGIC `descricao` à mão. Forçar um número que não corresponde é pior que não
 # MAGIC numerar: quem lê procura a etapa 3 no índice e encontra outra coisa.
 # MAGIC
-# MAGIC A saída é HTML puro — e aqui uma correção importante, porque é
-# MAGIC contraintuitivo: **o CSS está inline neste módulo**, montado a partir das
-# MAGIC cores importadas. `constants.styles.STYLE_SECTION_HEADER` existe, mas
-# MAGIC não é consumido por esta função. Essa constatação local não afirma
-# MAGIC identidade integral de CSS nem ausência de uso em todo outro código.
-# MAGIC
-# MAGIC Ou seja: editar `STYLE_SECTION_HEADER` não muda a saída desta função. A
-# MAGIC dívida está registrada no notebook de `constants.styles` e no inventário
-# MAGIC de duplicação em `PLANO_HUB.md` §12.2.
+# MAGIC A saída é HTML. `section_header_html` usa estilos legados de `constants.styles`; para configuração explícita, use `section_header_html_resolvido(theme, ...)`. Carregar um tema não reescreve HTML anterior.
 
 # COMMAND ----------
 # MAGIC %md

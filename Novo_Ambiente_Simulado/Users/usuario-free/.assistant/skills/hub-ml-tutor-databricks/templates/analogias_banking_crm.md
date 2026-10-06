@@ -2,7 +2,7 @@
 
 # Banco de analogias — Banking, CRM, Finanças
 
-Use estas analogias quando ajudarem a fixar um conceito técnico.
+Use estas analogias quando ajudarem o público informado a fixar um conceito técnico. São aproximações didáticas: não transferem autoridade, causalidade, certificação ou obrigações regulatórias.
 
 ## Conceitos Spark
 
@@ -38,10 +38,10 @@ Use estas analogias quando ajudarem a fixar um conceito técnico.
 |-----------------|----------------------|
 | Experiment | Estudo de viabilidade de um novo produto. |
 | Run | Cada simulação dentro do estudo, com parâmetros diferentes. |
-| Registered model | Produto financeiro homologado, com versão registrada. |
-| Alias / Stage | Indicação se o produto está em piloto, produção ou descontinuado. |
+| Registered model | Ficha de um modelo com versões registradas; registro não é homologação nem autorização de produção. |
+| Alias / Stage | Rótulo de referência à versão segundo o mecanismo disponível; o rótulo não comprova aprovação ou execução. |
 | Model serving | Esteira de scoring rodando 24/7. |
-| Drift (PSI/CSI) | Mudança no perfil dos clientes que entram no funil; sinal de retreino. |
+| Drift (PSI/CSI) | Mudança no perfil observado, como alteração no público que entra no funil; pede investigação, sem ordenar retreino. |
 | Feature store | Repositório de features padronizadas, como um manual de produtos. |
 
 ## Conceitos Unity Catalog
@@ -52,7 +52,7 @@ Use estas analogias quando ajudarem a fixar um conceito técnico.
 | Schema | Departamento dentro da diretoria. |
 | Table | Relatório oficial gerado pelo departamento. |
 | Volume | Pasta física com documentos brutos do departamento. |
-| Function | Rotina certificada (ex.: cálculo oficial de elegibilidade). |
+| Function | Rotina catalogada e reutilizável; catalogação não certifica correção nem elegibilidade. |
 | Row filter / column mask | Quem pode ver quais clientes/dados, conforme política. |
 | Lineage | Rastro de auditoria: quem usou aquele dado, quando, para quê. |
 
@@ -85,7 +85,7 @@ Formato padrão para cada nova entrada:
 
 **Critérios para inclusão**:
 - A analogia deve **iluminar**, não substituir a definição técnica.
-- Preferir operações que Rodrigo vivencia no dia a dia (carteira, campanha,
+- Preferir operações que o público informado reconhece no dia a dia (carteira, campanha,
   esteira de crédito, pipeline regulatório, jornada comercial, Private
   Banking, reconciliação, compliance).
 - Se a analogia não ficar óbvia em 2 linhas, o conceito provavelmente não

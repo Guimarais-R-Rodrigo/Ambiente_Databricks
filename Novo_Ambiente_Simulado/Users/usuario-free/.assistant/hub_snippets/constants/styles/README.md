@@ -2,18 +2,18 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-> CSS descreve como um elemento aparece. O módulo preserva as constantes legadas e, na V04, também materializa estilos a partir de um `ResolvedTheme` recebido explicitamente; ele continua sem reestilizar o Hub de forma global.
+> CSS descreve como um elemento aparece. O módulo preserva as constantes legadas e também materializa estilos a partir de um `ResolvedTheme` recebido explicitamente; ele continua sem reestilizar o Hub de forma global.
 
 ## Visão rápida
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Strings de estilo e uma família de fontes. |
+| O que é? | Constantes CSS, família de fontes e `get_styles_resolvidos(theme)`. |
 | Para que serve? | Reutilizar aparência em HTML montado pelo autor. |
 | Use quando... | Você precisa compor um bloco próprio e entende onde aplicar o estilo. |
 | Evite quando... | Você espera mudar todos os componentes editando este arquivo. |
 | Precisa de... | Python, Hub e um destino que renderize HTML/CSS. |
-| Entrega... | Textos de estilo; nenhum bloco renderizado automaticamente. |
+| Entrega... | Strings legadas ou dicionário novo de estilos resolvidos; não renderiza automaticamente. |
 
 **Acesso direto:** [exemplo](exemplo_styles.py) · [implementação](styles.py) · [API pública](__init__.py) · [coleção](../../README.md).
 
@@ -21,7 +21,7 @@
 
 HTML descreve elementos como um título ou uma linha. **CSS** descreve sua aparência: cor, espaço ao redor, borda e fonte. Aqui, cada constante `STYLE_*` é uma string com declarações CSS, pronta para o atributo `style` de um elemento.
 
-O módulo também fornece `FONT_FAMILY`. Não contém um arquivo de fonte nem instala tipografia. Na V04, badges, divisores, KPI cards, cabeçalhos, índice e tabela pandas consomem este módulo **somente nas novas rotas `_resolvido`**. As rotas legadas continuam usando constantes compatíveis e não são reestilizadas por carregar um tema.
+O módulo também fornece `FONT_FAMILY`. Não contém um arquivo de fonte nem instala tipografia. Badges, divisores, KPI cards, cabeçalhos, índice e tabela pandas consomem `constants.styles` nas duas rotas: a legada usa constantes históricas; a resolvida chama `get_styles_resolvidos(theme)`. Carregar um tema não modifica essas constantes nem o HTML já produzido.
 
 ## 2. Que problema este recurso resolve?
 
@@ -31,7 +31,7 @@ O módulo também fornece `FONT_FAMILY`. Não contém um arquivo de fonte nem in
 
 Use uma constante ao construir um bloco HTML pequeno que ainda não esteja coberto por um componente. Por exemplo, `STYLE_SECTION_HEADER` pode organizar um aviso explicativo; `STYLE_INDEX_ITEM` pode dar aparência consistente a itens de navegação.
 
-O uso é apropriado quando o autor controla a estrutura do HTML e os textos inseridos. Para uma função pronta de cartão ou selo, prefira o componente correspondente, sem pressupor que ele leia estas constantes.
+O uso é apropriado quando o autor controla a estrutura do HTML e os textos inseridos. Para uma função pronta de cartão ou selo, prefira o componente correspondente, consultando seu contrato de estilo.
 
 ## 4. Quando não usar?
 
@@ -77,7 +77,7 @@ print("border-left" in html)
 
 O trecho portátil retorna `True` e foi conferido. Para renderizar no Databricks, a documentação indica `displayHTML`; isso é uma etapa do notebook, não uma chamada feita pelo módulo.
 
-### Caminho V04 — tema explícito
+### Tema explícito
 
 ```python
 from hub_snippets.constants.styles import get_styles_resolvidos
@@ -98,7 +98,7 @@ Evite modificações improvisadas na constante compartilhada. Uma necessidade de
 
 ## 11. Limitações, riscos e armadilhas
 
-A V04 elimina a duplicação no **caminho resolvido** dos componentes cobertos, que passam a pedir estilos a `get_styles_resolvidos`. O caminho legado permanece congelado por compatibilidade e não deve ser confundido com um tema global ou folha de estilo de aplicação.
+O **caminho resolvido** dos componentes cobertos pede estilos a `get_styles_resolvidos`. O caminho legado permanece congelado por compatibilidade e não deve ser confundido com um tema global ou folha de estilo de aplicação.
 
 O par de atenção `#B26A00` sobre `#FFF8E1` tem contraste calculado de aproximadamente **3,99:1**, abaixo de 4,5:1 para texto comum, e o estilo declara 11px. Esta limitação foi documentada, não corrigida por troca silenciosa de cor. A [WCAG](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) orienta a avaliação; o nome de uma constante não constitui conformidade.
 
@@ -106,7 +106,7 @@ O par de atenção `#B26A00` sobre `#FFF8E1` tem contraste calculado de aproxima
 
 [badge](../../visual/badge/README.md), [divider](../../visual/divider/README.md) e [kpi_card](../../visual/kpi_card/README.md) fornecem elementos completos para necessidades específicas. Texto Markdown pode ser suficiente quando a prioridade é portabilidade.
 
-Para figuras Plotly, consulte [theme_plotly](../../visual/theme_plotly/theme_plotly.py). CSS inline de um bloco HTML não é a configuração interna de uma figura Plotly.
+Para figuras Plotly, consulte [theme_plotly](../../visual/theme_plotly/README.md). CSS inline de um bloco HTML não é a configuração interna de uma figura Plotly.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -122,4 +122,6 @@ Se um componente não mudar após editar uma constante, consulte seus imports an
 
 O [módulo](styles.py) e os imports dos componentes delimitam o uso real. [Python — html.escape](https://docs.python.org/3/library/html.html#html.escape) sustenta o tratamento do texto. [Databricks — HTML em notebooks](https://docs.databricks.com/aws/en/notebooks/notebook-media#include-html) explica o destino de renderização; [WCAG — contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) sustenta a ressalva. Consulta em 12/09/2026.
 
-Revisão R03-A: análise estática dos consumidores, testes portáteis e contraste numérico. Não houve mudança de CSS, homologação no workspace ou auditoria independente.
+Uma string CSS válida não comprova legibilidade, acessibilidade ou renderização no workspace. Confira a aparência no destino.
+
+[Registro técnico de referência](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R03A.md): consulte data, ambiente e alcance de cada teste; o registro não é homologação do destino.

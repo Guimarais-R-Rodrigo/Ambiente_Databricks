@@ -19,7 +19,7 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e APIs compatíveis; confira runtime, permissões e comportamento no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -103,6 +103,9 @@ print(f"outra semente : {c.count()} linhas, difere de a? {c.exceptAll(a).count()
 # MAGIC do modo simples. O helper usa a fração `n × 1,2 / total` e depois `limit(n)`:
 # MAGIC a sobra de 20% aumenta a chance de haver linhas suficientes para cortar, mas
 # MAGIC uma amostra aleatória ainda pode produzir menos que `n`. O `limit` é teto.
+# MAGIC A fração real é `min(1, 1.2*n/total)`: com total=110 e n=100, ela vale 1
+# MAGIC e o limite pode selecionar um prefixo. Não há garantia geral de inclusão uniforme.
+# MAGIC Na rota estratificada, evite previamente `__sample_rank` e `__stratum_target`: podem ser sobrescritos/removidos ou criar ambiguidade.
 
 # COMMAND ----------
 # MAGIC %md
@@ -146,5 +149,4 @@ for rotulo, df in [("simples", simples), ("estratificada", estratificada)]:
 # MAGIC - **Esperando exatamente N linhas.** É fração, não cota.
 # MAGIC - **Como substituto de agregação.** Se a pergunta cabe num `groupBy`, faça
 # MAGIC   o `groupBy`: amostrar para depois agregar troca exatidão por nada.
-# MAGIC - **Em base com partição enviesada, sem conferir.** Amostragem uniforme
-# MAGIC   sobre dado mal distribuído continua devolvendo o viés da distribuição.
+# MAGIC - **Sem conferir inclusão e partições.** O `limit` posterior pode privilegiar a ordem do resultado, especialmente com fração 1. Inferência populacional exige desenho próprio.

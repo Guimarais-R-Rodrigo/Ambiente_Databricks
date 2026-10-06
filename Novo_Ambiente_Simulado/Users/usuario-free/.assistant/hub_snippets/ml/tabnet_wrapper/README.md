@@ -57,6 +57,26 @@ Você usa a mesma separação e calcula AUC na validação. Se a diferença for 
 
 ## 7. O que você precisa antes de usar?
 
+`X` deve chegar numérico, normalmente `float32`; o wrapper chama `np.asarray` sem converter o dtype. Para categorias, valide integralidade antes de chamar: `int(...)` na implementação pode truncar valores fracionários de `cat_idxs`/`cat_dims` silenciosamente.
+
+```python
+import numpy as np
+
+assert len(cat_idxs) == len(cat_dims) and len(set(cat_idxs)) == len(cat_idxs)
+assert all(isinstance(i, (int, np.integer)) and not isinstance(i, bool) for i in cat_idxs)
+assert all(isinstance(d, (int, np.integer)) and not isinstance(d, bool) for d in cat_dims)
+for i, d in zip(cat_idxs, cat_dims):
+    assert 0 <= i < X_train.shape[1] and d > 0
+    for X_part in [X_train, X_val]:
+        coluna = X_part[:, i]
+        assert np.isfinite(coluna).all() and (coluna == np.floor(coluna)).all()
+        assert ((0 <= coluna) & (coluna < d)).all()
+```
+
+Use o mesmo encoder ajustado no treino e uma política explícita para categorias desconhecidas; não recalcule os códigos na validação.
+
+Para a rota binária com AUC, confirme **ambas as classes 0 e 1 no treino e na validação** antes de consumir compute. A checagem local não garante as duas classes na validação; uma única classe pode chegar ao fit e produzir erro ou AUC indefinida depois, conforme a versão. Essa é uma pré-condição de uso, não uma validação adicional já implementada.
+
 `X_train` e `X_val` precisam ser matrizes 2-D com o mesmo número de features; targets devem estar alinhados e splits não podem ser vazios. Para binário, labels precisam ser 0/1 e ambas as classes devem existir no treino; a validação é checada como 0/1, mas não há exigência local de ambas as classes nela antes do cálculo de AUC.
 
 `cat_idxs` e `cat_dims` devem ter o mesmo comprimento. Índices precisam cair dentro das colunas e cardinalidades devem ser positivas. O wrapper não valida cada valor categórico contra `cat_dims`; a biblioteca pode falhar posteriormente.
@@ -80,9 +100,35 @@ O helper não devolve as máscaras locais por linha nem chama `model.explain`. S
 
 ## 9. Como usar este recurso no Hub?
 
+Regressão usa target numérico 1-D, embora o wrapper o remodele internamente para o fit:
+
 ```python
+import numpy as np
 from hub_snippets.ml.tabnet_wrapper import train_tabnet
 
+y_train_reg = np.asarray(y_train_reg, dtype=np.float32).reshape(-1)
+y_val_reg = np.asarray(y_val_reg, dtype=np.float32).reshape(-1)
+assert np.isfinite(y_train_reg).all() and np.isfinite(y_val_reg).all()
+modelo_reg, metricas_reg, importancia_reg = train_tabnet(
+    X_train, y_train_reg, X_val, y_val_reg,
+    task="regression", log_mlflow=False,
+)
+# metricas_reg contém rmse_val, na unidade do target.
+```
+
+As matrizes seguem `float32`, mesma largura e alinhamento com os respectivos targets.
+
+`log_mlflow=False` desliga apenas as chamadas explícitas de registro deste wrapper. Não desativa autologging já configurado na sessão nem garante ausência de logs/caches da biblioteca. Confira o estado da sessão e o destino antes de treinar.
+
+```python
+import numpy as np
+from hub_snippets.ml.tabnet_wrapper import train_tabnet
+
+X_train = np.asarray(X_train, dtype=np.float32)
+X_val = np.asarray(X_val, dtype=np.float32)
+assert np.isfinite(X_train).all() and np.isfinite(X_val).all()
+assert set(np.asarray(y_train).reshape(-1)) == {0, 1}
+assert set(np.asarray(y_val).reshape(-1)) == {0, 1}
 model, metrics, importance = train_tabnet(
     X_train, y_train,
     X_val, y_val,
@@ -94,7 +140,7 @@ model, metrics, importance = train_tabnet(
 )
 ```
 
-O [notebook](exemplo_tabnet_wrapper.py) instala `pytorch-tabnet` e reinicia o Python. Nesta R05, a prosa é ajustada para não apresentar máscaras como explicação causal ou afirmar que TabNet é universalmente “último recurso”.
+O notebook instala pytorch-tabnet e reinicia o Python. A importância global resulta das máscaras/explicações do modelo; não é causalidade nem substitui explicação individual.
 
 Com MLflow habilitado, o wrapper registra apenas `algorithm`, `n_d`, `n_a`, `n_steps` e as métricas retornadas; não registra automaticamente toda a configuração nem o modelo por chamada própria.
 
@@ -110,7 +156,7 @@ No binário, o wrapper fixa `gamma=1.5`, `lambda_sparse=1e-4`, learning rate 0,0
 
 O wrapper não escolhe device explicitamente; a biblioteca decide conforme sua configuração/default. Ambiente e versão podem alterar CPU/GPU disponíveis e tempo de treino.
 
-`feature_importances_` não garante valor zero para ruído, não identifica direção do efeito e não substitui validação local. A frase histórica do notebook “como no SHAP, nada recebe zero” não é uma propriedade garantida nem do SHAP nem desta implementação e não deve orientar interpretação.
+`feature_importances_` não garante valor zero para ruído, não identifica direção do efeito e não substitui validação local. Também não há garantia de que toda feature receba importância não nula.
 
 O suporte categórico depende de codificação correta e do comportamento da versão instalada. O notebook instala a dependência sem pin, enquanto a biblioteca `pytorch-tabnet` pode evoluir. Registre versões em experimentos reproduzíveis.
 
@@ -134,6 +180,8 @@ Se o candidato continuar competitivo, avalie predição fora da amostra, custo e
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. O [repositório oficial `pytorch-tabnet`](https://github.com/dreamquark-ai/tabnet) documenta parâmetros, tarefas e instalação. A implementação oficial de [`_compute_feature_importances`](https://github.com/dreamquark-ai/tabnet/blob/develop/pytorch_tabnet/abstract_model.py) mostra a agregação/normalização da explicação global usada em `feature_importances_`.
+O [registro histórico de testes](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R05.md) identifica execução local em 12/09/2026. A versão exata de pytorch-tabnet é **NÃO INFORMADA na evidência local disponível**: o arquivo de versões citado ali não está no checkout nem no pacote operacional. A reprodução com uma versão específica permanece **NÃO VALIDADA**; não infira homologação a partir de instalação sem pin. Confira a versão efetiva e execute os dois modos no destino antes de considerá-los validados.
 
-A evidência de runtime desta R05 será registrada no relatório. Sem publicação Databricks, homologação de workspace ou auditoria independente presumida.
+Consulte pytorch-tabnet e a implementação de feature_importances_ na versão testada. Compare custo e qualidade com um baseline sob a mesma partição e valide a arquitetura no runtime de destino.
+
+Referências primárias de conceito/API: [repositório oficial `pytorch-tabnet`](https://github.com/dreamquark-ai/tabnet), [`_compute_feature_importances`](https://github.com/dreamquark-ai/tabnet/blob/develop/pytorch_tabnet/abstract_model.py).

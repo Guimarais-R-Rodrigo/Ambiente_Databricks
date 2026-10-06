@@ -4,7 +4,7 @@
 
 
 ## Uso
-Estrutura obrigatória do relatório executivo ao final do notebook.
+Estrutura do relatório executivo ao final do notebook, proporcional ao perfil e ao pedido. Se só planejado, registrar NÃO EXECUTADO e substituir a narrativa de treino por seu plano. Sem critério/evidência para um semáforo, usar NÃO CLASSIFICADO; sem medição, NÃO CALCULADO.
 
 ## Formato
 
@@ -26,12 +26,15 @@ Recomendação: [prosseguir com `@hub-ml-explainability` | melhorar features | c
 | Estabilidade de features | [✅/🟡/🔴] | [Top-5 estáveis / instáveis] |
 | Volume de dados | [✅/🟡/🔴] | [N suficiente / insuficiente] |
 
-### Top-5 Features (importância)
-1. **[Feature 1]** ([X]%): [interpretação em 1 frase]
-2. **[Feature 2]** ([X]%): [interpretação]
-3. **[Feature 3]** ([X]%): [interpretação]
-4. **[Feature 4]** ([X]%): [interpretação]
-5. **[Feature 5]** ([X]%): [interpretação]
+### Top-k Features (se importância calculada)
+Método: [gain/permutation/SHAP/outro]; conjunto: [fonte]; escala/unidade: [valor].
+Normalização: [denominador e regra ou nenhuma]. Percentual só quando calculado
+com essa regra; não equivale a percentual de decisões nem efeito causal.
+1. **[Feature 1]** ([valor na escala declarada]): [interpretação em 1 frase]
+2. **[Feature 2]** ([valor na escala declarada]): [interpretação]
+3. **[Feature 3]** ([valor na escala declarada]): [interpretação]
+4. **[Feature 4]** ([valor na escala declarada]): [interpretação]
+5. **[Feature 5]** ([valor na escala declarada]): [interpretação]
 
 ### Próximos passos (priorizados)
 1. [Ação 1 — mais impactante]

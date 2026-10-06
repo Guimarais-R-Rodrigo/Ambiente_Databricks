@@ -6,11 +6,9 @@ Este manual explica o que acontece entre abrir o ambiente, pedir ajuda à Genie 
 
 **A ideia central:** o Hub não é uma API remota que o Databricks “puxa” automaticamente. Ele reúne arquivos de orientação para a IA e bibliotecas Python reutilizáveis. A conversa recebe contexto; o interpretador importa código; o mecanismo de execução processa os dados. São operações relacionadas, mas diferentes.
 
-Este documento incorpora as funções de consulta antes separadas no catálogo de helpers e no glossário. Os READMEs continuam sendo a porta de entrada visual e operacional. Os componentes visuais já escolhidos não são substituídos por este manual.
+Use os READMEs como porta de entrada e este manual para aprofundar conceitos, consultar APIs e encontrar termos. Cabeçalhos e figuras apoiam a leitura; não executam análise.
 
-**Base documental e estrutural atual:** a iniciativa R00–R13 de READMEs foi encerrada no Git em `99e01012c26621539b4379ca301e4782765f68c0`, com 75/75 objetos operacionais, 3/3 exemplares e zero pendências. A R13 auditou coerência documental e regressões locais; não recertificou toda afirmação externa da plataforma. As explicações sobre Databricks continuam apoiadas na documentação oficial consultada em **11/09/2026** e devem ser verificadas novamente quando uma capacidade, interface ou versão puder ter mudado. Exemplos com dados são sintéticos; saída esperada não prova execução no workspace de destino.
-
-**Manutenção de uma única redação:** a versão de autoria fica em `ambiente_fonte/.assistant/MANUAL_TECNICO.md`. O arquivo homônimo da raiz do repositório é uma cópia de leitura do mesmo conteúdo; o simulado recebe a cópia produzida pelo renderer. Não mantenha redações divergentes. As referências de implementação ao final apontam para o snapshot examinado, para não transformar uma alteração futura em evidência retroativa.
+Este manual explica como usar a instalação autorizada do Hub, escolher recursos e interpretar seus resultados. Os exemplos são sintéticos; saída esperada não prova execução. As referências oficiais foram consultadas em 11/09/2026: confira novamente a capacidade e versão pertinentes antes de agir. O inventário referencia a versão de implementação indicada em cada ficha, sem recertificação retroativa.
 
 <a id="como-ler"></a>
 ## Como ler e encontrar uma resposta
@@ -35,7 +33,7 @@ Na primeira leitura, acompanhe os capítulos 1 a 8. Eles constroem o vocabulári
 | O que o MLflow registra? | [21. Experimentos](#mlflow) |
 | Como especificar, executar e avaliar um micromodelo? | [Micromodelos](#micromodelos); exemplo em `hub_micromodelos/exemplos/recencia_contato/README.md` |
 | Como APIs remotas, CLI e autenticação se relacionam? | [22. Integrações](#integracoes) |
-| O que são render, deploy, manifesto, CI e smoke test? | [23. Publicação](#publicacao) e [24. Validação](#validacao) |
+| Como conferir versão, integridade e evidência? | [23. Publicação](#publicacao) e [24. Validação](#validacao) |
 | Apareceu um erro. Por onde começo? | [25. Segurança](#seguranca) e [26. Diagnóstico de erros](#erros) |
 | Qual helper, skill ou prompt atende à minha demanda? | [27. Inventário de helpers](#catalogo-helpers) e [28. Métodos e briefings](#metodos) |
 | Não lembro o significado de um termo | [29. Índice de termos](#indice-termos) |
@@ -51,13 +49,7 @@ comportamento real. A síntese local não substitui este Manual: o
 [inventário integrado](#catalogo-helpers) e o [índice de termos](#indice-termos)
 permanecem aqui.
 
-A migração estrutural dos READMEs de objeto foi concluída na R11: os 75 objetos
-operacionais possuem guia local, e os três exemplares permanecem contabilizados
-separadamente. Para `hub_snippets`, seis índices de categoria — `constants`,
-`display`, `ml`, `spark`, `testing` e `visual` — oferecem uma rota intermediária
-entre este Manual, o catálogo geral e cada objeto. Novos objetos continuam
-devendo incluir o guia. O molde está no caminho lógico
-`hub_padroes/readme/template_objeto.md`, relativo à raiz `.assistant/`.
+Cada objeto possui um README local com finalidade, requisitos, entradas, saídas, efeitos e limites. Use o índice da categoria para encontrar o recurso e leia seu exemplo antes de executar.
 
 Antes de executar o exemplo, confira os efeitos dele separadamente dos efeitos
 do helper. O helper pode apenas ler, enquanto o notebook cria, sobrescreve ou
@@ -81,40 +73,13 @@ Há cinco famílias gerais de recursos. `skills/` contém métodos para a Genie 
 O projeto também não substitui o banco de dados, não cria um modelo treinado apenas ao ser copiado e não instala todas as dependências apenas porque inclui um arquivo `requirements-optional.txt`. Cada uma dessas ações exige um mecanismo próprio, explicado adiante.
 
 <a id="pastas"></a>
-## 2. Quatro lugares que não devem ser confundidos
+## 2. Instalação e caminhos que não devem ser confundidos
 
-### 2.1. Repositório, produto, simulado e workspace
+### 2.1. A instalação que seu notebook utiliza
 
-O **repositório Git** é o conjunto versionado de arquivos: produto, documentação, ferramentas e histórico. Um **commit** identifica uma versão desse conjunto. A raiz do Git é o primeiro nível do repositório, não necessariamente o local de onde um notebook importa suas bibliotecas.
+No workspace, use a cópia de `.assistant` instalada para você. Ela reúne skills, briefings, bibliotecas e exemplos. O caminho precisa corresponder à instalação autorizada; uma pasta com o mesmo nome em outra máquina não é a mesma instalação. `.assistant_instructions.md` é irmã de `.assistant/`, não fica dentro de `skills/`.
 
-`ambiente_fonte/` guarda o produto que será distribuído. Dentro dela, `.assistant_instructions.md` é irmão da pasta `.assistant/`: ele não fica dentro de `skills/`. A pasta `.assistant/` contém os componentes usados pelo Hub.
-
-`Novo_Ambiente_Simulado/` é uma árvore de arquivos que reproduz a organização de destino. **“Simulado” aqui não significa um Databricks rodando localmente.** O diretório não fornece compute, tabelas ou uma Genie Code local. Ele facilita conferir e copiar os arquivos certos para os lugares certos.
-
-O **workspace Databricks** é o ambiente operacional: interface, arquivos, notebooks, recursos de dados, configurações e permissões. O conteúdo publicado lá é uma cópia operacional. Uma alteração feita somente no workspace não atualiza o Git; uma mudança no Git tampouco se publica sozinha por existir um commit.
-
-```text
-Repositório Git
-  ambiente_fonte/                       fonte editável do produto
-    .assistant_instructions.md          instruções pessoais
-    .assistant/
-      README.md                         entrada do Hub
-      MANUAL_TECNICO.md                  explicação técnica e consulta
-      skills/                           métodos
-      hub_prompts/                      briefings
-      hub_snippets/                     biblioteca reutilizável
-      hub_scripts/                      utilitários
-      hub_micromodelos/                 contratos, execução e exemplos de domínio
-      hub_padroes/                       moldes
-      hub_readmes_visual_assets/        recursos visuais
-
-  Novo_Ambiente_Simulado/                árvore gerada, não um servidor
-    Users/usuario-free/
-      .assistant_instructions.md
-      .assistant/...
-```
-
-A organização de manutenção do Git também inclui `tools/`, `docs/` e os arquivos de instruções dos agentes. Esses arquivos de controle não são widgets nem componentes a copiar indiscriminadamente para o workspace. A consolidação deste manual não significa que o projeto inteiro deva ser reduzido a dois arquivos.
+O workspace contém uma cópia operacional. Uma mudança do repositório não atualiza automaticamente os arquivos que seu notebook usa. Não altere recursos compartilhados como efeito colateral de uma análise; encaminhe a manutenção ao responsável.
 
 ### 2.2. Caminho de arquivo, caminho de importação e nome de tabela
 
@@ -303,9 +268,7 @@ Nem toda pasta possível em Python exige `__init__.py`, pois existem namespace p
 
 ### 6.4. API pública não é descoberta automática pela IA
 
-A ferramenta de manutenção `tools/api_publica.py` lê a árvore sintática do módulo, sem importá-lo, e identifica funções, classes e nomes definidos no topo que não começam por `_`. Ela ajuda a conferir reexportações. Não registra funções no Databricks e não chama uma API remota para instalar a biblioteca.
-
-Há uma regra local importante: o inventário da API pública não inclui apenas funções “mais interessantes”. Constantes e outros nomes públicos também podem ser usados por outro módulo. O leitor iniciante pode começar pelos pontos de entrada recomendados; o mantenedor precisa preservar o contrato completo.
+A API pública reúne nomes importáveis previstos pelo pacote, inclusive constantes usadas por outros módulos. Importar uma função a disponibiliza ao Python; não a executa nem a apresenta automaticamente à Genie Code. Use os nomes documentados pelo objeto e preserve o contrato completo ao compor recursos.
 
 <a id="bootstrap"></a>
 ## 7. Um carregamento real explicado linha a linha
@@ -348,7 +311,7 @@ R$ 1.250.000,50
 
 Essa execução demonstra importação e formatação. Não testa leitura de tabela, permissão de catálogo, disponibilidade de Spark ou execução de uma skill. A separação é útil: se esse exemplo funciona e a leitura de dados falha, a investigação deve avançar da biblioteca para a camada de dados.
 
-No checkout local, use o endereço da pasta `ambiente_fonte/.assistant` dentro da sua cópia. Evite criar um “bootstrap universal” que tente vários diretórios silenciosamente: ele pode encontrar uma cópia antiga e produzir sucesso aparente.
+Confirme a origem do módulo carregado e use apenas a raiz da instalação autorizada. Evite procurar várias cópias silenciosamente.
 
 <a id="estado"></a>
 ## 8. Estado do notebook: por que a ordem e a reinicialização importam
@@ -595,7 +558,7 @@ Os recursos compartilhados ficam em `hub_readmes_visual_assets/`. Um PNG é uma 
 
 Uma imagem em um README usa um caminho em relação àquele documento. Copiar o Markdown para outra pasta pode quebrar a referência mesmo que o PNG continue existindo. A documentação Databricks admite imagens de workspace em células Markdown, mas a resolução do arquivo e a aparência precisam ser conferidas na superfície de uso. [S22](#fonte-s22)
 
-O cabeçalho CRM e o cabeçalho Squad têm papéis definidos pelo projeto. Este manual não muda essas escolhas, não substitui figuras existentes e não transforma recursos visuais em execução. A página pode permanecer visualmente idêntica enquanto a documentação técnica é consolidada.
+Os cabeçalhos e figuras são recursos de apresentação. Eles não executam consultas nem alteram os dados da análise.
 
 <a id="qualidade"></a>
 ## 15. Exemplo completo: da base sintética ao diagnóstico de qualidade
@@ -1040,11 +1003,9 @@ OAuth e tokens de acesso são mecanismos de autenticação. Um **service princip
 
 Não cole tokens em `SKILL.md`, no manual, em prompts, células salvas, prints ou comandos que fiquem em histórico. Use os mecanismos de credenciais aprovados. Um placeholder como `<username>` instrui substituição local; não é uma credencial válida. O manual não lista hosts, usuários ou catálogos reais do trabalho.
 
-### 22.4. Por que `expected-host` é importante
+### 22.4. Confirmar destino e efeito
 
-O publicador do projeto pode escrever centenas de objetos. A proteção `--expected-host` exige que o destino resolvido corresponda ao host pretendido. Isso reduz a chance de confundir laboratório e trabalho. Ela não transforma a operação em transação atômica, não aprova o conteúdo e não substitui um backup.
-
-O modo de plano do publicador integral não escreve arquivos no remoto, mas resolve a identidade e o destino por ferramentas autenticadas. Não deve ser descrito como comando inteiramente offline. Já o renderer local não precisa de credencial Databricks. Essa diferença explica por que um plano de publicação pode falhar por autenticação mesmo sem `--execute`.
+Antes de uma operação remota, confirme ambiente, identidade, recurso e efeito. Um plano pode consultar o serviço sem realizar escrita; leitura e alteração são ações diferentes. Conferir destino não transforma uma operação em transação atômica nem substitui autorização ou recuperação.
 
 ### 22.5. MCP não é um pacote Python escondido
 
@@ -1057,78 +1018,29 @@ O projeto não deve ser entendido como dependente de um arquivo JSON manual para
 Quando alguém diz “a API não funcionou”, peça que identifique a camada. Foi o contrato de argumentos de `data_quality_check`? A sessão Spark não estava acessível? A API de workspace recusou a credencial? Um endpoint de inferência não respondeu? A ação correta depende dessa localização. Reinstalar um helper não corrige uma ACL; renovar um token não cria uma função ausente no `__init__.py`.
 
 <a id="publicacao"></a>
-## 23. Da alteração no Git ao arquivo que aparece no Databricks
+## 23. Versão instalada, integridade e operação segura
 
-### 23.1. Commit, branch e sincronização
+### 23.1. A versão usada pelo notebook
 
-**Git** registra versões de arquivos. Um **commit** identifica um conjunto de alterações no histórico; seu SHA funciona como identificador. **Branch** é uma referência móvel para uma linha de trabalho. **Push** envia mudanças ao repositório remoto. **Pull request** propõe integrar uma linha de trabalho em outra. Fazer commit não publica automaticamente os arquivos no Databricks.
+A versão presente no workspace é a que seu notebook usa. Uma atualização do repositório não atualiza automaticamente a instalação. Se precisar de outra versão, siga o procedimento aprovado pelo responsável. Uma execução antiga ou um commit novo não prova que a sessão carregou os arquivos certos.
 
-Um ambiente pode consumir uma pasta Git sincronizada ou receber arquivos por outra ferramenta. Este projeto possui seu próprio fluxo de renderização e publicação. Portanto, não presuma que “está na `main`” significa “está no workspace” ou que “rodei no workspace” significa “a alteração está no Git”.
+### 23.2. Arquivos de biblioteca e notebooks
 
-### 23.2. O renderer local
+Uma biblioteca precisa continuar importável como arquivo. Um notebook tem células e metadados; ambos podem ter extensão `.py`. Executar outro notebook não equivale a importar uma função. Se o import falhar, confira o tipo e o caminho do objeto instalado. Renomear a extensão não converte fielmente um objeto. [S17](#fonte-s17)
 
-O comando abaixo apenas mostra o plano:
+### 23.3. Manifesto e integridade
 
-```powershell
-python tools/render_simulado.py
-```
+O manifesto identifica os arquivos e as versões do pacote. Um hash SHA-256 permite comparar integridade de bytes; não certifica correção analítica nem concede aprovação. O pacote de arquivos do workspace não é uma wheel Python (`.whl`); instalar seus arquivos não instala automaticamente dependências.
 
-O seguinte **apaga e recria a árvore derivada local** `Novo_Ambiente_Simulado/` a partir de `ambiente_fonte/`:
+Retirar um arquivo de uma versão não prova que uma cópia antiga desapareceu do workspace. Confira com o responsável a instalação efetiva e o escopo de qualquer retirada; não exclua arquivos compartilhados por inferência.
 
-```powershell
-python tools/render_simulado.py --write
-```
-
-O renderer copia `.assistant_instructions.md` e a pasta `.assistant/`, excluindo caches locais conhecidos. Gera a estrutura de usuário sanitizada e o aviso `README_GERADO.md`. Não cria workspace, não envia API remota, não inicia Spark e não altera permissões. Qualquer edição manual no derivado pode ser perdida; a autoria deve permanecer na fonte.
-
-O README de `ambiente_fonte/` e o README da raiz Git são documentos de manutenção: não entram nesse plano de cópia. O Manual Técnico de `.assistant/` entra por estar dentro da subárvore publicada. A cópia de leitura da raiz Git não é enviada separadamente.
-
-### 23.3. FILE e NOTEBOOK: a extensão não basta
-
-No workspace, um módulo Python deve permanecer importável como arquivo. Um notebook tem células e metadados de notebook. Ambos podem ser exportados com extensão `.py`, mas um notebook SOURCE possui marcadores, como `# Databricks notebook source`, `# COMMAND ----------` e `# MAGIC`.
-
-As ferramentas do projeto usam esse marcador para classificar. Na publicação, notebooks são importados com formato SOURCE; arquivos de biblioteca precisam continuar FILE. Importar indiscriminadamente todo `.py` como notebook quebra a expectativa de importação. Renomear uma extensão não é uma conversão fiel de objeto. Os formatos de importação/exportação são contratos das operações de workspace. [S17](#fonte-s17)
-
-Também não se deve confundir `RAW` de importação com uma opção universal de exportação. O fluxo escolhido pelas ferramentas diferencia formato solicitado, tipo de objeto e bytes exportados. Leia a implementação antes de substituir comandos de publicação.
-
-### 23.4. Planejar, executar e verificar
-
-Estes comandos são documentação operacional, **não foram executados para publicar este manual**. Substituições de perfil e host só devem ocorrer no ambiente autorizado, sem salvar credenciais no Git.
-
-```powershell
-# Resolve o destino e mostra o plano, sem publicar.
-python tools/publicar_free.py --profile PERFIL --expected-host https://HOST
-
-# Escreve no laboratório explicitamente conferido.
-python tools/publicar_free.py --profile PERFIL --expected-host https://HOST --execute
-
-# Consulta/exporta e compara conteúdo; não publica uma nova versão.
-python tools/publicar_free.py --profile PERFIL --expected-host https://HOST --verify --conteudo --relatorio .artifacts/verificacao.json
-```
-
-O publicador é específico do fluxo do laboratório. O modo de execução exige destino explícito e confere fonte/espelho antes de enviar. `--verify` e `--execute` não se combinam; `--rapido` é uma conferência reduzida de contagem e não pode representar comparação integral de conteúdo. O JSON de relatório registra a verificação, não a execução de cada análise.
-
-**Exclusão no Git não implica exclusão no workspace.** Se uma publicação anterior enviou o catálogo e o glossário, removê-los da fonte e regenerar o simulado não prova que as cópias remotas desapareceram. O publicador não deve ser tratado como um sincronizador que apaga indiscriminadamente tudo o que sobrou. Qualquer retirada remota exige conferência de escopo, autorização e tratamento explícito. Este trabalho não executa essa retirada no seu workspace.
-
-### 23.5. Manifesto, hash e pacote de implantação
-
-Um **manifesto** relaciona o que pertence ao pacote. Um **hash SHA-256** resume bytes para comparação de integridade: mudar um byte altera o resultado esperado. Igualdade de hashes não prova que a regra de negócio esteja correta, apenas que se está comparando o mesmo conteúdo sob aquele mecanismo.
-
-`tools/bundle_implantacao.py` produz um ZIP do produto derivado com `MANIFEST.json`. O manifesto registra caminhos, tamanhos, hashes, commit e condição do worktree. Um worktree **dirty** possui alterações ainda não commitadas; `--allow-dirty` existe para revisão, não para fingir uma versão imutável de produção.
-
-```powershell
-python tools/bundle_implantacao.py --output .artifacts/pacote-revisado.zip
-```
-
-Esse ZIP não é uma wheel Python. **Wheel**, geralmente `.whl`, é um formato de distribuição de pacote Python; o ZIP de implantação organiza arquivos do workspace. Descompactar um pacote de workspace não equivale a instalar todas as dependências de sua biblioteca.
-
-### 23.6. Jobs, DAGs e Bundles
+### 23.4. Jobs, DAGs e Bundles
 
 Um **job** coordena uma ou mais tarefas. Dependências entre tarefas formam um grafo; quando não há ciclos, chama-se DAG. Uma tarefa pode depender do sucesso de outra, mas retries, agendamento, identidade e políticas precisam ser configurados. Lakeflow Jobs é um recurso da plataforma; não é ativado pela criação de uma pasta `hub_scripts/`. [S31](#fonte-s31)
 
-**Declarative Automation Bundles** é a denominação atual do recurso anteriormente conhecido como Databricks Asset Bundles. Ele descreve recursos como código e apoia implantação organizada. Não confunda esse produto com o `bundle_implantacao.py` local: o nome parecido não significa que o script implemente o recurso nativo. [S32](#fonte-s32)
+**Declarative Automation Bundles** descreve recursos como código e apoia implantação organizada. Um ZIP de arquivos do Hub não é esse mecanismo de implantação. [S32](#fonte-s32)
 
-### 23.7. Mudança segura e rollback
+### 23.5. Mudança segura e rollback
 
 Antes de publicar, delimite objetos, ambiente, identidade e critérios de aceite. Mantenha evidência da versão anterior e da nova. **Rollback** é voltar deliberadamente a uma versão adequada; não é simplesmente executar outra vez um comando que falhou pela metade.
 
@@ -1137,36 +1049,13 @@ Uma operação pode gravar alguns arquivos e falhar depois. Na dúvida, inspecio
 <a id="validacao"></a>
 ## 24. Validação: cada teste responde a uma pergunta diferente
 
-### 24.1. CI não é CSI e não é `sys.path`
+### 24.1. Estrutura, cálculo e execução
 
-**CI**, integração contínua, executa verificações de código e estrutura associadas a mudanças no repositório. **CSI**, discutido no capítulo 18, é uma medida de mudança de distribuição utilizada em monitoramento. **`sys.path`** é a lista de caminhos da importação Python. Nenhum é sinônimo dos outros.
+Validação estrutural, teste de cálculo, execução no seu runtime e revisão de negócio respondem a perguntas diferentes. Importar uma biblioteca sem erro não prova que o cálculo terminou nem que respondeu à pergunta.
 
-**CD** pode significar entrega ou implantação contínua, conforme o processo. Um repositório ter GitHub Actions não prova que exista implantação automática. Neste snapshot, o gate local é deliberadamente separado de publicação e testes que exigem credenciais.
+CI significa integração contínua: verificações associadas a mudanças de software. CSI é uma medida de mudança de distribuição, discutida no capítulo 18; `sys.path` é a lista de caminhos de importação. AST é a representação sintática do código: permite inspecionar funções e argumentos sem executar a análise, mas não prova dados, permissões, correção estatística ou compatibilidade do serviço remoto.
 
-### 24.2. O que o gate atual executa
-
-```powershell
-python tools/ci_local.py --verbose
-```
-
-O comando usa o Python local e executa três etapas: validação de `ambiente_fonte/` com conferência das contagens do README; testes de regressão da biblioteca; e testes das ferramentas. Continua pelas etapas para apresentar mais de uma falha, em vez de esconder problemas posteriores.
-
-As dependências desse gate estão em `tools/requirements-dev.txt`. A instalação desse arquivo é uma ação separada. Ele não prepara automaticamente o workspace Databricks nem testa todos os treinadores opcionais.
-
-```powershell
-python -m pip install -r tools/requirements-dev.txt
-python tools/validate_assistant.py --conferir-readme
-```
-
-`python -m pip` vincula o instalador ao interpretador Python escolhido. Evita parte da confusão de ter vários `pip` no computador. Ainda é necessário conferir qual `python` foi resolvido pelo terminal.
-
-### 24.3. AST: ler a estrutura do código sem executá-lo
-
-**AST**, árvore de sintaxe abstrata, representa a estrutura de um programa: funções, argumentos, chamadas e expressões. `ast.parse` pode detectar sintaxe inválida e apoiar verificações de contratos sem iniciar Spark ou importar dependências pesadas.
-
-A ferramenta `tools/api_publica.py` usa estrutura de código para inventariar nomes públicos e apoiar `__init__.py`. Ela não cria endpoints REST. O validador usa AST para examinar módulos e exemplos, mas uma análise estática não prova tipos em execução, acessibilidade de tabelas, correção estatística ou compatibilidade de um serviço remoto.
-
-### 24.4. Teste unitário, regressão, integração e smoke
+### 24.2. Teste unitário, regressão, integração e smoke
 
 Um **teste unitário** exercita uma unidade pequena com entradas controladas. Um **teste de regressão** procura impedir que um comportamento corrigido volte a quebrar. **Integração** verifica componentes atuando juntos. **Smoke test** testa operações básicas para revelar falhas amplas de ambiente ou integração; não é validação exaustiva de todos os casos.
 
@@ -1174,13 +1063,13 @@ O projeto possui ferramentas de smoke Spark/ML e roteiros de teste conversaciona
 
 **Skip** indica caso não executado. “A suíte terminou sem falhas, com casos ignorados” não deve ser relatado como se todos tivessem passado em runtime. Registre o que foi executado, a versão, o ambiente e o motivo dos casos ausentes.
 
-### 24.5. Contrato de documentação e limite da evidência
+### 24.3. Contrato de documentação e limite da evidência
 
 Um link válido demonstra que o destino referenciado existe na verificação; não garante que seu conteúdo esteja correto. Um PNG com hash esperado demonstra integridade; não garante legibilidade. Um bloco de saída presente em Markdown demonstra que foi escrito; não prova sozinho sua execução. Um teste de importação não exercita a função, e uma resposta bem redigida não prova carregamento da skill.
 
-Neste projeto, resultados de validação exibidos no README são confrontados por `--conferir-readme`. Quando um documento é acrescentado ou removido, as contagens podem mudar sem que haja regressão de algoritmo. Devem ser atualizadas a partir da execução, não ajustadas por tentativa até desaparecer o erro.
+Registrar uma verificação não executa novamente o recurso. Preserve a versão, o ambiente e a distinção entre resultado esperado, observado e revisado.
 
-### 24.6. Como registrar uma evidência útil
+### 24.4. Como registrar uma evidência útil
 
 Uma evidência deve permitir entender versão, contexto e limite. Registre commit ou versão dos arquivos; ambiente/runtime; comando ou célula; entrada ou recorte; saída observada; critério esperado; resultado da comparação; e o que não foi coberto. Preserve o erro real quando a verificação falhar, removendo apenas informações sensíveis de modo declarado.
 
@@ -1243,7 +1132,6 @@ Registre a mensagem exata, sem tokens ou dados sensíveis. “Não funcionou” 
 | Método não suportado no serverless | API incompatível com compute/Connect | Documentação atual e alternativa suportada |
 | Imagem quebrada | Caminho, permissão, tipo ou publicação incorretos | Local do Markdown e local real do PNG; não o `sys.path` |
 | Função continua “antiga” | Módulo/cache/arquivo de outra localização | `__file__`, estado da sessão e reinicialização controlada |
-| CI reprova contagens do README | Evidência documental ficou desatualizada | Reexecutar gate e conferir alteração de inventário |
 
 ### 26.2. Uma sequência que preserva a capacidade de diagnosticar
 
@@ -1255,7 +1143,7 @@ Para uma falha de visualização, não publique novamente todos os helpers. Para
 <a id="catalogo-helpers"></a>
 ## 27. Inventário técnico dos helpers realmente existentes
 
-Este inventário cobre as 52 pastas de snippets da candidata V05 e os sete scripts do snapshot examinado. A unidade contada é a pasta de objeto, não o número de funções: um objeto pode exportar várias funções, classes ou constantes. Os dois exemplares de padrões são apresentados separadamente. Nomes e assinaturas abaixo foram extraídos das definições Python, sem executar treinadores nem importar dependências opcionais.
+Este inventário organiza os recursos por finalidade. O catálogo de cada família e o README local mostram os objetos disponíveis na instalação. A unidade contada é a pasta de objeto, não o número de funções: um objeto pode exportar várias funções, classes ou constantes. Os dois exemplares de padrões são apresentados separadamente. Nomes e assinaturas abaixo foram extraídos das definições Python, sem executar treinadores nem importar dependências opcionais.
 
 **Como usar:** procure a finalidade, leia o tipo de entrada e de retorno, abra o exemplo específico e só então adapte a chamada. A assinatura é uma referência de consulta; os capítulos 4 a 7 explicam sua notação. Ela não substitui a docstring, os testes ou a revisão de efeitos. As dependências citadas nas fichas destacam pontos de atenção, não constituem um lockfile completo. Nenhuma ficha significa “homologado hoje no seu workspace”.
 
@@ -1263,7 +1151,7 @@ Para navegar pelos snippets antes de chegar à ficha técnica, use os seis índi
 
 As referências de código são permalinks do snapshot, iguais nas cópias Git e workspace deste manual. Abrir esses links depende de acesso ao repositório privado. Dentro do workspace, o caminho local equivalente começa em `.assistant/` e conserva a subpasta exibida na ficha.
 
-**Guias locais R02:** os pilotos agora possuem `README.md` na própria pasta.
+**Guias dos objetos:** comece pelo `README.md` da própria pasta.
 Nas fichas abaixo, o caminho do guia é relativo à pasta `.assistant/`, não à
 localização de uma das três cópias deste Manual. Os READMEs das coleções oferecem
 links clicáveis dentro do produto. Essa convenção evita links relativos que
@@ -1276,17 +1164,9 @@ documental e tem evidência delimitada; não representa publicação no workspac
 
 Guia conceitual e de decisão: `hub_scripts/skill_execution/README.md` (a partir de `.assistant/`).
 
-Resolve `execution_contract.json` antes do core analítico e devolve um `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por recurso/template, issues bloqueantes e `writes_performed=false`. Na SE02, `run_preflight` avalia apenas pré-condições objetivas: não executa a EDA, não chama helpers analíticos e não prova aderência posterior.
+Resolve `execution_contract.json` antes do core analítico e devolve um `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por recurso/template, issues bloqueantes e `writes_performed=false`. `run_preflight` avalia apenas pré-condições objetivas: não executa a EDA, não chama helpers analíticos e não prova aderência posterior.
 
-A API pública inclui `run_preflight` e, desde a SE07, `get_skill_enforcement_policy`/`list_skill_enforcement_policies` para consultar a política transversal de nível por skill. O registry fica em `hub_padroes/skill_enforcement/policy.json`. `current_level` descreve somente enforcement implementado; `target_level` é roadmap e não prova existência de gates. O contrato v0.1 continua em `mode="audit"`; condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
-
-Desde a SE08, contratos e policy participam do validador geral do Hub e o gate
-local chama o perfil cumulativo `se08` do certifier em modo parcial/read-only.
-A certificação FULL permanece separada e usa
-`python -B tools/skill_enforcement/certify_local.py --profile se08`: ela inclui
-regressões SEF acumuladas, renderer canônico, ausência de drift no derivado e
-snapshot documental. O subgate do `ci_local.py` não substitui esse FULL.
-
+A API pública inclui `run_preflight` e `get_skill_enforcement_policy`/`list_skill_enforcement_policies` para consultar a política transversal de nível por skill. O registry fica em `hub_padroes/skill_enforcement/policy.json`. `current_level` descreve somente enforcement implementado; `target_level` é roadmap e não prova existência de gates. O contrato v0.1 continua em `mode="audit"`; condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
 Publicação/verify no Databricks Free e comportamento conversacional do Genie Code
 continuam canais de evidência distintos. Uma policy válida não prova que o agente
 carregou a skill, usou o runner ou resistiu a bypass. Da mesma forma, um
@@ -1299,7 +1179,7 @@ e gates do nível correspondente.
 
 #### `hub_snippets.constants.colors`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/colors/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_colors.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/constants/colors/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_colors.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Reúne cores e paletas usadas na apresentação. São valores de configuração visual, não variáveis aprendidas pelo modelo nem regras de aprovação. Consumir uma constante não desenha uma figura sozinho.
 
@@ -1309,7 +1189,7 @@ Constantes exportadas: `AZUL_CAIXA`, `LARANJA`, `AZUL_CLARO`, `CINZA_ESCURO`, `V
 
 #### `hub_snippets.constants.emojis`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/emojis/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_emojis.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/constants/emojis/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_emojis.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Relaciona símbolos e seções da apresentação. Um emoji de alerta é um recurso de comunicação; não executa um teste e não comprova gravidade estatística.
 
@@ -1341,7 +1221,7 @@ fmt_n(n: Number, sufixo: bool=True) -> str
 
 #### `hub_snippets.constants.styles`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/styles/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_styles.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/constants/styles/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_styles.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Reúne estilos visuais reutilizáveis e depende das constantes de cores do Hub. CSS controla aparência; não calcula indicadores nem altera permissões do notebook.
 
@@ -1353,7 +1233,7 @@ Constantes exportadas: `FONT_FAMILY`, `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, 
 
 #### `hub_snippets.display.correlation_matrix`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/correlation_matrix/`, abra `README.md` antes de `exemplo_correlation_matrix.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/display/correlation_matrix/`, abra `README.md` antes de `exemplo_correlation_matrix.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
 Recebe um DataFrame Spark e colunas numéricas. Calcula correlações e devolve a figura Plotly e os pares fortes, não apenas uma figura isolada. Depende de APIs de `pyspark.ml`; confira suporte no compute e tratamento de nulos. Correlação não é causalidade. O corte seleciona a lista de pares, não destaca células; o descarte de nulos é conjunto nas colunas selecionadas.
 
@@ -1370,7 +1250,7 @@ plot_correlation(df: DataFrame, cols: Optional[Iterable[str]]=None, method: str=
 
 #### `hub_snippets.display.dataframe_styled`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/dataframe_styled/`, abra `README.md` antes de `exemplo_dataframe_styled.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/display/dataframe_styled/`, abra `README.md` antes de `exemplo_dataframe_styled.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
 Recebe uma tabela pandas e devolve HTML estilizado. O consumidor escolhe onde mostrar esse texto. A operação de estilo delegada ao pandas pode exigir Jinja2 na chamada; o módulo carregar não prova essa dependência. O helper não ativa escape HTML; use conteúdo controlado.
 
@@ -1387,7 +1267,7 @@ display_styled(df_pandas, highlight_cols: Optional[Iterable[str]]=None, format_d
 
 #### `hub_snippets.display.distribution_grid`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/distribution_grid/`, abra `README.md` antes de `exemplo_distribution_grid.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/display/distribution_grid/`, abra `README.md` antes de `exemplo_distribution_grid.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
 Recebe DataFrame Spark, seleciona/amostra dados numéricos e devolve uma figura Plotly com distribuições. Confirme tamanho da amostra e leitura das escalas; os histogramas não representam uma contagem integral se vieram de amostra. Valores selecionados são coletados em pandas e incorporados à figura; N conta linhas coletadas, não valores válidos por coluna.
 
@@ -1406,7 +1286,7 @@ plot_distributions(df: DataFrame, cols: Optional[Iterable[str]]=None, ncols: int
 
 #### `hub_snippets.spark.date_features`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/date_features/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/date_features/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe Spark DataFrame e coluna de data; devolve atributos de calendário. A implementação embute nove feriados nacionais de data fixa em indicador próprio; isso não é calendário completo. Feriados móveis, locais, bancários ou regras do projeto entram separadamente em `holiday_dates`.
 
@@ -1423,7 +1303,7 @@ extrair_features_data(df: DataFrame, col_data: str, prefixo: Optional[str]=None,
 
 #### `hub_snippets.spark.join_diagnostics`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/join_diagnostics/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/join_diagnostics/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe dois Spark DataFrames e uma chave, possivelmente composta; devolve dicionário de cardinalidade, correspondência e estimativa de expansão. Não materializa o join completo, mas executa agregações de diagnóstico. Conferir um relacionamento não cria correspondências ausentes.
 
@@ -1440,7 +1320,7 @@ diagnosticar_join(esquerda: DataFrame, direita: DataFrame, chave: str | Sequence
 
 #### `hub_snippets.spark.null_summary`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/null_summary/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/null_summary/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe Spark DataFrame e devolve uma tabela por coluna com contagens, percentuais e status de `NULL`. As expressões não substituem regras de domínio para strings vazias, sentinelas ou NaN. Os limiares são política do consumidor e a implementação atual não valida sua ordem/faixa.
 
@@ -1474,7 +1354,7 @@ pit_join(fatos: DataFrame, features: DataFrame, chave: str | Sequence[str], ts_d
 
 #### `hub_snippets.spark.psi_calculator`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/psi_calculator/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/psi_calculator/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe Spark DataFrames e calcula PSI/CSI. `calcular_psi` devolve um float; `calcular_csi`, um dicionário por coluna; `interpretar_psi`, texto segundo limiares do consumidor. A guarda de cardinalidade categórica protege coleta no driver, mas não elimina todo custo distribuído.
 
@@ -1493,7 +1373,7 @@ interpretar_psi(psi_value: float, *, warning_threshold: Optional[float]=None, cr
 
 #### `hub_snippets.spark.safe_display`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/safe_display/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/safe_display/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Mostra uma quantidade limitada de linhas sem solicitar contagem integral apenas para exibir. Retorna `None`; não é uma função de amostragem que devolve dados para treino. Passe `display_fn=display` quando o renderer estiver disponível no notebook: o módulo não herda suas variáveis globais. Em execução local simples, forneça um renderer compatível ou espere a exceção documentada.
 
@@ -1510,7 +1390,7 @@ safe_display(df: DataFrame, limit: int=1000, msg: bool=True, *, display_fn: Opti
 
 #### `hub_snippets.spark.smart_sample`
 
-**Guia local do objeto (R04-A):** `hub_snippets/spark/smart_sample/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+**Guia do objeto:** `hub_snippets/spark/smart_sample/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe Spark DataFrame e devolve amostra limitada por `n`, com opção estratificada. O modo simples usa `sample` e `limit`: `n` é teto e a saída pode ter menos linhas. No estratificado elegível, a alocação busca exatamente `n` e preserva cada estrato; uma amostra de inspeção não é automaticamente apropriada para estimação.
 
@@ -1527,9 +1407,9 @@ smart_sample(df: DataFrame, n: int=10000, stratify_col: Optional[str]=None, seed
 
 ### 27.4. Modelagem, tempo, métricas e monitoramento
 
-#### Guias locais R06 — como montar uma avaliação temporal sem misturar as camadas
+#### Avaliação temporal sem misturar as camadas
 
-Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos R06 não formam um pipeline automático; cada um cobre uma parte:
+Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos temporais não formam um pipeline automático; cada um cobre uma parte:
 
 - `hub_snippets/ml/lgbm_temporal/README.md` — lags/rollings/calendário em pandas; não treina LightGBM;
 - `hub_snippets/ml/split_temporal/README.md` — um split treino/validação/teste por períodos observados;
@@ -1554,7 +1434,7 @@ train_arima(series: np.ndarray, m: int=12, forecast_periods: int=6, seasonal: bo
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/arima_wrapper.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/exemplo_arima_wrapper.py)
 
-#### Guias locais R08 — clusterização, anomalias e explicabilidade
+#### Clusterização, anomalias e explicabilidade
 
 Para um usuário novo, escolha primeiro a **pergunta**:
 
@@ -1565,7 +1445,7 @@ Para um usuário novo, escolha primeiro a **pergunta**:
 - `hub_snippets/ml/shap_explainer/README.md` — calcular atribuições do output do modelo;
 - `hub_snippets/ml/explainability_report/README.md` — transformar importâncias já calculadas em Markdown.
 
-Use as rotas em conjunto somente quando os contratos realmente se encaixarem. A R08 documenta o estado existente; não migra `umap_viz` para a rota V04 de temas e não altera implementações.
+Use as rotas em conjunto somente quando os contratos realmente se encaixarem. Confirme o suporte temático na API efetivamente usada; compor recursos não altera suas implementações.
 
 #### `hub_snippets.ml.autoencoder_anomaly`
 
@@ -1687,7 +1567,7 @@ profile_anomalies(df: pd.DataFrame, feature_cols: List[str], scores: np.ndarray,
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/isolation_forest.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/exemplo_isolation_forest.py)
 
-#### Guias locais R07 — score, maturidade e sobrevivência
+#### Score, maturidade e sobrevivência
 
 Para um usuário novo no Hub, separe as perguntas antes de escolher o objeto:
 
@@ -2058,7 +1938,7 @@ classify_iv(iv: float) -> str
 
 #### `hub_snippets.testing.fixtures`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/testing/fixtures/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_fixtures.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/testing/fixtures/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_fixtures.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Cria Spark DataFrames sintéticos para exercícios tabulares, séries, fatos/features e safras. Alguns testes exigem uma sessão Spark ativa. As características são controladas pelo gerador; não representam estatísticas observadas de clientes reais.
 
@@ -2080,7 +1960,7 @@ safras(n_contratos: int=400, *, seed: int=42, safras_yyyymm: Sequence[str]=('202
 
 #### `hub_snippets.visual.badge`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/badge/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_badge.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/visual/badge/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_badge.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve pequenas marcações HTML de status, score ou texto. Cor e rótulo precisam ser alimentados por uma interpretação justificada; a função visual não certifica o dado.
 
@@ -2099,7 +1979,7 @@ badge_inline(texto: str) -> str
 
 #### `hub_snippets.visual.divider`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/divider/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_divider.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/visual/divider/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_divider.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve separadores HTML. Controla apresentação, sem cálculo ou escrita de dados. O consumidor precisa renderizar a string na superfície adequada.
 
@@ -2119,7 +1999,7 @@ divider_section() -> str
 
 #### `hub_snippets.visual.index_generator`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/index_generator/`, abra `README.md` antes de `exemplo_index_generator.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/visual/index_generator/`, abra `README.md` antes de `exemplo_index_generator.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
 Devolve um índice de etapas de EDA em HTML ou Markdown. O parâmetro `markdown` define o formato. A implementação produz lista declarada, sem links ou inspeção das células; o índice não comprova execução das etapas.
 
@@ -2136,7 +2016,7 @@ gerar_indice_eda(etapas_ativas: Optional[Iterable[int]]=None, markdown: bool=Fal
 
 #### `hub_snippets.visual.kpi_card`
 
-**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/kpi_card/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_kpi_card.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+**Guia do objeto:** na pasta `hub_snippets/visual/kpi_card/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_kpi_card.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve cards HTML ou texto Markdown de indicadores. Recebe valores já apurados; não consulta tabela nem calcula KPI de negócio. Um card com número correto e denominador omitido ainda pode induzir erro.
 
@@ -2154,7 +2034,7 @@ kpi_card_markdown(metricas: Dict[str, Any]) -> str
 
 #### `hub_snippets.visual.section_header`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/section_header/`, abra `README.md` antes de `exemplo_section_header.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/visual/section_header/`, abra `README.md` antes de `exemplo_section_header.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
 Devolve HTML de cabeçalho para uma seção, com opções preenchidas por etapa ou fornecidas diretamente. Não é o PNG do cabeçalho institucional e não registra um widget nativo.
 
@@ -2174,9 +2054,7 @@ section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo
 Valida uma configuração visual completa e devolve um retrato isolado dos tokens,
 isto é, escolhas de aparência com nome e valor. Este núcleo não aplica cores,
 não registra templates, não consulta dados e não publica. `ResolvedTheme.to_dict()` fornece
-uma cópia editável, sem contaminar a configuração original. A V02 foi aceita e
-integrada no Git pelo PR #14; execução local, publicação e homologação no workspace
-continuam sendo estados diferentes.
+uma cópia editável, sem contaminar a configuração original. Validar a configuração não comprova aparência ou acessibilidade no seu workspace.
 
 **Schema** é o documento central dos campos e limites, em
 `hub_padroes/identidade_visual/theme.schema.json`. **Serialização canônica** é a
@@ -2187,8 +2065,7 @@ Esses conceitos complementam este Manual, sem criar outro glossário.
 A API pública contém `ThemeError`, `ResolvedTheme`, `normalize_color`,
 `resolve_theme`, `load_theme`, `load_reference_theme` e `export_theme`.
 As assinaturas detalhadas e exemplos ficam no README do objeto. Na pasta publicada
-`.assistant`, abra `hub_snippets/visual/tema/README.md`; no Git, o caminho é
-`ambiente_fonte/.assistant/hub_snippets/visual/tema/README.md`. O exemplo só usa
+`.assistant`, abra `hub_snippets/visual/tema/README.md`. O exemplo só usa
 referências sintéticas e memória; `export_theme` não salva um arquivo.
 
 O import requer somente a biblioteca padrão; validar requer as bibliotecas
@@ -2199,10 +2076,10 @@ Não há configuração implícita, cache global ou fallback diante de erro.
 
 #### `hub_snippets.visual.theme_lab`
 
-**Candidata V05 — Visual Lab de aparência, sem aprovação ou publicação.** Este
+**Visual Lab de aparência, sem aprovação ou publicação.** Este
 objeto oferece uma prévia pessoal para escolher uma base `notebook`, ajustar
 tokens, comparar a aparência e preservar uma sessão de autoria. Ele recebe temas
-revalidados pelo núcleo V02 e reutiliza os consumidores V03/V04; não consulta
+revalidados pelo núcleo de temas e reutiliza consumidores Plotly/HTML; não consulta
 rede, Spark, SQL ou MLflow e não altera `plotly.io.templates.default` ao importar.
 
 **Primeiro acesso.** Na cópia autorizada de `.assistant`, leia
@@ -2224,7 +2101,7 @@ motivo, em vez de simular efeito.
 revisão e histórico local limitado; `undo()` e `restore()` não publicam nada.
 `build_preview()` e `compare_preview()` usam os mesmos dados sintéticos em
 cabeçalho, KPI, barras, série temporal, heatmap e tabela. A galeria completa
-permanece `light`, porque a rota Plotly V03 recusa `dark` e `high_contrast` até
+permanece `light`, porque a rota Plotly recusa `dark` e `high_contrast` até
 que exista suporte explícito.
 
 <details>
@@ -2267,7 +2144,7 @@ documenta assinaturas, opções e exemplos com mais detalhe.
 `save_proposal()` salva apenas a configuração atual. `save_theme_lab_session()`
 cria um diretório novo com `base.json`, `proposal.json`, histórico e
 `session.json`; o manifesto é escrito por último e registra hashes e revisão.
-Sessão incompleta não aparece na listagem nem é reaberta. A reabertura revalida
+A listagem reconhece manifestos; não valida integralmente todos os payloads. A reabertura revalida
 os temas, confere os hashes e restaura base original, proposta, revisão e
 histórico; adulteração é recusada em vez de ter o hash “corrigido”. O bundle não
 autentica autor, não assina conteúdo e não registra aprovação de governança.
@@ -2281,17 +2158,13 @@ tem paridade com o launcher de presets/sessões. Nenhuma função instala pacote
 **Segurança e limites de evidência.** Persistência exige pasta regular já
 existente, não sobrescreve sessão/arquivo existente e não emite recibo de sucesso
 quando a escrita falha. Essas guardas não substituem ACL do ambiente nem formam
-uma sandbox. Os testes Python/GitHub Actions exercitam estado, callbacks no
-kernel, presets, sessões, hashes e roundtrip; não homologam navegador/runtime
-Databricks, teclado/leitor de tela, contraste percebido, zoom, p95, ACL real,
-reinício de sessão ou UAT por iniciante. A V05 continua candidata: sem aceite,
-merge, publicação Databricks ou início da V06.
+uma sandbox. Confira navegador/runtime, teclado/leitor de tela, contraste percebido, zoom, desempenho, ACL real e reabertura no ambiente de uso. A galeria completa usa `light`; salvar ou exportar proposta não a aprova nem muda o padrão da equipe.
 
 #### `hub_snippets.visual.theme_plotly`
 
-**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+**Guia do objeto:** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
-Mantém a rota legada de configuração/aplicação/registro e acrescenta, na V03, uma rota opt-in que consome `ResolvedTheme` de contexto notebook. `aplicar_tema_resolvido` afeta somente a figura passada; `registrar_template_plotly_resolvido` usa namespace `hub-*` e não muda o default da sessão sem `ativar=True`. Se o nome a substituir já estiver ativo, sozinho ou dentro de um default composto, `substituir=True` sem `ativar=True` é recusado para impedir mudança global implícita. Como a rota V03 revalida o tema antes do consumo, ela requer também as dependências declaradas em `hub_snippets/requirements-temas.txt` (`jsonschema` e `referencing`); nenhuma função instala pacotes. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. Dados, eixos e cores explícitas de traces permanecem fora da responsabilidade do adaptador.
+Mantém a rota legada de configuração/aplicação/registro e oferece uma rota opt-in que consome `ResolvedTheme` de contexto notebook. `aplicar_tema_resolvido` afeta somente a figura passada; `registrar_template_plotly_resolvido` usa namespace `hub-*` e não muda o default da sessão sem `ativar=True`. Se o nome a substituir já estiver ativo, sozinho ou dentro de um default composto, `substituir=True` sem `ativar=True` é recusado para impedir mudança global implícita. Como a rota resolvida revalida o tema antes do consumo, ela requer também as dependências declaradas em `hub_snippets/requirements-temas.txt` (`jsonschema` e `referencing`); nenhuma função instala pacotes. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. Dados, eixos e cores explícitas de traces permanecem fora da responsabilidade do adaptador.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -2307,7 +2180,7 @@ registrar_template_plotly_resolvido(theme: ResolvedTheme, *, nome: str, ativar: 
 
 </details>
 
-Para usuários novos, mantenha `aplicar_tema` se o objetivo é preservar o hábito atual. Use `aplicar_tema_resolvido` somente quando houver uma configuração notebook explicitamente resolvida pelo núcleo V02. A V03 suporta `mode=light`; `dark`/`high_contrast` falham fechados até uma sprint futura definir superfícies Plotly sem defaults ocultos. Fixtures empacotadas servem a testes/demonstrações e não são temas operacionais aprovados.
+Para usuários novos, mantenha `aplicar_tema` se o objetivo é preservar o hábito atual. Use `aplicar_tema_resolvido` somente quando houver uma configuração notebook explicitamente resolvida pelo núcleo de temas. O adaptador suporta `mode=light`; `dark`/`high_contrast` não são suportados e falham fechados. Fixtures empacotadas servem a testes/demonstrações e não são temas operacionais aprovados.
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py)
 
@@ -2436,6 +2309,33 @@ Uma assinatura com anotação `DataFrame` pode referir-se a Spark ou pandas conf
 Quando surgir um novo objeto, atualize esta seção a partir do código e confira seu exemplo. Ao remover ou renomear um helper, revise também as skills e os prompts que o recomendam. Alterar apenas o texto do manual não cria a implementação faltante.
 
 
+### Rotas rápidas — scripts operacionais
+
+Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da própria pasta. Ele explica o conceito, efeitos, custo e interpretação antes do notebook:
+
+- `hub_scripts/data_quality_check/README.md` — chave, nulos, atualidade e score heurístico;
+- `hub_scripts/doc_coverage/README.md` — adjacência Markdown-código, não qualidade textual;
+- `hub_scripts/drift_detector/README.md` — PSI numérico entre coortes, sem confundir drift e performance;
+- `hub_scripts/naming_checker/README.md` — convenções com origem explícita da política;
+- `hub_scripts/rfv_calculator/README.md` — RFV bruto com corte temporal global;
+- `hub_scripts/schema_to_yaml/README.md` — snapshot de schema, YAML/JSON e estatísticas opcionais.
+
+Os scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.
+
+### Rotas rápidas — modelos tabulares
+
+Para escolher entre os seis modelos/tabulares desta família, abra primeiro o README da pasta. A rota recomendada é: baseline simples → baseline de árvore → somente depois tuning ou arquitetura neural, sempre sob a mesma validação.
+
+- `hub_snippets/ml/train_lgbm/README.md` — LightGBM e métricas por tarefa;
+- `hub_snippets/ml/train_catboost/README.md` — CatBoost e categóricas;
+- `hub_snippets/ml/lgbm_ranker/README.md` — ranking por grupos e NDCG;
+- `hub_snippets/ml/optuna_lgbm/README.md` — TPE e limites da busca;
+- `hub_snippets/ml/mlp_embeddings/README.md` — embeddings e contrato binário do treinador;
+- `hub_snippets/ml/tabnet_wrapper/README.md` — TabNet e importância global.
+
+Os notebooks instalam dependências de laboratório e reiniciam o Python. Leia esses efeitos antes de executar. Métrica de validação, importância ou tuning não equivalem a homologação do modelo.
+
+
 <a id="metodos"></a>
 ## 28. Skills, prompts e padrões: como escolher sem decorar o repositório
 
@@ -2454,7 +2354,6 @@ Cada linha abaixo descreve o escopo do método, não uma promessa de execução 
 | `hub-ml-validacao-estatistica` | O que uma evidência sustenta sob incerteza? Defina hipótese, população e desenho. | Pressupostos, magnitude, intervalos, multiplicidade e conclusão proporcional. |
 | `hub-ml-analise-safra` | Como os grupos de originação amadurecem? Informe contrato, evento, referência e MOB. | Denominador, maturidade comparável, censura/incompletude e não duplicação de eventos. |
 | `hub-ml-explainability` | Como o modelo usa as entradas? Forneça modelo, preparação, dados e saída a explicar. | Coerência de features, referência explicativa, limites e distinção de causalidade. |
-| `hub-ml-micromodelos` | Como especificar uma característica ou descobrir oportunidades usando metadata? Declare decisão, escopo e permissão. | Distinguir metadata observada, hipótese e aprovação; contrato L1, sem runner Databricks. |
 | `hub-ml-monitoramento-modelo` | O que observar no funcionamento do modelo? Defina referência, produção, rótulos disponíveis e políticas. | Qualidade, drift, performance, custo e critérios explícitos para investigar/agir. |
 | `hub-ml-pipeline-builder` | Como organizar execução recorrente? Informe fontes, destino, frequência, dependências e permissões. | Idempotência, qualidade, retries, observabilidade e aprovação de escritas. |
 | `hub-ml-comentar-notebook` | Como explicar um notebook existente? Forneça o código e suas saídas. | Explicação antes/depois, interpretação dos números reais e ausência de mudanças ocultas na lógica. |
@@ -2466,9 +2365,9 @@ Cada linha abaixo descreve o escopo do método, não uma promessa de execução 
 
 A sigla `ml` no nome de uma skill é identidade do projeto. Não garante que toda solicitação deva terminar em um modelo treinado. Uma EDA pode concluir que a base ainda não está pronta, e uma auditoria pode concluir que a evidência não é suficiente.
 
-### 28.2. Os dezesseis briefings: dar os detalhes do caso
+### 28.2. Briefings por objetivo
 
-Os arquivos ficam em `hub_prompts/<nome>/<nome>.md`, acompanhados de notebook `exemplo_<nome>.py`. No piloto R02, `hub_prompts/eda_rapida/README.md` acrescenta a explicação de escolha e alerta que o preparo de seu notebook usa overwrite de tabela persistente. Abra o briefing real para preencher todos os seus campos; esta tabela explica o ponto de entrada, não cria um formulário alternativo concorrente.
+Os arquivos ficam em `hub_prompts/<nome>/<nome>.md`, acompanhados de notebook `exemplo_<nome>.py`. O README local explica a escolha e os efeitos do exemplo; o preparo de EDA rápida, por exemplo, usa overwrite de tabela persistente e não é necessário para apenas preencher o briefing. Abra o briefing real para preencher todos os seus campos; esta tabela explica o ponto de entrada, não cria um formulário alternativo concorrente.
 
 | Briefing | Use para | Informação que não deve faltar |
 |---|---|---|
@@ -2488,6 +2387,8 @@ Os arquivos ficam em `hub_prompts/<nome>/<nome>.md`, acompanhados de notebook `e
 | `comentar_notebook` | Melhorar a explicação de um artefato | Notebook e saídas reais, público e grau de detalhe. |
 | `tutor_explicar` | Aprender um ponto específico | Dúvida, bloco/erro e conhecimento prévio. |
 | `auditoria_skills` | Conferir método ou resultado | Contrato, evidências e critérios; não apenas a autoavaliação do autor. |
+| `micromodelo_novo` | Especificar objetivo conhecido | Entidade, instante, decisão, fontes autorizadas e restrições. |
+| `descobrir_micromodelos` | Investigar oportunidades com metadados autorizados | Catálogo permitido, escopo e incerteza; não presumir leitura de registros ou viabilidade. |
 
 `NÃO INFORMADO` identifica uma lacuna a resolver. `NÃO APLICÁVEL` registra algo examinado e considerado fora do caso. Nenhum dos dois significa “a IA pode escolher um valor sem avisar”. Um placeholder não preenchido também não deve virar um nome literal de tabela consultada.
 
@@ -2554,10 +2455,7 @@ Recursos presentes no Git podem ainda não estar publicados no workspace. Uma
 menção na resposta não executa outra skill. Sem ferramentas para ler os arquivos,
 o assistente deve solicitar o contexto mínimo ou registrar acesso bloqueado.
 
-**Estado da integração em 12/09/2026:** componente incorporado à fonte do produto,
-com publicação e testes conversacionais pendentes. A origem histórica do código
-examinado neste Manual permanece a indicada na abertura; esta seção registra a
-adição posterior e não atribui o Concierge ao snapshot antigo dos helpers.
+A descoberta termina em recomendação ou passagem de contexto. Consultar fontes requer acesso real; a falta de acesso deve ser declarada e não autoriza execução implícita.
 
 <a id="indice-termos"></a>
 ## 29. Índice de termos técnicos e de nomes parecidos
@@ -2646,33 +2544,7 @@ Este índice integra o antigo papel do glossário. As explicações desenvolvida
 | ADR / handoff / runbook | Decisão arquitetural / passagem de estado / procedimento operacional | [30](#fontes) |
 
 <a id="fontes"></a>
-### Guias locais R04-B — scripts operacionais
-
-Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da própria pasta. Ele explica o conceito, efeitos, custo e interpretação antes do notebook:
-
-- `hub_scripts/data_quality_check/README.md` — chave, nulos, atualidade e score heurístico;
-- `hub_scripts/doc_coverage/README.md` — adjacência Markdown-código, não qualidade textual;
-- `hub_scripts/drift_detector/README.md` — PSI numérico entre coortes, sem confundir drift e performance;
-- `hub_scripts/naming_checker/README.md` — convenções com origem explícita da política;
-- `hub_scripts/rfv_calculator/README.md` — RFV bruto com corte temporal global;
-- `hub_scripts/schema_to_yaml/README.md` — snapshot de schema, YAML/JSON e estatísticas opcionais.
-
-Os scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.
-
-### Guias locais R05 — modelos tabulares
-
-Para escolher entre os seis modelos/tabulares desta leva, abra primeiro o README da pasta. A rota recomendada é: baseline simples → baseline de árvore → somente depois tuning ou arquitetura neural, sempre sob a mesma validação.
-
-- `hub_snippets/ml/train_lgbm/README.md` — LightGBM e métricas por tarefa;
-- `hub_snippets/ml/train_catboost/README.md` — CatBoost e categóricas;
-- `hub_snippets/ml/lgbm_ranker/README.md` — ranking por grupos e NDCG;
-- `hub_snippets/ml/optuna_lgbm/README.md` — TPE e limites da busca;
-- `hub_snippets/ml/mlp_embeddings/README.md` — embeddings e contrato binário do treinador;
-- `hub_snippets/ml/tabnet_wrapper/README.md` — TabNet e importância global.
-
-Os notebooks instalam dependências de laboratório e reiniciam o Python. Leia esses efeitos antes de executar. Métrica de validação, importância ou tuning não equivalem a homologação do modelo.
-
-## 30. Fontes, manutenção e alcance das afirmações
+## 30. Fontes e alcance das afirmações
 
 ### 30.1. Como conferir a procedência
 
@@ -2725,82 +2597,26 @@ As referências `[Sxx]` no texto identificam as páginas abaixo. Foram consultad
 | <a id="fonte-s35"></a>S35 | [Databricks — expectations de qualidade](https://learn.microsoft.com/en-us/azure/databricks/ldp/expectations) |
 | <a id="fonte-s36"></a>S36 | [Databricks — família Genie, Genie One e Genie Agents](https://learn.microsoft.com/en-us/azure/databricks/genie/) |
 
-### 30.3. Fontes de implementação e de manutenção
+### 30.3. Versão e alcance das referências
 
-O inventário do capítulo 27 aponta para cada implementação, sua API exportada e seu notebook. As referências abaixo sustentam a organização, os mecanismos de validação e o fluxo de entrega. Referenciar uma ferramenta não executa o comando nem autoriza publicação.
-
-- [`README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/README.md)
-- [`CLAUDE.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/CLAUDE.md)
-- [`.claude/rules/docs-e-readmes.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/docs-e-readmes.md)
-- [`.claude/rules/genie-code-oficial.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/.claude/rules/genie-code-oficial.md)
-- [`docs/decisions/README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/docs/decisions/README.md)
-- [`ambiente_fonte/.assistant_instructions.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant_instructions.md)
-- [`ambiente_fonte/.assistant/README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/README.md)
-- [`ambiente_fonte/.assistant/skills/README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/skills/README.md)
-- [`ambiente_fonte/.assistant/hub_prompts/README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_prompts/README.md)
-- [`ambiente_fonte/.assistant/hub_padroes/README.md`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_padroes/README.md)
-- [`ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt)
-- [`tools/api_publica.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/api_publica.py)
-- [`tools/notebook_marker.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/notebook_marker.py)
-- [`tools/render_simulado.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/render_simulado.py)
-- [`tools/publicar_free.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/publicar_free.py)
-- [`tools/bundle_implantacao.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/bundle_implantacao.py)
-- [`tools/validate_assistant.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/validate_assistant.py)
-- [`tools/ci_local.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/ci_local.py)
-- [`tools/project_policy.py`](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/tools/project_policy.py)
-
-### 30.4. Como atualizar este manual sem criar duas redações
-
-Edite o arquivo de autoria `ambiente_fonte/.assistant/MANUAL_TECNICO.md`. Confira os contratos no código quando acrescentar uma API ou modificar exemplos. Sincronize a cópia de leitura da raiz Git a partir desse mesmo arquivo e regenere o simulado pelo renderer, nunca por edição manual do derivado. A igualdade das cópias é parte da conferência documental.
-
-A seguir está uma operação **local de manutenção**, a executar a partir da raiz do repositório após revisar a nova redação. Ela não publica no Databricks:
-
-```powershell
-python -c "from pathlib import Path; Path('MANUAL_TECNICO.md').write_bytes(Path('ambiente_fonte/.assistant/MANUAL_TECNICO.md').read_bytes())"
-python tools/render_simulado.py --write
-python tools/validate_assistant.py --conferir-readme
-python tools/ci_local.py
-```
-
-Atualizar uma referência oficial exige rever a afirmação que ela sustenta; não basta trocar a data. Atualizar uma contagem exige executar sua verificação. Atualizar um teste requer preservar a distinção entre verificações locais, runtime Databricks, serviços remotos e conversa da Genie Code.
+As fichas do catálogo apontam para implementações e exemplos em versões identificadas. Referências oficiais e a versão instalada sustentam as afirmações; conferir um link não executa o recurso. Para usar uma função, compare o contrato da ficha com o README do objeto instalado e registre qualquer diferença. Procedimentos de edição, geração, publicação e sincronização pertencem ao responsável pela manutenção.
 
 **Síntese final:** o arquivo orienta; o import disponibiliza código; a chamada realiza trabalho; o runtime determina como esse trabalho pode ocorrer; a autorização delimita recursos e efeitos; a evidência permite conferir o resultado. Entender essas seis etapas elimina grande parte da impressão de que o Databricks “puxa uma API” ou de que a IA executa tudo o que encontra em uma pasta.
 
 ---
 
-## Sistema de Temas — V00–V07 integradas no Git
+## Sistema de Temas: escolher e aplicar aparência
 
-O Sistema de Temas está integrado no repositório até a V07. Isso significa que o contrato, os adaptadores e consumidores descritos abaixo existem no produto versionado; **não** significa que um tema tenha sido publicado no workspace, aprovado visualmente ou homologado em browser/acessibilidade.
+O sistema separa configuração, aplicação aos componentes e edição de propostas. `ResolvedTheme` é a configuração validada; campos e limites pertencem a `hub_padroes/identidade_visual/theme.schema.json` e à referência `TOKENS.md`.
 
-### Camadas e responsabilidade
+1. Para preservar o comportamento existente, use a API legada.
+2. Para escolher uma configuração, use o Visual Lab ou `hub_snippets.visual.tema`.
+3. Aplique somente a rota `_resolvido` documentada pelo consumidor; importar não ativa tema global.
+4. Revise saída, dados, unidades e limites. Aparência não valida resultado analítico.
+5. Distinga salvar, compartilhar, aprovar, importar e publicar; nenhuma dessas ações autoriza as demais.
 
-- **V02 — núcleo:** carrega, valida e resolve configurações completas em `ResolvedTheme`. Não aplica nem aprova aparência.
-- **V03 — Plotly:** `aplicar_tema_resolvido` e registro explícito de template; sem efeito global por import.
-- **V04 — HTML/tabelas:** componentes `_resolvido` e estilos derivados do mesmo tema.
-- **V05 — Visual Lab:** autoria/comparação opt-in em notebook, com sessão e histórico; não publica.
-- **V06 — assets/geração:** renderização editorial orientada por tema em área candidata; geração não promove asset.
-- **V07 — consumidores/formatos:** correlação, distribuições, curvas de ML, monitoramento, UMAP e safras recebem rotas temáticas explícitas; HTML Plotly local foi exercitado.
+O Visual Lab oferece comparação e sessão pessoal. O App organiza autoria de propostas `notebook`; namespace por hash não substitui ACL. A ponte AI/BI depende de export real e binding revisado; gerar um candidato não importa nem publica dashboard. Guias: `hub_padroes/identidade_visual/databricks_app/README.md` e `hub_padroes/identidade_visual/aibi/README.md`.
 
-A fonte canônica de campos/limites está em `hub_padroes/identidade_visual/theme.schema.json`; a referência de tokens é `TOKENS.md`. Skills e templates podem orientar uso e composição, mas não devem copiar paletas para criar uma segunda política visual.
+`dark` e `high_contrast` têm cobertura diferente entre HTML e Plotly; modo válido não comprova acessibilidade. SHAP/Matplotlib e Kaplan–Meier conservam os limites do consumidor. A validação de configuração não homologa PNG, PDF, PPTX ou browser Databricks. Tema não muda dados, métrica, amostra, threshold, modelo, policy ou decisão de negócio.
 
-### Fluxo recomendado para notebook
-
-1. Se você só quer o comportamento histórico, use a API legada.
-2. Para escolher/editar uma proposta, use o Visual Lab ou carregue uma configuração completa pela API `hub_snippets.visual.tema`.
-3. Para uma figura/componente tematizável, use a rota `_resolvido` documentada pelo objeto.
-4. Revise saída, dados, unidade e limites; aparência não valida o resultado analítico.
-5. Trate salvar, compartilhar, aprovar e publicar como ações diferentes.
-
-### Limites atuais
-
-- `dark`/`high_contrast` têm cobertura diferente entre HTML e Plotly; não trate modo válido como homologação de acessibilidade.
-- SHAP/Matplotlib e o PNG do helper SHAP permanecem fora do theming V07.
-- Kaplan–Meier preserva aparência legada enquanto sua ordem de cores não estiver representada pelo contrato sem remapeamento silencioso.
-- PNG Plotly/Kaleido, PDF, PPTX e render real no browser Databricks não foram homologados pela V07.
-- Tema não muda threshold, métrica, amostra, agregação, modelo, policy ou decisão de negócio.
-
-### V08 — integração transversal em execução
-
-A V08 não adiciona runtime: ela reconcilia skills, padrões e este Manual para que todos apontem às mesmas fontes de verdade e limites das V02–V07. Até aceite/merge da V08, essa reconciliação deve ser tratada como candidata de documentação transversal, não como nova capacidade publicada.
-
-Para primeiro uso, consulte `hub_padroes/identidade_visual/GUIA_OPERACIONAL.md`. Para autoria, consulte `hub_snippets/visual/theme_lab/README.md`. Para um consumidor específico, o README local continua sendo a fonte de uso daquele objeto.
+Para primeiro uso, consulte `hub_padroes/identidade_visual/GUIA_OPERACIONAL.md`. Para autoria, consulte `hub_snippets/visual/theme_lab/README.md`; para cada API, seu README local.

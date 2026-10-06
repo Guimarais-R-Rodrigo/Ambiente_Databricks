@@ -10,13 +10,26 @@
 - **janela**: período retroativo (`7d`, `30d`, `90d`, `all_time`, `N/A` para estáticas).
 - **origem**: coluna(s) e tabela(s) fonte, separadas por vírgula.
 
+## Contrato temporal vinculado
+
+Manter a tabela compacta abaixo e um registro temporal por `feature_name`:
+- `event_time`: coluna/semântica do evento ou validade, unidade e fuso;
+- `available_at`: instante em que a informação ficou disponível, atraso e fonte de evidência;
+- `cutoff`: instante de decisão e limite da janela;
+- fronteira: LT (`<`) ou LE (`<=`) conforme contrato/perfil, incluindo limite inferior;
+- chave/entidade, regra de join/agregação e tratamento de empate/atualização.
+
+Nomes de campos aqui são da especificação: mapear para o schema real (por
+exemplo, `event_at` no perfil de lag). Sem evidência de disponibilidade, marcar
+PENDENTE; janela e origem sozinhas não comprovam ausência de leakage.
+
 ## Template
 
 | feature_name | definicao | tipo | granularidade | janela | origem |
 |---|---|---|---|---|---|
 | ... | ... | ... | ... | ... | ... |
 
-## Exemplo (banking — churn de cartão)
+## Exemplo ilustrativo fictício (banking — churn de cartão)
 
 | feature_name | definicao | tipo | granularidade | janela | origem |
 |---|---|---|---|---|---|

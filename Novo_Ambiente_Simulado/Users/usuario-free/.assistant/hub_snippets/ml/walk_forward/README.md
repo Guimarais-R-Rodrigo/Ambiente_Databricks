@@ -78,24 +78,24 @@ Se `model_fn` devolver chaves com esses mesmos nomes, os valores serão sobrescr
 ## 9. Como usar este recurso no Hub?
 
 ```python
+import numpy as np
+import pandas as pd
 from hub_snippets.ml.walk_forward import walk_forward_cv
 
-
+df = pd.DataFrame({"dt_ref": pd.date_range("2024-01-01", periods=24, freq="MS"),
+                   "target": np.arange(24, dtype=float)})
 def model_fn(train_df, test_df):
-    model = ajustar_somente_no_treino(train_df)
-    pred = model.predict(test_df[features])
-    return {"rmse": calcular_rmse(test_df[target], pred)}
+    train_df = train_df.sort_values("dt_ref")
+    test_df = test_df.sort_values("dt_ref")
+    media_treino = train_df["target"].mean()
+    erro = test_df["target"].to_numpy() - media_treino
+    return {"rmse": float(np.sqrt(np.mean(erro ** 2)))}
 
-results = walk_forward_cv(
-    df,
-    date_col="dt_ref",
-    target_col="target",
-    model_fn=model_fn,
-    min_train_periods=12,
-    test_periods=1,
-    gap=1,
-    period_unit="M",
-)
+results = walk_forward_cv(df, "dt_ref", "target", model_fn,
+                          min_train_periods=12, test_periods=1, gap=1)
+assert results and len(results) == 11
+assert (results[0]["train_end"], results[0]["test_start"]) == ("2024-12", "2025-02")
+assert (results[1]["train_end"], results[1]["test_start"]) == ("2025-01", "2025-03")
 ```
 
 O [notebook de exemplo](exemplo_walk_forward.py) usa um callback de baseline que recalcula a média do target a cada fold.
@@ -110,13 +110,15 @@ O [notebook de exemplo](exemplo_walk_forward.py) usa um callback de baseline que
 
 ## 11. Limitações, riscos e armadilhas
 
+Se `step < test_periods`, blocos de teste se sobrepõem e uma observação pode ser avaliada em vários folds. A média impressa não corrige essa dependência e não equivale à métrica de uma população sem repetições. Datas `NaT` não entram nos folds. Ordenar os períodos não ordena as linhas entregues ao callback: ordene dentro dele se o estimador depende da sequência. Evite também coluna de entrada `__period`, que é usada internamente e removida.
+
 O helper não consegue provar que preprocessing, feature engineering, seleção de hiperparâmetros ou modelo foram ajustados apenas no treino. Essa disciplina pertence ao callback.
 
 Ele pode retornar zero folds silenciosamente. A média impressa usa `np.std` com `ddof=0`, isto é, desvio-padrão populacional dos valores observados, e não um intervalo de confiança.
 
 A rotina escolhe as chaves de resumo a partir do primeiro fold. Métrica numérica que só apareça em folds posteriores não entra no print agregado. Chaves de metadados devolvidas pelo callback são substituídas.
 
-O notebook descreve “retreinar a cada janela”; mais precisamente, o helper **chama** `model_fn` a cada janela. Retreinamento só ocorre se a implementação do callback o fizer.
+O helper chama model_fn a cada janela. O callback deve criar/ajustar modelo e preprocessing somente com o treino daquele fold.
 
 ## 12. Quais são as alternativas?
 
@@ -138,6 +140,4 @@ Para um corte único consulte [split_temporal](../split_temporal/README.md). Par
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `cae94988cda66a8c61ecebbe6ceed487120a76f2`. A semântica de períodos e conversão temporal foi confrontada com a documentação oficial do pandas vigente em 12/09/2026.
-
-Este README documenta um orquestrador de avaliação, não um treinador. Não presume ausência de leakage no callback, publicação no Databricks, homologação em workspace nem auditoria independente.
+Consulte pandas Period e conversão temporal para a unidade dos cortes. O helper orquestra folds; prevenção de leakage, ajuste de preprocessing e treinamento continuam sendo responsabilidades do callback.

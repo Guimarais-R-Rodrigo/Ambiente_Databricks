@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico |
+# MAGIC | Compute | sessão Spark/PySpark e Hub importável; PyYAML opcional |
 # MAGIC | Bibliotecas | nenhuma além do runtime. **PyYAML é opcional**: sem ele o script devolve JSON, que é YAML 1.2 válido |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | a presença do PyYAML pode variar; o retorno continua válido nos dois casos |
+# MAGIC | Diferença Free × trabalho | confirme PyYAML e o parser consumidor; fallback por ImportError não recupera falhas de Spark ou serialização |
 
 # COMMAND ----------
 
@@ -132,6 +132,10 @@ print("degradado: nenhum consumidor quebra pela ausência da biblioteca.")
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## 4. Estatísticas são opcionais porque custam varredura
+# MAGIC
+# MAGIC **Limite da mensagem impressa acima:** a compatibilidade depende de um parser
+# MAGIC YAML 1.2 adequado. “Nenhum consumidor quebra” é amplo demais; valide o consumidor
+# MAGIC real. O fallback trata somente ImportError de PyYAML, não falhas de serialização.
 
 # MAGIC ```text
 # MAGIC PyYAML presente: a saída acima é YAML propriamente dito.
@@ -165,7 +169,8 @@ print(json.dumps(primeira, indent=2, ensure_ascii=False, default=str))
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** Sem `include_stats`, o script lê apenas metadados — é
-# MAGIC instantâneo e não toca nos dados. Com ele, cada coluna exige agregação.
+# MAGIC uma inspeção de schema, sem promessa de latência. Com estatísticas, há scan
+# MAGIC completo e agregações por coluna; avalie largura e tipos antes de chamar.
 # MAGIC
 # MAGIC O erro de interpretação mais provável: ligar `include_stats=True` por
 # MAGIC hábito numa tabela grande e atribuir a lentidão ao Spark. O parâmetro é

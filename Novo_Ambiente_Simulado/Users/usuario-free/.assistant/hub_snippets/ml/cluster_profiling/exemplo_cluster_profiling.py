@@ -57,7 +57,7 @@ print(perfis.to_string(index=False) if hasattr(perfis, "to_string") else perfis)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC O bloco histórico abaixo é **abreviado**: a célula imprime todas as combinações cluster × feature, mas aqui foram preservadas apenas seis linhas como amostra visual:
+# MAGIC A tabela abaixo é abreviada: mostra seis combinações cluster × feature. O retorno completo inclui todas as combinações das features solicitadas.
 # MAGIC
 # MAGIC ```text
 # MAGIC  cluster   n  pct_total  feature  cluster_mean  global_mean  index  z_score

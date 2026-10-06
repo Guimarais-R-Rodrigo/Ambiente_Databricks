@@ -1,39 +1,37 @@
 # Backlog de Features (Tier A/B/C)
 
-> Classificação por prioridade de implementação. Critérios objetivos para cada tier.
+## Uso
+Priorizar investigação/implementação conforme evidência de valor, risco, custo,
+disponibilidade e reuso. Tier não autoriza acesso, materialização ou uso em
+modelo. RFV, recência e razões são hipóteses de sinal; não são alto sinal ou
+baixo risco por definição.
 
-## Critérios de classificação
+## Critérios a calibrar pelo estudo
 
-| Tier | Sinal esperado | Risco leakage | Custo implementação | Ação |
-|---|---|---|---|---|
-| **A** | Alto (RFV, recência, razões clássicas) | BAIXO | BAIXO (dados disponíveis, join simples) | Implementar primeiro |
-| **B** | Provável (derivadas, tendências) | MÉDIO | MÉDIO (agregação pesada ou validação extra) | Segunda onda |
-| **C** | Incerto (experimental, alta dimensionalidade) | ALTO | ALTO (pipeline novo, dado externo) | Testar com cautela |
+| Tier | Interpretação da prioridade | Evidência necessária | Próxima ação proposta |
+|---|---|---|---|
+| A | Candidata a primeiro ciclo | Disponibilidade temporal, risco e custo compatíveis; valor esperado justificado | Validar premissas e implementar somente no escopo aprovado |
+| B | Dependências ou incertezas adicionais | Fonte/semântica, ganho incremental e custo a conferir | Resolver dependências antes da execução |
+| C | Exploração de maior incerteza | Hipótese, experimento delimitado, orçamento e critério de parada | Avaliar viabilidade sem prometer sinal |
 
-## Instruções de preenchimento
-- **tier**: A, B ou C (seguir critérios acima).
-- **feature_name**: mesmo nome do Spec Core.
-- **motivo**: por que espera-se sinal preditivo (1 linha, linguagem de negócio).
-- **risco**: BAIXO | MÉDIO | ALTO (consolidado de leakage + custo).
-- **dependencias**: tabelas, features ou decisões das quais depende.
-- **status**: `[ ]` (pendente) | `[~]` (em andamento) | `[x]` (implementada) | `[!]` (bloqueada).
+## Preenchimento
+- **feature_name**: mesmo nome da spec.
+- **motivo**: hipótese de sinal ou evidência incremental, distinguindo-os.
+- **risco**: avaliado com fonte/método; NÃO AVALIADO enquanto faltar disponibilidade.
+- **dependencias**: fontes, instante de publicação, joins e decisões pendentes.
+- **status**: pendente, em andamento, implementada ou bloqueada com evidência.
 
-## Template
-
-| tier | feature_name | motivo | risco | dependencias | status |
+| tier | feature_name | motivo/evidência | risco | dependencias | status |
 |---|---|---|---|---|---|
-| A | ... | ... | ... | ... | [ ] |
-| B | ... | ... | ... | ... | [ ] |
-| C | ... | ... | ... | ... | [ ] |
+| [A/B/C a confirmar] | [feature] | [hipótese ou resultado] | [avaliação ou NÃO AVALIADO] | [fontes/decisões] | [pendente] |
 
-## Exemplo (banking — propensão a investimento)
+## Exemplos ilustrativos fictícios
 
-| tier | feature_name | motivo | risco | dependencias | status |
-|---|---|---|---|---|---|
-| A | feat_saldo_medio_poupanca_90d | Cliente com saldo alto é candidato natural | BAIXO | tabela saldos | [ ] |
-| A | feat_qtd_acessos_app_30d | Engajamento digital = propensão a self-service | BAIXO | tabela acessos | [ ] |
-| A | feat_razao_saldo_renda | Capacidade de investimento | BAIXO | saldos + cadastro | [ ] |
-| B | feat_delta_saldo_30d_vs_90d | Tendência de acumulação | MÉDIO | saldos (histórico 90d) | [ ] |
-| B | feat_woe_segmento | Segmentos com maior conversão histórica | MÉDIO | cadastro + target (fit no treino) | [ ] |
-| C | feat_cluster_comportamental | Agrupamento não-supervisionado de perfil | ALTO | múltiplas features Tier A | [ ] |
-| C | feat_sazonalidade_salario | Pico de saldo pós-crédito de salário | ALTO | saldos diários (volume alto) | [ ] |
+| Candidata | Hipótese a testar | Disponibilidade/risco |
+|---|---|---|
+| `feat_saldo_medio_poupanca_90d` | Saldo histórico pode acrescentar informação ao modelo | NÃO VERIFICADOS; confirmar janela, atraso e autorização |
+| `feat_qtd_acessos_app_30d` | Atividade digital pode ter associação com o target | NÃO VERIFICADOS; não equivale a propensão nem efeito causal |
+| `feat_razao_saldo_renda` | Razão pode ajudar na segmentação | NÃO VERIFICADOS; conferir denominador, atualização e sensibilidade |
+| `feat_woe_segmento` | Codificação pode agregar sinal fora da amostra | Fit só no treino, validação OOT e prevenção de leakage |
+
+Não preencher tier, sinal ou risco do caso real a partir desses exemplos.
