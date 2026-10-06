@@ -2,8 +2,11 @@
 
 > Este template define a sequência de células que o agente deve criar no notebook de saída.
 > Adaptar ao tamanho e ao risco do corpus: condensado, padrão ou expandido.
+> A numeração organiza a leitura, não impõe quantidade de células. Um plano não
+> executa features. Campos sem fonte ficam PENDENTES/NÃO INFORMADOS, e etapas
+> não executadas não recebem PASS. Perfis limitados e gates da skill prevalecem.
 
-## Modo Padrão (~15–20 células)
+## Organização padrão (adaptável)
 
 ### Célula 1 — Header [%md]
 ```markdown
@@ -31,7 +34,7 @@
 | Horizonte | ... | ✅ / 🔴 PENDENTE |
 | Coluna de tempo | ... | ✅ / 🔴 PENDENTE |
 
-> ⚠️ Anti-leakage: somente dados anteriores a `<coluna_tempo>` serão usados.
+> ⚠️ Anti-leakage: confirmar event_time, available_at, cutoff e fronteira LT/LE do contrato; o plano não prova disponibilidade.
 ```
 
 ### Célula 3 — Inventário do Corpus [%md]
@@ -103,7 +106,7 @@
 ### Célula 7 — Validação de evidências [code] (opcional)
 ```python
 # === VALIDAÇÃO: schema e qualidade das fontes ===
-# Executar para confirmar evidências extraídas do corpus
+# Planejar a verificação pertinente; executar somente com escopo/autorização e rota canônica aplicável
 
 # df = spark.table("catalog.schema.tabela")
 # display(df.select([count(when(col(c).isNull(), c)).alias(c) for c in df.columns]))
@@ -165,7 +168,7 @@
 
 | feature_name | risco_leakage | custo | validacao | expectativa_sinal | obs |
 |---|---|---|---|---|---|
-| feat_qtd_transacoes_30d | BAIXO | BAIXO | count > 0 para ativos | positivo (mais trans → menos churn) | — |
+| feat_qtd_transacoes_30d | NÃO AVALIADO | A ESTIMAR | Domínio, janela e disponibilidade conforme contrato | Hipótese a testar | Exemplo ilustrativo |
 | ... | ... | ... | ... | ... | ... |
 ```
 
@@ -175,8 +178,8 @@
 
 | tier | feature_name | motivo | risco | dependencias | status |
 |---|---|---|---|---|---|
-| A | feat_qtd_transacoes_30d | RFV clássico, alto sinal | BAIXO | tabela transacoes | [ ] |
-| A | feat_razao_saldo_renda | proxy de capacidade | BAIXO | tabela saldos + cadastro | [ ] |
+| [tier a avaliar] | feat_qtd_transacoes_30d | Hipótese de sinal incremental | NÃO AVALIADO | fonte e disponibilidade a confirmar | [ ] |
+| [tier a avaliar] | feat_razao_saldo_renda | Hipótese de informação adicional | NÃO AVALIADO | componentes/denominador/disponibilidade a confirmar | [ ] |
 | B | feat_delta_saldo_30d_vs_90d | tendência, validar janela | MÉDIO | tabela saldos (histórico) | [ ] |
 | C | feat_embedding_produto | experimental, alta dim | ALTO | tabela produtos | [ ] |
 ```
@@ -188,7 +191,7 @@
 ### Ordem de execução
 1. **Base âncora**: 1 linha por `id_cliente` + `data_referencia`
 2. **Estáticas**: join com cadastro (cardinalidade 1:1, validar)
-3. **Agregações comportamentais**: GROUP BY + janela ≤ `data_referencia` (⚠️ anti-leakage)
+3. **Agregações comportamentais**: janela, event_time, available_at, cutoff e fronteira LT/LE definidos pelo contrato; respeitar o perfil executável
 4. **Temporais**: datediff, lag, tendências
 5. **Interações**: razões e diferenças (após ter componentes)
 6. **Codificação categóricas**: WoE fit no treino, transform no score
@@ -196,11 +199,11 @@
 8. **Seleção final**: combinar valor incremental, estabilidade, leakage, custo e interpretabilidade; não usar corte universal de IV/correlação/PSI
 
 ### Prevenção de explosão de join
-- Sempre `agregar ANTES` de fazer join
+- Definir ordem de agregação/join pela semântica e pelo grão. Pré-agregar quando necessário e correto; não é regra universal
 - Validar cardinalidade da chave: `df.groupBy("chave").count().where("count > 1")`
 - Conferir count antes/depois do join
 
-### Feature Store (se aplicável)
+### Feature Store (somente planejamento; efeitos dependem de autorização)
 - [ ] Registrar tabela de features com chave `id_cliente` + timestamp
 - [ ] Configurar `FeatureLookup` para treino
 - [ ] Definir frequência de atualização
@@ -211,7 +214,7 @@
 ## ✅ Checklist de Validação
 
 - [ ] Contexto: unidade de decisão e horizonte definidos (ou `PENDENTE/DECISAO`)
-- [ ] Anti-leakage: todas as features usam apenas dados anteriores ao evento
+- [ ] Anti-leakage: disponibilidade até a decisão e fronteiras conforme contrato; evidência ou pendência
 - [ ] Granularidade: 1 linha por unidade de decisão (sem duplicidades)
 - [ ] Pós-join: contagens antes/depois fazem sentido
 - [ ] Categóricas: cardinalidade controlada (WoE / top N + "outros")
@@ -226,20 +229,20 @@
 ## 📌 Resumo Executivo
 
 - **Total de features propostas**: N (Tier A: X, Tier B: Y, Tier C: Z)
-- **Famílias cobertas**: N de 7
+- **Famílias pertinentes cobertas**: [lista e escopo, sem quota obrigatória]
 - **Riscos principais**: <1–2 linhas>
 - **Pendências (`PENDENTE/DECISAO`)**: <lista ou "nenhuma">
-- **Próximo passo**: implementar Tier A no notebook `FE_Impl_<contexto>`
+- **Próximo passo**: [resolver pendência ou implementar escopo aprovado no destino confirmado]
 ```
 
 ---
 
-## Modo Condensado (~8–12 células)
+## Organização condensada
 Mesclar: Header + Contexto (1 célula), Inventário + Mapa (1 célula), pular Fluxo e Evidências detalhadas,
 ir direto para Taxonomia → Spec → Backlog → Checklist → Resumo.
 
-## Modo Expandido (~20–30 células)
-Adicionar:
+## Organização expandida
+Adicionar somente quando pertinente ao objetivo e autorizado:
 - Célula de código por família de features (skeleton de implementação)
 - Diagrama Mermaid para fluxo (se suportado)
 - Célula de código com cálculo de IV por feature candidata
