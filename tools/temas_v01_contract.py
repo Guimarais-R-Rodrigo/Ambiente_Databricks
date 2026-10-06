@@ -6,6 +6,7 @@ operacionais de autenticação. Relatos V01 permanecem históricos; o schema ati
 
 Uso: python -B tools/temas_v01_contract.py
      python -B tools/temas_v01_contract.py --print-dictionary
+     python -B tools/temas_v01_contract.py --print-operational-dictionary
 """
 from __future__ import annotations
 
@@ -192,6 +193,211 @@ def dictionary(schema: dict) -> str:
 
 
 
+# Projeção de uso independente do snapshot emitido por dictionary(). As listas
+# descrevem leituras efetivas dos adaptadores, não x-hub.consumers planejados.
+# test_temas_operational_tokens confronta estas listas com a AST dos consumidores.
+_OPERATIONAL_READERS = {
+    'constants/styles': (
+        'styles.get_styles_resolvidos (CSS para componentes HTML)',
+        ('font.family', 'surface.section', 'section.border_px', 'brand.primary',
+         'section.padding_y_px', 'section.padding_x_px', 'section.radius_px',
+         'section.title_px', 'text.secondary', 'section.description_px',
+         'surface.card', 'card.padding_y_px', 'card.padding_x_px', 'card.radius_px',
+         'card.font_px', 'text.primary', 'divider.light', 'divider.medium',
+         'status.ok_bg', 'status.ok_text', 'badge.padding_y_px', 'badge.padding_x_px',
+         'badge.radius_px', 'badge.font_px', 'status.warn_bg', 'status.warn_text',
+         'status.fail_bg', 'status.fail_text', 'table.header_text', 'semantic.negative'),
+    ),
+    'visual/theme_plotly': (
+        'theme_plotly (layout e rodapé nas APIs resolvidas)',
+        ('font.family', 'chart.font_px', 'text.plot', 'chart.title_px',
+         'brand.primary', 'palette.categorical', 'chart.height_px', 'chart.width_px',
+         'chart.margin_left_px', 'chart.margin_right_px', 'chart.margin_top_px',
+         'chart.margin_bottom_px', 'chart.footer_px', 'text.secondary'),
+    ),
+    'ml/curves_plotly': (
+        'curves_plotly (com theme explícito)',
+        ('palette.curves_legacy', 'text.plot', 'surface.card'),
+    ),
+    'ml/performance_monitor': (
+        'PerformanceMonitor.plot_timeline_resolvido',
+        ('brand.primary', 'text.secondary', 'semantic.warning', 'semantic.negative'),
+    ),
+    'ml/umap_viz': (
+        'plot_umap_clusters_resolvido',
+        ('palette.categorical', 'text.secondary', 'chart.footer_px'),
+    ),
+    'ml/vintage_analysis': (
+        'vintage_analysis (curvas/heatmap resolvidos)',
+        ('palette.categorical', 'palette.sequential', 'chart.height_px'),
+    ),
+    'display/correlation_matrix': (
+        'plot_correlation_resolvido', ('palette.diverging',),
+    ),
+    'visual/theme_lab': (
+        'theme_lab.build_preview (heatmap sintético)', ('palette.diverging',),
+    ),
+}
+_OPERATIONAL_NO_NOTEBOOK_CONSUMER = frozenset({
+    'brand.accent', 'semantic.positive', 'semantic.neutral',
+})
+_OPERATIONAL_NO_PREVIEW = frozenset({
+    'brand.accent', 'semantic.positive', 'semantic.neutral', 'semantic.warning',
+    'palette.curves_legacy', 'palette.sequential', 'divider.light', 'divider.medium',
+    'status.ok_bg', 'status.ok_text', 'status.warn_bg', 'status.warn_text',
+    'status.fail_bg', 'status.fail_text', 'badge.font_px', 'badge.radius_px',
+    'badge.padding_y_px', 'badge.padding_x_px',
+})
+_OPERATIONAL_EDITORIAL_COLORS = frozenset({
+    'editorial.' + key for key in (
+        'background', 'background_elevated', 'panel', 'panel_high', 'line', 'text',
+        'muted', 'quiet', 'hub_custom', 'gradient_end', 'atlas_core', 'dossier_back',
+        'dossier_middle', 'dossier_fold', 'databricks_native', 'human_decision',
+        'result_evidence', 'supporting_method', 'danger',
+    )
+})
+_OPERATIONAL_EDITORIAL_INERT = frozenset({
+    'typography.presentation_title_px', 'typography.readme_heading_px',
+    'typography.module_title_px', 'typography.small_px',
+    'geometry.connector_width', 'geometry.border_width',
+    'geometry.safe_margin', 'geometry.glow_opacity',
+})
+
+
+def _operational_notebook_support(key: str) -> str:
+    consumers = [f'[{label}](../../hub_snippets/{path}/README.md)'
+                 for path, (label, keys) in _OPERATIONAL_READERS.items() if key in keys]
+    if key in _OPERATIONAL_NO_NOTEBOOK_CONSUMER:
+        support = 'Sem leitura visual direta nas APIs notebook atuais; valor validado e preservado, sem propagação automática.'
+    elif consumers:
+        support = '; '.join(consumers) + '.'
+    else:
+        raise ValueError('TOKEN_SUPPORT_MISSING: ' + key)
+    if key == 'brand.accent':
+        support += ' As curvas com tema usam a segunda cor de palette.curves_legacy, não brand.accent.'
+    elif key == 'font.family':
+        support += ' A tabela pandas mantém a família fixa Segoe UI; este token não altera table.font_family.'
+    elif key == 'chart.footer_px':
+        support += ' No adaptador geral, só há efeito quando a chamada cria uma nota/rodapé.'
+    elif key == 'chart.height_px':
+        support += ' O heatmap de safras usa o máximo entre este valor e 25 px por safra.'
+    elif key == 'palette.categorical':
+        support += ' Cores explícitas dos traces e a paleta própria das curvas podem prevalecer.'
+    return support
+
+
+def _operational_editorial_support(key: str) -> str:
+    if key in {'canvas.width_px', 'canvas.height_px'}:
+        return ('Metadado preservado no tema; não redimensiona figuras. O compositor de variantes '
+                'usa as dimensões do preset de cada contrato visual.')
+    if key == 'font.family':
+        return ('O compositor de variantes aceita somente editorial_inter e recusa system_arial, '
+                'embora ambos sejam válidos no schema. Não baixa fontes nem muda a fonte do Markdown.')
+    if key in _OPERATIONAL_EDITORIAL_INERT:
+        return ('Valor encaminhado à configuração do compositor de variantes, mas sem leitura '
+                'nos renderers atuais dessa rota; tamanhos, espessuras, margens e brilho usam '
+                'valores próprios das composições. Não há propagação visual garantida.')
+    if key in {'editorial.atlas_core', 'editorial.dossier_fold'}:
+        return ('Cor encaminhada ao compositor, usada na autoria de assinaturas. Na rota de '
+                'variantes, essas assinaturas são congeladas e copiadas sem recoloração; '
+                'alterar o token não modifica seus bytes.')
+    if key == 'typography.body_px':
+        return ('Default de tamanho dos helpers de texto/medição do compositor; chamadas com '
+                'size explícito prevalecem. Não altera automaticamente todo texto das figuras.')
+    if key == 'geometry.corner_radius':
+        return ('Default de raio do helper de painéis do compositor; chamadas com radius '
+                'explícito prevalecem. Não altera cantos de todos os elementos.')
+    if key in _OPERATIONAL_EDITORIAL_COLORS:
+        return ('Cor consumida pelo compositor nas figuras paramétricas que usam este papel. '
+                'Assinaturas e assets congelados preservam os bytes; gerar uma variante '
+                'não a aprova nem a publica.')
+    raise ValueError('TOKEN_SUPPORT_MISSING: ' + key)
+
+
+def operational_dictionary(schema: dict, *, root: Path = ROOT) -> str:
+    """Emite somente a referência de uso; não modifica schema, temas ou snapshots."""
+    mapping = read_json(root / 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json')
+    aibi = {item['hub_token']: item for item in mapping['mappings']}
+    notebook = schema['$defs']['notebookTokens']['properties']
+    known = _OPERATIONAL_NO_NOTEBOOK_CONSUMER | {
+        token for _label, keys in _OPERATIONAL_READERS.values() for token in keys
+    }
+    editorial = _OPERATIONAL_EDITORIAL_COLORS | _OPERATIONAL_EDITORIAL_INERT | {
+        'font.family', 'typography.body_px', 'geometry.corner_radius',
+        'canvas.width_px', 'canvas.height_px',
+    }
+    if (set(notebook) != known or set(aibi) != set(notebook)
+            or len(mapping['mappings']) != len(aibi)
+            or set(schema['$defs']['editorialTokens']['properties']) != editorial):
+        raise ValueError('TOKEN_SUPPORT_COVERAGE: revisar cobertura de consumidores e AI/BI.')
+    lines = [
+        '# Referência de uso dos tokens', '',
+        '> Referência gerada a partir do schema e da cobertura dos consumidores. Não editar separadamente.', '',
+        'Consulte esta página para escolher um campo e verificar onde ele produz efeito. '
+        'O [schema](theme.schema.json) define nomes, tipos, defaults declarativos e restrições; '
+        'os adaptadores definem o suporte efetivo. Um campo válido não é um controle disponível em toda interface.', '',
+        'Os defaults abaixo são referências, não valores injetados pelo validador. '
+        'A configuração deve ser completa para seu contexto. Carregar/validar um tema não o aplica, '
+        'não o aprova e não o publica. A edição de proposta indicada por papel é metadado de contrato, '
+        'não autenticação nem concessão de permissão.', '',
+        'Comece pelo [guia operacional](GUIA_OPERACIONAL.md). Passe um ResolvedTheme explicitamente '
+        'às APIs resolvidas; as APIs legadas e constantes compartilhadas não são alteradas. '
+        'O adaptador Plotly e a galeria completa aceitam notebook/light. '
+        'SHAP/Matplotlib e Kaplan–Meier não recebem tema por essa rota.', '',
+        'O campo de consumo identifica leituras diretas; componentes e wrappers podem herdar '
+        'o layout/CSS desses adaptadores. O CSS de styles alimenta seção, cartões, badges, '
+        'divisores, índice e tabela nas respectivas APIs resolvidas. Nem toda propriedade é usada '
+        'por todo componente, e parâmetros explícitos de uma figura podem prevalecer.', '',
+        'O [Visual Lab](../../hub_snippets/visual/theme_lab/README.md) e o '
+        '[App de autoria](databricks_app/README.md) compartilham a disponibilidade de prévia '
+        'indicada por token. O tipo de controle declarado no schema é uma intenção de edição; '
+        'cada interface pode usar outro widget. Prévia sintética, validação e persistência '
+        'não comprovam acessibilidade, ACL ou homologação do ambiente.', '',
+        'Em AI/BI, a classificação vem da [matriz do Hub](aibi/aibi_mapping.json): '
+        'translated indica correspondência conceitual, approximated exige decisão de mapeamento '
+        'e unsupported não possui binding. Nenhuma classificação equivale a importação nativa pronta. '
+        'É necessário export real, binding revisado e autorização específica para importar/publicar; '
+        'consulte o [guia AI/BI](aibi/GUIA_PRIMEIRO_USO.md).', '',
+        'Cores e status não criam regras analíticas. Conferir contraste de uma combinação '
+        'não certifica toda a interface; o par de alerta de referência requer avaliação. '
+        'A paleta divergente exige quantidade ímpar também na validação semântica do núcleo.', '',
+    ]
+    for group in ('notebookTokens', 'editorialTokens'):
+        lines += ['## ' + ('Notebook' if group == 'notebookTokens' else 'README e apresentação'), '']
+        if group == 'editorialTokens':
+            lines += [
+                'Estes campos pertencem aos contextos readme e presentation, não à galeria notebook '
+                'nem ao App de autoria. A rota de variantes editoriais disponível seleciona readme; '
+                'aceitar presentation no núcleo não garante um renderer de apresentações. '
+                'O suporte abaixo descreve o compositor de variantes, que produz candidatos '
+                'para revisão e preserva os assets congelados. O Markdown e as imagens já '
+                'publicadas não são recoloridos ao carregar um tema. Consulte o '
+                '[guia de recursos visuais](../../hub_readmes_visual_assets/README.md).', '',
+            ]
+        for key, spec in schema['$defs'][group]['properties'].items():
+            meta = spec['x-hub']
+            limits = {k: v for k, v in spec.items() if k not in {'type', 'description', 'default', 'x-hub'}}
+            lines += [f'### `{key}`', '', spec['description'], '',
+                      f"**Unidade:** {meta['unit']}. **Tipo:** {spec['type']}. **Default de referência:** `{json.dumps(spec['default'], ensure_ascii=False)}`.",
+                      f"**Limites:** `{json.dumps(limits, ensure_ascii=False)}`. **Edição de proposta:** {', '.join(meta['editable_by'])}.",
+                      f"**Controle declarado:** `{meta['control']}`. **Contextos:** {', '.join(meta['contexts'])}.",
+                      f"**Efeito definido:** {meta['effect']}"]
+            if group == 'notebookTokens':
+                preview = ('Sem componente na galeria; controle desabilitado e valor preservado.'
+                           if key in _OPERATIONAL_NO_PREVIEW else
+                           'Controle habilitado na galeria sintética notebook/light; resultado depende do componente.')
+                item = aibi[key]
+                target = f" Destino conceitual: `{item['target_capability']}`." if item['target_capability'] else ''
+                lines += ['**Consumo atual:** ' + _operational_notebook_support(key),
+                          '**Visual Lab / App:** ' + preview,
+                          f"**AI/BI (matriz do Hub):** `{item['classification']}`; binding `{item['binding_strategy']}`.{target} {item['note']}"]
+            else:
+                lines += ['**Consumo atual e limite:** ' + _operational_editorial_support(key),
+                          '**Visual Lab / App / AI/BI:** Fora do contexto notebook dessas rotas; sem controle ou tradução editorial.']
+            lines += ['']
+    return '\n'.join(lines).rstrip() + '\n'
+
+
 def check_links(package: Path = PACKAGE, root: Path = ROOT) -> int:
     """Reutiliza o parser do projeto e confere arquivo e âncora, não didática."""
     files = list(package.glob('*.md')) + [root/'docs/decisions/ADR-0013-sistema-de-temas.md']
@@ -248,15 +454,20 @@ def check_package(package: Path = PACKAGE, root: Path = ROOT) -> dict:
 
 def main() -> int:
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--print-dictionary',action='store_true',help='Imprime referência derivada no stdout; não altera arquivos.')
+    output = parser.add_mutually_exclusive_group()
+    output.add_argument('--print-dictionary',action='store_true',help='Imprime referência histórica no stdout; não altera arquivos.')
+    output.add_argument('--print-operational-dictionary', action='store_true',
+                        help='Imprime referência de uso no stdout; não altera arquivos. Redirecionamento shell pode sobrescrever o destino.')
     args=parser.parse_args()
     try:
         if args.print_dictionary:
             print(dictionary(read_json(SCHEMA_PATH)),end='')
+        elif args.print_operational_dictionary:
+            print(operational_dictionary(read_json(SCHEMA_PATH)), end='')
         else:
             print(json.dumps(check_package(),ensure_ascii=False,indent=2))
         return 0
-    except (ContractError,OSError,KeyError) as exc:
+    except (ContractError,OSError,KeyError,ValueError) as exc:
         print(json.dumps({'status':'FAIL','error':str(exc)},ensure_ascii=False))
         return 1
 

@@ -30,7 +30,7 @@ def check_layout(root: Path = ROOT) -> dict:
     if hashlib.sha256((pattern/'theme.schema.json').read_bytes()).hexdigest() != tema._SCHEMA_SHA:
         raise ValueError('V02_SCHEMA_HASH: contrato 0.1.0 alterado sem revisão.')
     schema=tema._read_json(pattern/'theme.schema.json')
-    if (pattern/'TOKENS.md').read_text(encoding='utf-8') != contract.dictionary(schema):
+    if (pattern/'TOKENS.md').read_text(encoding='utf-8') != contract.operational_dictionary(schema, root=root):
         raise ValueError('V02_DICTIONARY: referência diverge do schema.')
     fixtures=root/'docs/sprints/sistema_temas/V01/fixtures'
     names={'legado_notebook.json','legado_editorial.json','executivo_claro_exemplo.json','apresentacao_exemplo.json'}
