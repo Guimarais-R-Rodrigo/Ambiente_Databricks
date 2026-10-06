@@ -94,9 +94,16 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Plano aprovado substitui somente hierarquia de ADR-0001; ADR-0025 registra.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C01-02",
@@ -122,9 +129,16 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C01-03",
@@ -150,9 +164,16 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Preserva changelog; autoria fixa é substituída por autoria efetiva.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda sessão com mudança"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda sessão com mudança",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C01-04",
@@ -178,9 +199,16 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C01-05",
@@ -206,9 +234,16 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C01-06",
@@ -234,9 +269,16 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda sessão com mudança"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda sessão com mudança",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T05",
+        "T17",
+        "T24"
+      ]
     },
     {
       "id": "O-C02-01",
@@ -264,9 +306,19 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Hierarquia específica CLAUDE substituída; loader real continua soberano.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Alterar camada de IA"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Alterar camada de IA",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-02",
@@ -294,9 +346,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entender projeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entender projeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-03",
@@ -324,9 +386,19 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Leitura universal de CHANGELOG removida para evitar bootstrap de história.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Escolher próxima ação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Escolher próxima ação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-04",
@@ -354,9 +426,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar produto ou gerar derivados"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar produto ou gerar derivados",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-05",
@@ -384,9 +466,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Manipular dados/arquivos"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Manipular dados/arquivos",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-06",
@@ -414,9 +506,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar helpers/skills"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar helpers/skills",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-07",
@@ -444,9 +546,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Preparar publicação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Preparar publicação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-08",
@@ -474,9 +586,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar helpers/skills"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar helpers/skills",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-09",
@@ -504,9 +626,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar identidade"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar identidade",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-10",
@@ -534,9 +666,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Empacotar/compartilhar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Empacotar/compartilhar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-11",
@@ -564,9 +706,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar Manual"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar Manual",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-12",
@@ -594,9 +746,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Alterar produto ou relatar estado"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Alterar produto ou relatar estado",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-13",
@@ -624,9 +786,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar objetos/documentação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar objetos/documentação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-14",
@@ -654,9 +826,19 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-15",
@@ -684,9 +866,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar visual/temas"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar visual/temas",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-16",
@@ -714,9 +906,19 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-17",
@@ -744,9 +946,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar micromodelos"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar micromodelos",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-18",
@@ -774,9 +986,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar decisões"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar decisões",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-19",
@@ -804,9 +1026,19 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-20",
@@ -834,9 +1066,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Interpretar capacidade atual"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Interpretar capacidade atual",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-21",
@@ -864,9 +1106,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda sessão com mudança"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda sessão com mudança",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-22",
@@ -894,9 +1146,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-23",
@@ -924,9 +1186,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar capacidade"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar capacidade",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-24",
@@ -954,9 +1226,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar documentação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar documentação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-25",
@@ -984,9 +1266,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Adicionar objeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Adicionar objeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C02-26",
@@ -1014,9 +1306,19 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Adicionar objeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Adicionar objeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T23",
+        "T34"
+      ]
     },
     {
       "id": "O-C03-01",
@@ -1042,9 +1344,16 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Fonte comum AGENTS; integrador altera shim e testa modo real.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Integrar cliente"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Integrar cliente",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19",
+        "T23"
+      ]
     },
     {
       "id": "O-C03-02",
@@ -1070,9 +1379,16 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Neutralidade aprovada sem criar política concorrente.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar/revisar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar/revisar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19",
+        "T23"
+      ]
     },
     {
       "id": "O-C03-03",
@@ -1098,9 +1414,16 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19",
+        "T23"
+      ]
     },
     {
       "id": "O-C04-01",
@@ -1126,9 +1449,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-02",
@@ -1154,9 +1483,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-03",
@@ -1182,9 +1517,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Preparar efeito"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Preparar efeito",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-04",
@@ -1210,9 +1551,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-05",
@@ -1238,9 +1585,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar ou fechar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar ou fechar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-06",
@@ -1266,9 +1619,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Decidir arquitetura"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Decidir arquitetura",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-07",
@@ -1294,9 +1653,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entender ambiente"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entender ambiente",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-08",
@@ -1322,9 +1687,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Escolher procedimento"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Escolher procedimento",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-09",
@@ -1350,9 +1721,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar inventário"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar inventário",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-10",
@@ -1378,9 +1755,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar instrução"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar instrução",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-11",
@@ -1406,9 +1789,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Integrar cliente"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Integrar cliente",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C04-12",
@@ -1434,9 +1823,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda sessão com mudança"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda sessão com mudança",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T17",
+        "T19"
+      ]
     },
     {
       "id": "O-C05-01",
@@ -1461,9 +1856,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-02",
@@ -1488,9 +1886,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-03",
@@ -1515,9 +1916,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-04",
@@ -1542,9 +1946,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar README"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar README",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-05",
@@ -1569,9 +1976,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar README/relatório"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar README/relatório",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-06",
@@ -1596,9 +2006,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-07",
@@ -1623,9 +2036,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-08",
@@ -1650,9 +2066,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar capacidade"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar capacidade",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-09",
@@ -1677,9 +2096,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar estado"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar estado",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-10",
@@ -1704,9 +2126,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-11",
@@ -1731,9 +2156,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar pasta"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar pasta",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-12",
@@ -1758,9 +2186,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar produto/documentação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar produto/documentação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-13",
@@ -1785,9 +2216,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Alterar decisão"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Alterar decisão",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-14",
@@ -1812,9 +2246,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar Manual"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar Manual",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-15",
@@ -1839,9 +2276,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar objetos"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar objetos",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-16",
@@ -1866,9 +2306,12 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-17",
@@ -1893,9 +2336,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar objeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar objeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C05-18",
@@ -1920,9 +2366,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Relatar aceite"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Relatar aceite",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C06-01",
@@ -1947,9 +2396,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C06-02",
@@ -1974,9 +2428,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C06-03",
@@ -2001,9 +2460,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Gerar derivado"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Gerar derivado",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C06-04",
@@ -2028,9 +2492,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Manipular legado"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Manipular legado",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C06-05",
@@ -2055,9 +2524,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Mudar produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Mudar produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-01",
@@ -2082,9 +2556,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Preparar testes/publicação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Preparar testes/publicação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-02",
@@ -2109,9 +2588,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Operar ambiente"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Operar ambiente",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-03",
@@ -2136,9 +2620,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Planejar runtime"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Planejar runtime",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-04",
@@ -2163,9 +2652,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-05",
@@ -2190,9 +2684,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Publicar/replicar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Publicar/replicar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-06",
@@ -2217,9 +2716,14 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Free limitations consultado em 2026-10-06 documenta Jobs/serving com limites.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Planejar aceite"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Planejar aceite",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-07",
@@ -2244,9 +2748,14 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar histórico runtime"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar histórico runtime",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-08",
@@ -2271,9 +2780,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Alterar helper"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Alterar helper",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-09",
@@ -2298,9 +2812,14 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar histórico runtime"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar histórico runtime",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-10",
@@ -2325,9 +2844,14 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-11",
@@ -2352,9 +2876,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Planejar tarefa Genie"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Planejar tarefa Genie",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-12",
@@ -2379,9 +2908,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Replicar ou afirmar capacidade"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Replicar ou afirmar capacidade",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-13",
@@ -2406,9 +2940,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-14",
@@ -2433,9 +2972,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Publicar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Publicar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-15",
@@ -2460,9 +3004,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Encontrar divergência"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Encontrar divergência",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C07-16",
@@ -2487,9 +3036,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Replicar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Replicar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C08-01",
@@ -2513,9 +3067,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-02",
@@ -2539,9 +3096,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-03",
@@ -2565,9 +3125,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar skill produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar skill produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-04",
@@ -2591,9 +3154,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar instruções produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar instruções produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-05",
@@ -2617,9 +3183,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar carregamento"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar carregamento",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-06",
@@ -2643,9 +3212,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-07",
@@ -2669,9 +3241,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Preparar prompt"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Preparar prompt",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-08",
@@ -2695,9 +3270,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-09",
@@ -2721,9 +3299,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar conectores"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar conectores",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-10",
@@ -2747,9 +3328,12 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Substitui negativa universal por escopo das fontes consultadas.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-11",
@@ -2773,9 +3357,12 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Fonte oficial memory de 2026-09-30 documenta memória automática; hooks permanecem não estabelecidos nas fontes consultadas.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar plataforma"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar plataforma",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-12",
@@ -2799,9 +3386,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Configurar ou publicar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Configurar ou publicar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-13",
@@ -2825,9 +3415,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-14",
@@ -2851,9 +3444,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Afirmar carregamento"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Afirmar carregamento",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-15",
@@ -2877,9 +3473,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar conteúdo Hub"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar conteúdo Hub",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-16",
@@ -2903,9 +3502,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Testar skill publicada"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Testar skill publicada",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C08-17",
@@ -2929,9 +3531,12 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Cadência trimestral substituída pela política aprovada: eventos/release e STALE >30 dias, sem monitor autônomo.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Mudar claim"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Mudar claim",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C09-01",
@@ -2956,9 +3561,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-02",
@@ -2983,9 +3594,15 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "ADR-0025 substitui hierarquia Claude.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-03",
@@ -3010,9 +3627,15 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Capacidade/independência são critérios, não fornecedor.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-04",
@@ -3037,9 +3660,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Fechar sessão"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Fechar sessão",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-05",
@@ -3064,9 +3693,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-06",
@@ -3091,9 +3726,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Decidir arquitetura"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Decidir arquitetura",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-07",
@@ -3118,9 +3759,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-08",
@@ -3145,9 +3792,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C09-09",
@@ -3172,9 +3825,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar/compartilhar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar/compartilhar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C10-01",
@@ -3198,9 +3857,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Operar Free"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Operar Free",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-02",
@@ -3224,9 +3888,14 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Estado de acesso antigo não é herdado.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Operar Free"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Operar Free",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-03",
@@ -3250,9 +3919,14 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Jobs e serving com limites documentados em Free limitations.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Planejar runtime"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Planejar runtime",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-04",
@@ -3276,9 +3950,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Publicar Free"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Publicar Free",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-05",
@@ -3302,9 +3981,14 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-06",
@@ -3328,9 +4012,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Testar Genie/skills"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Testar Genie/skills",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-07",
@@ -3354,9 +4043,14 @@
       "disposition": "PRESERVED_DATED",
       "classification": "historical_observation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Consultar história"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Consultar história",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-08",
@@ -3380,9 +4074,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Planejar tarefa Genie"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Planejar tarefa Genie",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C10-09",
@@ -3406,9 +4105,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C11-01",
@@ -3432,9 +4136,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Replicar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Replicar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C11-02",
@@ -3458,9 +4167,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Toda tarefa"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Toda tarefa",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C11-03",
@@ -3484,9 +4198,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Preparar replicação"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Preparar replicação",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C11-04",
@@ -3510,9 +4229,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Trabalhar com dados"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Trabalhar com dados",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C11-05",
@@ -3536,9 +4260,14 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Relatar aceite"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Relatar aceite",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "O-C12-01",
@@ -3561,9 +4290,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entender projeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entender projeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C12-02",
@@ -3586,9 +4318,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Operar ambiente"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Operar ambiente",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C12-03",
@@ -3611,9 +4346,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entender projeto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entender projeto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C12-04",
@@ -3636,9 +4374,12 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Caminho de usuário removido por minimização; contrato necessário internalizado.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Coordenar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Coordenar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C12-05",
@@ -3661,9 +4402,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Documentar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Documentar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C12-06",
@@ -3686,9 +4430,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Editar produto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Editar produto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C19-01",
@@ -3712,9 +4459,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar ADR"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar ADR",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C19-02",
@@ -3738,9 +4488,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar ADR"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar ADR",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C19-03",
@@ -3764,9 +4517,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar ADR"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar ADR",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C19-04",
@@ -3790,9 +4546,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar ADR"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar ADR",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C19-05",
@@ -3816,9 +4575,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Criar/alterar ADR"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Criar/alterar ADR",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C20-01",
@@ -3843,9 +4605,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C20-02",
@@ -3870,9 +4638,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C20-03",
@@ -3897,9 +4671,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C20-04",
@@ -3924,9 +4704,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C20-05",
@@ -3951,9 +4737,15 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Auditar"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Auditar",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": [
+        "T22",
+        "T24"
+      ]
     },
     {
       "id": "O-C21-01",
@@ -3976,9 +4768,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Fechar sessão"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Fechar sessão",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C21-02",
@@ -4001,9 +4796,12 @@
       "disposition": "SUPERSEDED",
       "classification": "superseded_contract",
       "reason": "Exemplo de agosto não representa processo vigente; histórico original permanece no commit baseline.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Fechar sessão"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Fechar sessão",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C21-03",
@@ -4026,9 +4824,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Fechar sessão"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Fechar sessão",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-01",
@@ -4051,9 +4852,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-02",
@@ -4076,9 +4880,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-03",
@@ -4101,9 +4908,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-04",
@@ -4126,9 +4936,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-05",
@@ -4151,9 +4964,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "O-C22-06",
@@ -4176,9 +4992,12 @@
       "disposition": "MIGRATED",
       "classification": "obligation",
       "reason": "Preservar significado no owner indicado; links não equivalem a imports automáticos.",
-      "verification_status": "NOT_RUN",
-      "reviewer": "PENDING_SEMANTIC_REVIEW",
-      "load_condition": "Entregar contexto"
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "load_condition": "Entregar contexto",
+      "mapping_verification_at_capture": "NOT_RUN",
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "native_test_gaps": []
     },
     {
       "id": "C13-O01",
@@ -4208,7 +5027,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4216,7 +5035,11 @@
         "anchor": "famílias-e-limites",
         "heading": "Famílias e limites",
         "line_start": 7
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C13-O02",
@@ -4245,7 +5068,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4253,7 +5076,13 @@
         "anchor": "rotas-disponíveis",
         "heading": "Rotas disponíveis",
         "line_start": 20
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C13-O03",
@@ -4282,7 +5111,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4290,7 +5119,13 @@
         "anchor": "rotas-disponíveis",
         "heading": "Rotas disponíveis",
         "line_start": 20
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C13-O04",
@@ -4320,7 +5155,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4328,7 +5163,14 @@
         "anchor": "famílias-e-limites",
         "heading": "Famílias e limites",
         "line_start": 7
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21",
+        "T34"
+      ]
     },
     {
       "id": "C13-O05",
@@ -4358,7 +5200,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4366,7 +5208,11 @@
         "anchor": "usar-ou-alterar-uma-skill",
         "heading": "Usar ou alterar uma skill",
         "line_start": 35
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C13-O06",
@@ -4397,7 +5243,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4405,7 +5251,13 @@
         "anchor": "usar-ou-alterar-uma-skill",
         "heading": "Usar ou alterar uma skill",
         "line_start": 35
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T34"
+      ]
     },
     {
       "id": "C13-O07",
@@ -4436,7 +5288,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4444,7 +5296,13 @@
         "anchor": "usar-ou-alterar-uma-skill",
         "heading": "Usar ou alterar uma skill",
         "line_start": 35
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C14-O01",
@@ -4474,7 +5332,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4482,7 +5340,13 @@
         "anchor": "intenção-e-pré-condições",
         "heading": "Intenção e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C14-O02",
@@ -4512,7 +5376,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4520,7 +5384,11 @@
         "anchor": "executar-e-interpretar-a-saída",
         "heading": "Executar e interpretar a saída",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O03",
@@ -4550,7 +5418,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4558,7 +5426,11 @@
         "anchor": "executar-e-interpretar-a-saída",
         "heading": "Executar e interpretar a saída",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O04",
@@ -4588,7 +5460,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4596,7 +5468,11 @@
         "anchor": "cobertura-e-limites",
         "heading": "Cobertura e limites",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O05",
@@ -4625,7 +5501,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4633,7 +5509,11 @@
         "anchor": "cobertura-e-limites",
         "heading": "Cobertura e limites",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O06",
@@ -4662,7 +5542,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4670,7 +5550,11 @@
         "anchor": "cobertura-e-limites",
         "heading": "Cobertura e limites",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O07",
@@ -4698,7 +5582,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4706,7 +5590,11 @@
         "anchor": "executar-e-interpretar-a-saída",
         "heading": "Executar e interpretar a saída",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O08",
@@ -4736,7 +5624,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4744,7 +5632,11 @@
         "anchor": "cobertura-e-limites",
         "heading": "Cobertura e limites",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O09",
@@ -4774,7 +5666,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4782,7 +5674,11 @@
         "anchor": "cobertura-e-limites",
         "heading": "Cobertura e limites",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O10",
@@ -4811,7 +5707,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4819,7 +5715,13 @@
         "anchor": "falhas-e-conclusão",
         "heading": "Falhas e conclusão",
         "line_start": 82
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C14-O11",
@@ -4849,7 +5751,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4857,7 +5759,11 @@
         "anchor": "falhas-e-conclusão",
         "heading": "Falhas e conclusão",
         "line_start": 82
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C14-O12",
@@ -4888,7 +5794,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4896,7 +5802,13 @@
         "anchor": "casos-de-aceitação-do-procedimento",
         "heading": "Casos de aceitação do procedimento",
         "line_start": 94
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C15-O01",
@@ -4926,7 +5838,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4934,7 +5846,14 @@
         "anchor": "intenção-e-pré-condições",
         "heading": "Intenção e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11",
+        "T21"
+      ]
     },
     {
       "id": "C15-O02",
@@ -4963,7 +5882,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -4971,7 +5890,13 @@
         "anchor": "plano-local-e-preflight-obrigatório",
         "heading": "Plano local e preflight obrigatório",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11"
+      ]
     },
     {
       "id": "C15-O03",
@@ -5002,7 +5927,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5010,7 +5935,14 @@
         "anchor": "plano-local-e-preflight-obrigatório",
         "heading": "Plano local e preflight obrigatório",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11",
+        "T24"
+      ]
     },
     {
       "id": "C15-O04",
@@ -5041,7 +5973,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5049,7 +5981,15 @@
         "anchor": "plano-local-e-preflight-obrigatório",
         "heading": "Plano local e preflight obrigatório",
         "line_start": 24
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11",
+        "T24",
+        "T34"
+      ]
     },
     {
       "id": "C15-O05",
@@ -5079,7 +6019,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5087,7 +6027,13 @@
         "anchor": "escrita-e-resultado-esperado",
         "heading": "Escrita e resultado esperado",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11"
+      ]
     },
     {
       "id": "C15-O06",
@@ -5117,7 +6063,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5125,7 +6071,13 @@
         "anchor": "escrita-e-resultado-esperado",
         "heading": "Escrita e resultado esperado",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11"
+      ]
     },
     {
       "id": "C15-O07",
@@ -5155,7 +6107,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5163,7 +6115,14 @@
         "anchor": "intenção-e-pré-condições",
         "heading": "Intenção e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11",
+        "T24"
+      ]
     },
     {
       "id": "C15-O08",
@@ -5193,7 +6152,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5201,7 +6160,13 @@
         "anchor": "escrita-e-resultado-esperado",
         "heading": "Escrita e resultado esperado",
         "line_start": 56
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11"
+      ]
     },
     {
       "id": "C16-O01",
@@ -5231,7 +6196,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5239,7 +6204,14 @@
         "anchor": "intenção-pré-condições-e-autoridade",
         "heading": "Intenção, pré-condições e autoridade",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12",
+        "T21"
+      ]
     },
     {
       "id": "C16-O02",
@@ -5270,7 +6242,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5278,7 +6250,15 @@
         "anchor": "fases-separadas",
         "heading": "Fases separadas",
         "line_start": 30
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T11",
+        "T12",
+        "T24"
+      ]
     },
     {
       "id": "C16-O03",
@@ -5307,7 +6287,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5315,7 +6295,14 @@
         "anchor": "fases-separadas",
         "heading": "Fases separadas",
         "line_start": 30
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12",
+        "T24"
+      ]
     },
     {
       "id": "C16-O04",
@@ -5346,7 +6333,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5354,7 +6341,15 @@
         "anchor": "intenção-pré-condições-e-autoridade",
         "heading": "Intenção, pré-condições e autoridade",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12",
+        "T24",
+        "T34"
+      ]
     },
     {
       "id": "C16-O05",
@@ -5382,7 +6377,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5390,7 +6385,13 @@
         "anchor": "fases-separadas",
         "heading": "Fases separadas",
         "line_start": 30
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O06",
@@ -5418,7 +6419,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5426,7 +6427,13 @@
         "anchor": "alcance-das-verificações",
         "heading": "Alcance das verificações",
         "line_start": 69
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O07",
@@ -5455,7 +6462,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5463,7 +6470,13 @@
         "anchor": "alcance-das-verificações",
         "heading": "Alcance das verificações",
         "line_start": 69
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O08",
@@ -5492,7 +6505,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5500,7 +6513,13 @@
         "anchor": "tipos-falhas-parciais-e-preservação",
         "heading": "Tipos, falhas parciais e preservação",
         "line_start": 88
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O09",
@@ -5530,7 +6549,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5538,7 +6557,14 @@
         "anchor": "tipos-falhas-parciais-e-preservação",
         "heading": "Tipos, falhas parciais e preservação",
         "line_start": 88
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12",
+        "T24"
+      ]
     },
     {
       "id": "C16-O10",
@@ -5567,7 +6593,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5575,7 +6601,13 @@
         "anchor": "tipos-falhas-parciais-e-preservação",
         "heading": "Tipos, falhas parciais e preservação",
         "line_start": 88
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O11",
@@ -5605,7 +6637,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5613,7 +6645,14 @@
         "anchor": "intenção-pré-condições-e-autoridade",
         "heading": "Intenção, pré-condições e autoridade",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12",
+        "T24"
+      ]
     },
     {
       "id": "C16-O12",
@@ -5642,7 +6681,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5650,7 +6689,13 @@
         "anchor": "tipos-falhas-parciais-e-preservação",
         "heading": "Tipos, falhas parciais e preservação",
         "line_start": 88
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C16-O13",
@@ -5679,7 +6724,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5687,7 +6732,13 @@
         "anchor": "intenção-pré-condições-e-autoridade",
         "heading": "Intenção, pré-condições e autoridade",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T12"
+      ]
     },
     {
       "id": "C17-O01",
@@ -5717,7 +6768,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5725,7 +6776,13 @@
         "anchor": "intenção-e-pré-condições",
         "heading": "Intenção e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C17-O02",
@@ -5755,7 +6812,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5763,7 +6820,13 @@
         "anchor": "intenção-e-pré-condições",
         "heading": "Intenção e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C17-O03",
@@ -5793,7 +6856,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5801,7 +6864,11 @@
         "anchor": "preparar-a-campanha-e-seu-corpus",
         "heading": "Preparar a campanha e seu corpus",
         "line_start": 31
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C17-O04",
@@ -5831,7 +6898,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5839,7 +6906,13 @@
         "anchor": "método-de-observação",
         "heading": "Método de observação",
         "line_start": 55
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T22"
+      ]
     },
     {
       "id": "C17-O05",
@@ -5870,7 +6943,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5878,7 +6951,13 @@
         "anchor": "preparar-a-campanha-e-seu-corpus",
         "heading": "Preparar a campanha e seu corpus",
         "line_start": 31
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T22"
+      ]
     },
     {
       "id": "C17-O06",
@@ -5908,7 +6987,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5916,7 +6995,13 @@
         "anchor": "método-de-observação",
         "heading": "Método de observação",
         "line_start": 55
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C17-O07",
@@ -5946,7 +7031,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5954,7 +7039,13 @@
         "anchor": "veredito-por-caso",
         "heading": "Veredito por caso",
         "line_start": 73
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21"
+      ]
     },
     {
       "id": "C17-O08",
@@ -5983,7 +7074,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -5991,7 +7082,11 @@
         "anchor": "registro-correção-e-encerramento",
         "heading": "Registro, correção e encerramento",
         "line_start": 86
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C17-O09",
@@ -6021,7 +7116,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6029,7 +7124,13 @@
         "anchor": "registro-correção-e-encerramento",
         "heading": "Registro, correção e encerramento",
         "line_start": 86
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C17-O10",
@@ -6059,7 +7160,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6067,7 +7168,11 @@
         "anchor": "registro-correção-e-encerramento",
         "heading": "Registro, correção e encerramento",
         "line_start": 86
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C17-O11",
@@ -6096,7 +7201,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6104,7 +7209,13 @@
         "anchor": "método-de-observação",
         "heading": "Método de observação",
         "line_start": 55
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O01",
@@ -6135,7 +7246,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6143,7 +7254,14 @@
         "anchor": "intenção-owner-e-pré-condições",
         "heading": "Intenção, owner e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T21",
+        "T24"
+      ]
     },
     {
       "id": "C18-O02",
@@ -6173,7 +7291,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6181,7 +7299,11 @@
         "anchor": "intenção-owner-e-pré-condições",
         "heading": "Intenção, owner e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C18-O03",
@@ -6211,7 +7333,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6219,7 +7341,13 @@
         "anchor": "preparar-o-kit-local",
         "heading": "Preparar o kit local",
         "line_start": 31
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O04",
@@ -6248,7 +7376,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6256,7 +7384,11 @@
         "anchor": "evidência-limites-e-recuperação",
         "heading": "Evidência, limites e recuperação",
         "line_start": 96
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C18-O05",
@@ -6285,7 +7417,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6293,7 +7425,13 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O06",
@@ -6323,7 +7461,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6331,7 +7469,11 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C18-O07",
@@ -6360,7 +7502,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6368,7 +7510,13 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O08",
@@ -6397,7 +7545,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6405,7 +7553,13 @@
         "anchor": "intenção-owner-e-pré-condições",
         "heading": "Intenção, owner e pré-condições",
         "line_start": 11
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O09",
@@ -6434,7 +7588,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6442,7 +7596,11 @@
         "anchor": "preparar-o-kit-local",
         "heading": "Preparar o kit local",
         "line_start": 31
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": []
     },
     {
       "id": "C18-O10",
@@ -6473,7 +7631,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6481,7 +7639,13 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O11",
@@ -6510,7 +7674,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6518,7 +7682,13 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O12",
@@ -6548,7 +7718,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6556,7 +7726,13 @@
         "anchor": "evidência-limites-e-recuperação",
         "heading": "Evidência, limites e recuperação",
         "line_start": 96
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     },
     {
       "id": "C18-O13",
@@ -6586,7 +7762,7 @@
         "editorial_mapping": "REVIEWED_LOCAL",
         "source_excerpt": "EXACT_BASELINE",
         "target_anchor": "VERIFIED_LOCAL",
-        "native_client_execution": "NOT_RUN",
+        "native_client_execution": "BLOCKED",
         "external_operation": "NOT_RUN"
       },
       "target_metadata": {
@@ -6594,13 +7770,19 @@
         "anchor": "backup-staging-e-promoção-manual",
         "heading": "Backup, staging e promoção manual",
         "line_start": 60
-      }
+      },
+      "mapping_verification_status": "PASS",
+      "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
+      "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
+      "native_test_gaps": [
+        "T24"
+      ]
     }
   ],
   "historical_exceptions": [
     {
       "path": "CHANGELOG.md",
-      "line": 2375,
+      "line": 2377,
       "line_sha256": "69b65f61cd7e79e70f3bbae9d0f93acae2d2694ff7daa4e43adc89df8cb4628c",
       "legacy_source": ".claude/context/ambiente-free.md",
       "replacement": "docs/ai/context/ambientes.md",
@@ -6609,7 +7791,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 2466,
+      "line": 2468,
       "line_sha256": "3c8e9ada1eb8c5ce9bc5c8f7f7d8c09a0df77647d050b370980a3f4957b8fe16",
       "legacy_source": ".claude/rules/docs-e-readmes.md",
       "replacement": "docs/ai/rules/documentacao.md",
@@ -6618,7 +7800,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 2743,
+      "line": 2745,
       "line_sha256": "622ea8e9dcfca6d2aefa0338084b37261a80ad2ae87b927adb3dec204b1e57fd",
       "legacy_source": ".claude/rules/free-vs-trabalho.md",
       "replacement": "docs/ai/context/ambientes.md + evidência datada",
@@ -6627,7 +7809,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 3465,
+      "line": 3467,
       "line_sha256": "b01da005e0b249679661013ba2b10bc099385eda95faf59d55de4671ec5d8f96",
       "legacy_source": ".claude/rules/free-vs-trabalho.md",
       "replacement": "docs/ai/context/ambientes.md + evidência datada",
@@ -6636,7 +7818,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 3546,
+      "line": 3548,
       "line_sha256": "2a4c9fdef961bb848e98d19de232a82deeb6f8182bd3c3174145cace8ac2d9f3",
       "legacy_source": ".claude/rules/free-vs-trabalho.md",
       "replacement": "docs/ai/context/ambientes.md + evidência datada",
@@ -6645,7 +7827,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 3688,
+      "line": 3690,
       "line_sha256": "5ed6fe5eeb8bce1a72ba90c80eb98edabfcb110e5b9078f7e0a64b3f6db98223",
       "legacy_source": ".claude/CLAUDE.md",
       "replacement": "docs/ai/README.md + mapa em AGENTS.md",
@@ -6654,7 +7836,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 3765,
+      "line": 3767,
       "line_sha256": "285e9e9c159068589c3cf0eff8e0cc830700e970209ac21ed2a92ba1461ab2a4",
       "legacy_source": ".claude/rules/genie-code-oficial.md",
       "replacement": "docs/ai/references/databricks-genie-code.md",
@@ -6663,7 +7845,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 4217,
+      "line": 4219,
       "line_sha256": "3b49e0c37b5690223a60e3d2803f5611e213e11f649ad5648b60d986ae63e320",
       "legacy_source": ".claude/skills/README.md",
       "replacement": ".agents/skills/README.md",
@@ -6672,7 +7854,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 4338,
+      "line": 4340,
       "line_sha256": "c2ba68417544be39d7c3ac2f44defff37acc9efaf2e0227721d4762bc8e3024e",
       "legacy_source": ".claude/rules/free-vs-trabalho.md",
       "replacement": "docs/ai/context/ambientes.md + evidência datada",
@@ -6681,7 +7863,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 4371,
+      "line": 4373,
       "line_sha256": "5f6888731981645392d15697ce6e06717506da37ba3f97401b4045ba29faf795",
       "legacy_source": ".claude/rules/genie-code-oficial.md",
       "replacement": "docs/ai/references/databricks-genie-code.md",
@@ -6690,7 +7872,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "line": 4477,
+      "line": 4479,
       "line_sha256": "eb132f0944e6dd63322aae88a6c952fccefae8f24f05447f09f30b55ed37952b",
       "legacy_source": ".claude/context/ambiente-free.md",
       "replacement": "docs/ai/context/ambientes.md",

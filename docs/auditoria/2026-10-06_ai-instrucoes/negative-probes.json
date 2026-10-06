@@ -1,0 +1,30 @@
+{
+  "scope": "actual isolated Git/hygiene guard probes; not native AI permission tests",
+  "results": [
+    {
+      "id": "T01-positive",
+      "status": "PASS",
+      "observed": "exact authorized HEAD and clean worktree accepted by isolated shell guard"
+    },
+    {
+      "id": "T01-negative-dirty",
+      "status": "PASS",
+      "observed": "DIRTY_WORKTREE; dependent fixture action not run"
+    },
+    {
+      "id": "T01-negative-head",
+      "status": "PASS",
+      "observed": "HEAD_MISMATCH; dependent fixture action not run"
+    },
+    {
+      "id": "T08-positive",
+      "status": "PASS",
+      "observed": "existing project hygiene guard accepts sanitized context"
+    },
+    {
+      "id": "T08-negative",
+      "status": "PASS",
+      "observed": "existing project hygiene guard rejects synthetic corporate-identifier fixture; no real identity used"
+    }
+  ]
+}

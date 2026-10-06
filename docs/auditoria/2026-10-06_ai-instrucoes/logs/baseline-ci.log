@@ -1,0 +1,1248 @@
+== GATE LOCAL ==
+raiz    : /workspace/shared/readme_integrated
+python  : 3.12.14
+
+-- temas: Sistema de temas V06 + V05 + V04 + V03 + V02 + V01
+test_active_gate_rejects_drift_and_historical_projection (test_temas_operational_tokens.OperationalTokenTests.test_active_gate_rejects_drift_and_historical_projection) ... ok
+test_aibi_classification_is_matrix_scope_not_native_import (test_temas_operational_tokens.OperationalTokenTests.test_aibi_classification_is_matrix_scope_not_native_import) ... ok
+test_all_links_remain_inside_delivered_package (test_temas_operational_tokens.OperationalTokenTests.test_all_links_remain_inside_delivered_package) ... ok
+test_cli_has_distinct_stdout_modes_without_implicit_write (test_temas_operational_tokens.OperationalTokenTests.test_cli_has_distinct_stdout_modes_without_implicit_write) ... ok
+test_complete_80_tokens_with_schema_contract_preserved (test_temas_operational_tokens.OperationalTokenTests.test_complete_80_tokens_with_schema_contract_preserved) ... ok
+test_direct_consumers_match_implementation_not_schema_plans (test_temas_operational_tokens.OperationalTokenTests.test_direct_consumers_match_implementation_not_schema_plans) ... ok
+test_editorial_support_preserves_renderer_limits (test_temas_operational_tokens.OperationalTokenTests.test_editorial_support_preserves_renderer_limits) ... ok
+test_gallery_availability_uses_actual_disabled_controls (test_temas_operational_tokens.OperationalTokenTests.test_gallery_availability_uses_actual_disabled_controls) ... ok
+test_historical_output_and_schema_are_frozen (test_temas_operational_tokens.OperationalTokenTests.test_historical_output_and_schema_are_frozen) ... ok
+test_operational_caveats_and_audience (test_temas_operational_tokens.OperationalTokenTests.test_operational_caveats_and_audience) ... ok
+test_operational_projection_is_reproducible_and_nonmutating (test_temas_operational_tokens.OperationalTokenTests.test_operational_projection_is_reproducible_and_nonmutating) ... ok
+test_all_contract_cases_have_oracles (test_temas_v01.ContractTests.test_all_contract_cases_have_oracles) ... ok
+test_all_four_context_fixtures_valid (test_temas_v01.ContractTests.test_all_four_context_fixtures_valid) ... ok
+test_alpha_hex_rejected (test_temas_v01.ContractTests.test_alpha_hex_rejected) ... ok
+test_analytic_parameters_forbidden (test_temas_v01.ContractTests.test_analytic_parameters_forbidden) ... ok
+test_approved_flag_forbidden (test_temas_v01.ContractTests.test_approved_flag_forbidden) ... ok
+test_apps_reserved_not_supported (test_temas_v01.ContractTests.test_apps_reserved_not_supported) ... ok
+test_arbitrary_css_forbidden (test_temas_v01.ContractTests.test_arbitrary_css_forbidden) ... ok
+test_asset_free_path_forbidden (test_temas_v01.ContractTests.test_asset_free_path_forbidden) ... ok
+test_asset_hash_tampered (test_temas_v01.ContractTests.test_asset_hash_tampered) ... ok
+test_asset_unknown_registry (test_temas_v01.ContractTests.test_asset_unknown_registry) ... ok
+test_boolean_is_not_dimension (test_temas_v01.ContractTests.test_boolean_is_not_dimension) ... ok
+test_cli_no_side_effect_files (test_temas_v01.ContractTests.test_cli_no_side_effect_files) ... ok
+test_color_injection_rejected (test_temas_v01.ContractTests.test_color_injection_rejected) ... ok
+test_contrast_candidate_pairs (test_temas_v01.ContractTests.test_contrast_candidate_pairs) ... ok
+test_contrast_known_black_white (test_temas_v01.ContractTests.test_contrast_known_black_white) ... ok
+test_contrast_not_rounded_to_pass (test_temas_v01.ContractTests.test_contrast_not_rounded_to_pass) ... ok
+test_contrast_same_color (test_temas_v01.ContractTests.test_contrast_same_color) ... ok
+test_contrast_symmetry (test_temas_v01.ContractTests.test_contrast_symmetry) ... ok
+test_document_local_links_resolve (test_temas_v01.ContractTests.test_document_local_links_resolve) ... ok
+test_duplicate_asset_path (test_temas_v01.ContractTests.test_duplicate_asset_path) ... ok
+test_duplicate_palette_color (test_temas_v01.ContractTests.test_duplicate_palette_color) ... ok
+test_empty_asset_manifest (test_temas_v01.ContractTests.test_empty_asset_manifest) ... ok
+test_empty_palette (test_temas_v01.ContractTests.test_empty_palette) ... ok
+test_engine_major_future (test_temas_v01.ContractTests.test_engine_major_future) ... ok
+test_engine_minimum_future (test_temas_v01.ContractTests.test_engine_minimum_future) ... ok
+test_engine_minimum_wrong_major (test_temas_v01.ContractTests.test_engine_minimum_wrong_major) ... ok
+test_every_token_has_existing_integration_point (test_temas_v01.ContractTests.test_every_token_has_existing_integration_point) ... ok
+test_excessive_dimension (test_temas_v01.ContractTests.test_excessive_dimension) ... ok
+test_external_ref_in_theme (test_temas_v01.ContractTests.test_external_ref_in_theme) ... ok
+test_file_root_parent_symlink (test_temas_v01.ContractTests.test_file_root_parent_symlink) ... ok
+test_human_cases_not_forged_pass (test_temas_v01.ContractTests.test_human_cases_not_forged_pass) ... ok
+test_inheritance_forbidden_no_cycle (test_temas_v01.ContractTests.test_inheritance_forbidden_no_cycle) ... ok
+test_invalid_hex_digit (test_temas_v01.ContractTests.test_invalid_hex_digit) ... ok
+test_invalid_metaschema (test_temas_v01.ContractTests.test_invalid_metaschema) ... ok
+test_label_accented_text_allowed (test_temas_v01.ContractTests.test_label_accented_text_allowed) ... ok
+test_label_excessive (test_temas_v01.ContractTests.test_label_excessive) ... ok
+test_label_markup_forbidden (test_temas_v01.ContractTests.test_label_markup_forbidden) ... ok
+test_label_trailing_control_rejected (test_temas_v01.ContractTests.test_label_trailing_control_rejected) ... ok
+test_legacy_curves_six_colors_preserved (test_temas_v01.ContractTests.test_legacy_curves_six_colors_preserved) ... ok
+test_legacy_debt_not_masked (test_temas_v01.ContractTests.test_legacy_debt_not_masked) ... ok
+test_lowercase_requires_ui_normalization (test_temas_v01.ContractTests.test_lowercase_requires_ui_normalization) ... ok
+test_missing_root_field (test_temas_v01.ContractTests.test_missing_root_field) ... ok
+test_missing_token_no_default_injection (test_temas_v01.ContractTests.test_missing_token_no_default_injection) ... ok
+test_model_all_defined_transitions (test_temas_v01.ContractTests.test_model_all_defined_transitions) ... ok
+test_model_denies_each_missing_guard (test_temas_v01.ContractTests.test_model_denies_each_missing_guard) ... ok
+test_model_denies_every_other_role (test_temas_v01.ContractTests.test_model_denies_every_other_role) ... ok
+test_model_integer_one_is_not_verified_true (test_temas_v01.ContractTests.test_model_integer_one_is_not_verified_true) ... ok
+test_model_no_publish_draft (test_temas_v01.ContractTests.test_model_no_publish_draft) ... ok
+test_model_no_self_approval (test_temas_v01.ContractTests.test_model_no_self_approval) ... ok
+test_model_stale_revision_denied (test_temas_v01.ContractTests.test_model_stale_revision_denied) ... ok
+test_negative_dimension (test_temas_v01.ContractTests.test_negative_dimension) ... ok
+test_no_dynamic_schema_ref (test_temas_v01.ContractTests.test_no_dynamic_schema_ref) ... ok
+test_no_external_schema_resolution (test_temas_v01.ContractTests.test_no_external_schema_resolution) ... ok
+test_no_network_needed (test_temas_v01.ContractTests.test_no_network_needed) ... ok
+test_noninteger_dimension (test_temas_v01.ContractTests.test_noninteger_dimension) ... ok
+test_numeric_string_rejected (test_temas_v01.ContractTests.test_numeric_string_rejected) ... ok
+test_package_complete (test_temas_v01.ContractTests.test_package_complete) ... ok
+test_palette_even_diverging (test_temas_v01.ContractTests.test_palette_even_diverging) ... ok
+test_palette_no_endpoints (test_temas_v01.ContractTests.test_palette_no_endpoints) ... ok
+test_palette_too_large (test_temas_v01.ContractTests.test_palette_too_large) ... ok
+test_parent_symlink_on_json_read (test_temas_v01.ContractTests.test_parent_symlink_on_json_read) ... ok
+test_parser_bom_rejected (test_temas_v01.ContractTests.test_parser_bom_rejected) ... ok
+test_parser_brackets_inside_escaped_string (test_temas_v01.ContractTests.test_parser_brackets_inside_escaped_string) ... ok
+test_parser_duplicate_nested (test_temas_v01.ContractTests.test_parser_duplicate_nested) ... ok
+test_parser_duplicate_root (test_temas_v01.ContractTests.test_parser_duplicate_root) ... ok
+test_parser_exponent_overflow (test_temas_v01.ContractTests.test_parser_exponent_overflow) ... ok
+test_parser_infinity (test_temas_v01.ContractTests.test_parser_infinity) ... ok
+test_parser_invalid_syntax (test_temas_v01.ContractTests.test_parser_invalid_syntax) ... ok
+test_parser_invalid_utf8 (test_temas_v01.ContractTests.test_parser_invalid_utf8) ... ok
+test_parser_nan (test_temas_v01.ContractTests.test_parser_nan) ... ok
+test_parser_no_sensitive_echo (test_temas_v01.ContractTests.test_parser_no_sensitive_echo) ... ok
+test_parser_string_not_bytes (test_temas_v01.ContractTests.test_parser_string_not_bytes) ... ok
+test_parser_surrogate_rejected (test_temas_v01.ContractTests.test_parser_surrogate_rejected) ... ok
+test_parser_too_deep (test_temas_v01.ContractTests.test_parser_too_deep) ... ok
+test_parser_too_large (test_temas_v01.ContractTests.test_parser_too_large) ... ok
+test_path_absolute (test_temas_v01.ContractTests.test_path_absolute) ... ok
+test_path_symlink (test_temas_v01.ContractTests.test_path_symlink) ... ok
+test_path_traversal (test_temas_v01.ContractTests.test_path_traversal) ... ok
+test_path_windows_drive (test_temas_v01.ContractTests.test_path_windows_drive) ... ok
+test_policy_approval_not_bound_to_dependencies (test_temas_v01.ContractTests.test_policy_approval_not_bound_to_dependencies) ... ok
+test_policy_default_allow_mutant (test_temas_v01.ContractTests.test_policy_default_allow_mutant) ... ok
+test_policy_duplicate_action (test_temas_v01.ContractTests.test_policy_duplicate_action) ... ok
+test_policy_no_owner_check_mutant (test_temas_v01.ContractTests.test_policy_no_owner_check_mutant) ... ok
+test_policy_publish_reader_mutant (test_temas_v01.ContractTests.test_policy_publish_reader_mutant) ... ok
+test_policy_published_editable_mutant (test_temas_v01.ContractTests.test_policy_published_editable_mutant) ... ok
+test_policy_reader_can_export_mutant (test_temas_v01.ContractTests.test_policy_reader_can_export_mutant) ... ok
+test_policy_removed_hash_check (test_temas_v01.ContractTests.test_policy_removed_hash_check) ... ok
+test_policy_scope_widening_mutant (test_temas_v01.ContractTests.test_policy_scope_widening_mutant) ... ok
+test_policy_self_asserted_operational_status (test_temas_v01.ContractTests.test_policy_self_asserted_operational_status) ... ok
+test_policy_trusts_json_identity_mutant (test_temas_v01.ContractTests.test_policy_trusts_json_identity_mutant) ... ok
+test_policy_unreviewed_transition (test_temas_v01.ContractTests.test_policy_unreviewed_transition) ... ok
+test_policy_valid (test_temas_v01.ContractTests.test_policy_valid) ... ok
+test_readme_distinguishes_current_and_future (test_temas_v01.ContractTests.test_readme_distinguishes_current_and_future) ... ok
+test_real_baseline_assets_match (test_temas_v01.ContractTests.test_real_baseline_assets_match) ... ok
+test_required_tokens_equal_documented_tokens (test_temas_v01.ContractTests.test_required_tokens_equal_documented_tokens) ... ok
+test_role_forgery_forbidden (test_temas_v01.ContractTests.test_role_forgery_forbidden) ... ok
+test_runtime_and_documentation_do_not_claim_installation (test_temas_v01.ContractTests.test_runtime_and_documentation_do_not_claim_installation) ... ok
+test_schema_future_version (test_temas_v01.ContractTests.test_schema_future_version) ... ok
+test_scope_not_from_theme (test_temas_v01.ContractTests.test_scope_not_from_theme) ... ok
+test_short_hex_rejected (test_temas_v01.ContractTests.test_short_hex_rejected) ... ok
+test_source_constants_default_values (test_temas_v01.ContractTests.test_source_constants_default_values) ... ok
+test_theme_id_not_path (test_temas_v01.ContractTests.test_theme_id_not_path) ... ok
+test_theme_id_trailing_newline_rejected (test_temas_v01.ContractTests.test_theme_id_trailing_newline_rejected) ... ok
+test_token_documentation_derived_exactly (test_temas_v01.ContractTests.test_token_documentation_derived_exactly) ... ok
+test_unknown_font (test_temas_v01.ContractTests.test_unknown_font) ... ok
+test_unknown_root_key (test_temas_v01.ContractTests.test_unknown_root_key) ... ok
+test_unknown_schema_dialect (test_temas_v01.ContractTests.test_unknown_schema_dialect) ... ok
+test_unknown_token (test_temas_v01.ContractTests.test_unknown_token) ... ok
+test_validation_does_not_mutate_or_fill_defaults (test_temas_v01.ContractTests.test_validation_does_not_mutate_or_fill_defaults) ... ok
+test_version_leading_zero (test_temas_v01.ContractTests.test_version_leading_zero) ... ok
+test_version_trailing_newline_rejected (test_temas_v01.ContractTests.test_version_trailing_newline_rejected) ... ok
+test_whitespace_requires_explicit_ui_normalization (test_temas_v01.ContractTests.test_whitespace_requires_explicit_ui_normalization) ... ok
+test_wrong_context_rejected (test_temas_v01.ContractTests.test_wrong_context_rejected) ... ok
+test_wrong_unit (test_temas_v01.ContractTests.test_wrong_unit) ... ok
+test_candidate_not_claimed_as_installed (test_temas_v01_integracao.V01IntegrationTests.test_candidate_not_claimed_as_installed) ... ok
+test_dictionary_displays_each_effect (test_temas_v01_integracao.V01IntegrationTests.test_dictionary_displays_each_effect) ... ok
+test_direct_validation_dependencies_declared (test_temas_v01_integracao.V01IntegrationTests.test_direct_validation_dependencies_declared) ... ok
+test_document_code_example_is_not_a_navigation_link (test_temas_v01_integracao.V01IntegrationTests.test_document_code_example_is_not_a_navigation_link) ... ok
+test_document_escaping_checkout_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_document_escaping_checkout_is_rejected) ... ok
+test_document_existing_encoded_anchor_is_accepted (test_temas_v01_integracao.V01IntegrationTests.test_document_existing_encoded_anchor_is_accepted) ... ok
+test_document_inexistent_anchor_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_document_inexistent_anchor_is_rejected) ... ok
+test_document_inexistent_file_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_document_inexistent_file_is_rejected) ... ok
+test_document_self_anchor_is_validated (test_temas_v01_integracao.V01IntegrationTests.test_document_self_anchor_is_validated) ... ok
+test_document_unsafe_scheme_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_document_unsafe_scheme_is_rejected) ... ok
+test_each_missing_original_gate_is_detected (test_temas_v01_integracao.V01IntegrationTests.test_each_missing_original_gate_is_detected) ... ok
+test_existing_gates_preserved (test_temas_v01_integracao.V01IntegrationTests.test_existing_gates_preserved) ... ok
+test_maintenance_guide_uses_integrated_v00_tools (test_temas_v01_integracao.V01IntegrationTests.test_maintenance_guide_uses_integrated_v00_tools) ... ok
+test_matrix_method_references_are_real (test_temas_v01_integracao.V01IntegrationTests.test_matrix_method_references_are_real) ... ok
+test_no_duplicate_adr_numbers (test_temas_v01_integracao.V01IntegrationTests.test_no_duplicate_adr_numbers) ... ok
+test_registry_additional_set_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_additional_set_is_rejected) ... ok
+test_registry_duplicate_entry_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_duplicate_entry_is_rejected) ... ok
+test_registry_empty_frozen_set_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_empty_frozen_set_is_rejected) ... ok
+test_registry_matches_authoritative_manifests (test_temas_v01_integracao.V01IntegrationTests.test_registry_matches_authoritative_manifests) ... ok
+test_registry_missing_entry_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_missing_entry_is_rejected) ... ok
+test_registry_nonempty_assetless_set_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_nonempty_assetless_set_is_rejected) ... ok
+test_registry_rewritten_hash_is_rejected (test_temas_v01_integracao.V01IntegrationTests.test_registry_rewritten_hash_is_rejected) ... ok
+test_shared_markdown_parser_is_used (test_temas_v01_integracao.V01IntegrationTests.test_shared_markdown_parser_is_used) ... ok
+test_single_sprint_entrypoint (test_temas_v01_integracao.V01IntegrationTests.test_single_sprint_entrypoint) ... ok
+test_asset_manifest_tampered (test_temas_v02.AdditionalGuards.test_asset_manifest_tampered) ... ok
+test_file_replaced_during_open_is_rejected (test_temas_v02.AdditionalGuards.test_file_replaced_during_open_is_rejected) ... ok
+test_internal_schema_reference_cycle (test_temas_v02.AdditionalGuards.test_internal_schema_reference_cycle) ... ok
+test_internal_schema_reference_missing (test_temas_v02.AdditionalGuards.test_internal_schema_reference_missing) ... ok
+test_layout_changed_api (test_temas_v02.AdditionalGuards.test_layout_changed_api) ... ok
+test_layout_changed_dictionary (test_temas_v02.AdditionalGuards.test_layout_changed_dictionary) ... ok
+test_layout_changed_manual (test_temas_v02.AdditionalGuards.test_layout_changed_manual) ... ok
+test_layout_changed_schema (test_temas_v02.AdditionalGuards.test_layout_changed_schema) ... ok
+test_layout_empty_test_content (test_temas_v02.AdditionalGuards.test_layout_empty_test_content) ... ok
+test_layout_parallel_validator (test_temas_v02.AdditionalGuards.test_layout_parallel_validator) ... ok
+test_same_content_from_different_paths_same_fingerprint (test_temas_v02.AdditionalGuards.test_same_content_from_different_paths_same_fingerprint) ... ok
+test_schema_must_be_object (test_temas_v02.AdditionalGuards.test_schema_must_be_object) ... ok
+test_schema_nested_id_rejected (test_temas_v02.AdditionalGuards.test_schema_nested_id_rejected) ... ok
+test_api_is_exhaustive (test_temas_v02.CoreTests.test_api_is_exhaustive) ... ok
+test_asset_resource_tampered (test_temas_v02.CoreTests.test_asset_resource_tampered) ... ok
+test_byte_limit (test_temas_v02.CoreTests.test_byte_limit) ... ok
+test_canonical_hash_tracks_export (test_temas_v02.CoreTests.test_canonical_hash_tracks_export) ... ok
+test_change_token_changes_fingerprint (test_temas_v02.CoreTests.test_change_token_changes_fingerprint) ... ok
+test_duplicate_json_keys (test_temas_v02.CoreTests.test_duplicate_json_keys) ... ok
+test_empty_bytes (test_temas_v02.CoreTests.test_empty_bytes) ... ok
+test_engine_future_version (test_temas_v02.CoreTests.test_engine_future_version) ... ok
+test_even_diverging_palette (test_temas_v02.CoreTests.test_even_diverging_palette) ... ok
+test_expected_context_match (test_temas_v02.CoreTests.test_expected_context_match) ... ok
+test_expected_context_mismatch (test_temas_v02.CoreTests.test_expected_context_mismatch) ... ok
+test_export_checks_result_integrity (test_temas_v02.CoreTests.test_export_checks_result_integrity) ... ok
+test_export_is_bytes_and_does_not_write (test_temas_v02.CoreTests.test_export_is_bytes_and_does_not_write) ... ok
+test_export_reimport_preserves_effective_values (test_temas_v02.CoreTests.test_export_reimport_preserves_effective_values) ... ok
+test_export_rejects_dictionary (test_temas_v02.CoreTests.test_export_rejects_dictionary) ... ok
+test_import_without_third_party_modules_or_platform (test_temas_v02.CoreTests.test_import_without_third_party_modules_or_platform) ... ok
+test_input_mutation_does_not_contaminate (test_temas_v02.CoreTests.test_input_mutation_does_not_contaminate) ... ok
+test_invalid_expected_context (test_temas_v02.CoreTests.test_invalid_expected_context) ... ok
+test_json_bom (test_temas_v02.CoreTests.test_json_bom) ... ok
+test_json_depth_limit (test_temas_v02.CoreTests.test_json_depth_limit) ... ok
+test_json_encoding (test_temas_v02.CoreTests.test_json_encoding) ... ok
+test_json_infinite (test_temas_v02.CoreTests.test_json_infinite) ... ok
+test_json_unicode_surrogate (test_temas_v02.CoreTests.test_json_unicode_surrogate) ... ok
+test_lowercase_import_is_not_silently_fixed (test_temas_v02.CoreTests.test_lowercase_import_is_not_silently_fixed) ... ok
+test_missing_dependencies_reported_without_install (test_temas_v02.CoreTests.test_missing_dependencies_reported_without_install) ... ok
+test_missing_field_does_not_fill_default (test_temas_v02.CoreTests.test_missing_field_does_not_fill_default) ... ok
+test_nested_tokens_cannot_be_mutated (test_temas_v02.CoreTests.test_nested_tokens_cannot_be_mutated) ... ok
+test_no_analytic_parameters (test_temas_v02.CoreTests.test_no_analytic_parameters) ... ok
+test_no_approval_or_provenance_in_export (test_temas_v02.CoreTests.test_no_approval_or_provenance_in_export) ... ok
+test_no_global_cache_for_schema (test_temas_v02.CoreTests.test_no_global_cache_for_schema) ... ok
+test_no_publishing_flags (test_temas_v02.CoreTests.test_no_publishing_flags) ... ok
+test_no_socket_calls (test_temas_v02.CoreTests.test_no_socket_calls) ... ok
+test_normalize_color_explicit (test_temas_v02.CoreTests.test_normalize_color_explicit) ... ok
+test_normalize_color_rejects_ambiguous_forms (test_temas_v02.CoreTests.test_normalize_color_rejects_ambiguous_forms) ... ok
+test_numeric_representation_same_fingerprint (test_temas_v02.CoreTests.test_numeric_representation_same_fingerprint) ... ok
+test_old_and_new_validation_share_functions (test_temas_v02.CoreTests.test_old_and_new_validation_share_functions) ... ok
+test_output_copy_mutation_does_not_contaminate (test_temas_v02.CoreTests.test_output_copy_mutation_does_not_contaminate) ... ok
+test_programmatic_custom_objects (test_temas_v02.CoreTests.test_programmatic_custom_objects) ... ok
+test_programmatic_cycle (test_temas_v02.CoreTests.test_programmatic_cycle) ... ok
+test_programmatic_depth (test_temas_v02.CoreTests.test_programmatic_depth) ... ok
+test_programmatic_integer_limit (test_temas_v02.CoreTests.test_programmatic_integer_limit) ... ok
+test_programmatic_nan (test_temas_v02.CoreTests.test_programmatic_nan) ... ok
+test_programmatic_nodes_limit (test_temas_v02.CoreTests.test_programmatic_nodes_limit) ... ok
+test_programmatic_nonstring_key (test_temas_v02.CoreTests.test_programmatic_nonstring_key) ... ok
+test_programmatic_text_limit (test_temas_v02.CoreTests.test_programmatic_text_limit) ... ok
+test_raw_hash_tracks_original_bytes (test_temas_v02.CoreTests.test_raw_hash_tracks_original_bytes) ... ok
+test_reference_context_unhashable (test_temas_v02.CoreTests.test_reference_context_unhashable) ... ok
+test_reference_contexts (test_temas_v02.CoreTests.test_reference_contexts) ... ok
+test_reordered_fields_same_fingerprint (test_temas_v02.CoreTests.test_reordered_fields_same_fingerprint) ... ok
+test_result_and_origins_are_frozen (test_temas_v02.CoreTests.test_result_and_origins_are_frozen) ... ok
+test_schema_resource_tampered (test_temas_v02.CoreTests.test_schema_resource_tampered) ... ok
+test_string_is_not_json_bytes (test_temas_v02.CoreTests.test_string_is_not_json_bytes) ... ok
+test_two_instances_are_isolated (test_temas_v02.CoreTests.test_two_instances_are_isolated) ... ok
+test_unknown_field_does_not_expose_value (test_temas_v02.CoreTests.test_unknown_field_does_not_expose_value) ... ok
+test_unknown_reference_context (test_temas_v02.CoreTests.test_unknown_reference_context) ... ok
+test_concurrent_resolutions_do_not_share_tokens (test_temas_v02.DeliveryTests.test_concurrent_resolutions_do_not_share_tokens) ... ok
+test_notebook_and_runtime_modules_have_correct_databricks_types (test_temas_v02.DeliveryTests.test_notebook_and_runtime_modules_have_correct_databricks_types) ... ok
+test_packaged_runtime_has_no_dependency_on_docs_or_tools (test_temas_v02.DeliveryTests.test_packaged_runtime_has_no_dependency_on_docs_or_tools) ... ok
+test_absolute_path (test_temas_v02.FileTests.test_absolute_path) ... ok
+test_bad_root (test_temas_v02.FileTests.test_bad_root) ... ok
+test_directory_is_not_configuration (test_temas_v02.FileTests.test_directory_is_not_configuration) ... ok
+test_expected_byte_hash_mismatch (test_temas_v02.FileTests.test_expected_byte_hash_mismatch) ... ok
+test_fifo_is_not_configuration (test_temas_v02.FileTests.test_fifo_is_not_configuration) ... ok
+test_hash_format (test_temas_v02.FileTests.test_hash_format) ... ok
+test_load_from_explicit_root (test_temas_v02.FileTests.test_load_from_explicit_root) ... ok
+test_missing_file (test_temas_v02.FileTests.test_missing_file) ... ok
+test_no_stale_file_cache (test_temas_v02.FileTests.test_no_stale_file_cache) ... ok
+test_oversized_file_is_rejected (test_temas_v02.FileTests.test_oversized_file_is_rejected) ... ok
+test_path_null (test_temas_v02.FileTests.test_path_null) ... ok
+test_path_repeated_separator (test_temas_v02.FileTests.test_path_repeated_separator) ... ok
+test_path_traversal (test_temas_v02.FileTests.test_path_traversal) ... ok
+test_path_url (test_temas_v02.FileTests.test_path_url) ... ok
+test_path_wrong_type (test_temas_v02.FileTests.test_path_wrong_type) ... ok
+test_permission_error_is_safe (test_temas_v02.FileTests.test_permission_error_is_safe) ... ok
+test_symlink_file (test_temas_v02.FileTests.test_symlink_file) ... ok
+test_symlink_parent (test_temas_v02.FileTests.test_symlink_parent) ... ok
+test_windows_path (test_temas_v02.FileTests.test_windows_path) ... ok
+test_wrong_extension (test_temas_v02.FileTests.test_wrong_extension) ... ok
+test_export_invalid_canonical_bytes_uses_safe_error (test_temas_v02.FurtherRegressions.test_export_invalid_canonical_bytes_uses_safe_error) ... ok
+test_export_missing_canonical_uses_safe_error (test_temas_v02.FurtherRegressions.test_export_missing_canonical_uses_safe_error) ... ok
+test_guard_rejects_asset_derivation_drift (test_temas_v02.FurtherRegressions.test_guard_rejects_asset_derivation_drift) ... ok
+test_guard_rejects_fixture_content_drift (test_temas_v02.FurtherRegressions.test_guard_rejects_fixture_content_drift) ... ok
+test_guard_rejects_fixture_set_drift (test_temas_v02.FurtherRegressions.test_guard_rejects_fixture_set_drift) ... ok
+test_guard_rejects_missing_core_document (test_temas_v02.FurtherRegressions.test_guard_rejects_missing_core_document) ... ok
+test_no_current_directory_dependency (test_temas_v02.FurtherRegressions.test_no_current_directory_dependency) ... ok
+test_real_resolution_does_not_invoke_style_mutation (test_temas_v02.FurtherRegressions.test_real_resolution_does_not_invoke_style_mutation) ... ok
+test_derived_fixture_drift_rejected (test_temas_v02.LayoutTests.test_derived_fixture_drift_rejected) ... ok
+test_duplicate_schema_rejected (test_temas_v02.LayoutTests.test_duplicate_schema_rejected) ... ok
+test_empty_layout_rejected (test_temas_v02.LayoutTests.test_empty_layout_rejected) ... ok
+test_missing_temas_gate_rejected (test_temas_v02.LayoutTests.test_missing_temas_gate_rejected) ... ok
+test_missing_test_file_rejected (test_temas_v02.LayoutTests.test_missing_test_file_rejected) ... ok
+test_path_suffix_helper_is_separator_agnostic (test_temas_v02.LayoutTests.test_path_suffix_helper_is_separator_agnostic) ... ok
+test_real_layout (test_temas_v02.LayoutTests.test_real_layout) ... ok
+test_aplicar_resolvido_nao_altera_default_da_sessao (test_temas_v03.TemasV03Tests.test_aplicar_resolvido_nao_altera_default_da_sessao) ... ok
+test_aplicar_resolvido_preserva_dados_e_eixos (test_temas_v03.TemasV03Tests.test_aplicar_resolvido_preserva_dados_e_eixos) ... ok
+test_aplicar_resolvido_retorna_mesmo_objeto (test_temas_v03.TemasV03Tests.test_aplicar_resolvido_retorna_mesmo_objeto) ... ok
+test_colisao_nao_substitui_sem_opt_in (test_temas_v03.TemasV03Tests.test_colisao_nao_substitui_sem_opt_in) ... ok
+test_config_retorna_copia_da_paleta (test_temas_v03.TemasV03Tests.test_config_retorna_copia_da_paleta) ... ok
+test_contexto_readme_e_rejeitado (test_temas_v03.TemasV03Tests.test_contexto_readme_e_rejeitado) ... ok
+test_dark_e_rejeitado_fail_closed (test_temas_v03.TemasV03Tests.test_dark_e_rejeitado_fail_closed) ... ok
+test_dicionario_nao_e_aceito_no_adaptador (test_temas_v03.TemasV03Tests.test_dicionario_nao_e_aceito_no_adaptador) ... ok
+test_fingerprint_adulterado_e_recusado (test_temas_v03.TemasV03Tests.test_fingerprint_adulterado_e_recusado) ... ok
+test_fixture_legada_mapeia_exatamente_para_layout_legado (test_temas_v03.TemasV03Tests.test_fixture_legada_mapeia_exatamente_para_layout_legado) ... ok
+test_get_config_nao_altera_default_da_sessao (test_temas_v03.TemasV03Tests.test_get_config_nao_altera_default_da_sessao) ... ok
+test_high_contrast_e_rejeitado_fail_closed (test_temas_v03.TemasV03Tests.test_high_contrast_e_rejeitado_fail_closed) ... ok
+test_legado_assinatura_aplicar_preservada (test_temas_v03.TemasV03Tests.test_legado_assinatura_aplicar_preservada) ... ok
+test_legado_assinaturas_restantes_preservadas (test_temas_v03.TemasV03Tests.test_legado_assinaturas_restantes_preservadas) ... ok
+test_nome_de_template_precisa_namespace_hub (test_temas_v03.TemasV03Tests.test_nome_de_template_precisa_namespace_hub) ... ok
+test_opcoes_precisam_booleanas (test_temas_v03.TemasV03Tests.test_opcoes_precisam_booleanas) ... ok
+test_registro_configurado_ativa_somente_explicitamente (test_temas_v03.TemasV03Tests.test_registro_configurado_ativa_somente_explicitamente) ... ok
+test_registro_configurado_nao_ativa_por_padrao (test_temas_v03.TemasV03Tests.test_registro_configurado_nao_ativa_por_padrao) ... ok
+test_registro_legado_caixa_continua_funcionando (test_temas_v03.TemasV03Tests.test_registro_legado_caixa_continua_funcionando) ... ok
+test_rodape_usa_tokens_configurados (test_temas_v03.TemasV03Tests.test_rodape_usa_tokens_configurados) ... ok
+test_substituicao_exige_flag_explicita (test_temas_v03.TemasV03Tests.test_substituicao_exige_flag_explicita) ... ok
+test_substituicao_template_ativo_com_ativacao_explicita (test_temas_v03.TemasV03Tests.test_substituicao_template_ativo_com_ativacao_explicita) ... ok
+test_substituicao_template_ativo_composto_exige_ativacao (test_temas_v03.TemasV03Tests.test_substituicao_template_ativo_composto_exige_ativacao) ... ok
+test_substituicao_template_ativo_simples_exige_ativacao (test_temas_v03.TemasV03Tests.test_substituicao_template_ativo_simples_exige_ativacao) ... ok
+test_tokens_configurados_chegam_ao_layout (test_temas_v03.TemasV03Tests.test_tokens_configurados_chegam_ao_layout) ... ok
+test_values_adulterados_nao_contaminam_layout_ou_rodape (test_temas_v03.TemasV03Tests.test_values_adulterados_nao_contaminam_layout_ou_rodape) ... ok
+test_badges_preservados (test_temas_v04.AssinaturasLegadasTests.test_badges_preservados) ... ok
+test_dataframe_preservado (test_temas_v04.AssinaturasLegadasTests.test_dataframe_preservado) ... ok
+test_divisores_preservados (test_temas_v04.AssinaturasLegadasTests.test_divisores_preservados) ... ok
+test_indice_preservado (test_temas_v04.AssinaturasLegadasTests.test_indice_preservado) ... ok
+test_kpi_preservado (test_temas_v04.AssinaturasLegadasTests.test_kpi_preservado) ... ok
+test_section_header_preservado (test_temas_v04.AssinaturasLegadasTests.test_section_header_preservado) ... ok
+test_badges_reference_iguais (test_temas_v04.EquivalenciaLegadaTests.test_badges_reference_iguais) ... ok
+test_dataframe_reference_semantico_equivalente (test_temas_v04.EquivalenciaLegadaTests.test_dataframe_reference_semantico_equivalente) ... mkdir -p failed for path /home/agent/.config/matplotlib: [Errno 30] Read-only file system: '/home/agent/.config/matplotlib'
+Matplotlib created a temporary cache directory at /tmp/matplotlib-89qs80qi because there was an issue with the default path (/home/agent/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+Fontconfig error: No writable cache directories
+ok
+test_divisores_reference_iguais (test_temas_v04.EquivalenciaLegadaTests.test_divisores_reference_iguais) ... ok
+test_indice_reference_igual (test_temas_v04.EquivalenciaLegadaTests.test_indice_reference_igual) ... ok
+test_kpi_reference_igual (test_temas_v04.EquivalenciaLegadaTests.test_kpi_reference_igual) ... ok
+test_section_header_reference_igual (test_temas_v04.EquivalenciaLegadaTests.test_section_header_reference_igual) ... ok
+test_styles_reference_reproduz_constantes_legadas (test_temas_v04.EquivalenciaLegadaTests.test_styles_reference_reproduz_constantes_legadas) ... ok
+test_contexto_readme_rejeitado (test_temas_v04.IntegridadeTests.test_contexto_readme_rejeitado) ... ok
+test_dark_e_high_contrast_sao_aceitos_no_html (test_temas_v04.IntegridadeTests.test_dark_e_high_contrast_sao_aceitos_no_html) ... ok
+test_dicionario_cru_rejeitado (test_temas_v04.IntegridadeTests.test_dicionario_cru_rejeitado) ... ok
+test_dicionario_de_estilos_e_copia (test_temas_v04.IntegridadeTests.test_dicionario_de_estilos_e_copia) ... ok
+test_fingerprint_adulterado_rejeitado (test_temas_v04.IntegridadeTests.test_fingerprint_adulterado_rejeitado) ... ok
+test_markdown_ainda_revalida_o_tema (test_temas_v04.IntegridadeTests.test_markdown_ainda_revalida_o_tema) ... ok
+test_modo_nao_certifica_acessibilidade_nem_altera_logica (test_temas_v04.IntegridadeTests.test_modo_nao_certifica_acessibilidade_nem_altera_logica) ... ok
+test_values_adulterados_nao_contaminam_estilos (test_temas_v04.IntegridadeTests.test_values_adulterados_nao_contaminam_estilos) ... ok
+test_badge_tokens_e_fallback (test_temas_v04.PropagacaoTokensTests.test_badge_tokens_e_fallback) ... ok
+test_card_tokens_e_escape (test_temas_v04.PropagacaoTokensTests.test_card_tokens_e_escape) ... ok
+test_dataframe_tokens_e_dados_preservados (test_temas_v04.PropagacaoTokensTests.test_dataframe_tokens_e_dados_preservados) ... ok
+test_divider_tokens (test_temas_v04.PropagacaoTokensTests.test_divider_tokens) ... ok
+test_indice_tokens (test_temas_v04.PropagacaoTokensTests.test_indice_tokens) ... ok
+test_markdown_nao_recebe_css (test_temas_v04.PropagacaoTokensTests.test_markdown_nao_recebe_css) ... ok
+test_score_muda_somente_aparencia (test_temas_v04.PropagacaoTokensTests.test_score_muda_somente_aparencia) ... ok
+test_section_tokens (test_temas_v04.PropagacaoTokensTests.test_section_tokens) ... ok
+test_import_do_modulo_nao_importa_ipywidgets (test_temas_v05.DependencyTests.test_import_do_modulo_nao_importa_ipywidgets) ... ok
+test_ui_real_constroi_sem_exibir_e_sem_mudar_tema (test_temas_v05.DependencyTests.test_ui_real_constroi_sem_exibir_e_sem_mudar_tema) ... skipped 'ipywidgets/IPython ausentes; workflow V05 usa --require-ipywidgets'
+test_codigo_nao_contem_rede_spark_ou_publicacao (test_temas_v05.DocumentationTests.test_codigo_nao_contem_rede_spark_ou_publicacao) ... ok
+test_objeto_tem_contrato_readme_exemplo_e_fachada (test_temas_v05.DocumentationTests.test_objeto_tem_contrato_readme_exemplo_e_fachada) ... ok
+test_atualizacao_multipla_e_atomica (test_temas_v05.DraftTests.test_atualizacao_multipla_e_atomica) ... ok
+test_booleano_nao_vira_inteiro (test_temas_v05.DraftTests.test_booleano_nao_vira_inteiro) ... ok
+test_contexto_nao_notebook_e_rejeitado (test_temas_v05.DraftTests.test_contexto_nao_notebook_e_rejeitado) ... ok
+test_criacao_revalida_e_nao_altera_base_recebida (test_temas_v05.DraftTests.test_criacao_revalida_e_nao_altera_base_recebida) ... ok
+test_duas_instancias_nao_compartilham_estado (test_temas_v05.DraftTests.test_duas_instancias_nao_compartilham_estado) ... ok
+test_exportacao_em_memoria_nao_escreve (test_temas_v05.DraftTests.test_exportacao_em_memoria_nao_escreve) ... ok
+test_hex_minusculo_e_normalizado_explicitamente (test_temas_v05.DraftTests.test_hex_minusculo_e_normalizado_explicitamente) ... ok
+test_limite_do_schema_falha_sem_commit_parcial (test_temas_v05.DraftTests.test_limite_do_schema_falha_sem_commit_parcial) ... ok
+test_noop_nao_cria_historico (test_temas_v05.DraftTests.test_noop_nao_cria_historico) ... ok
+test_paleta_divergente_par_e_rejeitada (test_temas_v05.DraftTests.test_paleta_divergente_par_e_rejeitada) ... ok
+test_paleta_string_e_normalizada (test_temas_v05.DraftTests.test_paleta_string_e_normalizada) ... ok
+test_tipo_incorreto_e_rejeitado (test_temas_v05.DraftTests.test_tipo_incorreto_e_rejeitado) ... ok
+test_token_desconhecido_falha_sem_mudar_estado (test_temas_v05.DraftTests.test_token_desconhecido_falha_sem_mudar_estado) ... ok
+test_undo_e_restore (test_temas_v05.DraftTests.test_undo_e_restore) ... ok
+test_undo_vazio_falha (test_temas_v05.DraftTests.test_undo_vazio_falha) ... ok
+test_fallback_cria_apenas_controles_primarios_e_aplica_strings (test_temas_v05.FallbackTests.test_fallback_cria_apenas_controles_primarios_e_aplica_strings) ... ok
+test_fallback_sem_dbutils_falha (test_temas_v05.FallbackTests.test_fallback_sem_dbutils_falha) ... ok
+test_metadado_nao_muta_tema (test_temas_v05.MetadataTests.test_metadado_nao_muta_tema) ... ok
+test_specs_derivados_do_schema_e_com_nomes_legiveis (test_temas_v05.MetadataTests.test_specs_derivados_do_schema_e_com_nomes_legiveis) ... ok
+test_comparacao_exige_draft (test_temas_v05.PreviewTests.test_comparacao_exige_draft) ... ok
+test_comparacao_preserva_data_dos_graficos (test_temas_v05.PreviewTests.test_comparacao_preserva_data_dos_graficos) ... ok
+test_dark_e_high_contrast_nao_fingem_preview_plotly (test_temas_v05.PreviewTests.test_dark_e_high_contrast_nao_fingem_preview_plotly) ... ok
+test_preview_reusa_dados_sinteticos_e_nao_muda_default_plotly (test_temas_v05.PreviewTests.test_preview_reusa_dados_sinteticos_e_nao_muda_default_plotly) ... ok
+test_nome_com_path_e_rejeitado (test_temas_v05.SaveTests.test_nome_com_path_e_rejeitado) ... ok
+test_raiz_inexistente_e_rejeitada (test_temas_v05.SaveTests.test_raiz_inexistente_e_rejeitada) ... ok
+test_salvar_nao_sobrescreve (test_temas_v05.SaveTests.test_salvar_nao_sobrescreve) ... ok
+test_salvar_proposta_cria_novo_json_e_recibo (test_temas_v05.SaveTests.test_salvar_proposta_cria_novo_json_e_recibo) ... ok
+test_controls_without_preview_are_explicit (test_temas_v05_integracao.ControlCoverageTests.test_controls_without_preview_are_explicit) ... ok
+test_fallback_reinstallation_preserves_typed_values (test_temas_v05_integracao.ControlCoverageTests.test_fallback_reinstallation_preserves_typed_values) ... ok
+test_bar_has_four_fixed_series (test_temas_v05_integracao.GalleryCoverageTests.test_bar_has_four_fixed_series) ... ok
+test_diverging_colors_reach_heatmap_without_changing_values (test_temas_v05_integracao.GalleryCoverageTests.test_diverging_colors_reach_heatmap_without_changing_values) ... ok
+test_apply_emits_symmetric_gallery_without_script_or_cdn (test_temas_v05_integracao.RealWidgetCallbackTests.test_apply_emits_symmetric_gallery_without_script_or_cdn) ... skipped 'UI opcional ausente; workflow específico V05 a instala explicitamente'
+test_failed_generation_preserves_draft_and_last_outputs (test_temas_v05_integracao.RealWidgetCallbackTests.test_failed_generation_preserves_draft_and_last_outputs) ... skipped 'UI opcional ausente; workflow específico V05 a instala explicitamente'
+test_pending_fields_block_save_and_export (test_temas_v05_integracao.RealWidgetCallbackTests.test_pending_fields_block_save_and_export) ... skipped 'UI opcional ausente; workflow específico V05 a instala explicitamente'
+test_restore_requires_explicit_confirmation (test_temas_v05_integracao.RealWidgetCallbackTests.test_restore_requires_explicit_confirmation) ... skipped 'UI opcional ausente; workflow específico V05 a instala explicitamente'
+test_unimplemented_fields_disabled (test_temas_v05_integracao.RealWidgetCallbackTests.test_unimplemented_fields_disabled) ... skipped 'UI opcional ausente; workflow específico V05 a instala explicitamente'
+test_empty_palette_fields_are_not_silently_discarded (test_temas_v05_integracao.SaveSafetyTests.test_empty_palette_fields_are_not_silently_discarded) ... ok
+test_fsync_failure_does_not_issue_receipt_or_delete_file (test_temas_v05_integracao.SaveSafetyTests.test_fsync_failure_does_not_issue_receipt_or_delete_file) ... ok
+test_invalid_root_has_operational_error_and_no_write (test_temas_v05_integracao.SaveSafetyTests.test_invalid_root_has_operational_error_and_no_write) ... ok
+test_permission_error_does_not_delete_preexisting_empty_file (test_temas_v05_integracao.SaveSafetyTests.test_permission_error_does_not_delete_preexisting_empty_file) ... ok
+test_receipt_has_destination_and_verified_bytes (test_temas_v05_integracao.SaveSafetyTests.test_receipt_has_destination_and_verified_bytes) ... ok
+test_short_write_is_failure_not_receipt (test_temas_v05_integracao.SaveSafetyTests.test_short_write_is_failure_not_receipt) ... ok
+test_symlink_target_is_not_followed_or_removed (test_temas_v05_integracao.SaveSafetyTests.test_symlink_target_is_not_followed_or_removed) ... ok
+test_launcher_blocks_session_save_with_unapplied_fields (test_temas_v05_sessions.LauncherTests.test_launcher_blocks_session_save_with_unapplied_fields) ... skipped 'UI opcional ausente; workflow V05 instala ipywidgets'
+test_launcher_marks_demo_and_opens_selected_base (test_temas_v05_sessions.LauncherTests.test_launcher_marks_demo_and_opens_selected_base) ... skipped 'UI opcional ausente; workflow V05 instala ipywidgets'
+test_launcher_saves_and_reopens_session_without_user_code (test_temas_v05_sessions.LauncherTests.test_launcher_saves_and_reopens_session_without_user_code) ... skipped 'UI opcional ausente; workflow V05 instala ipywidgets'
+test_bad_key_and_wrong_context_fail_closed (test_temas_v05_sessions.PresetTests.test_bad_key_and_wrong_context_fail_closed) ... ok
+test_demo_catalog_is_explicit_and_not_approval (test_temas_v05_sessions.PresetTests.test_demo_catalog_is_explicit_and_not_approval) ... ok
+test_maintainer_presets_are_revalidated (test_temas_v05_sessions.PresetTests.test_maintainer_presets_are_revalidated) ... ok
+test_unknown_preset_does_not_fallback (test_temas_v05_sessions.PresetTests.test_unknown_preset_does_not_fallback) ... ok
+test_existing_session_is_never_overwritten (test_temas_v05_sessions.SessionPersistenceTests.test_existing_session_is_never_overwritten) ... ok
+test_incomplete_directory_is_hidden_and_refused (test_temas_v05_sessions.SessionPersistenceTests.test_incomplete_directory_is_hidden_and_refused) ... ok
+test_listing_exposes_only_safe_metadata (test_temas_v05_sessions.SessionPersistenceTests.test_listing_exposes_only_safe_metadata) ... ok
+test_manifest_is_commit_marker_and_contains_lineage (test_temas_v05_sessions.SessionPersistenceTests.test_manifest_is_commit_marker_and_contains_lineage) ... ok
+test_reopened_history_can_undo_to_previous_valid_state (test_temas_v05_sessions.SessionPersistenceTests.test_reopened_history_can_undo_to_previous_valid_state) ... ok
+test_roundtrip_preserves_base_proposal_history_and_revision (test_temas_v05_sessions.SessionPersistenceTests.test_roundtrip_preserves_base_proposal_history_and_revision) ... ok
+test_tampered_proposal_is_refused_without_hash_repair (test_temas_v05_sessions.SessionPersistenceTests.test_tampered_proposal_is_refused_without_hash_repair) ... ok
+test_bridge_is_fail_closed_and_uses_resolved_theme (test_temas_v06.TemasV06Tests.test_bridge_is_fail_closed_and_uses_resolved_theme) ... ok
+test_generation_contract_is_mirrored (test_temas_v06.TemasV06Tests.test_generation_contract_is_mirrored) ... ok
+test_generation_is_deterministic_preserves_frozen_bytes_and_verifies (test_temas_v06.TemasV06Tests.test_generation_is_deterministic_preserves_frozen_bytes_and_verifies) ... ok
+test_output_cannot_target_active_package (test_temas_v06.TemasV06Tests.test_output_cannot_target_active_package) ... ok
+test_verifier_detects_tampering (test_temas_v06.TemasV06Tests.test_verifier_detects_tampering) ... ok
+test_legacy_signatures_remain_unchanged (test_temas_v07.ApiCompatibilityTests.test_legacy_signatures_remain_unchanged) ... ok
+test_pyspark_consumers_expose_resolved_routes_in_source (test_temas_v07.ApiCompatibilityTests.test_pyspark_consumers_expose_resolved_routes_in_source) ... ok
+test_curves_use_dedicated_palette (test_temas_v07.CurvesTests.test_curves_use_dedicated_palette) ... ok
+test_reference_theme_preserves_curve_data (test_temas_v07.CurvesTests.test_reference_theme_preserves_curve_data) ... ok
+test_resolved_curve_exports_to_self_contained_html (test_temas_v07.CurvesTests.test_resolved_curve_exports_to_self_contained_html) ... ok
+test_optional_visual_dependencies_remain_lazy (test_temas_v07.OptionalDependencyAndLiteralTests.test_optional_visual_dependencies_remain_lazy) ... ok
+test_resolved_routes_do_not_embed_hex_literals (test_temas_v07.OptionalDependencyAndLiteralTests.test_resolved_routes_do_not_embed_hex_literals) ... ok
+test_resolved_timeline_preserves_values_and_thresholds (test_temas_v07.PerformanceMonitorTests.test_resolved_timeline_preserves_values_and_thresholds) ... ok
+test_all_runtime_consumers_are_classified (test_temas_v07.RegistryTests.test_all_runtime_consumers_are_classified) ... ok
+test_controls_have_real_supported_consumers (test_temas_v07.RegistryTests.test_controls_have_real_supported_consumers) ... ok
+test_exceptions_are_explicit_and_actionable (test_temas_v07.RegistryTests.test_exceptions_are_explicit_and_actionable) ... ok
+test_output_format_boundary_is_closed (test_temas_v07.RegistryTests.test_output_format_boundary_is_closed) ... ok
+test_raw_dictionary_is_rejected (test_temas_v07.TokenAccessTests.test_raw_dictionary_is_rejected) ... ok
+test_tokens_are_revalidated_and_copied (test_temas_v07.TokenAccessTests.test_tokens_are_revalidated_and_copied) ... ok
+test_resolved_umap_reuses_same_embedding (test_temas_v07.UmapTests.test_resolved_umap_reuses_same_embedding) ... ok
+test_resolved_curves_preserve_points (test_temas_v07.VintageTests.test_resolved_curves_preserve_points) ... ok
+test_resolved_heatmap_preserves_matrix (test_temas_v07.VintageTests.test_resolved_heatmap_preserves_matrix) ... ok
+test_changed_consumers_match_byte_for_byte (test_temas_v07_mirror.MirrorTests.test_changed_consumers_match_byte_for_byte) ... ok
+test_correlation_uses_diverging_palette (test_temas_v07_mirror.SemanticPaletteTests.test_correlation_uses_diverging_palette) ... ok
+test_assistant_entrypoint_no_longer_calls_v05_candidate (test_temas_v08.CurrentStateTests.test_assistant_entrypoint_no_longer_calls_v05_candidate) ... ok
+test_first_use_does_not_stop_at_v04 (test_temas_v08.CurrentStateTests.test_first_use_does_not_stop_at_v04) ... ok
+test_identity_pattern_is_current_through_v07 (test_temas_v08.CurrentStateTests.test_identity_pattern_is_current_through_v07) ... ok
+test_manual_live_heading_and_state_are_current (test_temas_v08.CurrentStateTests.test_manual_live_heading_and_state_are_current) ... ok
+test_template_does_not_recommend_legacy_global_registration (test_temas_v08.EdaVisualTemplateTests.test_template_does_not_recommend_legacy_global_registration) ... ok
+test_template_has_no_hex_palette_policy (test_temas_v08.EdaVisualTemplateTests.test_template_has_no_hex_palette_policy) ... ok
+test_template_is_not_a_second_theme_source (test_temas_v08.EdaVisualTemplateTests.test_template_is_not_a_second_theme_source) ... ok
+test_each_row_has_reason_and_effect (test_temas_v08.MatrixTests.test_each_row_has_reason_and_effect) ... ok
+test_matrix_has_expected_transversal_surfaces (test_temas_v08.MatrixTests.test_matrix_has_expected_transversal_surfaces) ... ok
+test_no_edit_decision_for_commenting_skill_is_preserved (test_temas_v08.MatrixTests.test_no_edit_decision_for_commenting_skill_is_preserved) ... ok
+test_all_manual_copies_are_identical (test_temas_v08.MirrorTests.test_all_manual_copies_are_identical) ... ok
+test_updated_assistant_surfaces_match_simulated_bytes (test_temas_v08.MirrorTests.test_updated_assistant_surfaces_match_simulated_bytes) ... ok
+test_missing_capability_or_limit_is_rejected (test_temas_v08.OperationalGuidanceMutationTests.test_missing_capability_or_limit_is_rejected) ... ok
+test_patterns_index_reaches_v07 (test_temas_v08.PatternsAndWorkflowTests.test_patterns_index_reaches_v07) ... ok
+test_skills_catalog_names_canonical_visual_owner (test_temas_v08.PatternsAndWorkflowTests.test_skills_catalog_names_canonical_visual_owner) ... ok
+test_v08_workflow_is_read_only (test_temas_v08.PatternsAndWorkflowTests.test_v08_workflow_is_read_only) ... ok
+test_baseline_keeps_metrics_separate_from_visual_theme (test_temas_v08.SkillRoutingTests.test_baseline_keeps_metrics_separate_from_visual_theme) ... ok
+test_concierge_has_visual_route_and_no_publication_claim (test_temas_v08.SkillRoutingTests.test_concierge_has_visual_route_and_no_publication_claim) ... ok
+test_create_object_uses_resolved_theme_as_configurable_source (test_temas_v08.SkillRoutingTests.test_create_object_uses_resolved_theme_as_configurable_source) ... ok
+test_eda_skill_routes_to_resolved_consumers (test_temas_v08.SkillRoutingTests.test_eda_skill_routes_to_resolved_consumers) ... ok
+test_explainability_marks_shap_exception_and_resolved_curves (test_temas_v08.SkillRoutingTests.test_explainability_marks_shap_exception_and_resolved_curves) ... ok
+test_monitoring_theme_does_not_change_policy (test_temas_v08.SkillRoutingTests.test_monitoring_theme_does_not_change_policy) ... ok
+test_vintage_routes_to_resolved_plots_without_changing_rates (test_temas_v08.SkillRoutingTests.test_vintage_routes_to_resolved_plots_without_changing_rates) ... ok
+test_both_workflows_verify_generated_zip_before_use (test_temas_v09.ThemeTransitionContractTests.test_both_workflows_verify_generated_zip_before_use) ... ok
+test_bundle_generator_calls_v09_guard_and_writes_contract (test_temas_v09.ThemeTransitionContractTests.test_bundle_generator_calls_v09_guard_and_writes_contract) ... ok
+test_contract_is_explicit_and_non_publishing (test_temas_v09.ThemeTransitionContractTests.test_contract_is_explicit_and_non_publishing) ... ok
+test_existing_manifest_schema_version_is_preserved (test_temas_v09.ThemeTransitionContractTests.test_existing_manifest_schema_version_is_preserved) ... ok
+test_manifest_contract_must_match_inventory (test_temas_v09.ThemeTransitionContractTests.test_manifest_contract_must_match_inventory) ... ok
+test_missing_any_required_file_fails_closed (test_temas_v09.ThemeTransitionContractTests.test_missing_any_required_file_fails_closed) ... ok
+test_operational_workflow_prepares_node_dependencies_before_ci_gate (test_temas_v09.ThemeTransitionContractTests.test_operational_workflow_prepares_node_dependencies_before_ci_gate) ... ok
+test_required_theme_files_exist_in_simulated_product (test_temas_v09.ThemeTransitionContractTests.test_required_theme_files_exist_in_simulated_product) ... ok
+test_transition_checklist_names_theme_contract (test_temas_v09.ThemeTransitionContractTests.test_transition_checklist_names_theme_contract) ... ok
+test_v09_workflow_is_read_only (test_temas_v09.ThemeTransitionContractTests.test_v09_workflow_is_read_only) ... ok
+test_valid_zip_verifies_actual_theme_bytes (test_temas_v09.ThemeTransitionContractTests.test_valid_zip_verifies_actual_theme_bytes) ... ok
+test_zip_missing_or_tampered_required_file_fails (test_temas_v09.ThemeTransitionContractTests.test_zip_missing_or_tampered_required_file_fails) ... ok
+test_local_mode_accepts_explicit_temp_directory (test_temas_v10.ConfigTests.test_local_mode_accepts_explicit_temp_directory) ... ok
+test_mode_cannot_enable_publication (test_temas_v10.ConfigTests.test_mode_cannot_enable_publication) ... ok
+test_production_rejects_traversal_with_volumes_prefix (test_temas_v10.ConfigTests.test_production_rejects_traversal_with_volumes_prefix) ... ok
+test_production_requires_uc_volume_path (test_temas_v10.ConfigTests.test_production_requires_uc_volume_path) ... ok
+test_forwarded_identity_is_hashed_for_namespace (test_temas_v10.IdentityTests.test_forwarded_identity_is_hashed_for_namespace) ... ok
+test_local_identity_requires_two_explicit_values (test_temas_v10.IdentityTests.test_local_identity_requires_two_explicit_values) ... ok
+test_missing_identity_fails_closed (test_temas_v10.IdentityTests.test_missing_identity_fails_closed) ... ok
+test_app_source_and_simulated_mirror_are_identical (test_temas_v10.PackagingTests.test_app_source_and_simulated_mirror_are_identical) ... ok
+test_app_yaml_uses_resource_reference_without_secret (test_temas_v10.PackagingTests.test_app_yaml_uses_resource_reference_without_secret) ... ok
+test_bundle_builder_creates_and_verifies_derived_app (test_temas_v10.PackagingTests.test_bundle_builder_creates_and_verifies_derived_app) ... ok
+test_streamlit_shell_has_no_publish_or_approve_action (test_temas_v10.PackagingTests.test_streamlit_shell_has_no_publish_or_approve_action) ... ok
+test_workflow_syntax_check_does_not_pollute_product_tree (test_temas_v10.PackagingTests.test_workflow_syntax_check_does_not_pollute_product_tree) ... ok
+test_existing_session_is_not_overwritten (test_temas_v10.PersistenceTests.test_existing_session_is_not_overwritten) ... ok
+test_roundtrip_uses_v05_session_contract (test_temas_v10.PersistenceTests.test_roundtrip_uses_v05_session_contract) ... ok
+test_tampered_session_is_refused (test_temas_v10.PersistenceTests.test_tampered_session_is_refused) ... ok
+test_two_users_do_not_list_each_others_sessions (test_temas_v10.PersistenceTests.test_two_users_do_not_list_each_others_sessions) ... ok
+test_publication_is_not_implemented (test_temas_v10.PolicyTests.test_publication_is_not_implemented) ... ok
+test_retention_has_no_delete_or_history_rewrite (test_temas_v10.PolicyTests.test_retention_has_no_delete_or_history_rewrite) ... ok
+test_v01_roles_are_preserved_in_v10_matrix (test_temas_v10.PolicyTests.test_v01_roles_are_preserved_in_v10_matrix) ... ok
+test_binding_can_be_selective_and_reports_omissions (test_temas_v11.BindingTests.test_binding_can_be_selective_and_reports_omissions) ... ok
+test_binding_changes_only_explicit_existing_direct_fields (test_temas_v11.BindingTests.test_binding_changes_only_explicit_existing_direct_fields) ... ok
+test_binding_rejects_approximation_automation (test_temas_v11.BindingTests.test_binding_rejects_approximation_automation) ... ok
+test_binding_rejects_missing_native_path (test_temas_v11.BindingTests.test_binding_rejects_missing_native_path) ... ok
+test_binding_requires_exact_template_hash (test_temas_v11.BindingTests.test_binding_requires_exact_template_hash) ... ok
+test_public_facade_imports_as_namespace_package (test_temas_v11.FixtureAndPackagingTests.test_public_facade_imports_as_namespace_package) ... ok
+test_source_and_simulated_aibi_surface_are_byte_identical (test_temas_v11.FixtureAndPackagingTests.test_source_and_simulated_aibi_surface_are_byte_identical) ... ok
+test_synthetic_dashboard_is_not_databricks_importable_and_has_stable_semantics (test_temas_v11.FixtureAndPackagingTests.test_synthetic_dashboard_is_not_databricks_importable_and_has_stable_semantics) ... ok
+test_v11_code_does_not_call_databricks_or_workspace_api (test_temas_v11.FixtureAndPackagingTests.test_v11_code_does_not_call_databricks_or_workspace_api) ... ok
+test_v11_workflow_is_read_only_and_has_no_remote_databricks_action (test_temas_v11.FixtureAndPackagingTests.test_v11_workflow_is_read_only_and_has_no_remote_databricks_action) ... ok
+test_aibi_context_remains_reserved_not_silently_enabled (test_temas_v11.MappingTests.test_aibi_context_remains_reserved_not_silently_enabled) ... ok
+test_mapping_classifications_are_explicit_and_complete (test_temas_v11.MappingTests.test_mapping_classifications_are_explicit_and_complete) ... ok
+test_mapping_covers_exact_notebook_token_contract (test_temas_v11.MappingTests.test_mapping_covers_exact_notebook_token_contract) ... ok
+test_mapping_sources_are_official_databricks_docs (test_temas_v11.MappingTests.test_mapping_sources_are_official_databricks_docs) ... ok
+test_admin_and_draft_guards_fail_closed (test_temas_v11.PolicyTests.test_admin_and_draft_guards_fail_closed) ... ok
+test_dashboard_policy_separates_theme_from_publish (test_temas_v11.PolicyTests.test_dashboard_policy_separates_theme_from_publish) ... ok
+test_workspace_snapshot_policy_forbids_universal_propagation_claim (test_temas_v11.PolicyTests.test_workspace_snapshot_policy_forbids_universal_propagation_claim) ... ok
+test_direct_translations_are_only_three_capabilities (test_temas_v11.ProjectionTests.test_direct_translations_are_only_three_capabilities) ... ok
+test_projection_export_is_deterministic (test_temas_v11.ProjectionTests.test_projection_export_is_deterministic) ... ok
+test_projection_rejects_editorial_context (test_temas_v11.ProjectionTests.test_projection_rejects_editorial_context) ... ok
+test_projection_revalidates_v02_theme_and_is_not_native_import (test_temas_v11.ProjectionTests.test_projection_revalidates_v02_theme_and_is_not_native_import) ... ok
+test_a11_pass_requires_measured_contrast_not_rounded_up (test_temas_v12.EvidenceFailClosedTests.test_a11_pass_requires_measured_contrast_not_rounded_up) ... ok
+test_aibi_dashboard_journey_rejects_accidental_publication (test_temas_v12.EvidenceFailClosedTests.test_aibi_dashboard_journey_rejects_accidental_publication) ... ok
+test_aibi_rejects_approximated_automation (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_approximated_automation) ... ok
+test_aibi_rejects_divergent_rollback (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_divergent_rollback) ... ok
+test_aibi_rejects_malformed_rollback_hash (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_malformed_rollback_hash) ... ok
+test_aibi_rejects_pass_without_rollback_hashes (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_pass_without_rollback_hashes) ... ok
+test_aibi_rejects_semantic_drift (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_semantic_drift) ... ok
+test_aibi_rejects_stale_export_hash (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_stale_export_hash) ... ok
+test_aibi_rejects_synthetic_fixture_as_databricks_input (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_synthetic_fixture_as_databricks_input) ... ok
+test_aibi_rejects_unsupported_automation (test_temas_v12.EvidenceFailClosedTests.test_aibi_rejects_unsupported_automation) ... ok
+test_app_pass_requires_real_identity_isolation_and_absent_publication_actions (test_temas_v12.EvidenceFailClosedTests.test_app_pass_requires_real_identity_isolation_and_absent_publication_actions) ... ok
+test_human_pass_requires_authorized_real_participant (test_temas_v12.EvidenceFailClosedTests.test_human_pass_requires_authorized_real_participant) ... ok
+test_human_pass_requires_observed_duration_when_case_requires_it (test_temas_v12.EvidenceFailClosedTests.test_human_pass_requires_observed_duration_when_case_requires_it) ... ok
+test_mutation_requires_explicit_authorization_reference_and_rollback (test_temas_v12.EvidenceFailClosedTests.test_mutation_requires_explicit_authorization_reference_and_rollback) ... ok
+test_pass_requires_oracle_explicitly_met (test_temas_v12.EvidenceFailClosedTests.test_pass_requires_oracle_explicitly_met) ... ok
+test_pass_without_evidence_is_rejected (test_temas_v12.EvidenceFailClosedTests.test_pass_without_evidence_is_rejected) ... ok
+test_pending_record_does_not_fake_pass (test_temas_v12.EvidenceFailClosedTests.test_pending_record_does_not_fake_pass) ... ok
+test_preserved_fail_record_survives_the_new_pass_only_facts (test_temas_v12.EvidenceFailClosedTests.test_preserved_fail_record_survives_the_new_pass_only_facts) ... ok
+test_real_environment_pass_rejects_non_synthetic_data (test_temas_v12.EvidenceFailClosedTests.test_real_environment_pass_rejects_non_synthetic_data) ... ok
+test_sec01_rejects_permission_sustained_by_self_declared_role (test_temas_v12.EvidenceFailClosedTests.test_sec01_rejects_permission_sustained_by_self_declared_role) ... ok
+test_sec01_rejects_record_missing_the_hygiene_facts (test_temas_v12.EvidenceFailClosedTests.test_sec01_rejects_record_missing_the_hygiene_facts) ... ok
+test_sec01_rejects_versioned_identity_bytes (test_temas_v12.EvidenceFailClosedTests.test_sec01_rejects_versioned_identity_bytes) ... ok
+test_valid_aibi_draft_evidence_passes (test_temas_v12.EvidenceFailClosedTests.test_valid_aibi_draft_evidence_passes) ... ok
+test_valid_sec01_environment_evidence_passes (test_temas_v12.EvidenceFailClosedTests.test_valid_sec01_environment_evidence_passes) ... ok
+test_valid_uat_evidence_passes_without_claiming_environment (test_temas_v12.EvidenceFailClosedTests.test_valid_uat_evidence_passes_without_claiming_environment) ... ok
+test_workspace_theme_publication_requires_own_authorization (test_temas_v12.EvidenceFailClosedTests.test_workspace_theme_publication_requires_own_authorization) ... ok
+test_workspace_theme_rejects_live_link_claim (test_temas_v12.EvidenceFailClosedTests.test_workspace_theme_rejects_live_link_claim) ... ok
+test_added_line_that_looks_like_a_diff_header_is_not_dropped (test_temas_v12.HigieneDeConteudoTests.test_added_line_that_looks_like_a_diff_header_is_not_dropped) ... ok
+test_clean_root_doc_content_produces_no_finding (test_temas_v12.HigieneDeConteudoTests.test_clean_root_doc_content_produces_no_finding) ... ok
+test_forbidden_credential_added_to_permitted_root_doc_is_detected (test_temas_v12.HigieneDeConteudoTests.test_forbidden_credential_added_to_permitted_root_doc_is_detected) ... ok
+test_historic_debt_outside_the_diff_is_not_swept (test_temas_v12.HigieneDeConteudoTests.test_historic_debt_outside_the_diff_is_not_swept) ... ok
+test_hygiene_does_not_match_the_files_that_implement_it (test_temas_v12.HigieneDeConteudoTests.test_hygiene_does_not_match_the_files_that_implement_it) ... ok
+test_hygiene_finding_never_echoes_the_matched_secret (test_temas_v12.HigieneDeConteudoTests.test_hygiene_finding_never_echoes_the_matched_secret) ... ok
+test_only_added_lines_are_extracted_from_a_diff (test_temas_v12.HigieneDeConteudoTests.test_only_added_lines_are_extracted_from_a_diff) ... ok
+test_workflow_delegates_hygiene_and_declares_every_permitted_path (test_temas_v12.HigieneDeConteudoTests.test_workflow_delegates_hygiene_and_declares_every_permitted_path) ... ok
+test_workspace_identifier_and_paths_added_to_root_doc_are_detected (test_temas_v12.HigieneDeConteudoTests.test_workspace_identifier_and_paths_added_to_root_doc_are_detected) ... ok
+test_aibi01_requires_rollback_hashes_on_pass (test_temas_v12.MatrixContractTests.test_aibi01_requires_rollback_hashes_on_pass) ... ok
+test_canonical_human_cases_from_v01_are_preserved (test_temas_v12.MatrixContractTests.test_canonical_human_cases_from_v01_are_preserved) ... ok
+test_evidence_classes_are_not_synonyms (test_temas_v12.MatrixContractTests.test_evidence_classes_are_not_synonyms) ... ok
+test_sec01_hygiene_facts_are_canonical (test_temas_v12.MatrixContractTests.test_sec01_hygiene_facts_are_canonical) ... ok
+test_sec01_specialization_is_ratified_in_v12_without_touching_v01 (test_temas_v12.MatrixContractTests.test_sec01_specialization_is_ratified_in_v12_without_touching_v01) ... ok
+test_specialization_does_not_leak_to_the_other_human_cases (test_temas_v12.MatrixContractTests.test_specialization_does_not_leak_to_the_other_human_cases) ... ok
+test_v11_direct_mapping_contract_is_unchanged (test_temas_v12.MatrixContractTests.test_v11_direct_mapping_contract_is_unchanged) ... ok
+test_v12_keeps_v11_native_fixture_non_importable (test_temas_v12.MatrixContractTests.test_v12_keeps_v11_native_fixture_non_importable) ... ok
+test_matrix_hash_is_frozen_for_traceability (test_temas_v12.PackagingAndWorkflowTests.test_matrix_hash_is_frozen_for_traceability) ... ok
+test_v12_tool_has_no_network_or_databricks_client (test_temas_v12.PackagingAndWorkflowTests.test_v12_tool_has_no_network_or_databricks_client) ... ok
+test_v12_workflow_is_read_only_and_has_no_databricks_credentials (test_temas_v12.PackagingAndWorkflowTests.test_v12_workflow_is_read_only_and_has_no_databricks_credentials) ... ok
+test_aibi_pass_requires_integral_rollback_but_preserved_fail_does_not (test_temas_v12_evidencia_real.HardeningContractTests.test_aibi_pass_requires_integral_rollback_but_preserved_fail_does_not) ... ok
+test_matrix_hash_is_actually_frozen (test_temas_v12_evidencia_real.HardeningContractTests.test_matrix_hash_is_actually_frozen) ... ok
+test_sec01_sanitization_facts_are_canonical_and_enforced (test_temas_v12_evidencia_real.HardeningContractTests.test_sec01_sanitization_facts_are_canonical_and_enforced) ... ok
+test_sec01_specialization_is_explicit_and_v01_remains_historical (test_temas_v12_evidencia_real.HardeningContractTests.test_sec01_specialization_is_explicit_and_v01_remains_historical) ... ok
+test_added_line_that_looks_like_diff_header_is_not_dropped (test_temas_v12_evidencia_real.HygieneGateTests.test_added_line_that_looks_like_diff_header_is_not_dropped) ... ok
+test_removed_and_context_lines_are_not_treated_as_candidate_additions (test_temas_v12_evidencia_real.HygieneGateTests.test_removed_and_context_lines_are_not_treated_as_candidate_additions) ... ok
+test_scanner_detects_forbidden_values_without_echoing_secret (test_temas_v12_evidencia_real.HygieneGateTests.test_scanner_detects_forbidden_values_without_echoing_secret) ... ok
+test_workflow_delegates_hygiene_and_remains_read_only (test_temas_v12_evidencia_real.HygieneGateTests.test_workflow_delegates_hygiene_and_remains_read_only) ... ok
+test_real_human_records_preserve_passes_and_a11_fail (test_temas_v12_evidencia_real.RealAibiEvidenceTests.test_real_human_records_preserve_passes_and_a11_fail) ... ok
+test_real_records_remain_fail_closed_and_synthetic_pass_validates (test_temas_v12_evidencia_real.RealAibiEvidenceTests.test_real_records_remain_fail_closed_and_synthetic_pass_validates) ... ok
+test_sec_01_identity_and_effective_permission_are_sanitized_and_valid (test_temas_v12_evidencia_real.RealAibiEvidenceTests.test_sec_01_identity_and_effective_permission_are_sanitized_and_valid) ... ok
+test_aibi_pass_scope_does_not_hide_a11_fail (test_temas_v13_s1.V13S1ContractTests.test_aibi_pass_scope_does_not_hide_a11_fail) ... ok
+test_every_owner_and_artifact_is_a_real_reference (test_temas_v13_s1.V13S1ContractTests.test_every_owner_and_artifact_is_a_real_reference) ... ok
+test_inherited_non_pass_states_are_preserved (test_temas_v13_s1.V13S1ContractTests.test_inherited_non_pass_states_are_preserved) ... ok
+test_mutant_that_anticipates_s2_preflight_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_that_anticipates_s2_preflight_fails) ... ok
+test_mutant_that_claims_s1_remote_mutation_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_that_claims_s1_remote_mutation_fails) ... ok
+test_mutant_that_embeds_second_token_contract_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_that_embeds_second_token_contract_fails) ... ok
+test_mutant_that_marks_mutation_authorization_optional_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_that_marks_mutation_authorization_optional_fails) ... ok
+test_mutant_that_marks_mutation_rollback_optional_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_that_marks_mutation_rollback_optional_fails) ... ok
+test_mutant_with_missing_owner_artifact_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_with_missing_owner_artifact_fails) ... ok
+test_mutant_without_authorization_on_mutable_action_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_without_authorization_on_mutable_action_fails) ... ok
+test_mutant_without_owner_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_without_owner_fails) ... ok
+test_mutant_without_rollback_on_mutable_action_fails (test_temas_v13_s1.V13S1ContractTests.test_mutant_without_rollback_on_mutable_action_fails) ... ok
+test_real_matrix_validates (test_temas_v13_s1.V13S1ContractTests.test_real_matrix_validates) ... ok
+test_relationships_cover_v05_v09_v10_v11_boundaries (test_temas_v13_s1.V13S1ContractTests.test_relationships_cover_v05_v09_v10_v11_boundaries) ... ok
+test_s1_documentation_keeps_s2_and_databricks_out_of_scope (test_temas_v13_s1.V13S1ContractTests.test_s1_documentation_keeps_s2_and_databricks_out_of_scope) ... ok
+test_s1_does_not_copy_canonical_contracts (test_temas_v13_s1.V13S1ContractTests.test_s1_does_not_copy_canonical_contracts) ... ok
+test_surface_set_is_exactly_the_plan_inventory (test_temas_v13_s1.V13S1ContractTests.test_surface_set_is_exactly_the_plan_inventory) ... ok
+test_v13_workflow_is_read_only (test_temas_v13_s1.V13S1ContractTests.test_v13_workflow_is_read_only) ... ok
+test_validator_has_no_network_or_databricks_client_import (test_temas_v13_s1.V13S1ContractTests.test_validator_has_no_network_or_databricks_client_import) ... ok
+test_workspace_and_dashboard_are_distinct_surfaces (test_temas_v13_s1.V13S1ContractTests.test_workspace_and_dashboard_are_distinct_surfaces) ... ok
+test_aggregate_mode_sorts_and_propagates_blocked (test_temas_v13_s2.V13S2PreflightTests.test_aggregate_mode_sorts_and_propagates_blocked) ... ok
+test_aggregate_rejects_duplicate_operation (test_temas_v13_s2.V13S2PreflightTests.test_aggregate_rejects_duplicate_operation) ... ok
+test_context_incompatible_has_stable_code (test_temas_v13_s2.V13S2PreflightTests.test_context_incompatible_has_stable_code) ... ok
+test_every_emitted_code_is_registered (test_temas_v13_s2.V13S2PreflightTests.test_every_emitted_code_is_registered) ... ok
+test_identity_reference_is_not_promoted_to_live_verification (test_temas_v13_s2.V13S2PreflightTests.test_identity_reference_is_not_promoted_to_live_verification) ... ok
+test_incomplete_transition_bundle_fails (test_temas_v13_s2.V13S2PreflightTests.test_incomplete_transition_bundle_fails) ... ok
+test_invalid_app_bundle_and_storage_are_reported (test_temas_v13_s2.V13S2PreflightTests.test_invalid_app_bundle_and_storage_are_reported) ... ok
+test_invalid_request_shape_is_structured_fail (test_temas_v13_s2.V13S2PreflightTests.test_invalid_request_shape_is_structured_fail) ... ok
+test_invalid_theme_fails_closed (test_temas_v13_s2.V13S2PreflightTests.test_invalid_theme_fails_closed) ... ok
+test_json_pointer_missing_fails_aibi_binding (test_temas_v13_s2.V13S2PreflightTests.test_json_pointer_missing_fails_aibi_binding) ... ok
+test_missing_authorization_blocks_local_bundle (test_temas_v13_s2.V13S2PreflightTests.test_missing_authorization_blocks_local_bundle) ... ok
+test_missing_rollback_blocks_local_bundle (test_temas_v13_s2.V13S2PreflightTests.test_missing_rollback_blocks_local_bundle) ... ok
+test_publish_remains_canonically_blocked (test_temas_v13_s2.V13S2PreflightTests.test_publish_remains_canonically_blocked) ... ok
+test_remote_import_with_valid_local_binding_stays_blocked_on_identity (test_temas_v13_s2.V13S2PreflightTests.test_remote_import_with_valid_local_binding_stays_blocked_on_identity) ... ok
+test_report_never_echoes_authorization_identity_or_rollback_reference (test_temas_v13_s2.V13S2PreflightTests.test_report_never_echoes_authorization_identity_or_rollback_reference) ... ok
+test_s2_tool_has_no_network_databricks_or_mutation_client_import (test_temas_v13_s2.V13S2PreflightTests.test_s2_tool_has_no_network_databricks_or_mutation_client_import) ... ok
+test_same_request_produces_identical_report (test_temas_v13_s2.V13S2PreflightTests.test_same_request_produces_identical_report) ... ok
+test_stale_native_template_hash_fails_aibi_binding (test_temas_v13_s2.V13S2PreflightTests.test_stale_native_template_hash_fails_aibi_binding) ... ok
+test_stale_theme_hash_has_stable_code (test_temas_v13_s2.V13S2PreflightTests.test_stale_theme_hash_has_stable_code) ... ok
+test_surface_mode_requires_one_operation (test_temas_v13_s2.V13S2PreflightTests.test_surface_mode_requires_one_operation) ... ok
+test_synthetic_dashboard_cannot_be_native_template (test_temas_v13_s2.V13S2PreflightTests.test_synthetic_dashboard_cannot_be_native_template) ... ok
+test_unknown_action_fails_closed (test_temas_v13_s2.V13S2PreflightTests.test_unknown_action_fails_closed) ... ok
+test_unknown_surface_fails_closed (test_temas_v13_s2.V13S2PreflightTests.test_unknown_surface_fails_closed) ... ok
+test_valid_local_bundle_preflight_passes (test_temas_v13_s2.V13S2PreflightTests.test_valid_local_bundle_preflight_passes) ... ok
+test_valid_notebook_preflight_passes (test_temas_v13_s2.V13S2PreflightTests.test_valid_notebook_preflight_passes) ... ok
+test_workflow_runs_s1_and_s2_read_only (test_temas_v13_s2.V13S2PreflightTests.test_workflow_runs_s1_and_s2_read_only) ... ok
+test_workspace_theme_remains_canonically_blocked (test_temas_v13_s2.V13S2PreflightTests.test_workspace_theme_remains_canonically_blocked) ... ok
+test_acceptance_reference_is_not_echoed (test_temas_v13_s3.V13S3ReleaseTests.test_acceptance_reference_is_not_echoed) ... ok
+test_app_bundle_content_is_reproducible_and_releaseable (test_temas_v13_s3.V13S3ReleaseTests.test_app_bundle_content_is_reproducible_and_releaseable) ... ok
+test_blocked_s2_preflight_stays_blocked (test_temas_v13_s3.V13S3ReleaseTests.test_blocked_s2_preflight_stays_blocked) ... ok
+test_dirty_tree_fails_before_receipt (test_temas_v13_s3.V13S3ReleaseTests.test_dirty_tree_fails_before_receipt) ... ok
+test_every_emitted_code_is_registered (test_temas_v13_s3.V13S3ReleaseTests.test_every_emitted_code_is_registered) ... ok
+test_git_subprocess_is_read_only (test_temas_v13_s3.V13S3ReleaseTests.test_git_subprocess_is_read_only) ... ok
+test_incompatible_update_version_is_rejected (test_temas_v13_s3.V13S3ReleaseTests.test_incompatible_update_version_is_rejected) ... ok
+test_lkg_reference_must_match_real_bytes (test_temas_v13_s3.V13S3ReleaseTests.test_lkg_reference_must_match_real_bytes) ... ok
+test_mid_operation_failure_never_emits_success_receipt (test_temas_v13_s3.V13S3ReleaseTests.test_mid_operation_failure_never_emits_success_receipt) ... ok
+test_preflight_must_be_bound_to_same_artifact (test_temas_v13_s3.V13S3ReleaseTests.test_preflight_must_be_bound_to_same_artifact) ... ok
+test_release_initial_rejects_lkg_descriptor (test_temas_v13_s3.V13S3ReleaseTests.test_release_initial_rejects_lkg_descriptor) ... ok
+test_release_requires_clean_tree_and_emits_verified_receipt (test_temas_v13_s3.V13S3ReleaseTests.test_release_requires_clean_tree_and_emits_verified_receipt) ... ok
+test_rollback_dry_run_restores_exact_lkg_content (test_temas_v13_s3.V13S3ReleaseTests.test_rollback_dry_run_restores_exact_lkg_content) ... ok
+test_s3_documentation_contains_all_canonical_runbooks (test_temas_v13_s3.V13S3ReleaseTests.test_s3_documentation_contains_all_canonical_runbooks) ... ok
+test_s3_tool_has_no_network_or_databricks_client (test_temas_v13_s3.V13S3ReleaseTests.test_s3_tool_has_no_network_or_databricks_client) ... ok
+test_same_release_request_is_deterministic (test_temas_v13_s3.V13S3ReleaseTests.test_same_release_request_is_deterministic) ... ok
+test_stale_artifact_source_commit_is_rejected (test_temas_v13_s3.V13S3ReleaseTests.test_stale_artifact_source_commit_is_rejected) ... ok
+test_tampered_bundle_is_rejected_without_receipt (test_temas_v13_s3.V13S3ReleaseTests.test_tampered_bundle_is_rejected_without_receipt) ... ok
+test_update_requires_last_known_good (test_temas_v13_s3.V13S3ReleaseTests.test_update_requires_last_known_good) ... ok
+test_update_with_compatible_lkg_verifies_restore (test_temas_v13_s3.V13S3ReleaseTests.test_update_with_compatible_lkg_verifies_restore) ... ok
+test_workflow_runs_s1_s2_s3_read_only (test_temas_v13_s3.V13S3ReleaseTests.test_workflow_runs_s1_s2_s3_read_only) ... ok
+test_artifact_integrity_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_artifact_integrity_fixture_is_classified) ... ok
+test_authorization_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_authorization_fixture_is_classified) ... ok
+test_bad_evidence_shape_kind_state_and_duplicate_fail_closed (test_temas_v13_s4.V13S4DiagnosticTests.test_bad_evidence_shape_kind_state_and_duplicate_fail_closed) ... ok
+test_canonical_contract_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_canonical_contract_fixture_is_classified) ... ok
+test_environment_identity_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_environment_identity_fixture_is_classified) ... ok
+test_every_failure_stage_has_fixture_or_mutant (test_temas_v13_s4.V13S4DiagnosticTests.test_every_failure_stage_has_fixture_or_mutant) ... ok
+test_existing_fail_is_not_hidden_by_missing_evidence (test_temas_v13_s4.V13S4DiagnosticTests.test_existing_fail_is_not_hidden_by_missing_evidence) ... ok
+test_git_state_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_git_state_fixture_is_classified) ... ok
+test_input_contract_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_input_contract_fixture_is_classified) ... ok
+test_lkg_compatibility_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_lkg_compatibility_fixture_is_classified) ... ok
+test_missing_evidence_is_a_real_blocker_not_pass (test_temas_v13_s4.V13S4DiagnosticTests.test_missing_evidence_is_a_real_blocker_not_pass) ... ok
+test_not_applicable_optional_evidence_stays_not_applicable (test_temas_v13_s4.V13S4DiagnosticTests.test_not_applicable_optional_evidence_stays_not_applicable) ... ok
+test_preflight_readiness_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_preflight_readiness_fixture_is_classified) ... ok
+test_referenced_required_evidence_allows_pass_but_is_not_authenticated (test_temas_v13_s4.V13S4DiagnosticTests.test_referenced_required_evidence_allows_pass_but_is_not_authenticated) ... ok
+test_rollback_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_rollback_fixture_is_classified) ... ok
+test_s2_operation_status_mismatch_is_rejected (test_temas_v13_s4.V13S4DiagnosticTests.test_s2_operation_status_mismatch_is_rejected) ... ok
+test_s3_non_pass_with_success_receipt_is_rejected (test_temas_v13_s4.V13S4DiagnosticTests.test_s3_non_pass_with_success_receipt_is_rejected) ... ok
+test_s3_pass_without_receipt_is_rejected (test_temas_v13_s4.V13S4DiagnosticTests.test_s3_pass_without_receipt_is_rejected) ... ok
+test_s4_documentation_covers_all_plan_deliverables (test_temas_v13_s4.V13S4DiagnosticTests.test_s4_documentation_covers_all_plan_deliverables) ... ok
+test_s4_tool_has_no_network_databricks_or_mutation_import (test_temas_v13_s4.V13S4DiagnosticTests.test_s4_tool_has_no_network_databricks_or_mutation_import) ... ok
+test_safe_log_distinguishes_all_four_statuses (test_temas_v13_s4.V13S4DiagnosticTests.test_safe_log_distinguishes_all_four_statuses) ... ok
+test_same_request_produces_identical_diagnosis (test_temas_v13_s4.V13S4DiagnosticTests.test_same_request_produces_identical_diagnosis) ... ok
+test_secret_in_source_message_check_id_and_receipt_is_never_echoed (test_temas_v13_s4.V13S4DiagnosticTests.test_secret_in_source_message_check_id_and_receipt_is_never_echoed) ... ok
+test_source_boundary_violation_is_rejected (test_temas_v13_s4.V13S4DiagnosticTests.test_source_boundary_violation_is_rejected) ... ok
+test_source_code_registry_matches_s2_owner_exactly (test_temas_v13_s4.V13S4DiagnosticTests.test_source_code_registry_matches_s2_owner_exactly) ... ok
+test_source_code_registry_matches_s3_owner_exactly (test_temas_v13_s4.V13S4DiagnosticTests.test_source_code_registry_matches_s3_owner_exactly) ... ok
+test_source_overall_status_mismatch_is_rejected (test_temas_v13_s4.V13S4DiagnosticTests.test_source_overall_status_mismatch_is_rejected) ... ok
+test_staging_execution_fixture_is_classified (test_temas_v13_s4.V13S4DiagnosticTests.test_staging_execution_fixture_is_classified) ... ok
+test_unknown_source_code_is_rejected_without_echo (test_temas_v13_s4.V13S4DiagnosticTests.test_unknown_source_code_is_rejected_without_echo) ... ok
+test_workflow_keeps_s1_s2_s3_history_and_runs_s4_read_only (test_temas_v13_s4.V13S4DiagnosticTests.test_workflow_keeps_s1_s2_s3_history_and_runs_s4_read_only) ... ok
+test_all_observed_pairs_passing_yields_local_pass_only (test_temas_v13_s5.V13S5CompatibilityTests.test_all_observed_pairs_passing_yields_local_pass_only) ... ok
+test_bad_export_hash_fails (test_temas_v13_s5.V13S5CompatibilityTests.test_bad_export_hash_fails) ... ok
+test_black_white_ratio_is_exactly_twenty_one (test_temas_v13_s5.V13S5CompatibilityTests.test_black_white_ratio_is_exactly_twenty_one) ... ok
+test_color_must_be_six_digit_hex_without_alpha (test_temas_v13_s5.V13S5CompatibilityTests.test_color_must_be_six_digit_hex_without_alpha) ... ok
+test_compatibility_matrix_documents_exact_s1_surfaces_and_owner_refs (test_temas_v13_s5.V13S5CompatibilityTests.test_compatibility_matrix_documents_exact_s1_surfaces_and_owner_refs) ... ok
+test_decision_uses_raw_ratio_without_rounding_to_pass (test_temas_v13_s5.V13S5CompatibilityTests.test_decision_uses_raw_ratio_without_rounding_to_pass) ... ok
+test_document_decides_preflight_but_keeps_issue_open_and_v11_frozen (test_temas_v13_s5.V13S5CompatibilityTests.test_document_decides_preflight_but_keeps_issue_open_and_v11_frozen) ... ok
+test_document_explicitly_covers_light_dark_and_high_contrast (test_temas_v13_s5.V13S5CompatibilityTests.test_document_explicitly_covers_light_dark_and_high_contrast) ... ok
+test_extra_or_missing_field_fails (test_temas_v13_s5.V13S5CompatibilityTests.test_extra_or_missing_field_fails) ... ok
+test_fail_dominates_passing_pairs (test_temas_v13_s5.V13S5CompatibilityTests.test_fail_dominates_passing_pairs) ... ok
+test_high_contrast_unexercised_is_explicit (test_temas_v13_s5.V13S5CompatibilityTests.test_high_contrast_unexercised_is_explicit) ... ok
+test_historical_a11_pairs_reproduce_documented_ratios_and_fail (test_temas_v13_s5.V13S5CompatibilityTests.test_historical_a11_pairs_reproduce_documented_ratios_and_fail) ... ok
+test_historical_colors_are_anchored_in_v12_evidence_document (test_temas_v13_s5.V13S5CompatibilityTests.test_historical_colors_are_anchored_in_v12_evidence_document) ... ok
+test_large_text_uses_three_to_one_only_when_declared (test_temas_v13_s5.V13S5CompatibilityTests.test_large_text_uses_three_to_one_only_when_declared) ... ok
+test_mode_is_closed_enum (test_temas_v13_s5.V13S5CompatibilityTests.test_mode_is_closed_enum) ... ok
+test_non_real_evidence_basis_fails (test_temas_v13_s5.V13S5CompatibilityTests.test_non_real_evidence_basis_fails) ... ok
+test_observed_high_contrast_is_measured_not_assumed (test_temas_v13_s5.V13S5CompatibilityTests.test_observed_high_contrast_is_measured_not_assumed) ... ok
+test_observed_must_be_boolean (test_temas_v13_s5.V13S5CompatibilityTests.test_observed_must_be_boolean) ... ok
+test_other_surface_is_not_silently_generalized (test_temas_v13_s5.V13S5CompatibilityTests.test_other_surface_is_not_silently_generalized) ... ok
+test_output_never_claims_network_or_remote_mutation (test_temas_v13_s5.V13S5CompatibilityTests.test_output_never_claims_network_or_remote_mutation) ... ok
+test_pair_id_is_sanitized_and_unique (test_temas_v13_s5.V13S5CompatibilityTests.test_pair_id_is_sanitized_and_unique) ... ok
+test_pair_shape_is_closed (test_temas_v13_s5.V13S5CompatibilityTests.test_pair_shape_is_closed) ... ok
+test_pairs_must_be_nonempty_list (test_temas_v13_s5.V13S5CompatibilityTests.test_pairs_must_be_nonempty_list) ... ok
+test_same_request_is_deterministic (test_temas_v13_s5.V13S5CompatibilityTests.test_same_request_is_deterministic) ... ok
+test_synthetic_fixture_is_forbidden_as_real_export (test_temas_v13_s5.V13S5CompatibilityTests.test_synthetic_fixture_is_forbidden_as_real_export) ... ok
+test_text_class_is_closed_enum (test_temas_v13_s5.V13S5CompatibilityTests.test_text_class_is_closed_enum) ... ok
+test_tool_has_no_network_databricks_shell_or_mutation_import (test_temas_v13_s5.V13S5CompatibilityTests.test_tool_has_no_network_databricks_shell_or_mutation_import) ... ok
+test_unobserved_pair_is_not_inferred_and_has_no_ratio (test_temas_v13_s5.V13S5CompatibilityTests.test_unobserved_pair_is_not_inferred_and_has_no_ratio) ... ok
+test_v13_live_readme_preserves_s5_history_when_s7_starts (test_temas_v13_s5.V13S5CompatibilityTests.test_v13_live_readme_preserves_s5_history_when_s7_starts) ... ok
+test_workflow_runs_s5_read_only_and_preserves_s4_history (test_temas_v13_s5.V13S5CompatibilityTests.test_workflow_runs_s5_read_only_and_preserves_s4_history) ... ok
+test_wrong_engine_or_version_fails (test_temas_v13_s5.V13S5CompatibilityTests.test_wrong_engine_or_version_fails) ... ok
+test_wrong_request_type_fails (test_temas_v13_s5.V13S5CompatibilityTests.test_wrong_request_type_fails) ... ok
+test_aibi_fixture_uses_local_binding_and_preserves_semantics (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_aibi_fixture_uses_local_binding_and_preserves_semantics) ... ok
+test_all_phase_statuses_use_closed_vocabulary (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_all_phase_statuses_use_closed_vocabulary) ... ok
+test_every_surface_exposes_full_cycle_in_order (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_every_surface_exposes_full_cycle_in_order) ... ok
+test_every_surface_preserves_remote_boundary (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_every_surface_preserves_remote_boundary) ... ok
+test_evidence_refs_are_repository_relative_and_sanitized (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_evidence_refs_are_repository_relative_and_sanitized) ... ok
+test_five_local_or_simulated_rehearsals_pass (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_five_local_or_simulated_rehearsals_pass) ... ok
+test_global_boundary_has_no_network_remote_mutation_or_publication (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_global_boundary_has_no_network_remote_mutation_or_publication) ... ok
+test_no_product_or_simulated_tree_is_an_s6_artifact (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_no_product_or_simulated_tree_is_an_s6_artifact) ... ok
+test_no_surface_infers_remote_pass_from_local_pass (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_no_surface_infers_remote_pass_from_local_pass) ... ok
+test_notebook_semantics_and_rollback_pass (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_notebook_semantics_and_rollback_pass) ... ok
+test_real_environment_cases_remain_exactly_three_and_blocked (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_real_environment_cases_remain_exactly_three_and_blocked) ... ok
+test_rehearsal_report_is_json_serializable_without_custom_encoder (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_rehearsal_report_is_json_serializable_without_custom_encoder) ... ok
+test_report_does_not_expose_temp_paths_credentials_or_email (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_report_does_not_expose_temp_paths_credentials_or_email) ... ok
+test_report_identity_and_scope_are_closed (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_report_identity_and_scope_are_closed) ... ok
+test_s6_document_covers_plan_order_and_remote_boundary (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_s6_document_covers_plan_order_and_remote_boundary) ... ok
+test_s6_document_keeps_historical_v12_states_distinct (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_s6_document_keeps_historical_v12_states_distinct) ... ok
+test_s6_does_not_reclassify_a11_or_issue_57 (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_s6_does_not_reclassify_a11_or_issue_57) ... ok
+test_s7_is_not_started (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_s7_is_not_started) ... ok
+test_subprocess_is_restricted_to_canonical_local_builder (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_subprocess_is_restricted_to_canonical_local_builder) ... ok
+test_surface_order_matches_plan (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_surface_order_matches_plan) ... ok
+test_tool_has_no_network_or_databricks_client_import (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_tool_has_no_network_or_databricks_client_import) ... ok
+test_v09_stage_and_rollback_are_local_and_verified (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_v09_stage_and_rollback_are_local_and_verified) ... ok
+test_v10_stage_and_rollback_are_local_and_verified (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_v10_stage_and_rollback_are_local_and_verified) ... ok
+test_v13_live_readme_preserves_s6_history_when_s7_starts (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_v13_live_readme_preserves_s6_history_when_s7_starts) ... ok
+test_visual_lab_session_roundtrip_and_restore_pass (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_visual_lab_session_roundtrip_and_restore_pass) ... ok
+test_workflow_runs_s6_read_only (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_workflow_runs_s6_read_only) ... ok
+test_workflow_s6_frontier_is_explicit (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_workflow_s6_frontier_is_explicit) ... ok
+test_workspace_theme_remains_blocked (test_temas_v13_s6.V13S6OperationalRehearsalTests.test_workspace_theme_remains_blocked) ... ok
+test_baseline_is_integrated_s6_merge (test_temas_v13_s7.V13S7HandoffTests.test_baseline_is_integrated_s6_merge) ... ok
+test_blocked_training_route_matches_matrix (test_temas_v13_s7.V13S7HandoffTests.test_blocked_training_route_matches_matrix) ... ok
+test_decision_matrix_covers_core_failure_routes (test_temas_v13_s7.V13S7HandoffTests.test_decision_matrix_covers_core_failure_routes) ... ok
+test_decision_matrix_forbids_silent_bypass (test_temas_v13_s7.V13S7HandoffTests.test_decision_matrix_forbids_silent_bypass) ... ok
+test_first_operation_executes_real_preflight_cli (test_temas_v13_s7.V13S7HandoffTests.test_first_operation_executes_real_preflight_cli) ... ok
+test_first_operation_uses_real_canonical_notebook_route (test_temas_v13_s7.V13S7HandoffTests.test_first_operation_uses_real_canonical_notebook_route) ... ok
+test_human_gate_cannot_be_forged_by_ci (test_temas_v13_s7.V13S7HandoffTests.test_human_gate_cannot_be_forged_by_ci) ... ok
+test_human_gate_has_real_versioned_pass (test_temas_v13_s7.V13S7HandoffTests.test_human_gate_has_real_versioned_pass) ... ok
+test_human_protocol_forbids_statistical_inference_and_sla (test_temas_v13_s7.V13S7HandoffTests.test_human_protocol_forbids_statistical_inference_and_sla) ... ok
+test_human_protocol_has_all_six_oracles (test_temas_v13_s7.V13S7HandoffTests.test_human_protocol_has_all_six_oracles) ... ok
+test_human_protocol_records_completed_evidence (test_temas_v13_s7.V13S7HandoffTests.test_human_protocol_records_completed_evidence) ... ok
+test_human_protocol_records_duration_help_and_interpretation_errors (test_temas_v13_s7.V13S7HandoffTests.test_human_protocol_records_duration_help_and_interpretation_errors) ... ok
+test_human_protocol_requires_non_builder_and_no_verbal_instruction (test_temas_v13_s7.V13S7HandoffTests.test_human_protocol_requires_non_builder_and_no_verbal_instruction) ... ok
+test_inherited_v12_nonpass_states_are_preserved (test_temas_v13_s7.V13S7HandoffTests.test_inherited_v12_nonpass_states_are_preserved) ... ok
+test_live_readme_moves_to_s7_after_integrated_s6 (test_temas_v13_s7.V13S7HandoffTests.test_live_readme_moves_to_s7_after_integrated_s6) ... ok
+test_no_new_s7_engine_is_created (test_temas_v13_s7.V13S7HandoffTests.test_no_new_s7_engine_is_created) ... ok
+test_rehearsal_registry_references_historical_evidence (test_temas_v13_s7.V13S7HandoffTests.test_rehearsal_registry_references_historical_evidence) ... ok
+test_release_rollback_is_non_destructive (test_temas_v13_s7.V13S7HandoffTests.test_release_rollback_is_non_destructive) ... ok
+test_s6_not_started_marker_becomes_historical_only (test_temas_v13_s7.V13S7HandoffTests.test_s6_not_started_marker_becomes_historical_only) ... ok
+test_s7_artifacts_exist (test_temas_v13_s7.V13S7HandoffTests.test_s7_artifacts_exist) ... ok
+test_start_here_routes_to_existing_owners (test_temas_v13_s7.V13S7HandoffTests.test_start_here_routes_to_existing_owners) ... ok
+test_status_vocabulary_is_preserved (test_temas_v13_s7.V13S7HandoffTests.test_status_vocabulary_is_preserved) ... ok
+test_training_never_authorizes_remote_environment (test_temas_v13_s7.V13S7HandoffTests.test_training_never_authorizes_remote_environment) ... ok
+test_v12_pass_scope_is_not_generalized (test_temas_v13_s7.V13S7HandoffTests.test_v12_pass_scope_is_not_generalized) ... ok
+test_v14_scope_is_reserved_not_implemented (test_temas_v13_s7.V13S7HandoffTests.test_v14_scope_is_reserved_not_implemented) ... ok
+test_workflow_remains_read_only_without_databricks_credentials (test_temas_v13_s7.V13S7HandoffTests.test_workflow_remains_read_only_without_databricks_credentials) ... ok
+test_workflow_runs_s7_contract_before_regressions (test_temas_v13_s7.V13S7HandoffTests.test_workflow_runs_s7_contract_before_regressions) ... ok
+test_workflow_s7_frontier_is_explicit_and_human_is_versioned_pass (test_temas_v13_s7.V13S7HandoffTests.test_workflow_s7_frontier_is_explicit_and_human_is_versioned_pass) ... ok
+test_checkpoint_records_baseline_and_concurrency (test_temas_v14_s0.V14S0FreezeTests.test_checkpoint_records_baseline_and_concurrency) ... ok
+test_checkpoint_records_measured_metrics_and_fail_closed_history (test_temas_v14_s0.V14S0FreezeTests.test_checkpoint_records_measured_metrics_and_fail_closed_history) ... ok
+test_ci_diff_stays_inside_s0_allowlist_only_on_s0_branch (test_temas_v14_s0.V14S0FreezeTests.test_ci_diff_stays_inside_s0_allowlist_only_on_s0_branch) ... skipped 'escopo Git é verificado no GitHub Actions'
+test_human_pass_is_not_promoted_to_readiness (test_temas_v14_s0.V14S0FreezeTests.test_human_pass_is_not_promoted_to_readiness) ... ok
+test_inherited_nonpass_states_are_preserved (test_temas_v14_s0.V14S0FreezeTests.test_inherited_nonpass_states_are_preserved) ... ok
+test_plan_keeps_exact_s0_contract (test_temas_v14_s0.V14S0FreezeTests.test_plan_keeps_exact_s0_contract) ... ok
+test_root_readme_tracks_s0_integration_and_v14_continuity (test_temas_v14_s0.V14S0FreezeTests.test_root_readme_tracks_s0_integration_and_v14_continuity) ... ok
+test_s0_artifacts_exist (test_temas_v14_s0.V14S0FreezeTests.test_s0_artifacts_exist) ... ok
+test_s0_docs_forbid_databricks_mutation_and_go_live (test_temas_v14_s0.V14S0FreezeTests.test_s0_docs_forbid_databricks_mutation_and_go_live) ... ok
+test_s0_historical_boundary_remains_recorded_after_s1_starts (test_temas_v14_s0.V14S0FreezeTests.test_s0_historical_boundary_remains_recorded_after_s1_starts) ... ok
+test_six_surfaces_remain_exact (test_temas_v14_s0.V14S0FreezeTests.test_six_surfaces_remain_exact) ... ok
+test_sprints_index_keeps_s0_historical_entry (test_temas_v14_s0.V14S0FreezeTests.test_sprints_index_keeps_s0_historical_entry) ... ok
+test_temas_index_keeps_v14_navigation (test_temas_v14_s0.V14S0FreezeTests.test_temas_index_keeps_v14_navigation) ... ok
+test_v11_contract_is_frozen_not_reimplemented (test_temas_v14_s0.V14S0FreezeTests.test_v11_contract_is_frozen_not_reimplemented) ... ok
+test_v14_plan_is_not_rewritten_by_s0_scope (test_temas_v14_s0.V14S0FreezeTests.test_v14_plan_is_not_rewritten_by_s0_scope) ... ok
+test_workflow_is_read_only (test_temas_v14_s0.V14S0FreezeTests.test_workflow_is_read_only) ... ok
+test_workflow_keeps_s0_and_canonical_gates (test_temas_v14_s0.V14S0FreezeTests.test_workflow_keeps_s0_and_canonical_gates) ... ok
+test_all_operational_slots_are_fail_closed_without_evidence (test_temas_v14_s1.V14S1OwnershipTests.test_all_operational_slots_are_fail_closed_without_evidence) ... ok
+test_blocked_slot_cannot_claim_principal (test_temas_v14_s1.V14S1OwnershipTests.test_blocked_slot_cannot_claim_principal) ... ok
+test_ci_diff_stays_inside_s1_allowlist (test_temas_v14_s1.V14S1OwnershipTests.test_ci_diff_stays_inside_s1_allowlist) ... skipped 'allowlist S1 só se aplica à branch S1 no GitHub Actions'
+test_evidenced_authority_requires_evidence (test_temas_v14_s1.V14S1OwnershipTests.test_evidenced_authority_requires_evidence) ... ok
+test_exact_six_surfaces_and_technical_owners (test_temas_v14_s1.V14S1OwnershipTests.test_exact_six_surfaces_and_technical_owners) ... ok
+test_go_live_decision_remains_not_decided (test_temas_v14_s1.V14S1OwnershipTests.test_go_live_decision_remains_not_decided) ... ok
+test_human_pass_remains_formative (test_temas_v14_s1.V14S1OwnershipTests.test_human_pass_remains_formative) ... ok
+test_inherited_states_are_not_reclassified (test_temas_v14_s1.V14S1OwnershipTests.test_inherited_states_are_not_reclassified) ... ok
+test_invented_authority_fails_even_with_existing_file_ref (test_temas_v14_s1.V14S1OwnershipTests.test_invented_authority_fails_even_with_existing_file_ref) ... ok
+test_missing_operational_slot_fails (test_temas_v14_s1.V14S1OwnershipTests.test_missing_operational_slot_fails) ... ok
+test_missing_technical_owner_fails (test_temas_v14_s1.V14S1OwnershipTests.test_missing_technical_owner_fails) ... ok
+test_nonexistent_evidence_ref_fails (test_temas_v14_s1.V14S1OwnershipTests.test_nonexistent_evidence_ref_fails) ... ok
+test_readme_marks_s0_integrated_s1_active_and_s2_not_started (test_temas_v14_s1.V14S1OwnershipTests.test_readme_marks_s0_integrated_s1_active_and_s2_not_started) ... ok
+test_real_matrix_validates (test_temas_v14_s1.V14S1OwnershipTests.test_real_matrix_validates) ... ok
+test_remote_mutation_readiness_and_s2_claims_fail (test_temas_v14_s1.V14S1OwnershipTests.test_remote_mutation_readiness_and_s2_claims_fail) ... ok
+test_runbook_forbids_invented_identity_channel_and_sla (test_temas_v14_s1.V14S1OwnershipTests.test_runbook_forbids_invented_identity_channel_and_sla) ... ok
+test_s1_allowlist_scope_is_branch_specific (test_temas_v14_s1.V14S1OwnershipTests.test_s1_allowlist_scope_is_branch_specific) ... ok
+test_s2_artifacts_are_not_started (test_temas_v14_s1.V14S1OwnershipTests.test_s2_artifacts_are_not_started) ... ok
+test_self_approval_fails (test_temas_v14_s1.V14S1OwnershipTests.test_self_approval_fails) ... ok
+test_v01_and_v13_remain_canonical_owners (test_temas_v14_s1.V14S1OwnershipTests.test_v01_and_v13_remain_canonical_owners) ... ok
+test_validator_has_no_network_databricks_or_mutation_clients (test_temas_v14_s1.V14S1OwnershipTests.test_validator_has_no_network_databricks_or_mutation_clients) ... ok
+test_workflow_runs_s0_s1_and_canonical_gates_read_only (test_temas_v14_s1.V14S1OwnershipTests.test_workflow_runs_s0_s1_and_canonical_gates_read_only) ... ok
+test_wrong_technical_owner_fails (test_temas_v14_s1.V14S1OwnershipTests.test_wrong_technical_owner_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 754 tests in 43.906s
+
+OK (skipped=11)
+   OK   (45.6s) OK (skipped=11)
+
+-- validacao: validação local do ambiente_fonte
+raiz analisada     : /workspace/shared/readme_integrated/ambiente_fonte
+skills             : 15 · 15/15 com as 5 seções estruturais
+skill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy
+prompts            : 18 · 174 campos com guia e contrato humano
+helpers citados    : 101 caminhos verificados
+saída no README    : 20 linhas conferidas contra execução real
+markdown / links   : 245 arquivos / 1882 links relativos
+notebooks / links  : 84 notebooks / 108 links relativos
+readmes de objeto  : 79/79 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
+pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
+forma da pasta     : 61 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 63 pares (saída: o que o notebook consome)
+contrato de entrada: 61 pares (entrada: o que o notebook passa)
+saída colada       : 83 notebooks com bloco real, 0 sem
+idioma da docstring: 63 módulos, 0 com docstring em inglês
+normas do molde    : 78 arquivos, 0 violação(ões)
+notebook exercita  : 61 objetos, 0 notebook(s) que só importam
+python (AST)       : 290 arquivos
+instrucoes         : 12624/20000 caracteres
+repo (identidade)  : 2243 arquivos varridos no repositório editável/derivado
+repo (links)       : 3387 links fora da raiz analisada
+worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
+
+
+APROVADO: 0 falha(s), 0 aviso(s)
+   OK   (13.9s) APROVADO: 0 falha(s), 0 aviso(s)
+
+-- sef: Skill Enforcement SE08 — gate local cumulativo parcial sem renderer
+== SKILL ENFORCEMENT LOCAL CERTIFICATION ==
+profile=se08 HEAD=f2843eafae84d44cd751f307101de84f11981bd7 scope=DIAGNOSTIC_SE08_NO_RENDER
+-- 01 contract_v0_1
+   PASS (0.07s) Resumo: 14/14 contratos válidos.
+-- 02 se01_regression
+   PASS (0.17s) OK
+-- 03 se02_regression
+   PASS (0.22s) OK
+-- 04 se03_regression
+   PASS (0.22s) OK
+-- 05 se04_receipt_tests
+   PASS (0.12s) OK
+-- 06 se04_runner_tests
+   PASS (0.17s) OK
+-- 07 se05_postflight_tests
+   PASS (0.17s) OK
+-- 08 se05_runner_tests
+   PASS (0.52s) OK
+-- 09 se06_eval_tests
+   PASS (0.37s) OK
+-- 10 se07_policy_validation
+   PASS (0.07s) SE07_POLICY = PASS | catalog=15 | policies=15
+-- 11 se07_policy_tests
+   PASS (1.07s) OK
+-- 12 se08_policy_io_tests
+   PASS (0.47s) OK
+-- 13 se08_operational_tests
+   PASS (0.22s) OK
+-- 14 se08_storage_cleanup_tests
+   PASS (3.32s) OK
+-- 15 se08_windows_corrective_tests
+   PASS (0.11s) OK
+-- 16 se08_cleanup_diagnostics_tests
+   PASS (0.17s) OK
+-- 17 certifier_regression
+   PASS (6.89s) OK (skipped=4)
+-- 18 assistant_structure
+   PASS (7.31s) APROVADO: 0 falha(s), 0 aviso(s)
+-- 19 readme_snapshot
+   PASS (13.86s) APROVADO: 0 falha(s), 0 aviso(s)
+LOCAL_CERTIFICATION = PASS
+scope = DIAGNOSTIC_SE08_NO_RENDER
+infrastructure_errors = []
+   OK   (35.6s) infrastructure_errors = []
+
+-- biblioteca: regressões de hub_snippets
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [1-1]
+................................/workspace/shared/readme_integrated/ambiente_fonte/.assistant/hub_snippets/ml/lgbm_temporal/lgbm_temporal.py:87: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+  convertida = pd.to_datetime(texto, errors="coerce")
+.............
+----------------------------------------------------------------------
+Ran 45 tests in 0.139s
+
+OK
+   OK   (1.4s) OK
+
+-- ferramentas: guardas de tools/
+.......................................
+----------------------------------------------------------------------
+Ran 39 tests in 0.964s
+
+OK
+   OK   (1.3s) OK
+
+-- transicao: guardas do kit e notebook de aceite (Spark opcional separado)
+error -> FAIL - Consulte a causa nesta sessão; não exporte o erro bruto.
+...........................sssssss..........
+----------------------------------------------------------------------
+Ran 44 tests in 0.020s
+
+OK (skipped=7)
+   OK   (0.1s) OK (skipped=7)
+
+-- micromodelos: contratos e aceite do módulo Micromodelos extraído
+test_build_and_execute_from_isolated_package (test_micromodelo_free_kit.FreeKitTests.test_build_and_execute_from_isolated_package) ... ok
+test_never_overwrites_existing_output (test_micromodelo_free_kit.FreeKitTests.test_never_overwrites_existing_output) ... ok
+test_optional_metadata_cell_checks_only_configured_synthetic_table (test_micromodelo_free_kit.FreeKitTests.test_optional_metadata_cell_checks_only_configured_synthetic_table) ... ok
+test_product_transport_uses_exact_allowlist_and_rejects_links (test_micromodelo_free_kit.FreeKitTests.test_product_transport_uses_exact_allowlist_and_rejects_links) ... ok
+test_absence_policy_is_structured_and_cannot_hide_false_in_prose (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_absence_policy_is_structured_and_cannot_hide_false_in_prose) ... ok
+test_audit_material_references_reject_whitespace_and_invisible_text (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_audit_material_references_reject_whitespace_and_invisible_text) ... ok
+test_calibration_evidence_ref_must_resolve_to_executed_measured_experiment (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_calibration_evidence_ref_must_resolve_to_executed_measured_experiment) ... ok
+test_canonical_required_text_fields_accept_legitimate_unicode (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_canonical_required_text_fields_accept_legitimate_unicode) ... ok
+test_canonical_required_text_fields_reject_nonmaterial_content (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_canonical_required_text_fields_reject_nonmaterial_content) ... ok
+test_cli_distinguishes_snapshot_from_evolution_certification (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_cli_distinguishes_snapshot_from_evolution_certification) ... ok
+test_cli_previous_blocks_rewind (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_cli_previous_blocks_rewind) ... ok
+test_cli_returns_zero_for_template_and_one_for_invalid_document (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_cli_returns_zero_for_template_and_one_for_invalid_document) ... ok
+test_cosmetic_semantic_duplicates_are_rejected (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_cosmetic_semantic_duplicates_are_rejected) ... ok
+test_duplicate_ids_are_rejected_in_components_and_experiments (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_duplicate_ids_are_rejected_in_components_and_experiments) ... ok
+test_duplicate_yaml_and_json_keys_are_rejected_on_load (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_duplicate_yaml_and_json_keys_are_rejected_on_load) ... ok
+test_editorial_equivalence_is_conservative_and_unicode_robust (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_editorial_equivalence_is_conservative_and_unicode_robust) ... ok
+test_existing_publication_policy_provenance_is_always_validated (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_existing_publication_policy_provenance_is_always_validated) ... ok
+test_finite_number_uses_canonical_numeric_domain (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_finite_number_uses_canonical_numeric_domain) ... ok
+test_generic_textual_pattern_cannot_replace_material_text (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_generic_textual_pattern_cannot_replace_material_text) ... ok
+test_human_approval_intrinsics_are_always_enforced (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_human_approval_intrinsics_are_always_enforced) ... ok
+test_human_validation_decision_must_match_status (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_human_validation_decision_must_match_status) ... ok
+test_indeterminate_publication_policy_cannot_contradict_false_semantics (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_indeterminate_publication_policy_cannot_contradict_false_semantics) ... ok
+test_material_content_gates_reject_nonmaterial_and_accept_unicode (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_material_content_gates_reject_nonmaterial_and_accept_unicode) ... ok
+test_material_text_rejects_default_ignorable_fillers (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_material_text_rejects_default_ignorable_fillers) ... ok
+test_material_text_unicode_policy_is_shared_by_schema_and_validator (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_material_text_unicode_policy_is_shared_by_schema_and_validator) ... ok
+test_negative_fixtures_fail_for_expected_reason (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_negative_fixtures_fail_for_expected_reason) ... ok
+test_nonexecuted_experiment_cannot_store_observed_result (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_nonexecuted_experiment_cannot_store_observed_result) ... ok
+test_nonfinite_material_numbers_and_json_constants_are_rejected (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_nonfinite_material_numbers_and_json_constants_are_rejected) ... ok
+test_normative_material_fields_accept_legitimate_unicode (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_normative_material_fields_accept_legitimate_unicode) ... ok
+test_normative_material_fields_reject_nonmaterial_unicode_classes (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_normative_material_fields_reject_nonmaterial_unicode_classes) ... ok
+test_previous_published_same_version_cannot_be_rewound (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_previous_published_same_version_cannot_be_rewound) ... ok
+test_previous_spec_allows_real_transition_and_rejects_version_rewind (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_previous_spec_allows_real_transition_and_rejects_version_rewind) ... ok
+test_probability_language_requires_calibrated_semantics (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_probability_language_requires_calibrated_semantics) ... ok
+test_proposed_threshold_and_weight_are_allowed_before_validation_gate (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_proposed_threshold_and_weight_are_allowed_before_validation_gate) ... ok
+test_publication_lifecycle_has_valid_positive_path (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_publication_lifecycle_has_valid_positive_path) ... ok
+test_publication_status_must_match_lifecycle_phase (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_publication_status_must_match_lifecycle_phase) ... ok
+test_required_minlength_guard_handles_string_type_arrays (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_required_minlength_guard_handles_string_type_arrays) ... ok
+test_required_minlength_text_fields_have_explicit_material_policy (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_required_minlength_text_fields_have_explicit_material_policy) ... ok
+test_root_provenance_material_fields_are_guarded (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_root_provenance_material_fields_are_guarded) ... ok
+test_schema_authoring_profile_prevents_unreviewed_composition (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_schema_authoring_profile_prevents_unreviewed_composition) ... ok
+test_schema_is_valid_draft_2020_12 (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_schema_is_valid_draft_2020_12) ... ok
+test_schema_patterns_are_exact_structural_allowlist (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_schema_patterns_are_exact_structural_allowlist) ... ok
+test_score_disabled_cannot_leave_score_contract_behind (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_score_disabled_cannot_leave_score_contract_behind) ... ok
+test_score_normalization_requires_structured_contract_at_validation (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_score_normalization_requires_structured_contract_at_validation) ... ok
+test_semantic_equivalence_rejects_default_ignorable_infix (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_semantic_equivalence_rejects_default_ignorable_infix) ... ok
+test_template_yaml_is_valid (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_template_yaml_is_valid) ... ok
+test_unknown_property_in_material_block_is_rejected (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_unknown_property_in_material_block_is_rejected) ... ok
+test_unknown_source_reference_is_rejected (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_unknown_source_reference_is_rejected) ... ok
+test_valid_transition_table_has_rework_but_no_skips (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_valid_transition_table_has_rework_but_no_skips) ... ok
+test_validated_fixture_is_valid (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_validated_fixture_is_valid) ... ok
+test_validation_phase_requires_nonempty_material_content (test_micromodelo_mm01.MicromodeloMM01ContractTests.test_validation_phase_requires_nonempty_material_content) ... ok
+test_initial_punctuation_does_not_create_false_ambiguity (test_micromodelo_mm01_r02.MicromodeloMM01R02RegressionTests.test_initial_punctuation_does_not_create_false_ambiguity) ... ok
+test_initial_punctuation_is_not_canonicalized_away (test_micromodelo_mm01_r02.MicromodeloMM01R02RegressionTests.test_initial_punctuation_is_not_canonicalized_away) ... ok
+test_terminal_editorial_punctuation_remains_equivalent (test_micromodelo_mm01_r02.MicromodeloMM01R02RegressionTests.test_terminal_editorial_punctuation_remains_equivalent) ... ok
+test_numpy_float64_is_rejected_as_external_numeric_type (test_micromodelo_mm01_r03.MicromodeloMM01R03RegressionTests.test_numpy_float64_is_rejected_as_external_numeric_type) ... ok
+test_calibration_evidence_id_is_material_but_run_is_not (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_calibration_evidence_id_is_material_but_run_is_not) ... ok
+test_classification_semantics_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_classification_semantics_change_changes_fingerprint) ... ok
+test_cli_prints_sha256_for_valid_fixture (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_cli_prints_sha256_for_valid_fixture) ... ok
+test_component_collection_order_does_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_component_collection_order_does_not_change_fingerprint) ... ok
+test_custom_normalization_reference_is_material (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_custom_normalization_reference_is_material) ... ok
+test_custom_score_semantics_reference_is_material (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_custom_score_semantics_reference_is_material) ... ok
+test_editorial_duplicate_in_use_lists_does_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_editorial_duplicate_in_use_lists_does_not_change_fingerprint) ... ok
+test_editorial_semantic_text_normalization_preserves_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_editorial_semantic_text_normalization_preserves_fingerprint) ... ok
+test_entity_grain_or_time_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_entity_grain_or_time_change_changes_fingerprint) ... ok
+test_equivalent_integer_and_float_numbers_share_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_equivalent_integer_and_float_numbers_share_fingerprint) ... ok
+test_evidence_rule_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_evidence_rule_change_changes_fingerprint) ... ok
+test_experiment_result_is_evidence_not_material_definition (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_experiment_result_is_evidence_not_material_definition) ... ok
+test_explanatory_descriptions_do_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_explanatory_descriptions_do_not_change_fingerprint) ... ok
+test_fingerprint_shape_and_algorithm_are_explicit (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_fingerprint_shape_and_algorithm_are_explicit) ... ok
+test_human_version_title_and_objective_are_not_material_identity (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_human_version_title_and_objective_are_not_material_identity) ... ok
+test_initial_punctuation_is_not_editorial_equivalent (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_initial_punctuation_is_not_editorial_equivalent) ... ok
+test_invalid_mm01_spec_is_refused_before_hashing (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_invalid_mm01_spec_is_refused_before_hashing) ... ok
+test_missing_policy_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_missing_policy_change_changes_fingerprint) ... ok
+test_provenance_approval_and_timestamps_do_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_provenance_approval_and_timestamps_do_not_change_fingerprint) ... ok
+test_publication_lifecycle_status_is_not_material_definition (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_publication_lifecycle_status_is_not_material_definition) ... ok
+test_publication_output_contract_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_publication_output_contract_change_changes_fingerprint) ... ok
+test_raw_mapping_key_order_does_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_raw_mapping_key_order_does_not_change_fingerprint) ... ok
+test_score_meaning_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_score_meaning_change_changes_fingerprint) ... ok
+test_score_weight_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_score_weight_change_changes_fingerprint) ... ok
+test_source_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_source_change_changes_fingerprint) ... ok
+test_source_column_serial_order_does_not_change_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_source_column_serial_order_does_not_change_fingerprint) ... ok
+test_standard_normalization_audit_reference_is_not_material (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_standard_normalization_audit_reference_is_not_material) ... ok
+test_structured_score_semantics_audit_reference_is_not_material (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_structured_score_semantics_audit_reference_is_not_material) ... ok
+test_study_output_contract_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_study_output_contract_change_changes_fingerprint) ... ok
+test_threshold_change_changes_fingerprint (test_micromodelo_mm02_fingerprint.MicromodeloMM02FingerprintTests.test_threshold_change_changes_fingerprint) ... ok
+test_absent_empty_truncated_and_invalid_unicode_are_distinct (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_absent_empty_truncated_and_invalid_unicode_are_distinct) ... ok
+test_all_candidates_validated_before_first_detail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_all_candidates_validated_before_first_detail) ... ok
+test_binding_mismatch_is_rejected (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_binding_mismatch_is_rejected) ... ok
+test_cli_errors_do_not_echo_secret_or_path (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_cli_errors_do_not_echo_secret_or_path) ... ok
+test_cli_positive_and_no_input_write (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_cli_positive_and_no_input_write) ... ok
+test_column_reference_integrity (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_column_reference_integrity) ... ok
+test_constraints_are_not_claimed_enforced (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_constraints_are_not_claimed_enforced) ... ok
+test_cross_catalog_response_fails (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_cross_catalog_response_fails) ... ok
+test_denied_is_not_empty_catalog (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_denied_is_not_empty_catalog) ... ok
+test_details_before_discovery_fail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_details_before_discovery_fail) ... ok
+test_details_only_for_shortlisted_objects (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_details_only_for_shortlisted_objects) ... ok
+test_deterministic_output_across_runs (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_deterministic_output_across_runs) ... ok
+test_discovery_cannot_reuse_stale_state (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_discovery_cannot_reuse_stale_state) ... ok
+test_duplicate_across_pages_fails (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_duplicate_across_pages_fails) ... ok
+test_duplicate_tags_and_bad_nullable_fail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_duplicate_tags_and_bad_nullable_fail) ... ok
+test_empty_and_duplicate_shortlists_fail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_empty_and_duplicate_shortlists_fail) ... ok
+test_failed_page_cannot_smuggle_data (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_failed_page_cannot_smuggle_data) ... ok
+test_fixture_and_return_values_are_not_mutated (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_fixture_and_return_values_are_not_mutated) ... ok
+test_fixture_header_and_hash (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_fixture_header_and_hash) ... ok
+test_fixture_rejects_unknown_operation_and_duplicate_stream (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_fixture_rejects_unknown_operation_and_duplicate_stream) ... ok
+test_identifiers_are_not_code_or_paths (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_identifiers_are_not_code_or_paths) ... ok
+test_implementation_has_no_execution_or_network_imports (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_implementation_has_no_execution_or_network_imports) ... ok
+test_injection_in_tag_never_selects_another_schema (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_injection_in_tag_never_selects_another_schema) ... ok
+test_injection_is_inert_data_and_cannot_change_calls (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_injection_is_inert_data_and_cannot_change_calls) ... ok
+test_invalid_limits_do_not_accept_bool (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_invalid_limits_do_not_accept_bool) ... ok
+test_item_limit_is_visible (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_item_limit_is_visible) ... ok
+test_json_duplicates_nonfinite_and_oversize_fail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_json_duplicates_nonfinite_and_oversize_fail) ... ok
+test_object_discovery_never_requests_details (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_object_discovery_never_requests_details) ... ok
+test_object_type_is_strict (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_object_type_is_strict) ... ok
+test_page_limit_is_visible (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_page_limit_is_visible) ... ok
+test_pagination_completes_bounded_metadata (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_pagination_completes_bounded_metadata) ... ok
+test_pagination_cycle_fails (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_pagination_cycle_fails) ... ok
+test_partial_observation_is_visible_at_top_level (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_partial_observation_is_visible_at_top_level) ... ok
+test_partial_permission_is_not_successful_empty (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_partial_permission_is_not_successful_empty) ... ok
+test_payload_growth_is_rejected_not_silently_dropped (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_payload_growth_is_rejected_not_silently_dropped) ... ok
+test_reordered_metadata_is_deterministic_without_truncation (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_reordered_metadata_is_deterministic_without_truncation) ... ok
+test_rows_samples_stats_and_instructions_fields_fail (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_rows_samples_stats_and_instructions_fields_fail) ... ok
+test_schema_only_does_not_request_objects (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_schema_only_does_not_request_objects) ... ok
+test_snapshot_drift_fails (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_snapshot_drift_fails) ... ok
+test_text_sanitization_is_traceable (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_text_sanitization_is_traceable) ... ok
+test_unavailable_details_not_mapped_to_known_empty (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_unavailable_details_not_mapped_to_known_empty) ... ok
+test_unknown_constraint_column_fails (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_unknown_constraint_column_fails) ... ok
+test_unknown_schema_does_not_fallback (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_unknown_schema_does_not_fallback) ... ok
+test_unknown_shortlist_fails_before_any_detail_call (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_unknown_shortlist_fails_before_any_detail_call) ... ok
+test_wrong_symbolic_catalog_is_rejected (test_micromodelo_mm03_metadata.MetadataMM03Tests.test_wrong_symbolic_catalog_is_rejected) ... ok
+test_bad_brief_cannot_emit_spec (test_micromodelo_mm04_flow.MM04FlowTests.test_bad_brief_cannot_emit_spec) ... ok
+test_cli_known_and_discover (test_micromodelo_mm04_flow.MM04FlowTests.test_cli_known_and_discover) ... ok
+test_cli_readback_failure_removes_only_new_yaml_and_retry_succeeds (test_micromodelo_mm04_flow.MM04FlowTests.test_cli_readback_failure_removes_only_new_yaml_and_retry_succeeds) ... ok
+test_cli_yaml_round_trip_without_overwrite_or_discover_side_effect (test_micromodelo_mm04_flow.MM04FlowTests.test_cli_yaml_round_trip_without_overwrite_or_discover_side_effect) ... ok
+test_denied_schema_is_not_assumed_empty_catalog (test_micromodelo_mm04_flow.MM04FlowTests.test_denied_schema_is_not_assumed_empty_catalog) ... ok
+test_discovery_deduplicates_business_hypothesis_and_filters_weak_signal (test_micromodelo_mm04_flow.MM04FlowTests.test_discovery_deduplicates_business_hypothesis_and_filters_weak_signal) ... ok
+test_discovery_is_limited_deduplicated_and_hypothetical (test_micromodelo_mm04_flow.MM04FlowTests.test_discovery_is_limited_deduplicated_and_hypothetical) ... ok
+test_duplicate_or_unobserved_candidate_fails_before_details (test_micromodelo_mm04_flow.MM04FlowTests.test_duplicate_or_unobserved_candidate_fails_before_details) ... ok
+test_injected_description_and_tag_cannot_change_brief_scope_or_approval (test_micromodelo_mm04_flow.MM04FlowTests.test_injected_description_and_tag_cannot_change_brief_scope_or_approval) ... ok
+test_known_objective_is_valid_mm01_pre_study_and_mm02_fingerprinted (test_micromodelo_mm04_flow.MM04FlowTests.test_known_objective_is_valid_mm01_pre_study_and_mm02_fingerprinted) ... ok
+test_missing_entity_fields_are_explicitly_pending (test_micromodelo_mm04_flow.MM04FlowTests.test_missing_entity_fields_are_explicitly_pending) ... ok
+test_non_client_goal_never_inherits_client_defaults (test_micromodelo_mm04_flow.MM04FlowTests.test_non_client_goal_never_inherits_client_defaults) ... ok
+test_progressive_update_preserves_sources_and_mm01_transition (test_micromodelo_mm04_flow.MM04FlowTests.test_progressive_update_preserves_sources_and_mm01_transition) ... ok
+test_truncated_columns_are_not_written_as_complete_fields (test_micromodelo_mm04_flow.MM04FlowTests.test_truncated_columns_are_not_written_as_complete_fields) ... ok
+test_without_business_proposal_objects_are_only_triage_not_opportunities (test_micromodelo_mm04_flow.MM04FlowTests.test_without_business_proposal_objects_are_only_triage_not_opportunities) ... ok
+test_blocked_condition_and_reason_are_visible_in_both_artifacts (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_blocked_condition_and_reason_are_visible_in_both_artifacts) ... ok
+test_existing_rules_criteria_and_measured_result_are_attributed (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_existing_rules_criteria_and_measured_result_are_attributed) ... ok
+test_fingerprint_matches_mm02_and_is_stable (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_fingerprint_matches_mm02_and_is_stable) ... ok
+test_idea_generates_all_study_sections_without_claiming_results (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_idea_generates_all_study_sections_without_claiming_results) ... ok
+test_invalid_spec_is_refused_before_artifact_creation (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_invalid_spec_is_refused_before_artifact_creation) ... ok
+test_material_change_changes_both_artifacts (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_material_change_changes_both_artifacts) ... ok
+test_run_policy_separates_approval_and_individual_results (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_run_policy_separates_approval_and_individual_results) ... ok
+test_spec_text_cannot_create_notebook_cell_or_active_html (test_micromodelo_mm06_artifacts.MM06ArtifactsTests.test_spec_text_cannot_create_notebook_cell_or_active_html) ... ok
+test_all_run_types_are_complete_without_sklearn_or_individual_results (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_all_run_types_are_complete_without_sklearn_or_individual_results) ... ok
+test_collector_cannot_log_after_context_closes (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_collector_cannot_log_after_context_closes) ... ok
+test_disabled_score_rejects_score_metrics_in_either_call_order (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_disabled_score_rejects_score_metrics_in_either_call_order) ... ok
+test_enabled_score_requires_score_field_before_logging_parameters (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_enabled_score_requires_score_field_before_logging_parameters) ... ok
+test_incomplete_run_fails_and_does_not_claim_complete (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_incomplete_run_fails_and_does_not_claim_complete) ... ok
+test_individual_id_cannot_be_logged_as_parameter (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_individual_id_cannot_be_logged_as_parameter) ... ok
+test_invalid_aggregates_do_not_log_metrics (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_invalid_aggregates_do_not_log_metrics) ... ok
+test_invalid_contract_or_non_synthetic_scope_fails_before_run (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_invalid_contract_or_non_synthetic_scope_fails_before_run) ... ok
+test_legacy_run_governado_signature_and_behavior_remain (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_legacy_run_governado_signature_and_behavior_remain) ... ok
+test_mlflow_absent_raises_import_error (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_mlflow_absent_raises_import_error) ... ok
+test_score_metrics_require_output_score_field (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_score_metrics_require_output_score_field) ... ok
+test_zero_population_without_scores_is_valid (test_micromodelo_mm06_tracking.TrackingMM06Tests.test_zero_population_without_scores_is_valid) ... ok
+test_constraints_with_unsupported_class_are_unavailable (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_constraints_with_unsupported_class_are_unavailable) ... ok
+test_optional_view_unavailable_is_not_empty_observation (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_optional_view_unavailable_is_not_empty_observation) ... ok
+test_pagination_has_bounded_query_and_stable_batch_id (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_pagination_has_bounded_query_and_stable_batch_id) ... ok
+test_permission_failure_is_explicit_and_unknown_error_fails_closed (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_permission_failure_is_explicit_and_unknown_error_fails_closed) ... ok
+test_progressive_collector_maps_allowlisted_views (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_progressive_collector_maps_allowlisted_views) ... ok
+test_scopes_and_binding_rejected_before_sql (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_scopes_and_binding_rejected_before_sql) ... ok
+test_unrepresentable_column_name_fails_closed_without_renaming (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_unrepresentable_column_name_fails_closed_without_renaming) ... ok
+test_unrepresentable_object_name_fails_closed_without_renaming (test_micromodelo_mm07_databricks.DatabricksAdapterTests.test_unrepresentable_object_name_fails_closed_without_renaming) ... ok
+test_aggregate_reconciles_independent_of_reported_counts (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_aggregate_reconciles_independent_of_reported_counts) ... ok
+test_duplicate_event_id_is_rejected_before_double_counting (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_duplicate_event_id_is_rejected_before_double_counting) ... ok
+test_explicit_counter_evidence_precedes_incomplete_coverage (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_explicit_counter_evidence_precedes_incomplete_coverage) ... ok
+test_invalid_or_wrong_phase_spec_cannot_be_scored (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_invalid_or_wrong_phase_spec_cannot_be_scored) ... ok
+test_known_synthetic_oracle_and_indeterminate_reasons (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_known_synthetic_oracle_and_indeterminate_reasons) ... ok
+test_material_profile_changes_are_rejected_but_editorial_change_is_allowed (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_material_profile_changes_are_rejected_but_editorial_change_is_allowed) ... ok
+test_no_mlflow_or_institutional_execution_is_claimed (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_no_mlflow_or_institutional_execution_is_claimed) ... ok
+test_out_of_window_or_unknown_signal_fails_closed (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_out_of_window_or_unknown_signal_fails_closed) ... ok
+test_unknown_event_and_duplicate_population_fail_closed (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_unknown_event_and_duplicate_population_fail_closed) ... ok
+test_uses_canonical_flow_spec_fingerprint_and_artifacts (test_micromodelo_mm09_lab.MM09GreenfieldLabTests.test_uses_canonical_flow_spec_fingerprint_and_artifacts) ... ok
+test_output_contract_is_detached_from_spec (test_micromodelo_mm10_handoff.HandoffTests.test_output_contract_is_detached_from_spec) ... ok
+test_pilot_handoff_is_draft_and_not_publication (test_micromodelo_mm10_handoff.HandoffTests.test_pilot_handoff_is_draft_and_not_publication) ... ok
+test_rejects_unreconciled_count (test_micromodelo_mm10_handoff.HandoffTests.test_rejects_unreconciled_count) ... ok
+test_zero_aggregate_is_not_claimed_as_measured (test_micromodelo_mm10_handoff.HandoffTests.test_zero_aggregate_is_not_claimed_as_measured) ... ok
+test_equivalent_and_divergent_are_distinct (test_micromodelo_mm12_migration_lab.MigrationLabTests.test_equivalent_and_divergent_are_distinct) ... ok
+test_rejects_non_fixture_and_duplicate (test_micromodelo_mm12_migration_lab.MigrationLabTests.test_rejects_non_fixture_and_duplicate) ... ok
+test_rejects_non_string_classification_on_either_side (test_micromodelo_mm12_migration_lab.MigrationLabTests.test_rejects_non_string_classification_on_either_side) ... ok
+test_catalog_is_derived_and_impact_is_scoped (test_micromodelo_mm13_catalog.CatalogTests.test_catalog_is_derived_and_impact_is_scoped) ... ok
+test_rejects_duplicate_and_invalid_spec (test_micromodelo_mm13_catalog.CatalogTests.test_rejects_duplicate_and_invalid_spec) ... ok
+
+----------------------------------------------------------------------
+Ran 192 tests in 4.123s
+
+OK
+   OK   (4.4s) OK
+
+-- micromodelos-pacote: aceite sintético do produto Micromodelos isolado do checkout
+test_corrupt_module_fails_before_import (__main__.ExtractedProductAcceptanceTests.test_corrupt_module_fails_before_import) ... ok
+test_destination_flags_do_not_connect (__main__.ExtractedProductAcceptanceTests.test_destination_flags_do_not_connect) ... ok
+test_integrated_synthetic_acceptance (__main__.ExtractedProductAcceptanceTests.test_integrated_synthetic_acceptance) ... ok
+test_missing_contract_fails_integrity (__main__.ExtractedProductAcceptanceTests.test_missing_contract_fails_integrity) ... ok
+test_missing_dependency_stops_before_import (__main__.ExtractedProductAcceptanceTests.test_missing_dependency_stops_before_import) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.417s
+
+OK
+   OK   (0.5s) OK
+
+-- readmes: contrato dos READMEs, dispensas monotônicas e integração com Concierge
+test_actual_adr_numbers_are_unique (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_adr_numbers_are_unique) ... ok
+test_actual_stage_union_is_valid (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_stage_union_is_valid) ... ok
+test_discovery_cannot_omit_original_readme_tests (test_readme_integracao.ReadmeConciergeIntegrationTests.test_discovery_cannot_omit_original_readme_tests) ... ok
+test_duplicate_adr_number_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_adr_number_is_rejected) ... ok
+test_duplicate_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_stage_is_rejected) ... ok
+test_each_missing_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_each_missing_stage_is_rejected) ... ok
+test_instructions_preserve_both_optional_discovery_and_readme_contract (test_readme_integracao.ReadmeConciergeIntegrationTests.test_instructions_preserve_both_optional_discovery_and_readme_contract) ... ok
+test_manual_and_instructions_mirrors_match (test_readme_integracao.ReadmeConciergeIntegrationTests.test_manual_and_instructions_mirrors_match) ... ok
+test_proposal_and_concierge_have_distinct_routes (test_readme_integracao.ReadmeConciergeIntegrationTests.test_proposal_and_concierge_have_distinct_routes) ... ok
+test_weakened_readme_validation_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_weakened_readme_validation_is_rejected) ... ok
+test_broken_anchor (test_readme_objeto_contract.ReadmeContractTests.test_broken_anchor) ... ok
+test_broken_link (test_readme_objeto_contract.ReadmeContractTests.test_broken_link) ... ok
+test_code_only_section (test_readme_objeto_contract.ReadmeContractTests.test_code_only_section) ... ok
+test_comment_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_comment_headings_do_not_count) ... ok
+test_committed_bootstrap (test_readme_objeto_contract.ReadmeContractTests.test_committed_bootstrap) ... ok
+test_complete_with_pending_rejected (test_readme_objeto_contract.ReadmeContractTests.test_complete_with_pending_rejected) ... ok
+test_control_path_traversal_rejected (test_readme_objeto_contract.ReadmeContractTests.test_control_path_traversal_rejected) ... ok
+test_delivered_must_retire_waiver (test_readme_objeto_contract.ReadmeContractTests.test_delivered_must_retire_waiver) ... ok
+test_duplicate_heading (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_heading) ... ok
+test_duplicate_json_rejected (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_json_rejected) ... ok
+test_editor_placeholder_rejected (test_readme_objeto_contract.ReadmeContractTests.test_editor_placeholder_rejected) ... ok
+test_empty_section (test_readme_objeto_contract.ReadmeContractTests.test_empty_section) ... ok
+test_escape_product_tree (test_readme_objeto_contract.ReadmeContractTests.test_escape_product_tree) ... ok
+test_existing_anchor (test_readme_objeto_contract.ReadmeContractTests.test_existing_anchor) ... ok
+test_fenced_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_fenced_headings_do_not_count) ... ok
+test_ghost_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_ghost_waiver_rejected) ... ok
+test_git_bootstrap_only_preexisting (test_readme_objeto_contract.ReadmeContractTests.test_git_bootstrap_only_preexisting) ... ok
+test_git_reintroduced_waiver_in_commit (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_commit) ... ok
+test_git_reintroduced_waiver_in_worktree (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_worktree) ... ok
+test_history_unavailable_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_history_unavailable_fails_closed) ... ok
+test_legitimate_pending_legacy (test_readme_objeto_contract.ReadmeContractTests.test_legitimate_pending_legacy) ... ok
+test_link_inside_code_not_real_link (test_readme_objeto_contract.ReadmeContractTests.test_link_inside_code_not_real_link) ... ok
+test_missing_api_link (test_readme_objeto_contract.ReadmeContractTests.test_missing_api_link) ... ok
+test_missing_quick_view (test_readme_objeto_contract.ReadmeContractTests.test_missing_quick_view) ... ok
+test_missing_readme (test_readme_objeto_contract.ReadmeContractTests.test_missing_readme) ... ok
+test_missing_section (test_readme_objeto_contract.ReadmeContractTests.test_missing_section) ... ok
+test_missing_version (test_readme_objeto_contract.ReadmeContractTests.test_missing_version) ... ok
+test_new_object_without_readme (test_readme_objeto_contract.ReadmeContractTests.test_new_object_without_readme) ... ok
+test_new_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_new_waiver_rejected) ... ok
+test_prompt_placeholder_is_legitimate (test_readme_objeto_contract.ReadmeContractTests.test_prompt_placeholder_is_legitimate) ... ok
+test_script_and_exemplar (test_readme_objeto_contract.ReadmeContractTests.test_script_and_exemplar) ... ok
+test_shallow_history_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_shallow_history_fails_closed) ... ok
+test_short_document_has_no_word_quota (test_readme_objeto_contract.ReadmeContractTests.test_short_document_has_no_word_quota) ... ok
+test_symlink_readme_rejected (test_readme_objeto_contract.ReadmeContractTests.test_symlink_readme_rejected) ... ok
+test_template_order_is_validated (test_readme_objeto_contract.ReadmeContractTests.test_template_order_is_validated) ... ok
+test_unknown_category_is_not_silently_ignored (test_readme_objeto_contract.ReadmeContractTests.test_unknown_category_is_not_silently_ignored) ... ok
+test_waived_symlink_is_not_silently_accepted (test_readme_objeto_contract.ReadmeContractTests.test_waived_symlink_is_not_silently_accepted) ... ok
+test_wrong_order (test_readme_objeto_contract.ReadmeContractTests.test_wrong_order) ... ok
+test_wrong_version (test_readme_objeto_contract.ReadmeContractTests.test_wrong_version) ... ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 0.159s
+
+OK
+   OK   (0.2s) OK
+
+-- concierge-pacote: estrutura do pacote Concierge
+PASS: estrutura, frontmatter, links locais, sintaxe e matriz de aceite.
+NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+   OK   (0.0s) NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+
+-- concierge-regressoes: regressões do verificador Concierge
+test_broken_link (test_validador.ValidatorTests.test_broken_link) ... ok
+test_claimed_human_pass (test_validador.ValidatorTests.test_claimed_human_pass) ... ok
+test_duplicate_case (test_validador.ValidatorTests.test_duplicate_case) ... ok
+test_duplicate_frontmatter (test_validador.ValidatorTests.test_duplicate_frontmatter) ... ok
+test_extra_frontmatter_field (test_validador.ValidatorTests.test_extra_frontmatter_field) ... ok
+test_invalid_route (test_validador.ValidatorTests.test_invalid_route) ... ok
+test_link_outside_package (test_validador.ValidatorTests.test_link_outside_package) ... ok
+test_missing_template (test_validador.ValidatorTests.test_missing_template) ... ok
+test_negative_cannot_take_over (test_validador.ValidatorTests.test_negative_cannot_take_over) ... ok
+test_positive_activation_must_select (test_validador.ValidatorTests.test_positive_activation_must_select) ... ok
+test_python_syntax_error (test_validador.ValidatorTests.test_python_syntax_error) ... ok
+test_root_symlink_rejected (test_validador.ValidatorTests.test_root_symlink_rejected) ... ok
+test_symlink_rejected (test_validador.ValidatorTests.test_symlink_rejected) ... ok
+test_valid_package (test_validador.ValidatorTests.test_valid_package) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.075s
+
+OK
+   OK   (0.1s) OK
+
+-- concierge-integracao: integração canônica, contratos declarados e espelho
+test_ci_includes_all_local_concierge_stages (__main__.ConciergeIntegrationTests.test_ci_includes_all_local_concierge_stages) ... ok
+test_declared_helper_paths_exist_without_importing (__main__.ConciergeIntegrationTests.test_declared_helper_paths_exist_without_importing) ... ok
+test_description_only_selects_discovery_contract (__main__.ConciergeIntegrationTests.test_description_only_selects_discovery_contract) ... ok
+test_example_public_symbols_are_exported (__main__.ConciergeIntegrationTests.test_example_public_symbols_are_exported) ... ok
+test_fixtures_never_claim_conversational_pass (__main__.ConciergeIntegrationTests.test_fixtures_never_claim_conversational_pass) ... ok
+test_forward_cases_and_pending_state_are_documented (__main__.ConciergeIntegrationTests.test_forward_cases_and_pending_state_are_documented) ... ok
+test_manual_inventory_and_reading_copy (__main__.ConciergeIntegrationTests.test_manual_inventory_and_reading_copy) ... ok
+test_package_links_and_matrix_are_valid (__main__.ConciergeIntegrationTests.test_package_links_and_matrix_are_valid) ... ok
+test_personal_instructions_have_optional_route (__main__.ConciergeIntegrationTests.test_personal_instructions_have_optional_route) ... ok
+test_policy_and_discovery_folders_agree (__main__.ConciergeIntegrationTests.test_policy_and_discovery_folders_agree) ... ok
+test_publisher_knows_skill_without_remote_calls (__main__.ConciergeIntegrationTests.test_publisher_knows_skill_without_remote_calls) ... ok
+test_rendered_skill_matches_source_bytes (__main__.ConciergeIntegrationTests.test_rendered_skill_matches_source_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.177s
+
+OK
+   OK   (0.3s) OK
+
+== RESUMO ==
+  OK   temas          45.6s
+  OK   validacao      13.9s
+  OK   sef            35.6s
+  OK   biblioteca      1.4s
+  OK   ferramentas     1.3s
+  OK   transicao       0.1s
+  OK   micromodelos    4.4s
+  OK   micromodelos-pacote    0.5s
+  OK   readmes         0.2s
+  OK   concierge-pacote    0.0s
+  OK   concierge-regressoes    0.1s
+  OK   concierge-integracao    0.3s
+
+alcance : gate local — não cobre Databricks, Spark nem Genie Code
+APROVADO: 12 etapa(s)

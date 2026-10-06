@@ -7,6 +7,8 @@
 - (Codex) Revalidadas fontes Databricks e corrigidas negativas obsoletas sem editar runtime. O espelho foi gerado duas vezes em cópia isolada; só o marcador mudou, com os 691 pares de payload preservados.
 - (Codex) Revisão de contexto completo encontrou e corrigiu falhas reais no novo guardião (inventário, frontmatter, recursos, symlinks, caixa, fim de linha e claims). Aceite nativo dos clientes e Windows permanece bloqueado; pacote local não significa publicação, merge ou homologação.
 
+- (Codex) Candidata 420976e: CI local 14/14, 60 testes de controle e rollback/reaplicação efetivos aprovados. Codex nativo bloqueado antes da sessão por filesystem read-only; demais clientes/Windows ausentes. A evidência mantém S06/aceite pleno S07 bloqueados e publicação manual pendente.
+
 ## 2026-10-06 — Readequação documental: entradas e percurso de uso
 
 - (Codex) Reconciliados os estados e as rotas de manutenção com o histórico Git e a policy vigente, preservando os fechamentos datados e suas falhas. O fluxo local-first separa revisão documental de publicação e execução autorizadas.

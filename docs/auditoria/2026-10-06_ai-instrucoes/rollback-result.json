@@ -1,3 +1,79 @@
 {
-  "status": "NOT_RUN"
+  "status": "PASS",
+  "scope": "actual local revert/reapply in disposable clone; native client loader not exercised",
+  "tested_sha": "420976e7b76373721998a5df96e996530764688d",
+  "tested_tree": "ade8ff3bab3533cfa10803cdc44b537a3c22ab50",
+  "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
+  "baseline_tree": "035c31b1e4c27549ab012d574dec54421dd9ea31",
+  "commits": [
+    "8aee5679ad5d48aef50e5dee4096e4e50438ce23",
+    "3d1057cbf52ef9420fc6a466755336d989b084d3",
+    "420976e7b76373721998a5df96e996530764688d"
+  ],
+  "restored_full_baseline_tree": true,
+  "restored_exact_candidate_tree": true,
+  "unrelated_untracked_work_preserved": true,
+  "checked_at_utc": "2026-10-06T19:31:54.732328+00:00",
+  "logs": [
+    {
+      "command": "git clone --no-hardlinks --quiet <candidate> <isolated-clone>/repo",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git rev-list --reverse f2843eafae84d44cd751f307101de84f11981bd7..420976e7b76373721998a5df96e996530764688d",
+      "exit_code": 0,
+      "stdout": "8aee5679ad5d48aef50e5dee4096e4e50438ce23\n3d1057cbf52ef9420fc6a466755336d989b084d3\n420976e7b76373721998a5df96e996530764688d\n",
+      "stderr": ""
+    },
+    {
+      "command": "git revert --no-commit f2843eafae84d44cd751f307101de84f11981bd7..420976e7b76373721998a5df96e996530764688d",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git write-tree",
+      "exit_code": 0,
+      "stdout": "035c31b1e4c27549ab012d574dec54421dd9ea31\n",
+      "stderr": ""
+    },
+    {
+      "command": "<python-test-env> -B tools/validate_assistant.py --conferir-readme",
+      "exit_code": 0,
+      "stdout": "raiz analisada     : <isolated-clone>/ambiente_fonte\nskills             : 15 · 15/15 com as 5 seções estruturais\nskill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy\nprompts            : 18 · 174 campos com guia e contrato humano\nhelpers citados    : 101 caminhos verificados\nsaída no README    : 20 linhas conferidas contra execução real\nmarkdown / links   : 245 arquivos / 1882 links relativos\nnotebooks / links  : 84 notebooks / 108 links relativos\nreadmes de objeto  : 79/79 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)\npastas de objeto   : 63 conferidas (nome, arquivos, __init__)\nforma da pasta     : 61 conferidas (o módulo tem o nome da pasta)\ncontrato de dados  : 63 pares (saída: o que o notebook consome)\ncontrato de entrada: 61 pares (entrada: o que o notebook passa)\nsaída colada       : 83 notebooks com bloco real, 0 sem\nidioma da docstring: 63 módulos, 0 com docstring em inglês\nnormas do molde    : 78 arquivos, 0 violação(ões)\nnotebook exercita  : 61 objetos, 0 notebook(s) que só importam\npython (AST)       : 290 arquivos\ninstrucoes         : 12624/20000 caracteres\nrepo (identidade)  : 2243 arquivos varridos no repositório editável/derivado\nrepo (links)       : 3387 links fora da raiz analisada\nworktree (extras)  : 1 arquivos locais examinados, fora da contagem versionada\n\n\nAPROVADO: 0 falha(s), 0 aviso(s)\n",
+      "stderr": ""
+    },
+    {
+      "command": "git -c user.name=Codex -c user.email=codex@openai.com commit -qm test: isolated complete migration rollback",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git cherry-pick --no-commit 8aee5679ad5d48aef50e5dee4096e4e50438ce23 3d1057cbf52ef9420fc6a466755336d989b084d3 420976e7b76373721998a5df96e996530764688d",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git write-tree",
+      "exit_code": 0,
+      "stdout": "ade8ff3bab3533cfa10803cdc44b537a3c22ab50\n",
+      "stderr": ""
+    },
+    {
+      "command": "python -B tools/ai_controls.py --check --release --migration-freeze",
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"scope\": \"offline static contracts only; no native client certification\",\n  \"tracked_and_new_files\": 2474,\n  \"canonical_skills\": 5,\n  \"generated_files\": 5,\n  \"requirements\": 215,\n  \"core_lines\": 72,\n  \"core_bytes\": 4725,\n  \"product_pairs\": 691,\n  \"migration_freeze\": true,\n  \"historical_matches\": 90,\n  \"warnings\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "<python-test-env> -B tools/validate_assistant.py --conferir-readme",
+      "exit_code": 0,
+      "stdout": "raiz analisada     : <isolated-clone>/ambiente_fonte\nskills             : 15 · 15/15 com as 5 seções estruturais\nskill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy\nprompts            : 18 · 174 campos com guia e contrato humano\nhelpers citados    : 101 caminhos verificados\nsaída no README    : 20 linhas conferidas contra execução real\nmarkdown / links   : 245 arquivos / 1882 links relativos\nnotebooks / links  : 84 notebooks / 108 links relativos\nreadmes de objeto  : 79/79 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)\npastas de objeto   : 63 conferidas (nome, arquivos, __init__)\nforma da pasta     : 61 conferidas (o módulo tem o nome da pasta)\ncontrato de dados  : 63 pares (saída: o que o notebook consome)\ncontrato de entrada: 61 pares (entrada: o que o notebook passa)\nsaída colada       : 83 notebooks com bloco real, 0 sem\nidioma da docstring: 63 módulos, 0 com docstring em inglês\nnormas do molde    : 78 arquivos, 0 violação(ões)\nnotebook exercita  : 61 objetos, 0 notebook(s) que só importam\npython (AST)       : 290 arquivos\ninstrucoes         : 12624/20000 caracteres\nrepo (identidade)  : 2304 arquivos varridos no repositório editável/derivado\nrepo (links)       : 3583 links fora da raiz analisada\nworktree (extras)  : 1 arquivos locais examinados, fora da contagem versionada\n\n\nAPROVADO: 0 falha(s), 0 aviso(s)\n",
+      "stderr": ""
+    }
+  ]
 }

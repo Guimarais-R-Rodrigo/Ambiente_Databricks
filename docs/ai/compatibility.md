@@ -8,7 +8,7 @@ devem confirmar os clientes/modelos efetivamente adotados antes da homologação
 
 | Produto/superfície | Estratégia entregue | Evidência local | Gate nativo |
 |---|---|---|---|
-| Codex CLI | AGENTS.md + .agents/skills | CLI 0.159.2 detectada em Linux; sessão desta tarefa recebeu contexto por orquestração | BLOCKED: sessão nativa nova com diagnóstico completo ainda não demonstrada |
+| Codex CLI | AGENTS.md + .agents/skills | CLI 0.159.2 detectada em Linux; tentativa nativa falhou antes da sessão (filesystem read-only) | BLOCKED: inicialização do cliente falhou; nenhum loader observado |
 | Claude Code | CLAUDE.md importa AGENTS.md; .claude/skills gerada | cliente ausente | BLOCKED: instalar/configurar somente com autorização própria e testar |
 | Gemini CLI | GEMINI.md importa ./AGENTS.md; .agents/skills documentada | cliente ausente | BLOCKED: cliente e sessão autorizada necessários |
 | Grok Build | AGENTS nativo documentado; descoberta compatível .claude/skills é candidata | cliente ausente | BLOCKED: grok inspect, coexistência e cinco nomes únicos precisam de prova |
