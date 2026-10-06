@@ -2,6 +2,12 @@
 
 > **Recurso customizado:** não é padrão Databricks nem fonte de verdade. Ler o `SKILL.md` atual e auditar o artefato real. Estes checkpoints ajudam a formular testes; não aprovam uma skill por presença de palavras-chave.
 
+A matriz não substitui o contrato atual, a policy, o Receipt, o Postflight nem
+o verificador aplicável. O catálogo abaixo é apoio parcial: novas skills ou
+perfis exigem revisão dos checkpoints, sem presumir cobertura completa.
+Itens condicionais, como MLflow, gráficos ou deploy, só se aplicam quando o
+perfil e o pedido os exigem e autorizam.
+
 ## Checkpoints universais
 
 - `SKILL.md` descobrível com frontmatter apenas `name` e `description`.
@@ -51,7 +57,7 @@
 - Split respeita tempo, entidade, gap e teste intocado.
 - Métricas são válidas para classes/volume e objetivo operacional.
 - Séries usam backtesting; ranking valida grupos; survival trata censura.
-- MLflow registra pipeline, assinatura, dependências e snapshot sem PII.
+- Quando tracking for aplicável e autorizado, MLflow registra os artefatos exigidos pelo perfil, sem PII; cálculo local sem tracking não é falha por si só.
 
 ## hub-ml-explainability
 
