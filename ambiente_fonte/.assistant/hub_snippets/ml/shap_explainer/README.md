@@ -8,7 +8,7 @@ Este objeto encapsula cálculo SHAP para modelos de árvore, lineares e KernelSH
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Wrapper para calcular SHAP, ranquear mean |SHAP| e gerar plots global/local. |
+| O que é? | Wrapper para calcular SHAP, ranquear mean \|SHAP\| e gerar plots global/local. |
 | Para que serve? | Inspecionar contribuição das features para as previsões do modelo. |
 | Use quando... | Modelo, classe/output e conjunto de dados a explicar estão explicitamente definidos. |
 | Evite quando... | Você quer inferência causal, explicação sem conhecer o output ou custo KernelSHAP incompatível com a base. |
@@ -73,6 +73,27 @@ Os plotters fecham a figura e não retornam `Figure`.
 
 ## 9. Como usar este recurso no Hub?
 
+Para KernelSHAP, controle a amostra **antes** do helper e guarde os índices. A subamostragem interna não retorna índices e pode reordenar as linhas: unir seus valores ao `X` original atribuiria explicações a entidades erradas.
+
+```python
+import numpy as np
+from hub_snippets.ml.shap_explainer import compute_shap, plot_shap_global
+
+# X é uma matriz numérica preparada com as mesmas colunas do treino.
+X = np.asarray(X, dtype=float)
+indices = np.random.default_rng(42).choice(len(X), min(200, len(X)), replace=False)
+X_amostra = X[indices]
+values, base = compute_shap(
+    model, X_amostra, feature_names=names, model_type="kernel",
+    task="classification", output_index=1, max_samples=len(X_amostra),
+)
+assert values.shape == X_amostra.shape
+# Escolha um diretório existente e autorize a escrita/sobrescrita antes de usar:
+# plot_shap_global(values, X_amostra, names, save_path="/tmp/shap_global.png")
+```
+
+Reutilize exatamente `X_amostra` nos plots e na direção do relatório; `indices` permite recuperar os IDs originais. O exemplo de caminho cria ou pode sobrescrever um PNG local. Sem `save_path`, os plotters fecham a figura sem retorná-la nem entregar um arquivo. Para modelo de regressão, use `task="regression"` e a saída pertinente.
+
 ```python
 from hub_snippets.ml.shap_explainer import compute_shap, get_feature_importance_shap
 
@@ -89,6 +110,8 @@ ranking = get_feature_importance_shap(values, names)
 O [notebook](exemplo_shap_explainer.py) instala a versão de SHAP testada naquela fixture e reinicia o Python.
 
 ## 10. Decisões e configurações que mais importam
+
+Se SHAP já retorna uma matriz 2D, `output_index` é ignorado: o argumento não prova que uma classe foi selecionada. Confirme a semântica da saída do estimador. Para lista/tensor multi-output, a seleção e a validação de índice são exigidas pelo wrapper.
 
 `background` é opcional e só afeta `model_type="linear"`; com `None`, permanece o comportamento anterior.
 
@@ -128,6 +151,6 @@ Depois do cálculo, use [`explainability_report`](../explainability_report/READM
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. Documentação oficial do SHAP: [`TreeExplainer`](https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html) e [API](https://shap.readthedocs.io/en/latest/api.html).
+Consulte TreeExplainer e a API SHAP da versão instalada. A soma das atribuições depende do output explicado e da referência adotada; revise classe, base_value, alinhamento de linhas e dependência entre features antes de interpretar.
 
-A documentação oficial ressalta que a soma SHAP depende do output explicado e que o tratamento de dependência entre features é parte da configuração. A revisão R08 não presume causalidade, publicação Databricks ou auditoria independente.
+Referências primárias de conceito/API: [`TreeExplainer`](https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html), [API](https://shap.readthedocs.io/en/latest/api.html).

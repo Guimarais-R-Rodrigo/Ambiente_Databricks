@@ -75,6 +75,32 @@ A docstring atual de `evaluate_ranking` diz “NDCG@k e MAP@k”, mas **MAP não
 
 ## 9. Como usar este recurso no Hub?
 
+Prepare `X`, `y` e tamanhos a partir da **mesma ordenação**, separadamente para treino e validação:
+
+```python
+import numpy as np
+import pandas as pd
+
+def preparar(frame):
+    assert frame["grupo"].notna().all()
+    ordenado = frame.sort_values("grupo", kind="stable").copy()
+    X = ordenado[["feature_1", "feature_2"]].to_numpy(dtype=float)
+    y = ordenado["relevancia"].to_numpy()
+    grupos = ordenado.groupby("grupo", sort=False).size().to_numpy(dtype=int)
+    assert int(grupos.sum()) == len(y) == len(X)
+    return X, y, grupos
+
+# Exemplo sintético de preparação: os dois blocos resultam em grupos [2, 2].
+frame = pd.DataFrame({"grupo": ["B", "A", "B", "A"],
+    "feature_1": [1, 2, 3, 4], "feature_2": [4, 3, 2, 1], "relevancia": [0, 2, 1, 0]})
+X_exemplo, y_exemplo, grupos_exemplo = preparar(frame)
+assert grupos_exemplo.tolist() == [2, 2]
+```
+
+No uso real aplique `preparar` aos dois splits definidos pelo protocolo, sem reutilizar o mesmo frame como validação.
+
+`log_mlflow=False` desliga apenas as chamadas explícitas de registro deste wrapper. Não desativa autologging já configurado na sessão nem garante ausência de logs/caches da biblioteca. Confira o estado da sessão e o destino antes de treinar.
+
 ```python
 from hub_snippets.ml.lgbm_ranker import train_lgbm_ranker, evaluate_ranking
 
@@ -87,11 +113,13 @@ model, metrics = train_lgbm_ranker(
 ndcg_top3 = evaluate_ranking(model, X_val, y_val, groups_val, ks=[3])
 ```
 
-O [notebook](exemplo_lgbm_ranker.py) instala LightGBM e reinicia o Python. Ele afirma na abertura histórica que avalia “NDCG e MAP”; nesta R05 a prosa será corrigida para refletir NDCG apenas, preservando código e saídas.
+O notebook instala LightGBM, reinicia o Python e demonstra NDCG. MAP não é calculado por este helper, mesmo que ainda apareça em uma docstring.
 
 Com logging habilitado, a função chama `mlflow.log_params` e `mlflow.log_metrics` no contexto de run disponível; não administra o ciclo de vida do run nem registra o modelo.
 
 ## 10. Decisões e configurações que mais importam
+
+O avaliador local fixa ganho exponencial `2**relevancia - 1`, mesmo quando `params` define `label_gain` diferente no treinamento. Nesse caso os dois NDCGs medem convenções diferentes. Compare-os diretamente somente com o mesmo ganho exponencial, cortes k, grupos e agregação; não interprete a discrepância como erro aritmético automaticamente.
 
 Os defaults locais usam `objective=lambdarank`, `metric=ndcg`, `ndcg_eval_at=[5,10,20]`, learning rate 0,05, `num_leaves=63`, `min_data_in_leaf=50`, frações de features/linhas de 0,8 e `bagging_freq=5`. Aqui o bagging de linhas está efetivamente habilitado porque `bagging_freq` é positivo.
 
@@ -127,6 +155,6 @@ Depois do baseline, escolha métricas alinhadas ao produto e avalie separação 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. A [documentação de parâmetros do LightGBM](https://lightgbm.readthedocs.io/en/latest/Parameters.html) descreve `lambdarank`, labels de relevância, `label_gain` e parâmetros de ranking. A [documentação de early stopping](https://lightgbm.readthedocs.io/en/v4.6.0/pythonapi/lightgbm.early_stopping.html) explica o papel da validação e de `best_iteration`.
+Consulte os parâmetros lambdarank, label_gain e early stopping da versão LightGBM instalada. Para comparar o avaliador local com a métrica do treino, preserve a mesma convenção de ganhos e a separação correta dos grupos. Revalide pacotes e tracking no destino.
 
-A execução de runtime desta R05 será registrada no relatório da sprint. Sem publicação Databricks, homologação de workspace ou revisão independente presumida.
+Referências primárias de conceito/API: [documentação de parâmetros do LightGBM](https://lightgbm.readthedocs.io/en/latest/Parameters.html), [documentação de early stopping](https://lightgbm.readthedocs.io/en/v4.6.0/pythonapi/lightgbm.early_stopping.html).

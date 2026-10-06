@@ -2,13 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 <!-- sistema-temas-v07: consumidores -->
-> **Atualização V07 — estado atual.** `build_vintage_table` e `compare_safras`
-> continuam sem lógica de tema. Para as figuras, V07 adiciona
-> `plot_vintage_curves_resolvido` (usa `palette.categorical`) e
-> `plot_vintage_heatmap_resolvido` (usa `palette.sequential`). As duas rotas
-> reutilizam os mesmos pontos/matriz das funções legadas: MOB, maturidade,
-> denominadores, taxas, cobertura e células `NaN` não são alterados pela
-> aparência.
+build_vintage_table e compare_safras calculam os resultados sem configuração de aparência. Use plot_vintage_curves_resolvido ou plot_vintage_heatmap_resolvido com ResolvedTheme notebook/light para personalizar as figuras. As rotas preservam pontos, matrizes, maturidades, denominadores, taxas e células NaN; curvas usam paleta categórica e heatmap, sequencial.
 
 Análise de vintage organiza contratos pela safra de originação e pelo tempo decorrido desde a originação, aqui expresso em MOB (*months on book*). Este helper constrói taxas acumuladas somente quando a célula safra×MOB está completamente observada e oferece curvas, heatmap e comparação de checkpoints. Ele ajuda a comparar maturação; **não extrapola safras imaturas nem corrige sozinho definição de evento, denominator ou censura operacional**.
 
@@ -20,7 +14,7 @@ Análise de vintage organiza contratos pela safra de originação e pelo tempo d
 | Para que serve? | Comparar incidência acumulada em maturidades equivalentes. |
 | Use quando... | Originação, referência, contrato, MOB e evento estiverem semanticamente definidos. |
 | Evite quando... | Snapshots faltantes forem confundidos com não-evento ou quando se pretende extrapolar uma safra ainda imatura. |
-| Precisa de... | pandas, NumPy e Plotly para os gráficos. |
+| Precisa de... | pandas, NumPy e Plotly já no import (via `theme_plotly`). |
 | Entrega... | Tabela de vintage, figuras Plotly e comparação de checkpoints. |
 
 Consulte a [implementação](vintage_analysis.py), a [fachada pública](__init__.py) e o [notebook de exemplo](exemplo_vintage_analysis.py).
@@ -65,6 +59,16 @@ Se uma safra de maio tem 200 contratos mas apenas 150 possuem snapshot de MOB 6,
 
 ## 7. O que você precisa antes de usar?
 
+Valide identidades antes de construir a tabela; estas verificações não são impostas pelo wrapper:
+
+```python
+assert df["id_contrato"].notna().all()
+assert df.groupby("id_contrato")["dt_orig"].nunique(dropna=False).eq(1).all()
+assert df["dt_orig"].notna().all()
+```
+
+Normalize datas antes de comparar. IDs nulos podem ser descartados pelo agrupamento; um mesmo ID com origens diferentes pode entrar em safras distintas. Quando houver base-mestra de contratos, confronte IDs/safras e denominadores com ela, incluindo contratos sem nenhum snapshot válido. Não reescreva a origem para forçar consistência.
+
 Devem existir `contract_id`, datas de originação e referência e target. Mesmo quando `mob_col` é fornecido, **as duas colunas de data continuam obrigatórias** pelo contrato atual.
 
 Datas são convertidas com `pd.to_datetime`. MOB deve ser finito, não negativo e inteiro após filtragem. Target não pode ter nulos e deve conter apenas 0/1 nas observações remanescentes.
@@ -76,6 +80,18 @@ A tabela contém `safra`, `mob`, `n_contratos_observados`, `n_eventos_acumulados
 `plot_vintage_curves` e `plot_vintage_heatmap` devolvem figuras Plotly. `compare_safras` produz uma linha por safra com taxa em checkpoints e diferença para a média entre safras disponíveis naquele checkpoint.
 
 ## 9. Como usar este recurso no Hub?
+
+Com `theme` já obtido pela [resolução de tema](../../visual/tema/README.md) e compatível com notebook/light:
+
+```python
+from hub_snippets.ml.vintage_analysis import (
+    plot_vintage_curves_resolvido, plot_vintage_heatmap_resolvido,
+)
+curvas = plot_vintage_curves_resolvido(tabela, theme, max_mob=12)
+cobertura = plot_vintage_heatmap_resolvido(tabela, theme, metric="cobertura_observada")
+```
+
+Figuras são retornadas em memória; salvar/publicar exige uma ação separada.
 
 ```python
 from hub_snippets.ml.vintage_analysis import build_vintage_table, compare_safras
@@ -100,6 +116,8 @@ O módulo opera em pandas. Se a origem é Spark, reduza o volume deliberadamente
 `safra_grain` define mês ou trimestre. `max_mob` limita apenas a visualização. `top_n_safras` escolhe safras recentes segundo a ordenação textual das chaves produzidas pelo próprio helper.
 
 ## 11. Limitações, riscos e armadilhas
+
+O heatmap multiplica `metric` por 100 e rotula `%`, sem verificar sua unidade. Use somente proporções 0–1, como `taxa_acumulada` ou `cobertura_observada`; passar contagens apresenta percentuais falsos. Célula parcial existente pode ter `NaN`, mas MOB totalmente ausente não produz sequer uma linha. As curvas podem ligar MOBs separados e o `pivot_table` do heatmap pode eliminar eixos inteiramente nulos. Reveja a grade e a cobertura antes de interpretar continuidade ou ausência de cor.
 
 A definição de “coorte completa” usa contratos que sobreviveram ao filtro de MOB válido. O helper não possui base-mestra externa para recuperar contratos ausentes de todos os snapshots válidos.
 
@@ -127,6 +145,4 @@ Depois da tabela, documente política para safras incompletas e critérios de co
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. O conceito de vintage/MOB é aplicado conforme a implementação local; este README não apresenta limites de maturidade ou critérios de safra como norma externa universal.
-
-Este README não presume projeção validada, homologação de risco, publicação no Databricks nem auditoria independente.
+As definições de safra, MOB, população observada e taxa seguem o contrato local descrito neste guia. Critérios de comparação e eventual projeção de safras imaturas precisam de validação própria.

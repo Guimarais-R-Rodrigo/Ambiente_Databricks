@@ -12,7 +12,7 @@ ARIMA modela uma série a partir da relação entre valores passados, diferencia
 | Para que serve? | Ajustar um candidato ARIMA/SARIMA e produzir forecast de horizonte fixo. |
 | Use quando... | Houver uma série univariada ordenada, frequência compreendida e avaliação temporal separada. |
 | Evite quando... | A métrica in-sample for a única evidência, houver covariáveis essenciais ou o histórico não sustentar a sazonalidade proposta. |
-| Precisa de... | `pmdarima`, NumPy e MLflow se `log_mlflow=True`. |
+| Precisa de... | NumPy, pandas e MLflow no import; `pmdarima` na execução. |
 | Entrega... | Modelo ajustado, vetor de forecast e dicionário de métricas in-sample. |
 
 Consulte a [implementação](arima_wrapper.py), a [fachada pública](__init__.py) e o [notebook de exemplo](exemplo_arima_wrapper.py). O notebook instala `pmdarima==2.0.4` com `numpy==1.23.5` e reinicia o Python; isso é uma decisão de ambiente do exemplo, não uma dependência versionada pelo pacote do Hub.
@@ -65,6 +65,15 @@ O módulo importa `mlflow` no topo. Portanto MLflow precisa estar importável me
 
 ## 8. O que este recurso entrega?
 
+Com `model` retornado, uma chamada separada recupera o intervalo sem alterar a tupla do helper:
+
+```python
+forecast_com_intervalo, intervalo = model.predict(n_periods=6, return_conf_int=True)
+assert intervalo.shape == (6, 2)
+```
+
+Confira a cobertura/definição do intervalo na versão instalada. Esta chamada de previsão não transforma métricas in-sample em validação futura.
+
 O retorno é `(model, forecast, metrics)`.
 
 `forecast` contém somente a previsão pontual para os `forecast_periods`. O dicionário `metrics` contém `aic`, `bic`, `order`, `seasonal_order`, `rmse_insample` e `mape_insample`. `order` e `seasonal_order` são convertidos para string no dicionário.
@@ -76,8 +85,11 @@ O intervalo calculado por `predict(..., return_conf_int=True)` não é devolvido
 Depois de tornar `.assistant` importável:
 
 ```python
+import numpy as np
 from hub_snippets.ml.arima_wrapper import train_arima
 
+# Série mensal sintética; não é resultado de treino observado.
+serie = np.asarray([100 + i + 5*np.sin(2*np.pi*i/12) for i in range(48)], dtype=float)
 model, forecast, metrics = train_arima(
     serie,
     m=12,
@@ -103,11 +115,11 @@ As métricas são in-sample. AIC/BIC ajudam a comparar especificações sob hip�
 
 O intervalo de confiança é descartado. O wrapper não recebe regressoras exógenas, não testa autocorrelação residual, não verifica quebra estrutural e não implementa validação walk-forward.
 
-O notebook histórico afirma que a ordem escolhida é a “melhor descrição” e associa uma ordem observada diretamente ao processo gerador. A R06 qualifica essa leitura: é a especificação selecionada pelo procedimento, no espaço e critério usados, para aquela amostra.
+A ordem retornada é a especificação selecionada pelo procedimento para esta amostra, dentro do espaço e do critério usados. Não identifica por si o processo gerador.
 
 ## 12. Quais são as alternativas?
 
-[prophet_wrapper](../prophet_wrapper/README.md) representa tendência, sazonalidades e feriados de outra forma. [walk_forward](../walk_forward/walk_forward.py) fornece um protocolo de avaliação por múltiplos cortes. Baselines simples como último valor, média sazonal ou regressão temporal também são comparações importantes.
+[prophet_wrapper](../prophet_wrapper/README.md) representa tendência, sazonalidades e feriados de outra forma. [walk_forward](../walk_forward/README.md) fornece um protocolo de avaliação por múltiplos cortes. Baselines simples como último valor, média sazonal ou regressão temporal também são comparações importantes.
 
 Para séries com regressoras exógenas ou estruturas específicas, uma API de SARIMAX ou outro modelo pode ser mais adequada que este wrapper reduzido.
 
@@ -119,12 +131,10 @@ Confira `model.order`, `model.seasonal_order` e o resumo do modelo. Se `seasonal
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](arima_wrapper.py) define o wrapper; a [fachada](__init__.py) exporta `SEED` e `train_arima`; o [notebook](exemplo_arima_wrapper.py) demonstra uma série sintética. Para avaliação temporal, consulte [walk_forward](../walk_forward/walk_forward.py) e [split_temporal](../split_temporal/split_temporal.py).
+A [implementação](arima_wrapper.py) define o wrapper; a [fachada](__init__.py) exporta `SEED` e `train_arima`; o [notebook](exemplo_arima_wrapper.py) demonstra uma série sintética. Para avaliação temporal, consulte [walk_forward](../walk_forward/README.md) e [split_temporal](../split_temporal/README.md).
 
 Depois de escolher um candidato, o próximo passo é medir fora da amostra e documentar o protocolo, não promover a ordem escolhida a verdade sobre o processo.
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `cae94988cda66a8c61ecebbe6ceed487120a76f2`. Fontes primárias consultadas em 12/09/2026: documentação `AutoARIMA`/`auto_arima` do pmdarima 2.0.x e exemplo oficial de `auto_arima`. A documentação da biblioteca informa que `d` pode ser selecionado por teste de raiz unitária, que a busca stepwise procura uma especificação segundo o critério configurado e que `random_state`/`n_fits` pertencem à busca aleatória, não ao caminho stepwise usado aqui.
-
-O notebook fixa `pmdarima==2.0.4`; em 12/09/2026 o PyPI aponta `pmdarima 2.1.1` como release mais recente. A evidência de runtime desta R06 será registrada no relatório da sprint. Este README não presume publicação no Databricks, homologação em workspace nem auditoria independente.
+Consulte a implementação para o contrato local e a documentação de auto_arima da versão instalada para o espaço de busca. O notebook fixa pmdarima 2.0.4 e NumPy 1.23.5; reproduzir a instalação altera a sessão e requer compatibilidade com o runtime de destino. Métricas in-sample não homologam previsão futura.

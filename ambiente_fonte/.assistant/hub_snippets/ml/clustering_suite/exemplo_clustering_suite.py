@@ -54,7 +54,7 @@ print(resultado_k.to_string(index=False) if hasattr(resultado_k, "to_string") el
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC A tabela histórica abaixo corresponde a `resultado_k["scores"]`, com `best_k` mostrado separadamente. A chamada `select_k` devolve um **dict**, portanto o `print(resultado_k)` literal da célula tem outra representação textual:
+# MAGIC select_k retorna um dict. A tabela abaixo corresponde a resultado_k["scores"]; a recomendação está em resultado_k["best_k"]. Para imprimir a tabela, use resultado_k["scores"].to_string(index=False).
 # MAGIC
 # MAGIC ```text
 # MAGIC    k      inertia  silhouette     calinski  davies_bouldin

@@ -55,6 +55,8 @@ Se `exp(coef)=1,5`, a interpretação local é hazard estimado 1,5 vez maior por
 
 ## 7. O que você precisa antes de usar?
 
+O helper rejeita `penalizer < 0` e `l1_ratio` fora de `[0,1]`. Use parâmetros finitos, covariáveis numéricas e confira finitude de todas as colunas de ajuste antes de chamar; a verificação de infinitos/tipos não está completa no wrapper. O diagnóstico PH deve receber exatamente as linhas elegíveis do ajuste, com a mesma ordem e preparação, não uma amostra arbitrária com nomes iguais.
+
 `feature_cols` deve ser lista não vazia sem duplicatas. Duração, evento e features precisam existir. Após remoção complete-case, deve restar ao menos uma linha; durações precisam ser positivas e o evento deve ser binário com pelo menos um evento observado.
 
 O helper **remove silenciosamente linhas com nulos** nas colunas usadas. Compare `n_observations` com a base original e avalie se complete-case é aceitável.
@@ -68,16 +70,20 @@ Essas métricas vêm do modelo ajustado na própria amostra; o C-index retornado
 ## 9. Como usar este recurso no Hub?
 
 ```python
+import numpy as np
 from hub_snippets.ml.survival_cox import train_cox_ph, validate_proportionality
 
+df_ajuste = df[["duracao", "evento"] + features].dropna().copy()
+assert not df_ajuste.empty
+assert np.isfinite(df_ajuste.to_numpy(dtype=float)).all()
 model, metrics = train_cox_ph(
-    df,
+    df_ajuste,
     duration_col="duracao",
     event_col="evento",
     feature_cols=features,
     log_mlflow=False,
 )
-ph = validate_proportionality(model, df, "duracao", "evento")
+ph = validate_proportionality(model, df_ajuste, "duracao", "evento")
 ```
 
 O teste PH é uma chamada separada; treinar o modelo não o executa automaticamente.
@@ -89,6 +95,8 @@ O teste PH é uma chamada separada; treinar o modelo não o executa automaticame
 A unidade de cada covariável muda a leitura do hazard ratio. Uma variável padronizada tem interpretação por desvio-padrão; uma variável em reais ou anos tem outra escala.
 
 ## 11. Limitações, riscos e armadilhas
+
+O notebook usa `log_mlflow=False` para desligar o registro explícito do helper. Falhas de tracking em um runtime/configuração de laboratório são evidência histórica, não proibição universal de runs em serverless. Antes de habilitar, confira experimento, permissões, configuração e autologging da sessão.
 
 A implementação imprime como “significativas” as features com `p<0,05` **sem correção por multiplicidade**. Isso é uma convenção de exibição local, não prova substantiva nem regra universal.
 
@@ -118,6 +126,4 @@ Depois do ajuste, se a pergunta for preditiva, crie avaliação fora da amostra;
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. Fontes primárias consultadas em 12/09/2026: documentação `lifelines.CoxPHFitter` e `lifelines.statistics.proportional_hazard_test`, incluindo a forma `h(t|x)=h0(t)exp((x-x̄)'β)`, penalização e o teste com transformação temporal.
-
-Este README não presume causalidade, homologação de modelo, publicação no Databricks nem auditoria independente.
+Consulte CoxPHFitter e proportional_hazard_test do lifelines. O diagnóstico de proporcionalidade é separado do fit; as métricas retornadas são in-sample e não demonstram causalidade nem qualidade preditiva futura.

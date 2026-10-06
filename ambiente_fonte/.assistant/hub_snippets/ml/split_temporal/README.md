@@ -57,6 +57,8 @@ A quantidade de **linhas** em cada partição depende da volumetria dos meses. A
 
 ## 7. O que você precisa antes de usar?
 
+`__period` é um nome reservado: a implementação sobrescreve uma coluna de entrada com esse nome e depois a remove das saídas. Recuse ou renomeie essa coluna antes de chamar. Para exclusividade por entidade, exija `group_col` não nulo ou defina uma política explícita: nulos não entram nos conjuntos de exclusão e não têm exclusividade garantida.
+
 `date_col` deve existir e ser convertível por pandas. `train_pct` e `val_pct` precisam ser positivos e somar menos que 1. `gap_periods` não pode ser negativo.
 
 A base precisa ter ao menos `3 + 2*gap_periods` períodos observados. Ainda assim, combinações de percentuais e gaps podem deixar o teste vazio; o helper detecta esse caso.
@@ -70,6 +72,23 @@ Retorna `(train, val, test)`, cada elemento um novo `pandas.DataFrame`. A coluna
 O helper não devolve as datas-limite ou períodos descartados em estrutura separada. Se a auditoria precisar dessas fronteiras, derive-as das saídas e da base original.
 
 ## 9. Como usar este recurso no Hub?
+
+Fixture mensal, uma linha por mês, sem filtro de entidade:
+
+```python
+import pandas as pd
+from hub_snippets.ml.split_temporal import temporal_split
+
+df = pd.DataFrame({"dt_ref": pd.date_range("2024-01-01", periods=24, freq="MS")})
+assert "__period" not in df.columns
+train, val, test = temporal_split(df, "dt_ref")
+assert [len(train), len(val), len(test)] == [16, 3, 3]
+assert train["dt_ref"].max() == pd.Timestamp("2025-04-01")
+assert val["dt_ref"].min() == pd.Timestamp("2025-06-01")
+assert test["dt_ref"].min() == pd.Timestamp("2025-10-01")
+```
+
+Janeiro/2024–abril/2025 treinam; maio/2025 é gap; junho–agosto validam; setembro é gap; outubro–dezembro testam. São 16 + 3 + 3 períodos e dois gaps. Com 30 linhas em cada mês seriam 480/90/90 linhas e 60 excluídas pelos gaps, antes de eventuais filtros de entidade/datas. Para `group_col`, confira `df[group_col].notna().all()` antes do split quando exclusividade for requisito.
 
 ```python
 from hub_snippets.ml.split_temporal import temporal_split
@@ -102,7 +121,7 @@ A função opera em pandas/driver. Datas nulas podem desaparecer das três saíd
 
 `group_col` implementa um contrato conservador de entidades disjuntas e pode esvaziar validação/teste. Ele não é equivalente a “evitar leakage” em qualquer painel; depende da pergunta de generalização.
 
-O notebook histórico resume o comportamento como “tudo até uma data treina, tudo depois testa”. O contrato real tem três partições, dois possíveis gaps e cortes derivados de proporções de períodos.
+O retorno contém três partições, com até dois gaps. Os cortes são calculados sobre períodos observados, não por uma data-limite fornecida pelo chamador.
 
 ## 12. Quais são as alternativas?
 
@@ -124,6 +143,4 @@ Depois de um split único, use [walk_forward](../walk_forward/README.md) se prec
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `cae94988cda66a8c61ecebbe6ceed487120a76f2`. A conversão `DatetimeIndex`/`Period` e os aliases de frequência foram confrontados com a documentação oficial do pandas vigente em 12/09/2026.
-
-Este README documenta separação temporal no driver. Não presume ausência completa de leakage, publicação no Databricks, homologação em workspace nem auditoria independente.
+Consulte a conversão datetime/Period do pandas para as frequências aceitas. Este helper separa dados no driver e preserva a ordem dos períodos; a preparação das features ainda precisa impedir informação futura.

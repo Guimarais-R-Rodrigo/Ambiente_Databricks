@@ -92,25 +92,14 @@ except ImportError as erro:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Registro do impedimento encontrado no ensaio sintético de referência:
+# MAGIC
 # MAGIC ```text
 # MAGIC ⚠️ NÃO EXECUTADO no laboratório
-# MAGIC
-# MAGIC O que rodaria : generate_technical_summary(shap_importance, native_importance=nativa)
 # MAGIC Por que não   : ImportError: Missing optional dependency 'tabulate'.
-# MAGIC Onde verificar: hub_snippets/requirements-optional.txt
-# MAGIC Primeiro bloqueio: instalar `tabulate` na sessão (%pip install tabulate).
-# MAGIC Segundo bloqueio: a comparação nativa atual também espera uma coluna `rank`
-# MAGIC em **ambos** os DataFrames; esta fixture não a fornece. Instalar `tabulate`
-# MAGIC sozinho, portanto, não faz a célula concluir.
 # MAGIC ```
 # MAGIC
-# MAGIC A dependência é **escondida**: não há `import tabulate` no topo do módulo.
-# MAGIC Ela entra por `DataFrame.to_markdown()`, que o pandas delega ao `tabulate`
-# MAGIC só na hora da chamada. Por isso `explainability_report` está na lista de
-# MAGIC "núcleo, sem dependência opcional": a classificação foi feita por import de
-# MAGIC topo, e esse critério não enxerga o caso. A célula 1 roda porque
-# MAGIC `generate_executive_report` monta o texto à mão; só o resumo técnico
-# MAGIC tabula.
+# MAGIC O resumo técnico exige tabulate. Para comparar rankings, os dois DataFrames precisam de feature e rank, com uma linha por feature. A fixture acima ainda não fornece rank: crie-o de acordo com a ordenação de cada importância antes da chamada. Esse exemplo precisa dessa preparação adicional para concluir.
 # MAGIC
 # MAGIC **Como ler, quando roda.** As duas ordenações **discordam**: SHAP põe `atraso_medio` em
 # MAGIC segundo e a importância nativa põe `renda`. Discordância é comum e não é

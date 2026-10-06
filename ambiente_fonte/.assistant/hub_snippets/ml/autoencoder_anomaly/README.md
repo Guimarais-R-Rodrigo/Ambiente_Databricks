@@ -55,6 +55,8 @@ O [notebook](exemplo_autoencoder_anomaly.py) planta anomalias sintéticas sutis 
 
 ## 7. O que você precisa antes de usar?
 
+O código exige `batch_size > 1`, `epochs > 0`, `patience > 0`, `lr > 0` e `0 < threshold_percentile < 100`. Confirme também tipos/finitude dos parâmetros e capacidade da arquitetura; atender aos limites não torna a referência normal adequada.
+
 `X_train_normal` e `X_test` precisam ser matrizes 2D, finitas e com a mesma quantidade de features. O treino exige ao menos duas linhas; o teste não pode ser vazio.
 
 PyTorch precisa estar instalado. A fachada importa PyTorch ao carregar o módulo. `mlflow` é opcional no import, mas `log_mlflow=True` exige a biblioteca disponível e um ambiente onde registrar métricas faça sentido.
@@ -70,6 +72,28 @@ O modelo recebe ainda os atributos `input_center_` e `input_scale_` usados inter
 O retorno não contém rótulo booleano: a comparação `test_errors > threshold` é feita pelo consumidor.
 
 ## 9. Como usar este recurso no Hub?
+
+Pontuar outro lote sem ajustar novamente, usando as mesmas features/ordem e todo o pré-processamento externo do treino:
+
+```python
+import numpy as np
+import torch
+
+X_futuro = np.asarray(X_futuro, dtype=np.float32)
+assert X_futuro.ndim == 2 and np.isfinite(X_futuro).all()
+assert X_futuro.shape[1] == len(model.input_center_)
+Z = (X_futuro - model.input_center_) / model.input_scale_
+device = next(model.parameters()).device
+model.eval()
+with torch.no_grad():
+    entrada = torch.as_tensor(Z, dtype=torch.float32, device=device)
+    scores_futuros = ((model(entrada) - entrada) ** 2).mean(dim=1).cpu().numpy()
+marcados = scores_futuros > threshold
+```
+
+Divida em lotes se a matriz não couber na memória do device. O `threshold` continua no espaço padronizado do treino; não o compare a MSE em unidades originais e não ajuste outro scaler no lote futuro. Chamar `train_autoencoder_anomaly` de novo faz um novo treino.
+
+Para persistência autorizada, guarde pesos, arquitetura, ordem das features, `threshold`, `input_center_`, `input_scale_` e qualquer transformação externa. Centro/escala são atributos NumPy comuns, não buffers PyTorch: salvar somente `state_dict()` perde essa parte do contrato. O bloco acima apenas calcula em memória, sem gravar pesos.
 
 ```python
 from hub_snippets.ml.autoencoder_anomaly import train_autoencoder_anomaly
@@ -124,6 +148,6 @@ Para caracterizar os casos marcados, combine o score com análise de features e 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. Como referência de runtime, a documentação oficial do PyTorch descreve `BatchNorm1d` e suas estatísticas por mini-batch: <https://docs.pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html>.
+Consulte a documentação de torch.nn.BatchNorm1d e verifique versões e recursos do ambiente. O detector precisa de validação com casos independentes; a execução do exemplo sintético não comprova eficácia no dado real.
 
-A revisão R08 distingue leitura estática, teste local e teste de runtime. Ela não presume publicação no Databricks, homologação do detector nem auditoria independente.
+Referências primárias de conceito/API: [Documentação primária de autoencoder_anomaly](https://docs.pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html).

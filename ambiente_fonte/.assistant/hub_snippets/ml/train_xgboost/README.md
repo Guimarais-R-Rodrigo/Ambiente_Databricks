@@ -77,6 +77,19 @@ As métricas saem numéricas, sem formatação percentual. O código binário us
 
 ## 9. Como usar este recurso no Hub?
 
+Chamada mínima depois de preparar matrizes e rótulos 0/1 nos dois splits:
+
+```python
+from hub_snippets.ml.train_xgboost import train_xgboost_baseline
+modelo, metricas = train_xgboost_baseline(
+    X_train, y_train, X_val, y_val,
+    task="binary", early_stopping_rounds=50, log_mlflow=False,
+)
+# Retorno: XGBClassifier e {"auc_val": valor, "gini_val": valor}.
+```
+
+O comentário descreve o schema; não promete números de desempenho.
+
 Depois de tornar a raiz `.assistant` confirmada visível ao Python, importe `train_xgboost_baseline` de `hub_snippets.ml.train_xgboost`. A preparação do caminho está no [guia da coleção](../../README.md); o [notebook](exemplo_train_xgboost.py) contém um cenário sintético completo. Não use `%run` para carregar o módulo.
 
 O notebook executa `%pip install xgboost` e `%restart_python`: isso altera o ambiente da sessão e apaga seu estado Python. Leia a preparação antes de executar. Nas chamadas demonstradas, `log_mlflow=False` desliga apenas `mlflow.log_params` e `mlflow.log_metrics` realizados pelo wrapper. Não desliga autologging que já esteja ativo.
@@ -97,13 +110,13 @@ O treino usa a interface Python do estimador, não uma implementação distribu�
 
 Mesmo numa partição adequada, reutilizar repetidamente a validação para escolher modelos pode tornar seu resultado otimista. A [documentação de previsão](https://xgboost.readthedocs.io/en/stable/prediction.html) também distingue o uso de `best_iteration` entre interfaces; não transporte conclusões da API nativa para a interface usada aqui sem conferir.
 
-Resultados próximos de LightGBM e XGBoost não provam que “o número veio do dado”: ambos podem compartilhar o mesmo vazamento ou viés. Tampouco uma diferença pequena pode ser declarada ruído sem analisar variabilidade e relevância. Os números históricos do notebook foram preservados, mas suas conclusões precisam desses limites.
+Resultados próximos de LightGBM e XGBoost não provam ausência de viés ou vazamento compartilhado. Avalie relevância e variabilidade da diferença sob a mesma população, partição e critérios.
 
 ## 12. Quais são as alternativas?
 
-Uma referência de maioria, média ou um modelo linear adequado pode esclarecer quanto o método acrescenta. Os helpers de [LightGBM](../train_lgbm/train_lgbm.py) e [CatBoost](../train_catboost/train_catboost.py) permitem investigar outras implementações, após conferir seus próprios contratos. A escolha depende de dados, métricas, preparação, interpretabilidade e custo, não de um vencedor universal.
+Uma referência de maioria, média ou um modelo linear adequado pode esclarecer quanto o método acrescenta. Os helpers de [LightGBM](../train_lgbm/README.md) e [CatBoost](../train_catboost/README.md) permitem investigar outras implementações, após conferir seus próprios contratos. A escolha depende de dados, métricas, preparação, interpretabilidade e custo, não de um vencedor universal.
 
-Para separar dados no tempo, examine [split_temporal](../split_temporal/split_temporal.py). Ele complementa o treinamento; não é outro algoritmo preditivo.
+Para separar dados no tempo, examine [split_temporal](../split_temporal/README.md). Ele complementa o treinamento; não é outro algoritmo preditivo.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -117,6 +130,6 @@ A [implementação](train_xgboost.py) contém o treino e as métricas; a [fachad
 
 ## 15. Referências
 
-Contrato conferido na implementação, fachada e notebook da base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. Fontes primárias externas, consultadas em 12/09/2026: [árvores impulsionadas](https://xgboost.readthedocs.io/en/stable/tutorials/model.html), [interface de estimadores](https://xgboost.readthedocs.io/en/stable/python/sklearn_estimator.html), [previsão e parada](https://xgboost.readthedocs.io/en/stable/prediction.html), [vazamento de dados](https://scikit-learn.org/stable/common_pitfalls.html) e [autologging Databricks](https://docs.databricks.com/aws/en/mlflow/databricks-autologging). Cada uma sustenta o assunto ao qual foi associada no texto; não certifica este wrapper inteiro.
+[Evidência histórica de rótulos, local e sintética, XGBoost 3.1.3 (12/09/2026)](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/evidencias_fechamento_r02/rotulos_xgboost.txt). O [relatório de alcance](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/REVISAO_FECHAMENTO_R02.md) separa testes locais, skips e ambientes não exercitados. Não é prova de tracking remoto ou execução Databricks.
 
-Revisão R02: leitura técnica e didática pelo próprio autor. Os testes locais sintéticos da sprint usam XGBoost 3.1.3 e logging desligado; não são as saídas históricas do notebook. Teste no Databricks, teste de tracking remoto e auditoria independente não fazem parte dessa evidência. Aceite humano do piloto permanece separado. Na revisão de fechamento de 12/09/2026, os três modos foram novamente exercitados localmente. Foram também reproduzidas a passagem de três classes pela checagem inicial de `binary` e a recusa de classes `1, 2, 3` pelo estimador multiclasse, com XGBoost 3.1.3 real e logging desligado. Essas verificações caracterizam o contrato e suas lacunas, não homologam produção.
+Consulte as APIs XGBoost e scikit-learn e a documentação de autologging do seu runtime. O helper exige rótulos compatíveis com o estimador, não prepara features e não controla autologging externo. As evidências de testes vinculadas informam versões e modos exercitados; não substituem a validação do ambiente de destino.

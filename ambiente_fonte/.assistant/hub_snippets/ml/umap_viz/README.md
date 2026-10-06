@@ -2,12 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 <!-- sistema-temas-v07: consumidores -->
-> **Atualização V07 — estado atual.** `plot_umap_clusters` permanece a rota
-> legada. `plot_umap_clusters_resolvido(..., theme)` valida o tema antes do
-> cálculo, chama o mesmo `compute_umap` e troca somente paleta/layout. Coordenadas,
-> labels, opacidade e tamanho solicitado não são recalculados por uma segunda
-> lógica. `umap-learn` continua importado de forma lazy; selecionar um tema não
-> instala dependências nem prova estabilidade dos clusters.
+Use plot_umap_clusters para a aparência legada ou plot_umap_clusters_resolvido(..., theme) para um ResolvedTheme notebook/light. A rota temática valida o tema antes do cálculo e conserva coordenadas, labels, opacidade e tamanho dos pontos. umap-learn continua carregado apenas quando a projeção é calculada.
 
 Este objeto calcula embedding UMAP e cria um scatter Plotly colorido por label. Ele ajuda a **explorar vizinhanças em baixa dimensão**, mas a geometria do desenho depende de hiperparâmetros e não deve ser tratada como medida fiel das distâncias originais ou prova de que clusters “existem”.
 
@@ -20,7 +15,7 @@ Este objeto calcula embedding UMAP e cria um scatter Plotly colorido por label. 
 | Use quando... | Features e métrica de distância fazem sentido e a visualização é tratada como exploratória. |
 | Evite quando... | Você precisa medir distâncias originais, provar clusters ou inferir significado dos eixos. |
 | Precisa de... | NumPy, `umap-learn`, pandas/Plotly e constantes visuais do Hub. |
-| Entrega... | `compute_umap`: array de embedding; `plot_umap_clusters`: `go.Figure`. |
+| Entrega... | `compute_umap`: array de embedding; rotas legada e `plot_umap_clusters_resolvido`: `go.Figure`. |
 
 Consulte a [implementação](umap_viz.py), a [fachada pública](__init__.py) e o [notebook de exemplo](exemplo_umap_viz.py).
 
@@ -70,6 +65,8 @@ Para `plot_umap_clusters`, `labels` precisa ter o mesmo comprimento de `X_scaled
 
 ## 8. O que este recurso entrega?
 
+O retorno de `compute_umap` contém somente coordenadas; não inclui o transformador UMAP ajustado. O wrapper não permite persistir/reaplicar a mesma projeção out-of-sample. Chamar novamente ajusta outra projeção, mesmo com a mesma semente.
+
 `compute_umap` retorna array `(n_amostras, n_components)`. Os eixos não carregam unidade de negócio.
 
 `plot_umap_clusters` retorna uma figura Plotly 2D. O rodapé usa `n` se esse argumento for truthy; caso contrário mostra `len(X_scaled)`. Esse `n` é apenas texto de apresentação e não é conferido contra a base.
@@ -78,9 +75,25 @@ A contagem de clusters exclui label `-1`.
 
 ## 9. Como usar este recurso no Hub?
 
+Para tema explícito, obtenha `theme` pela [resolução do Hub](../../visual/tema/README.md) no contexto notebook/light e mantenha labels como array:
+
 ```python
+import numpy as np
+from hub_snippets.ml.umap_viz import plot_umap_clusters_resolvido
+labels = np.asarray(labels)
+assert labels.ndim == 1 and len(labels) == len(X_scaled)
+fig = plot_umap_clusters_resolvido(X_scaled, labels, theme=theme,
+                                  title="Projeção exploratória")
+```
+
+A chamada valida o tema antes da projeção, calcula no driver e retorna figura em memória; não instala UMAP nem salva/publica o desenho.
+
+```python
+import numpy as np
 from hub_snippets.ml.umap_viz import plot_umap_clusters
 
+labels = np.asarray(labels)  # o plotter usa labels.astype(str)
+assert labels.ndim == 1 and len(labels) == len(X_scaled)
 fig = plot_umap_clusters(
     X_scaled,
     labels,
@@ -103,7 +116,7 @@ Esses parâmetros **não são expostos por `plot_umap_clusters`**: o plotter sem
 
 UMAP pode alterar aparência de grupos quando hiperparâmetros mudam. Mesmo com semente fixa, estabilidade visual não equivale a estabilidade da segmentação.
 
-O módulo usa um `TEMA_BASE` e constantes visuais legadas diretamente; `plot_umap_clusters` **não recebe `ResolvedTheme` nem usa a rota V04 `_resolvido`**. Isso é estado atual documentado, não uma migração silenciosa do sistema de temas.
+plot_umap_clusters usa a aparência legada e não recebe theme. Para um tema explícito, use plot_umap_clusters_resolvido; selecionar essa rota não muda a lógica da projeção.
 
 Rodar clustering sobre um embedding pode ser uma estratégia válida em alguns pipelines, mas muda a geometria do problema e precisa ser validado; a projeção 2D não é neutra.
 
@@ -115,7 +128,7 @@ PCA oferece uma projeção linear mais simples e com componentes interpretáveis
 
 ## 13. Como saber se o resultado faz sentido?
 
-Repita UMAP com diferentes `n_neighbors`/`min_dist` e, quando pertinente, diferentes sementes. Compare a visualização com métricas e perfis no espaço original.
+Compare `n_neighbors`/`min_dist` pela API `compute_umap` e confira métricas/perfis no espaço original. O wrapper fixa `random_state=42` e não aceita argumento `seed`: testar sementes diferentes exige a API UMAP direta ou uma mudança funcional separada.
 
 Verifique labels ausentes após `cluster_names`, contagem de linhas e se o rodapé representa realmente o N que você quer comunicar.
 
@@ -127,6 +140,6 @@ Se a decisão depender da estabilidade dos segmentos, volte ao espaço original 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. A documentação oficial do UMAP descreve o efeito de `n_neighbors`, `min_dist` e `n_components`: <https://umap-learn.readthedocs.io/en/latest/parameters.html> e <https://umap-learn.readthedocs.io/en/latest/api.html>.
+Consulte a documentação UMAP sobre n_neighbors, min_dist e n_components. A projeção é exploratória e não comprova estabilidade dos clusters; o wrapper fixa a semente e não devolve o transformador ajustado.
 
-A revisão R08 não presume publicação Databricks, homologação visual/analítica nem auditoria independente.
+Referências primárias de conceito/API: [Documentação primária de umap_viz](https://umap-learn.readthedocs.io/en/latest/parameters.html), [Documentação primária de umap_viz](https://umap-learn.readthedocs.io/en/latest/api.html).

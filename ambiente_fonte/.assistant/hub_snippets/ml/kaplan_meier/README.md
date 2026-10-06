@@ -55,11 +55,33 @@ Se a curva de um grupo cair mais lentamente, isso descreve a experiência observ
 
 ## 7. O que você precisa antes de usar?
 
+Pré-validações do chamador para a rota de teste (não são garantias implementadas pelo helper):
+
+```python
+import numpy as np
+assert not df.empty
+assert df[["duracao", "evento", "segmento"]].notna().all().all()
+assert np.isfinite(df["duracao"].to_numpy(dtype=float)).all()
+assert (df["duracao"] >= 0).all()  # confirme se zero é admissível no desenho
+assert df["evento"].isin([0, 1]).all()
+assert df["segmento"].nunique() >= 2
+```
+
+Use unidades e origem temporal comuns; não descarte censurados para satisfazer essas verificações.
+
 `duration_col` precisa representar tempo coerente desde a origem definida; `event_col` precisa representar evento observado versus censura conforme o contrato do `lifelines`. O helper atual não valida explicitamente duração positiva, binariedade, nulos ou grupos vazios antes da biblioteca subjacente.
 
 Quando `group_col` existe, valores nulos merecem tratamento explícito. O `groupby` da figura e o uso de `unique()` no teste não constituem uma política de missingness documentada pelo helper.
 
 ## 8. O que este recurso entrega?
+
+Estruturas de retorno ilustrativas, sem inventar valores observados:
+
+- Dois grupos A/B: `{"statistic": ..., "p_value": ...}`; sem flag booleana.
+- Três grupos A/B/C: `{"global": {"statistic": ..., "p_value": ..., "significant_0_05": ...}, "pairwise_holm": {"A_vs_B": {...}, "A_vs_C": {...}, "B_vs_C": {...}}`.
+- Cada par contém `statistic` (estatística do teste), `p_value_raw` (bruto), `p_value_holm` (ajustado no conjunto de pares) e `significant_holm_0_05` (`p_value_holm < 0.05`). Nomes e ordem dos pares seguem os grupos encontrados.
+
+As flags usam um corte local de 0,05 e não medem relevância prática ou causalidade.
 
 `plot_kaplan_meier(...)` devolve `plotly.graph_objects.Figure`. A legenda inclui tamanho do grupo e `median_survival_time_`; se a mediana não for atingida no horizonte observado, o `lifelines` pode representar a mediana como infinito.
 
@@ -89,9 +111,9 @@ A definição do tempo zero, do evento e da censura domina a interpretação. Mu
 
 ## 11. Limitações, riscos e armadilhas
 
-A figura Plotly criada por este helper **não adiciona marcadores de censura**. O notebook histórico diz que “as marcas de censura aparecem”, mas a implementação apenas adiciona a curva e a faixa de confiança. A informação de censura entra no estimador; isso não significa que esteja marcada visualmente.
+O estimador é Kaplan–Meier, mas a figura Plotly conecta os pontos com linhas padrão, sem `line_shape="hv"`. Não a descreva como desenho em degraus nem como prova de evolução linear entre eventos. Alterar a geometria requer uma mudança funcional separada.
 
-Também não há tabela de indivíduos em risco, entrada tardia (`entry`) nem suporte exposto a pesos. O teste de dois grupos não adiciona um campo booleano de significância ao retorno, embora imprima uma interpretação em stdout.
+A figura usa a censura no estimador, mas não exibe marcadores de censura nem tabela de indivíduos em risco. Não há argumentos de entrada tardia ou pesos. O retorno de log_rank_test para dois grupos contém statistic e p_value, sem flag booleana de significância.
 
 P-valor pequeno não mede tamanho de efeito. Para muitos grupos, os testes par-a-par são ajustados por Holm, mas a escolha do conjunto de comparações ainda pertence à análise.
 
@@ -115,6 +137,4 @@ Depois da descrição não ajustada, defina se a pergunta pede associação mult
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. Fontes primárias consultadas em 12/09/2026: documentação do `KaplanMeierFitter` e de `lifelines.statistics.logrank_test`/`multivariate_logrank_test`. A documentação do lifelines explicita que a implementação do log-rank trata censura à direita e alerta para curvas cruzadas; os marcadores de censura são opção de plotagem da API do lifelines, mas não são adicionados pela figura Plotly deste helper.
-
-Este README não presume publicação no Databricks, homologação de modelo nem auditoria independente.
+Consulte KaplanMeierFitter e os testes logrank_test/multivariate_logrank_test do lifelines. O contrato usa censura à direita; curvas cruzadas, tamanho dos grupos e indivíduos ainda sob risco precisam entrar na interpretação.

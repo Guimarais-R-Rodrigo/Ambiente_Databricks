@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-Este objeto oferece dois contextos MLflow. `run_governado` mantém o contrato de modelo sklearn com assinatura. `run_micromodelo` acrescenta registro E0 rule-based com fingerprint MM02, contrato de saída e métricas agregadas reconciliadas, sem exigir um modelo sklearn. Ambos organizam registro; nenhum substitui aprovação ou validação.
+Este objeto oferece dois contextos MLflow. `run_governado` exige o registro de modelo sklearn com exemplo de entrada. `run_micromodelo` acrescenta registro E0 rule-based com fingerprint MM02, contrato de saída e métricas agregadas reconciliadas, sem exigir um modelo sklearn. Ambos organizam registro; nenhum substitui aprovação ou validação.
 
 ## Visão rápida
 
@@ -27,7 +27,7 @@ Um run com AUC e hiperparâmetros pode continuar inútil se não disser qual dat
 
 ## 3. Quando faz sentido usar?
 
-Use `run_governado` para baselines treináveis que registram modelo sklearn e assinatura. Use `run_micromodelo` no laboratório sintético E0 quando uma regra sem modelo sklearn precisa registrar DEVELOPMENT, VALIDATION ou SCORING, com contagens agregadas e referência de execução. Confira separadamente autorização do experimento MLflow no runtime.
+Use `run_governado` para baselines treináveis que registram modelo sklearn e um exemplo de entrada, verificando separadamente a assinatura efetivamente persistida. Use `run_micromodelo` no laboratório sintético E0 quando uma regra sem modelo sklearn precisa registrar DEVELOPMENT, VALIDATION ou SCORING, com contagens agregadas e referência de execução. Confira separadamente autorização do experimento MLflow no runtime.
 
 ## 4. Quando não usar?
 
@@ -35,19 +35,21 @@ Não use nenhum deles como substituto de Model Registry, aprovação, lineage co
 
 ## 5. Como funciona, intuitivamente?
 
-`run_governado` conserva a checagem original de parâmetros, métricas e assinatura no fechamento completo. `run_micromodelo` verifica tipo, SHA-256 MM02, dataset/split sintéticos, limitações e contrato de saída antes de abrir o run. Seu coletor registra somente parâmetros de configuração da allowlist fechada e agregados: população, contagens TRUE/FALSE/INDETERMINADO e, opcionalmente, mínimo/média/máximo do score 0–100. As contagens devem somar a população; população zero não admite estatísticas de score. No fechamento, falta de parâmetros ou agregados gera `ValueError` e não grava `mm06.complete=true`.
+`run_governado` exige parâmetros, métricas e uma chamada `modelo(..., exemplo_entrada=...)` no fechamento completo; sua flag interna de assinatura verifica apenas se o exemplo não é `None`. `run_micromodelo` verifica tipo, SHA-256 MM02, dataset/split sintéticos, limitações e contrato de saída antes de abrir o run. Seu coletor registra somente parâmetros de configuração da allowlist fechada e agregados: população, contagens TRUE/FALSE/INDETERMINADO e, opcionalmente, mínimo/média/máximo do score 0–100. As contagens devem somar a população; população zero não admite estatísticas de score. No fechamento, falta de parâmetros ou agregados gera `ValueError` e não grava `mm06.complete=true`.
 
 ## 6. Exemplo de situação
 
-Um baseline de propensão é registrado com versão do dataset, split temporal, limitações, hiperparâmetros, métricas e exemplo de entrada. No E0, uma regra sintética que classificou quatro entidades pode registrar 1 TRUE, 1 FALSE e 2 INDETERMINADO, além de referência da execução. O teste local usa MLflow simulado: verifica chamadas e falhas, sem provar backend real ou Databricks Free.
+Um baseline pode registrar dataset, split, limitações, hiperparâmetros, métricas e exemplo de entrada. Um micromodelo sintético pode registrar população 4 com 1 TRUE, 1 FALSE e 2 INDETERMINADO, junto da referência de execução; as contagens devem reconciliar.
 
 ## 7. O que você precisa antes de usar?
 
-MLflow precisa estar importável e operacional no runtime. `limitacoes` deve ser iterável de itens; passe uma lista de strings. `modelo(..., exemplo_entrada=...)` é necessário para marcar a assinatura como presente.
+MLflow precisa estar importável e operacional no runtime. `limitacoes` deve ser iterável de itens; passe uma lista de strings. `modelo(..., exemplo_entrada=...)` é necessário para marcar a flag local de assinatura como presente; não verifica o schema gravado pelo backend.
 
 Para `run_micromodelo`, informe fingerprint SHA-256 MM02 já validado, `tipo`, `dataset` e `split` iniciados por `synthetic:`, limitações não vazias e `contrato_saida` com `grain`, `classification_field`, os três `classification_values`, `score_field` e `score_semantics`. O prefixo é declaração do caller, não verificação de origem sintética. Dentro do bloco, chame `parametros` com pelo menos uma das chaves de configuração permitidas (`regra`, `versao_regra`, `limiar`, `janela_dias`, `normalizacao`, `politica_indeterminado`, `score_habilitado`) e `agregados_medidos(..., referencia_execucao=...)`. Chaves como `client_id` são rejeitadas antes de enviar parâmetros ao MLflow. Se `experimento` for fornecido, o helper chama `mlflow.set_experiment` antes de abrir o run.
 
 ## 8. O que este recurso entrega?
+
+`input_example` não é prova de assinatura completa. O coletor marca `_tem_assinatura` somente pela presença de `exemplo_entrada`, sem reler o artefato MLflow. Quando executar o registro autorizado, confira a assinatura efetiva no artefato do modelo (tipos, nomes e formas de entrada/saída) antes de afirmar completude de schema. Não infira esse resultado apenas de `pendencias() == []`.
 
 `run_governado` retorna o coletor existente com `parametros`, `metricas`, `modelo`, `artefato` e `pendencias`. `run_micromodelo` retorna coletor com `parametros`, `agregados_medidos` e `pendencias`; tags incluem fingerprint, tipo, dataset/split, limitações, contrato de saída e completude. O efeito externo depende do backend MLflow disponível.
 
@@ -88,9 +90,11 @@ with run_micromodelo(
                           referencia_execucao="exec_sintetica_001")
 ```
 
-O SHA repetido ilustra a forma do campo, não é fingerprint de uma especificação real. O exemplo acima é ilustrativo; a prova com fingerprint MM02 real e backend MLflow local está em `tools/micromodelo_mm06_e0_tracking.py` e no relatório de entrega do laboratório. Em 2026-09-29, três runs sintéticas foram gravadas e relidas no Databricks Free com fingerprint e `mm06.complete=true`; a prova e suas limitações estão no `docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md` no repositório. Essa execução se limita ao experimento pessoal e à configuração explícita usada no ensaio.
+O fingerprint repetido no exemplo mostra apenas o formato de 64 caracteres hexadecimais. Em uso, obtenha o fingerprint da especificação validada e confirme o experimento/tracking autorizado. Consulte o exemplo MM06 e seu relatório de evidência para os ambientes já exercitados.
 
 ## 10. Decisões e configurações que mais importam
+
+No coletor de `run_micromodelo`, `agregados_medidos` aceita uma única chamada bem-sucedida por contexto; nova chamada é recusada. Prepare e reconcilie o agregado antes de registrar. Ao sair do `with`, inclusive por exceção, o coletor é invalidado e não pode ser reutilizado. Se houver `score_field`, o valor exato permitido para `score_semantics` é `"FORCA_EVIDENCIA"`; sem campo de score, ambos são `None`.
 
 `exigir_completo=False` relaxa a verificação de fechamento, mas não torna um run incompleto adequado a decisões. `experimento` muda o destino do registro.
 
@@ -102,7 +106,9 @@ Os valores dos parâmetros também são limitados: `regra`/`versao_regra` são r
 
 ## 11. Limitações, riscos e armadilhas
 
-O helper é acoplado ao flavor sklearn em `modelo()`. Para LightGBM, PyTorch ou outro flavor, registre o modelo com a API apropriada ou evolua o helper em sprint funcional separada.
+Não há transação nem rollback de logging. Tags, parâmetros, métricas ou modelos já enviados podem permanecer no backend se uma chamada ou o fechamento falhar. Uma exceção no corpo do `with` também pode impedir a verificação final de completude. Antes de repetir, inspecione o run e os artefatos parciais; não trate exceção como garantia de que nada foi escrito nem apague recursos automaticamente.
+
+O helper é acoplado ao flavor sklearn em `modelo()`. Para LightGBM, PyTorch ou outro flavor, registre o modelo com a API apropriada ou evolua o helper em uma mudança funcional separada.
 
 A compatibilidade com MLflow depende do runtime gerenciado. O notebook registra que uma configuração de serverless Free deixou de abrir o run em determinada data; isso é evidência histórica, não regra eterna sobre todo serverless Databricks.
 
@@ -120,12 +126,18 @@ Para `run_governado`, confira tags, parâmetros, métricas, artefatos, modelo e 
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](mlflow_run.py) contém ambos os contextos e a [fachada](__init__.py) reexporta `run_governado` e `run_micromodelo`. O [notebook](exemplo_mlflow_run.py) demonstra o caminho legado e documenta uma limitação observada de runtime; o teste MM06 novo usa fake MLflow e não substitui exemplo real.
+A implementação e a fachada expõem run_governado e run_micromodelo. O notebook demonstra o contexto de modelo sklearn. Para o contexto rule-based E0, consulte o exemplo MM06; verificar imports não substitui confirmar que o backend recebe e devolve o registro.
 
 Depois do registro, métricas podem ser produzidas por [`metrics_report`](../metrics_report/README.md) e acompanhadas por [`performance_monitor`](../performance_monitor/README.md).
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da R09. Referência primária: documentação oficial do MLflow para Tracking, `start_run`, logging e model flavors.
+Evidências de manutenção, com escopos separados:
 
-Revalide a versão e o comportamento no runtime Databricks de destino antes de transformar observações do notebook em regra operacional.
+- [Testes locais com backend simulado](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/tools/tests/test_micromodelo_mm06_tracking.py): verificam chamadas/recusas do wrapper; não provam persistência real.
+- [Exemplo de tracking E0](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/tools/micromodelo_mm06_e0_tracking.py) e [relatório datado de 29/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md): registram backend local real com MLflow 3.16.1 e leitura das runs.
+- O mesmo relatório, seção “MLflow Free e instalação da skill”, delimita três runs sintéticas completas no Databricks Free, com configuração explícita de registry URI e experimento absoluto. As etapas usam a mesma fixture, sem holdout independente; não homologam o ambiente corporativo nem outra configuração.
+
+Os scripts externos não são pré-requisitos ocultos do pacote e não devem ser executados apenas para ler este guia. Um ensaio de registro exige autorização de destino e efeitos próprios.
+
+Consulte a documentação da versão MLflow usada para Tracking, start_run, logging e flavors. Antes de registrar, confirme tracking, experimento e permissões; falhas observadas em outra configuração de runtime não determinam o comportamento do seu ambiente.

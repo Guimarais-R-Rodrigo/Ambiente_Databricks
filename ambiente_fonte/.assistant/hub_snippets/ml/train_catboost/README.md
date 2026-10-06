@@ -57,6 +57,8 @@ Você prepara `X_train` e `X_val` preservando a coluna de agência em um tipo ac
 
 ## 7. O que você precisa antes de usar?
 
+Para a rota binária com AUC, confirme **ambas as classes 0 e 1 no treino e na validação** antes de consumir compute. A checagem local não garante as duas classes na validação; uma única classe pode chegar ao fit e produzir erro ou AUC indefinida depois, conforme a versão. Essa é uma pré-condição de uso, não uma validação adicional já implementada.
+
 As matrizes de treino e validação precisam ter as mesmas colunas na mesma ordem e os targets precisam estar alinhados. O wrapper não valida explicitamente dimensionalidade ou quantidade de linhas antes de entregar os dados ao CatBoost.
 
 Para classificação, o treino precisa conter ao menos duas classes e a validação não pode trazer classe ausente do treino. A função não impõe uma codificação binária específica além do que o CatBoost e as métricas aceitam.
@@ -79,14 +81,22 @@ O modelo mantém toda a interface do objeto CatBoost retornado. O helper não de
 
 ## 9. Como usar este recurso no Hub?
 
+`log_mlflow=False` desliga apenas as chamadas explícitas de registro deste wrapper. Não desativa autologging já configurado na sessão nem garante ausência de logs/caches da biblioteca. Confira o estado da sessão e o destino antes de treinar.
+
 ```python
+import numpy as np
 from hub_snippets.ml.train_catboost import train_catboost_baseline
 
+# Fixture sintética curta para conferir tipo/contrato, não qualidade preditiva.
+X_train = np.array([[1.0, 4.0, "A"], [2.0, 3.0, "B"],
+                    [3.0, 2.0, "A"], [4.0, 1.0, "B"]], dtype=object)
+y_train = np.array([0, 1, 0, 1])
+X_val = np.array([[1.5, 3.5, "A"], [3.5, 1.5, "B"]], dtype=object)
+y_val = np.array([0, 1])
+assert set(y_train) == set(y_val) == {0, 1}
 model, metrics = train_catboost_baseline(
     X_train, y_train, X_val, y_val,
-    task="binary",
-    cat_features=[2, 5],
-    log_mlflow=False,
+    task="binary", cat_features=[2], log_mlflow=False,
 )
 ```
 
@@ -104,7 +114,7 @@ O early stopping vem no dicionário como `early_stopping_rounds=50` e usa o conj
 
 ## 11. Limitações, riscos e armadilhas
 
-O notebook histórico explicava a codificação categórica como se cada linha usasse literalmente as “linhas anteriores” em ordem temporal e fazia analogia com point-in-time join. Essa leitura é imprecisa. CatBoost usa técnicas ordenadas/permutadas para reduzir o viés e o vazamento de target das estatísticas categóricas; isso **não** certifica disponibilidade temporal das features e não substitui `pit_join`.
+As estatísticas categóricas ordenadas/permutadas do CatBoost não certificam disponibilidade temporal das features. Faça a construção point-in-time e a separação de dados de acordo com a decisão real.
 
 O wrapper não valida índices repetidos em `cat_features`, tipos permitidos, nulos, cardinalidade, memória ou correspondência de schema entre treino e validação. Esses erros podem surgir na biblioteca.
 
@@ -130,6 +140,6 @@ Se o baseline justificar aprofundamento, trate separadamente tuning, teste final
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `d9da056c95bf5c4209b2f208de1c9a987580efe7`. Fontes primárias consultadas em 12/09/2026: [features categóricas no CatBoost](https://catboost.ai/docs/en/features/categorical-features), [parâmetro `has_time` e ordem/permutação](https://catboost.ai/docs/en/references/training-parameters/common) e [FAQ com referências ao ordered boosting/ordered categorical statistics](https://catboost.ai/docs/en/concepts/faq).
+Consulte a documentação CatBoost sobre features categóricas, has_time e parâmetros de treinamento. Confirme cat_features e tipos recebidos; versões, recursos e logging devem ser revalidados no ambiente de execução.
 
-A evidência de runtime desta R05 será registrada no relatório da sprint. Este README não afirma homologação Databricks, publicação em workspace nem revisão independente.
+Referências primárias de conceito/API: [features categóricas no CatBoost](https://catboost.ai/docs/en/features/categorical-features), [parâmetro `has_time` e ordem/permutação](https://catboost.ai/docs/en/references/training-parameters/common), [FAQ com referências ao ordered boosting/ordered categorical statistics](https://catboost.ai/docs/en/concepts/faq).

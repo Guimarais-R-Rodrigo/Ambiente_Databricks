@@ -71,6 +71,22 @@ Se houver menos de dois clusters não-ruído, silhouette/Calinski/Davies não s�
 
 ## 9. Como usar este recurso no Hub?
 
+Para escolher `k` em amostra pequena, limite os candidatos depois de aplicar a escala escolhida:
+
+```python
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from hub_snippets.ml.clustering_suite import select_k
+
+X_scaled = StandardScaler().fit_transform(df[["f1", "f2"]])
+n = len(X_scaled)
+assert n >= 3 and np.isfinite(X_scaled).all()
+assert len(np.unique(X_scaled, axis=0)) >= 2
+resultado_k = select_k(X_scaled, k_range=range(2, min(11, n)))
+```
+
+O intervalo evita `k >= n`, mas não garante silhouette válida: pontos repetidos podem produzir menos rótulos distintos que o solicitado. Verifique diversidade e os rótulos efetivos de cada ajuste; a função pode falhar durante a seleção. Três linhas finitas não tornam o default `range(2,11)` apropriado.
+
 ```python
 from hub_snippets.ml.clustering_suite import run_clustering_pipeline
 
@@ -88,6 +104,8 @@ O [notebook](exemplo_clustering_suite.py) usa dados sintéticos e desliga MLflow
 
 ## 10. Decisões e configurações que mais importam
 
+Para `algorithm="gmm"` com `k=None`, a escolha automática continua sendo feita por **KMeans/silhouette**, não por AIC/BIC de misturas gaussianas. Isso escolhe um candidato segundo outra geometria; justifique a transferência do k ou passe um k avaliado especificamente para GMM.
+
 `algorithm` aceita `kmeans`, `gmm` ou `dbscan`; `scaler` aceita `standard` ou `robust`.
 
 `k` explícito evita a seleção automática. `k_range` importa apenas quando `k=None` e o algoritmo não é DBSCAN. O parâmetro `method` existe em `select_k`, não em `run_clustering_pipeline`.
@@ -95,6 +113,8 @@ O [notebook](exemplo_clustering_suite.py) usa dados sintéticos e desliga MLflow
 Na implementação atual, DBSCAN usa `eps=0.5` e `min_samples=5` fixos; a API não expõe esses dois valores.
 
 ## 11. Limitações, riscos e armadilhas
+
+KMeans e GMM permitem aplicar `out["scaler"].transform(X_novo)` e depois `out["model"].predict(...)`, mantendo features/ordem e sem novo fit. DBSCAN não oferece `predict` out-of-sample nessa rota, e o wrapper não implementa atribuição de novas observações. Reajustar DBSCAN pode mudar todos os grupos; não o apresente como scoring estável de um modelo já ajustado.
 
 Silhouette, Calinski-Harabasz e Davies-Bouldin avaliam geometria interna sob determinadas noções de distância/separação. Elas não medem automaticamente valor de negócio, fairness ou estabilidade temporal.
 
@@ -122,6 +142,6 @@ Use o resultado com [`cluster_profiling`](../cluster_profiling/README.md) antes 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base da R08. A API oficial do scikit-learn documenta `silhouette_score`, `calinski_harabasz_score` e `davies_bouldin_score`: <https://scikit-learn.org/stable/api/sklearn.metrics.html>.
+Consulte as APIs silhouette_score, calinski_harabasz_score e davies_bouldin_score do scikit-learn. Essas métricas descrevem geometria na amostra; a seleção de k deve ser validada por estabilidade e uso dos grupos.
 
-A revisão R08 não presume publicação Databricks, homologação de segmentação nem auditoria independente.
+Referências primárias de conceito/API: [Documentação primária de clustering_suite](https://scikit-learn.org/stable/api/sklearn.metrics.html).

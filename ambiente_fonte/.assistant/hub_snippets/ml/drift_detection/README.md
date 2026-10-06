@@ -45,9 +45,18 @@ Duas populações têm média quase igual, mas uma ficou bimodal. PSI e KS detec
 
 ## 7. O que você precisa antes de usar?
 
+`__MISSING__` é categoria reservada do CSI. Uma categoria real com esse texto se funde a ausências, podendo ocultar drift. Recuse-a ou remapeie-a com uma convenção sem colisões **igual nas duas bases**, antes de chamar:
+
+```python
+for frame in [ref, atual]:
+    assert not frame["uf"].dropna().eq("__MISSING__").any()
+```
+
+As listas de tipos não são validadas pelo helper como partição do universo: rejeite duplicatas, sobreposição, colunas extras e falta de cobertura. `numeric_cols=[]`/`categorical_cols=[]` acionam inferência por `or`, assim como `None`; não significam “desabilite este ramo”.
+
 Defina `feature_cols`. Se não passar listas de tipos, a função infere numéricas a partir do DataFrame de referência e trata as demais como categóricas.
 
-Para classificar status, `psi_threshold` e `ks_threshold` devem ser fornecidos juntos. Thresholds severos exigem thresholds de warning. `min_non_null` deve ser positivo.
+Para classificar status, `psi_threshold` e `ks_threshold` devem ser fornecidos juntos. Recomenda-se sempre associar severidade a uma política de warning. O código só rejeita `severe_psi_threshold` sem warning; `severe_ks_threshold` isolado é aceito mas ignorado na classificação, ficando `NOT_CLASSIFIED` se houver dados suficientes. `min_non_null` deve ser positivo.
 
 ## 8. O que este recurso entrega?
 
@@ -73,6 +82,27 @@ Os valores acima são apenas exemplo de chamada; calibre a política no seu proc
 
 ## 10. Decisões e configurações que mais importam
 
+| Função | Parâmetros de configuração expostos |
+|---|---|
+| `calculate_psi(reference, current, n_bins=10, eps=1e-6)` | `n_bins >= 2`, `eps > 0` |
+| `calculate_ks(reference, current)` | Sem bins, smoothing ou thresholds |
+| `calculate_csi(reference, current, eps=1e-6)` | `eps > 0`; categorias, incluindo ausências |
+| `detect_drift_all_features(...)` | `feature_cols`, `numeric_cols`, `categorical_cols`, warning PSI/KS, severidade PSI/KS e `min_non_null=10`; não recebe `n_bins`/`eps` |
+
+Pré-validação ilustrativa para listas explícitas:
+
+```python
+features = ["score", "renda", "uf"]
+numericas, categoricas = ["score", "renda"], ["uf"]
+assert len(set(features)) == len(features)
+assert len(set(numericas)) == len(numericas) and len(set(categoricas)) == len(categoricas)
+assert set(numericas).isdisjoint(categoricas)
+assert set(numericas) | set(categoricas) == set(features)
+assert set(features) <= set(ref.columns) and set(features) <= set(atual.columns)
+```
+
+Se usar inferência, derive e confira as listas efetivas sob os dtypes da referência antes de interpretar o relatório.
+
 `n_bins` altera a discretização do PSI. `eps` evita log de zero e influencia categorias/bins raros. `min_non_null` controla quando a varredura recusa evidência numérica insuficiente.
 
 A definição da referência é mais importante que o número do threshold: mudar a referência muda a pergunta.
@@ -83,7 +113,7 @@ O código é driver-side. PSI depende dos bins da referência. KS p-value é sen
 
 Na categórica, a checagem de `min_non_null` usa o comprimento total da série, apesar do nome do parâmetro; portanto ela não conta apenas valores não nulos nesse ramo.
 
-`severe_ks_threshold` sem `severe_psi_threshold` é aceito desde que os thresholds de warning existam; o status severo numérico dispara se qualquer threshold severo configurado for excedido.
+Com os dois thresholds de warning presentes, `severe_ks_threshold` pode ser usado sem `severe_psi_threshold`; severidade numérica dispara por qualquer limiar severo configurado atingido (`>=`). Sem warning, KS severo isolado não classifica. Os limiares devem ser coerentes e finitos por política do chamador; o wrapper não valida todos esses limites.
 
 ## 12. Quais são as alternativas?
 
@@ -101,4 +131,4 @@ Para performance realizada, use [`metrics_report`](../metrics_report/README.md) 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da R09. Referência primária para KS: documentação SciPy de `ks_2samp`. PSI/CSI são implementações locais cuja discretização, smoothing e thresholds devem ser tratados como parte do contrato do Hub, não como defaults universais.
+Consulte scipy.stats.ks_2samp para a definição do teste KS. PSI/CSI usam a discretização e o smoothing descritos neste guia; seus thresholds são política do consumidor, não limites universais.

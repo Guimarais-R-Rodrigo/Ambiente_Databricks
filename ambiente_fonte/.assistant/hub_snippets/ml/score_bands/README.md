@@ -43,7 +43,7 @@ Não use `aprovacao_acum` como aprovação realizada. O nome histórico da colun
 
 ## 5. Como funciona, intuitivamente?
 
-A função valida scores finitos e target binário, executa `qcut(..., duplicates="drop")`, ordena os intervalos pela mediana e percorre as bandas acumulando `pct_base`.
+A função valida scores finitos e target binário, executa `qcut(..., duplicates="drop")`, ordena os intervalos pelo ponto médio do intervalo quantílico (`interval.mid`), não pela mediana dos scores observados e percorre as bandas acumulando `pct_base`.
 
 Como `y_true=1` é assumido como evento adverso, `n_mau` é a soma do target e `n_bom` é o restante. O nome `taxa_default` também herda essa convenção de crédito.
 
@@ -54,6 +54,8 @@ Um score de risco maior significa maior chance de inadimplência. Você chama `h
 Isso não significa que a curva precise ser perfeitamente monotônica em toda amostra; ruído amostral e empates podem produzir desvios.
 
 ## 7. O que você precisa antes de usar?
+
+O helper recusa `n_bands < 2` e exige pelo menos dois valores distintos de score. Score constante não produz uma banda válida nessa API; trate-o como diagnóstico de falta de variação, sem fabricar faixas artificiais.
 
 `scores` e `y_true` devem ser vetores 1D, não vazios e do mesmo tamanho. Scores precisam ser finitos. `y_true` aceita apenas 0 e 1 e a implementação interpreta 1 como evento adverso.
 
@@ -66,6 +68,25 @@ O DataFrame contém `faixa`, `score_min`, `score_max`, `n`, `pct_base`, `n_bom`,
 O número de linhas pode ser menor que `n_bands`: a implementação usa `duplicates="drop"` e elimina cortes quantílicos repetidos quando muitos scores estão empatados.
 
 ## 9. Como usar este recurso no Hub?
+
+Caso sintético mínimo e recusa esperada de score constante:
+
+```python
+from hub_snippets.ml.score_bands import generate_score_bands
+bandas = generate_score_bands([10, 20, 30, 40], [0, 0, 1, 1],
+                              n_bands=2, higher_score_is_better=False)
+assert bandas["n"].tolist() == [2, 2]
+assert bandas["taxa_default"].tolist() == [0.0, 100.0]
+assert bandas["aprovacao_acum"].tolist() == [50.0, 100.0]
+try:
+    generate_score_bands([600, 600], [0, 1], n_bands=2)
+except ValueError as erro:
+    assert "scores must vary" in str(erro)
+else:
+    raise AssertionError("score constante deveria ser recusado")
+```
+
+Esses números apenas conferem a fixture; uma banda com evento de 100% não é uma regra de decisão automática.
 
 ```python
 from hub_snippets.ml.score_bands import generate_score_bands
@@ -96,7 +117,7 @@ O nome `taxa_default` é específico de crédito, mas a função tecnicamente ac
 
 ## 12. Quais são as alternativas?
 
-Para scorecard de pontos, veja [scorecard_builder](../scorecard_builder/README.md). Para métricas discriminatórias globais, `metrics_report` entra na R09. Para bins fixos de risco, uma transformação explícita com limites versionados pode ser mais adequada que quantis recalculados.
+Use [scorecard_builder](../scorecard_builder/README.md) para construir contribuições de pontos e [metrics_report](../metrics_report/README.md) para métricas globais. Para comparar populações com as mesmas fronteiras, use bins fixos versionados; este helper recalcula quantis a cada chamada.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -112,6 +133,4 @@ Depois de diagnosticar a ordenação, uma política de corte precisa incorporar 
 
 ## 15. Referências
 
-Contrato local conferido na implementação, fachada e notebook da base `289731c79e8ed43d82b39d61cdc41ba2e69ea717`. Fonte primária consultada em 12/09/2026: documentação `pandas.qcut`, que define discretização por quantis e `duplicates="drop"` para bordas não únicas.
-
-Este README não presume aprovação de política, publicação no Databricks nem auditoria independente.
+Consulte pandas.qcut para a remoção de limites quantílicos repetidos. O número de bandas pode ser menor que o solicitado. A tabela é diagnóstica; decisões de corte exigem política e validação próprias.
