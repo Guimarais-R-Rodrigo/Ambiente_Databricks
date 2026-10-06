@@ -48,8 +48,12 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Dependências declaradas para validador e certificação
+        run: python -m pip install -r tools/requirements-dev.txt
+
       - name: Preparar derivado local do SHA
         run: |
+          python -B tools/validate_assistant.py --conferir-readme
           python -B tools/render_simulado.py --write
           python -B tools/render_simulado.py --check
       - name: Contrato v0.1

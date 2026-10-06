@@ -20,12 +20,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Preparar derivado local do SHA
-        run: |
-          python -B tools/render_simulado.py --write
-          python -B tools/render_simulado.py --check
       - name: Dependências declaradas
         run: python -m pip install -r tools/requirements-dev.txt
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: Fonte única, API, documentação e testes V02
         shell: bash
         run: |

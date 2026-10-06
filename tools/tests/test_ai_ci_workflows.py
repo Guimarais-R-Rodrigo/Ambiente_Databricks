@@ -108,6 +108,20 @@ class CIWorkflowTests(unittest.TestCase):
         recipe.write_text(recipe.read_text().replace("  workflow_dispatch:","  push:"))
         with self.assertRaises(ValueError):ci.check(self.root)
 
+    def test_render_preparation_validates_after_declared_dependencies(self):
+        for path in (self.root / ".github/workflows").glob("*.yml"):
+            for job_id, job in yaml.safe_load(path.read_text())["jobs"].items():
+                steps = job["steps"]
+                for index, step in enumerate(steps):
+                    if step.get("name") not in ("Preparar derivado local do SHA", "Gerar e conferir saída ignorada"):
+                        continue
+                    command = step["run"]
+                    self.assertLess(command.index("tools/validate_assistant.py"), command.index("tools/render_simulado.py --write"))
+                    self.assertLess(command.index("tools/render_simulado.py --write"), command.index("tools/render_simulado.py --check"))
+                    installs = [i for i, item in enumerate(steps) if "pip install" in item.get("run", "")]
+                    self.assertTrue(installs, (path.name, job_id))
+                    self.assertLess(max(installs), index, (path.name, job_id))
+
     def test_permissions_cache_inputs_and_no_success_result_cache(self):
         for path in (self.root/".github/workflows").glob("*.yml"):
             data=yaml.safe_load(path.read_text())

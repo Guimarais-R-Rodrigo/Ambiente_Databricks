@@ -23,10 +23,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Preparar derivado local do SHA
-        run: |
-          python -B tools/render_simulado.py --write
-          python -B tools/render_simulado.py --check
       - name: Dependências declaradas e UI de teste
         run: |
           python -m pip install -r tools/requirements-dev.txt
@@ -35,6 +31,11 @@ jobs:
         run: |
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Preparar derivado local do SHA
+        run: |
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/render_simulado.py --write
+          python -B tools/render_simulado.py --check
       - name: V05 específica e sessões sem SKIP de ipywidgets
         run: |
           python -B tools/tests/test_temas_v05.py --require-ipywidgets -v
