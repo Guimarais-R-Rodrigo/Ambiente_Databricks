@@ -32,7 +32,10 @@ real e da [compatibilidade](../compatibility.md), não desta organização edito
 
 ## Fechamento
 
-Toda sessão que altera algo tem changelog com data e autoria reais. Use o
+Toda sessão que altera algo mantém data, autoria, arquivos e evidência no owner
+da tarefa: teste, auditoria, handoff quando há continuidade ou commit/PR para
+manutenção trivial. O CHANGELOG da raiz registra apenas marcos que afetam uso,
+arquitetura, compatibilidade, contrato, distribuição ou risco material. Use o
 [template](../templates/changelog-entry.md). Não é exigido importar ou ler todo o
 histórico no início: busque o trecho pertinente à retomada/investigação.
 

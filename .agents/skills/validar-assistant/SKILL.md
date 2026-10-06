@@ -88,8 +88,9 @@ ACL, seleção Genie, publicação, CI agregado ou homologação corporativa.
 - Correção autorizada: refaça a validação depois da última edição. Não repare o
   espelho à mão nem corrija produto fora do pedido.
 - Registre SHA/estado do checkout, comando, exit code, contadores, avisos,
-  falhas e o que não foi testado no [CHANGELOG](../../../CHANGELOG.md) e na
-  evidência da tarefa. Sucesso é apenas o alcance efetivamente observado.
+  falhas e o que não foi testado na evidência datada da tarefa. A raiz recebe
+  apenas o marco pertinente, conforme o [critério](../../../docs/ai/templates/changelog-entry.md).
+  Sucesso é apenas o alcance efetivamente observado.
 
 ## Casos de aceitação do procedimento
 

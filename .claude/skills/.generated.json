@@ -5,36 +5,36 @@
     {
       "source": ".agents/skills/forward-test-skills/SKILL.md",
       "destination": ".claude/skills/forward-test-skills/SKILL.md",
-      "source_sha256": "484aa6262f86e5e0468a8797720b0cede10b794f7c276c447bd0e3653c9e2a99",
-      "output_sha256": "0f2623af3d976fc828b776b5507445b74971859b05dab1831caca71e55945a6e",
+      "source_sha256": "d40f1830780a4cc37b45771ad4cd09a3ac4c060888a59144ed2d0be3428a71ee",
+      "output_sha256": "a98451cdd9d366164cc13c386bf821892e9c271bd5f6f8e981ad8cb7aa5ae5a5",
       "transform": "frontmatter-preserved provenance comment"
     },
     {
       "source": ".agents/skills/publicar-free/SKILL.md",
       "destination": ".claude/skills/publicar-free/SKILL.md",
-      "source_sha256": "0ee8b1b486e36ba3f54d6280fff265aaf74d2baf4fe20daaa1b453f3b3b33563",
-      "output_sha256": "74c20f725da09635ab94399ad754b78c3ca2ebe4ca64988d8c45adc867729004",
+      "source_sha256": "e03da537aa276d6c5ef50b374fb6a551d747106157155778016dc2c4bb590471",
+      "output_sha256": "0d58af946145f2fe8c2fc259327890906eacc1c71e2b7a47727b7712304629a7",
       "transform": "frontmatter-preserved provenance comment"
     },
     {
       "source": ".agents/skills/render-simulado/SKILL.md",
       "destination": ".claude/skills/render-simulado/SKILL.md",
-      "source_sha256": "a016e9ac8aa5ea85ff83bd964c3f386c631ee11dd16aafe80d979a3a7766f182",
-      "output_sha256": "f95fd60f2ac67841253648280d4fb4b46bac66510cc77d285378bd680a17aa49",
+      "source_sha256": "fd238703ef92f43e27bd13b46cf4722adb20345f67cd00dd3ed80e8a8e69d4ed",
+      "output_sha256": "0351d3aac18446fbe815ebf252f38c23bc964d42f520512575e70f9fcdee20f6",
       "transform": "frontmatter-preserved provenance comment"
     },
     {
       "source": ".agents/skills/replicar-trabalho/SKILL.md",
       "destination": ".claude/skills/replicar-trabalho/SKILL.md",
-      "source_sha256": "943bc85b6a93b1684aed443276b6102a084e2e9df7fb6367c8e22774ca90fd67",
-      "output_sha256": "48fa6bbf89333ca44e9254d51ced1d47205ec1b44ca9b9bcc49205f923972684",
+      "source_sha256": "07ab3078b02ad416d18be29bf92174244b3009368ed887ecd3704ff07b97cdfe",
+      "output_sha256": "dbf84a000499f76e437e0b662dc5d718538ba3da07587612292a554cead8638e",
       "transform": "frontmatter-preserved provenance comment"
     },
     {
       "source": ".agents/skills/validar-assistant/SKILL.md",
       "destination": ".claude/skills/validar-assistant/SKILL.md",
-      "source_sha256": "73c8e4751389f5c288b3030d56d051f3255cc975749027e3fc333c7c4510fe62",
-      "output_sha256": "8a166d4515d08bbce94cd64a95abfbd963bf10f4d2de0d2f612e4bae72432fdc",
+      "source_sha256": "9d2df73f212a9567af9be230f673f276c9efd8b39230b1015cb7023f489f5864",
+      "output_sha256": "33ad7b3bf0f504b87458da9b718c632050995eae8b62e359eaa91ba8c155ff33",
       "transform": "frontmatter-preserved provenance comment"
     }
   ]

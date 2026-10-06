@@ -109,7 +109,8 @@ Somente dados sintéticos no Free. Após skills alteradas, use chat novo; se a
 metadata continuar antiga, recarregue a página. Mudança de `description` requer
 retestes afetados pelo [procedimento de forward](../forward-test-skills/SKILL.md).
 Registre fases efetivamente executadas, SHA, exit codes, veredictos e limites no
-[CHANGELOG](../../../CHANGELOG.md). Verify conclui com APROVADO/REPROVADO e
+recibo/evidência datada da publicação. A raiz recebe apenas o marco pertinente,
+conforme o [critério](../../../docs/ai/templates/changelog-entry.md). Verify conclui com APROVADO/REPROVADO e
 retorno 0/1. Publicar não certifica roteamento Genie nem ambiente corporativo;
 para este último, use [replicar-trabalho](../replicar-trabalho/SKILL.md).
 

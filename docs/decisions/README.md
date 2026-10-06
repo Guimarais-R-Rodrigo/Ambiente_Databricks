@@ -47,6 +47,8 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; módulo integrado pela PR #119 (`63601e09`) |
 | [0025](ADR-0025-arquitetura-instrucoes-ia.md) | núcleo AGENTS e documentação neutra; adaptadores mínimos e evidência por superfície | aceito para implementação local; compatibilidade/auditoria não presumidas |
 
+| [0026](ADR-0026-arquitetura-projeto-e-historia.md) | navegação por tarefa, retenção reversível e fronteiras de pacote/derivação | aceito para execução local; lotes e homologação com provas próprias |
+
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 
 [Voltar ao índice de documentação](../README.md)

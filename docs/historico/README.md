@@ -1,9 +1,13 @@
-# Histórico — conteúdo retirado do produto
+# Histórico — snapshots e localizadores
+
+- [Cronologia integral de 13/08 a 06/10/2026](changelog/README.md): 198 entradas na ordem original, manifesto e recuperação dos bytes.
+- [Protótipo Concierge](concierge.md): localização congelada e rota canônica atual.
+- [Marcos atuais](../../CHANGELOG.md), [decisões](../decisions/README.md) e [owners vivos](../ai/context/projeto.md#owners-vivos) continuam separados da evidência antiga.
 
 A [readequação documental de 06/10/2026](readequacao_readmes_2026-10-06/README_RAIZ_TEMAS.md) preserva a cronologia transferida do README raiz e o [ciclo de vida anterior](readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md).
 
-Esta coleção preserva documentos que já viajaram com o `.assistant` e deixaram
-de ser produto. Ela explica origem e nomenclatura antiga, mas não é manual
+Esta coleção preserva snapshots encerrados e documentos que já viajaram com o
+`.assistant` e deixaram de ser produto. Ela explica origem e nomenclatura antiga, mas não é manual
 vigente.
 
 > **Leitura histórica:** não atualize nomes antigos apenas para parecerem atuais.

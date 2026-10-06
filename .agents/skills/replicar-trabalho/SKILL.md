@@ -102,7 +102,8 @@ PASS. Registre cada gate separadamente. Kit pronto, gate local ou prova Free
 não certificam runtime, ACL, dados, instruções ou destino corporativo.
 
 Registre commit, escopo, resultados sanitizados, pendências/dono e limites no
-[CHANGELOG](../../../CHANGELOG.md) e recibo apropriado. Backups, screenshots
+recibo apropriado. A raiz recebe apenas o marco pertinente, conforme o
+[critério](../../../docs/ai/templates/changelog-entry.md). Backups, screenshots
 identificáveis, erros brutos, paths reais, credenciais e dados corporativos
 permanecem no ambiente autorizado. Revise o recibo antes de compartilhar.
 

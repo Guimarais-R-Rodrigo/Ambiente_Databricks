@@ -54,8 +54,10 @@ melhore entrada/sumário/navegação sem reescrever evidência antiga.
 - Links relativos devem resolver no Git e, em produto, na publicação Databricks.
 - O corpo decisório de ADR aceito é imutável. Errata factual, ratificação/status
   podem ser anexados com data, preservando texto. Mudar decisão exige novo ADR.
-- Alterações entram no changelog da data real e autoria efetiva; não reescreva
-  entradas antigas. [Template](../templates/changelog-entry.md).
+- Preserve registro datado e autoria efetiva no owner da tarefa. A raiz recebe
+  apenas marcos relevantes; comandos, contagens e tentativas ficam na evidência.
+  Não reescreva entradas antigas nem snapshots fechados.
+  [Critério e template](../templates/changelog-entry.md).
 
 ## Manual tecnico
 

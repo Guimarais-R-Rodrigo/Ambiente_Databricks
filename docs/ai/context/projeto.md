@@ -46,6 +46,11 @@ diagramas e tabelas, com a qualidade do README raiz como referência.
   hierarquia editorial CLAUDE/.claude do ADR-0001. Git canônico, derivação,
   rastreabilidade, dados e decisões do produto permanecem preservados.
 
+A [arquitetura por tarefa e retenção](../../decisions/ADR-0026-arquitetura-projeto-e-historia.md)
+separa marcos estratégicos, provas datadas e contexto de tarefa. O protótipo
+Concierge permanece [histórico](../../historico/concierge.md); manutenção e uso
+seguem a versão canônica do produto.
+
 ## Owners vivos
 
 | Assunto | Onde consultar o estado | Como verificar |

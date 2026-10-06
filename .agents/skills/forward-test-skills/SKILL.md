@@ -96,8 +96,9 @@ renderize com preflight, publique com autorização e repita os casos afetados e
 vizinhos em chats novos. Não altere produto automaticamente para fechar este
 teste. Falha de menção: confira path, frontmatter, duplicatas e versão publicada.
 
-Feche a rodada no [CHANGELOG](../../../CHANGELOG.md), informando descrições
-alteradas e casos não testados. Um PASS de seleção não certifica runtime nem
+Feche a rodada no resultado datado acima, informando descrições alteradas e casos
+não testados. Registre no [CHANGELOG](../../../CHANGELOG.md) apenas mudanças
+relevantes de uso/contrato, conforme o [critério](../../../docs/ai/templates/changelog-entry.md). Um PASS de seleção não certifica runtime nem
 libera replicação corporativa por si só.
 
 ## Casos de aceitação do procedimento

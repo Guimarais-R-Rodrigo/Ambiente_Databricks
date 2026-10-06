@@ -1,0 +1,120 @@
+{
+  "source_commit": "126a2e125cca2251527f187a58696243414c6859",
+  "files_count": 19,
+  "entries": [
+    {
+      "path": "novas_funcionalidades/CHANGELOG.md",
+      "bytes": 1505,
+      "sha256": "5771de3fe095666d233ae05acc94c93f9d624bf1be0179e986480a902c12dc47",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/README.md",
+      "bytes": 1703,
+      "sha256": "8de2b92fc9c2c67aa2224039776933d30d8dc1f0c9cf20d6f3f07301c8bf44ec",
+      "disposition": "live_navigation_updated_original_in_source_commit"
+    },
+    {
+      "path": "novas_funcionalidades/skills/README.md",
+      "bytes": 1371,
+      "sha256": "ac306be4fe02e507114b1a8e18efe0f0dd700b6ad243ce127799ecaeae2d712e",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/README.md",
+      "bytes": 4398,
+      "sha256": "0ef301b4752f0eda88dc7ea157b534ed6e89912671105c334aeccd67e9f71574",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/SKILL.md",
+      "bytes": 10448,
+      "sha256": "78859de279754f828ab9639fdd9e8ac88e08ac3870a889559227d77d46895e13",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/arquitetura_e_decisao.md",
+      "bytes": 3830,
+      "sha256": "d545c14b6599b46e49ff36cf076b15a4027c4f76ee4196e1f8df0190ae66ca19",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
+      "bytes": 3280,
+      "sha256": "756ac7eaa57a86e12618d12ff140cb0d529faed78c2462e50e5a423f8ce95bbc",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/instalacao_testes_promocao.md",
+      "bytes": 4346,
+      "sha256": "8867bc7d9be5a1faccef788e44eaeb7392817f47b1af0d85db2ed6285177dbb5",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/references/composicao.md",
+      "bytes": 3251,
+      "sha256": "f2194b98119701c34c1a41c15f821bb27b845e4e97da4940824e397d6a4871b8",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/references/descoberta.md",
+      "bytes": 4822,
+      "sha256": "67535a55c662e9dee9c4944fca3e4c30dfc8b22e8799eb04843e982d51d1f233",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/references/exemplos.md",
+      "bytes": 3957,
+      "sha256": "eb46e765327fe0b561ba8232fe451a66d4e62cdb485aec6f6f3fa7dbc9af1d3b",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/templates/handoff.md",
+      "bytes": 1559,
+      "sha256": "474542e607acf07aa21644cf519e1f19c79c7770aaae35b9c6005105624b6c1c",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/templates/recomendacao.md",
+      "bytes": 1985,
+      "sha256": "9af5577daa965743ba6e635dfda8342117bd43c997f5eb106fd314ea4b07c8db",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/templates/registro_busca.md",
+      "bytes": 1466,
+      "sha256": "4f739c2f4bcb858dcadfe22ab29f2438fb665bed48ffa72ebe24afdd912bebe3",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/tests/README.md",
+      "bytes": 3369,
+      "sha256": "8532d061fdfd4c3651310fa7cdc0b0d71cbf550d1125c8730f0ca2937ed4dd45",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/tests/RESULTADOS.md",
+      "bytes": 2027,
+      "sha256": "ce3a28fa629fafafbfc46492966aa316f328499f31bfd0b06725f5e670040d65",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/tests/casos_aceite.json",
+      "bytes": 14694,
+      "sha256": "9b9c1719ea95da0af678c0abadc4a2fd32131db72b23a5236efa0d732d8d4f17",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/tests/test_validador.py",
+      "bytes": 4261,
+      "sha256": "8b658898401eb6c575993c13861cc03f34b3306fff0897c1cd26d14c83bee25a",
+      "disposition": "retained_exactly"
+    },
+    {
+      "path": "novas_funcionalidades/skills/hub-ml-concierge/tests/validar_pacote.py",
+      "bytes": 8533,
+      "sha256": "d132e76675797cacb52097f1936d7376b56a763d7c06d598ca98d06a7976a861",
+      "disposition": "retained_exactly"
+    }
+  ]
+}

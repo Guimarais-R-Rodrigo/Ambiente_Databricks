@@ -9,7 +9,7 @@ críticas também estão no [núcleo](../../../AGENTS.md); este detalhe não as 
 |---|---|---|
 | Canônica | Git deste repositório | única fonte editorial editável |
 | Produto | `ambiente_fonte/` | `.assistant/` e `.assistant_instructions.md` editáveis apenas em escopo de produto |
-| Derivada | `Novo_Ambiente_Simulado/` | espelho produzido por `tools/render_simulado.py`, nunca à mão |
+| Derivada | `.artifacts/simulado/` | espelho produzido por `tools/render_simulado.py`, nunca à mão |
 | Operacional | workspaces Free/trabalho | cópias publicadas, não canônicas |
 | Congelada | `Ambiente_Antigo/` e entregas históricas | referência read-only; quarentena local não publicável |
 
@@ -34,7 +34,8 @@ aprovado, nunca a instruções, template, Git ou logs.
 ## Ciclo
 
 Mudança no comportamento exige na mesma sessão: validador, re-render autorizado,
-changelog e ADR quando estrutural. Não reivindique conclusão se um gate exigido
+marco no changelog e ADR quando estrutural; detalhe da execução fica no owner
+da evidência. Não reivindique conclusão se um gate exigido
 está ausente; reporte BLOCKED e motivo. Documentação de manutenção não muda
 runtime, manifests, schemas, policy nem licença por associação.
 
@@ -47,15 +48,20 @@ Não congelar quantidade antiga como critério nem presumir todo `.py` como FILE
 
 Sem flag, `python tools/render_simulado.py` mostra o plano local. `--write` remove
 e recria a árvore completa; uma divergência não autoriza apagar diretório alheio.
+`--output-root` permite somente subdiretórios gerados dentro de `.artifacts/`;
+`--check` compara paths, bytes/hashes e tipos com inventário não vazio. O diff Git
+não cobre saída ignorada e não substitui esse gate.
 Antes de escrever: valide a fonte, registre destino/inventário/extras, confira
 ownership e autorização, preserve trabalho desconhecido e prefira clone/cópia
 isolada em ensaio. Extras ou conflito bloqueiam a parte destrutiva até decisão.
 
-Na migração da camada IA, somente o integrador gera eventual `README_GERADO.md`
-em cópia isolada: marcador nunca é editado à mão; payload do produto deve manter
-hashes da baseline congelada. Esse freeze vale para a campanha, não proíbe toda
-futura evolução de produto em escopo próprio. Não mudar manifesto para legitimar
-o próprio delta proibido.
+Na campanha IA anterior, o payload foi congelado; sua baseline e evidências
+continuam imutáveis. `ai_controls --migration-freeze` reproduz essa exigência
+histórica e pode falhar após uma mudança de produto autorizada posteriormente.
+O gate normal verifica paridade dinâmica da fonte atual com o derivado atual.
+O [ADR-0026](../../decisions/ADR-0026-arquitetura-projeto-e-historia.md) separa esses
+contratos: não reescreva a baseline para legitimar o delta. `README_GERADO.md`
+continua gerado, nunca editado à mão; só o integrador finaliza derivados comuns.
 
 ## Publicacao
 

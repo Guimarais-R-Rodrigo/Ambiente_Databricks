@@ -18,6 +18,11 @@
 
 ## 🧭 Por onde começar
 
+- **Usar o Hub:** [instalação e primeiro uso](ambiente_fonte/.assistant/README.md).
+- **Manter:** [contrato e rotas](AGENTS.md) → [ferramentas e gates](tools/README.md).
+- **Preparar uma entrega:** [replicação e limites](.agents/skills/replicar-trabalho/SKILL.md) → [runbook](docs/playbooks/replicacao-trabalho.md).
+- **Investigar uma regressão:** [classes de defeito e guardas](docs/auditoria/README.md#classes-de-defeito-que-viraram-guardas) → teste/prova da frente.
+
 | Objetivo | Abra |
 |---|---|
 | entender o ecossistema e o primeiro uso | [guia `.assistant`](ambiente_fonte/.assistant/README.md) |
@@ -25,13 +30,18 @@
 | usar funções/classes reutilizáveis | [Hub Snippets](ambiente_fonte/.assistant/hub_snippets/README.md) |
 | usar utilitários técnicos | [Hub Scripts](ambiente_fonte/.assistant/hub_scripts/README.md) |
 | escolher uma Agent Skill | [Skills](ambiente_fonte/.assistant/skills/README.md) |
+| descobrir ou combinar recursos do Hub | [Concierge canônico](ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md) |
 | preencher um briefing | [Hub Prompts](ambiente_fonte/.assistant/hub_prompts/README.md) |
 | criar ou manter objetos do Hub | [Hub Padrões](ambiente_fonte/.assistant/hub_padroes/README.md) |
 | consultar nível e superfícies protegidas | [Policy vigente](ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) |
 | verificar escopo técnico aceito e limites Genie | [Evidência B1](docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) |
 | acompanhar sprints e histórico | [Índice de sprints](docs/sprints/README.md) |
 
+<a id="o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho"></a>
+
 ## 🌟 O que é este ecossistema
+
+![Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
 Projetos de Machine Learning em Big Data exigem decisões recorrentes sobre grão, tempo, amostragem, leakage, métricas, visualização, monitoramento e governança. Sem o contexto do projeto, um assistente pode propor fórmulas, bibliotecas ou convenções diferentes das usadas pela equipe.
 
@@ -45,6 +55,8 @@ O ecossistema `.assistant` organiza esse contexto em camadas separadas:
 
 A pasta `hub_readmes_visual_assets/` é infraestrutura editorial para diagramas e cabeçalhos. Ela não é um sexto componente funcional nem fornece contexto automaticamente à Genie Code.
 
+<a id="arquitetura-completa-do-ecossistema"></a>
+
 ## 🏛️ Arquitetura e responsabilidade
 
 ![Corte arquitetural entre fonte versionada, workspace, contexto da Genie Code, notebook e runtime.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
@@ -57,7 +69,7 @@ A separação principal é entre **contexto** e **execução**:
 - a existência de um arquivo dentro de `.assistant` não o coloca automaticamente no `sys.path`;
 - publicar, executar, revisar e promover são gates distintos.
 
-`ambiente_fonte/` é a fonte editável. `Novo_Ambiente_Simulado/` é uma representação derivada e deve permanecer sincronizada por ferramenta/gates, não por edição manual concorrente.
+`ambiente_fonte/` é a fonte editável. `.artifacts/simulado/` é uma representação derivada e deve permanecer sincronizada por ferramenta/gates, não por edição manual concorrente.
 
 ## 🎨 Sistema de Temas
 
@@ -76,6 +88,8 @@ workspace theme, ACL, deploy de App ou Publish.
 
 ## 🔄 Como o contexto chega à Genie Code
 
+![Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
+
 1. Você descreve a demanda, anexa os recursos necessários e pode selecionar uma skill com `@hub-ml-*`.
 2. As instruções aplicáveis e a skill orientam método, riscos, recursos e formato.
 3. Helpers recomendados continuam sendo importados e executados explicitamente no notebook/runtime.
@@ -88,7 +102,7 @@ Não existe uma leitura automática única de toda a pasta `.assistant`. A ativa
 | Camada | Papel | Regra |
 |---|---|---|
 | `ambiente_fonte/` | fonte do produto | editar aqui |
-| `Novo_Ambiente_Simulado/` | derivado de verificação | manter equivalente à fonte |
+| `.artifacts/simulado/` | derivado de verificação | manter equivalente à fonte |
 | `tools/` | testes, gates e automação | executar antes de promover |
 | `docs/` | decisões e evidências | registrar escopo e limites |
 | workspace | cópia operacional | validar separadamente antes de uso |
@@ -125,7 +139,13 @@ worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
+<a id="ciclo-de-vida-do-projeto"></a>
+
 ## Ciclo de contribuição
+
+![Pista de promoção com sete gates e retornos de correção para a etapa de edição.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
+
+A figura registra o ciclo histórico; o [procedimento corrente](docs/playbooks/ciclo-de-vida.md) e os [gates de manutenção](tools/README.md) são as referências operacionais vigentes.
 
 Edite a fonte, execute os gates proporcionais, gere o derivado em uma árvore isolada e registre a evidência. O [ciclo de vida](docs/playbooks/ciclo-de-vida.md) separa esse trabalho local de publicação e homologação autorizadas. A lista executável dos checks e seus pré-requisitos fica em [tools](tools/README.md).
 
@@ -145,4 +165,4 @@ Edite a fonte, execute os gates proporcionais, gere o derivado em uma árvore is
 
 ## 🔗 Continuidade e histórico
 
-O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).
+Os [marcos do projeto](CHANGELOG.md), as [decisões](docs/decisions/README.md) e o [histórico integral](docs/historico/changelog/README.md) têm rotas próprias. O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).

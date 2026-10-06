@@ -2,11 +2,25 @@
 
 ## Uso
 
-Adicione sob a data real da sessão; crie `## YYYY-MM-DD` se necessário. Subseções
-na ordem Adicionado, Atualizado, Corrigido, Removido, Notas, omitindo vazias.
-Cada item identifica autor efetivo entre parênteses, sem fornecedor fixo.
-Itens curtos, de uma a três linhas, citam arquivos e evidência/limites. Não incluir
-identificadores corporativos, PII ou segredos; não reescrever datas passadas.
+`CHANGELOG.md` da raiz reúne marcos que alteram uso, arquitetura, compatibilidade,
+contrato, distribuição ou risco material. Use a data real e a autoria efetiva,
+sem fornecedor fixo; cada marco resume efeito e limite em uma a três linhas,
+com links para decisão, owner e prova quando necessários.
+
+Toda sessão com alteração continua rastreável, mas comandos, contagens, tentativas,
+rebase e recibos pertencem ao owner da execução: teste/auditoria datados, handoff
+quando há trabalho aberto, ou commit/PR para manutenção trivial. Não criar outro
+diário obrigatório nem duplicar a mesma evidência em vários índices.
+
+Metas editoriais: até 12 marcos, 120 linhas e 12 KiB, mantendo os ciclos recentes.
+Ao exceder, faça outro snapshot verificável com índice, commit e hashes antes de
+curar a raiz. São metas de leitura, não limites de modelo nem permissão para
+excluir fatos. [Arquivo preservado](../../historico/changelog/README.md).
+
+Não incluir identificadores corporativos, PII ou segredos. Não reescrever datas,
+autoria, ADR aceito ou provas congeladas. Erratas entram com nova data e referência.
+Um resultado PASS vale apenas para o SHA, ambiente e escopo observado; conserve
+FAIL, NOT_RUN, BLOCKED e NOT_AUTHORIZED quando aplicáveis.
 
 Modelo não executável: `launchable=false`, `execution_authorized=false`.
 Um registro de plano não afirma execução e não autoriza a próxima ação.
@@ -16,20 +30,11 @@ Um registro de plano não afirma execução e não autoriza a próxima ação.
 ```markdown
 ## <YYYY-MM-DD>
 
-### Adicionado
-1. (<autor real>) <arquivo>: <mudança efetiva e finalidade>.
-
-### Atualizado
-1. (<autor real>) <arquivo>: <delta e escopo preservado>.
-
-### Corrigido
-1. (<autor real>) <arquivo>: <defeito e prova da correção>.
-
-### Removido
-1. (<autor real>) <arquivo>: <remoção autorizada e rota substituta>.
-
-### Notas
-- (<autor real>) <comando/ação, SHA, resultado observado e limite>.
-- (<autor real>) <teste ainda não executado>: NOT_RUN; <destino sem prova>: NOT_OBSERVABLE.
-- (<autor real>) <bloqueio, owner e próxima condição, sem concessão de execução>.
+- (<autor real>) <mudança efetiva e impacto de uso/contrato>. <Limite material>.
+  [Decisão](<ADR>) · [Estado e prova](<owner da frente ou evidência datada>).
 ```
+
+Para detalhar uma execução, use o template de teste/auditoria da frente ou o
+[handoff](handoff.md), informando SHA, arquivos, comandos, esperado, observado,
+exit code, ambiente, bloqueios e condição de retomada. Atualizar um registro não
+concede autorização para executar suas próximas ações.

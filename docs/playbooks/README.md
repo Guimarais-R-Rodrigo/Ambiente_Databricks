@@ -33,6 +33,7 @@ verificação no destino.
 - Descreva comandos copiáveis, pré-condições e critério de sucesso.
 - Não inclua usuário, host, token ou caminho corporativo real; use placeholders.
 - Mudança de decisão arquitetural pede ADR. Mudança no modo de executar pede
-  atualização do playbook e entrada no `CHANGELOG.md`.
+  atualização do playbook e evidência datada; mudança relevante de operação entra
+  como marco no `CHANGELOG.md`.
 
 Volte ao [índice de documentação](../README.md).

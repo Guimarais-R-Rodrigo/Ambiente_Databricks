@@ -10,6 +10,10 @@ quem mantém ou aprova mudanças começa aqui.
 
 | Sua pergunta | Documento dono |
 |---|---|
+| “Como mantenho o projeto?” | [Rotas IA](ai/README.md) e [ferramentas](../tools/README.md) |
+| “Como preparo uma entrega?” | [Replicação](../.agents/skills/replicar-trabalho/SKILL.md) e [runbook](playbooks/replicacao-trabalho.md) |
+| “Qual regressão já foi encontrada?” | [Classes de defeito e guardas](auditoria/README.md#classes-de-defeito-que-viraram-guardas) |
+| “O que mudou de modo relevante?” | [Marcos](../CHANGELOG.md); [cronologia integral arquivada](historico/changelog/README.md) |
 | “Qual decisão arquitetural está valendo?” | [ADRs](decisions/README.md) |
 | “Que riscos outra IA encontrou?” | [Auditorias](auditoria/README.md) |
 | “O que foi realmente testado?” | [Testes](testes/README.md) |
@@ -33,11 +37,11 @@ Os documentos têm naturezas diferentes:
 
 | Natureza | Pode ser reescrita? | Como evolui |
 |---|---:|---|
-| Guia operacional | sim | edição normal + `CHANGELOG.md` |
+| Guia operacional | sim | edição + evidência; marco relevante no `CHANGELOG.md` |
 | ADR aceito | não, salvo errata factual anexada | novo ADR supersede o anterior |
 | Auditoria ou resultado de teste | não | nova rodada, com nova data |
-| Handoff | não depois de entregue | novo handoff ou changelog fecha o assunto |
-| Relatório de sprint | não | correções ficam no changelog e na evidência posterior |
+| Handoff | não depois de entregue | novo handoff/evidência fecha o assunto |
+| Relatório de sprint | não | correções ficam na evidência posterior, com marco se relevante |
 
 Por isso um resultado antigo pode contradizer o estado atual sem estar “errado”:
 ele registra o runtime e a data em que foi observado. Para decidir hoje, use o

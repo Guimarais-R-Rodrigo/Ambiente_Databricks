@@ -13,7 +13,7 @@ abra o [guia do `.assistant`](.assistant/README.md).
 ```mermaid
 flowchart LR
   F["ambiente_fonte/<br/><b>canônico e editável</b><br/>sem identidade"]
-  S["Novo_Ambiente_Simulado/<br/><b>derivado</b><br/>Users/usuario-free"]
+  S[".artifacts/simulado/<br/><b>derivado</b><br/>Users/usuario-free"]
   L["Databricks Free<br/><b>laboratório</b>"]
   W["Workspace do trabalho<br/><b>destino controlado</b>"]
   F -->|"render_simulado.py"| S
@@ -24,7 +24,7 @@ flowchart LR
 | Camada | Finalidade | Pode editar? |
 |---|---|---:|
 | `ambiente_fonte/` | produto neutro e versionado | **sim** |
-| `Novo_Ambiente_Simulado/` | espelho da árvore de workspace | **não** |
+| `.artifacts/simulado/` | espelho da árvore de workspace | **não** |
 | workspace Free | teste operacional | não; recebe publicação |
 | workspace do trabalho | consumo governado | não; recebe pacote aprovado |
 
@@ -62,6 +62,7 @@ python tools/validate_assistant.py
 
 # 2. Regenere o derivado; sem --write o comando apenas mostra o plano
 python tools/render_simulado.py --write
+python tools/render_simulado.py --check
 
 # 3. Publique e confira o laboratório com destino explícito
 python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
@@ -72,7 +73,8 @@ Depois:
 
 1. execute o smoke test quando a mudança tocar Python, Spark ou ML;
 2. execute forward tests quando mudar `name`, `description` ou escopo de skill;
-3. registre a alteração no `CHANGELOG.md`;
+3. preserve evidência datada no owner da tarefa e registre apenas o marco relevante
+   no `CHANGELOG.md`, conforme o [critério editorial](../docs/ai/templates/changelog-entry.md);
 4. faça o commit somente com a evidência pertinente.
 
 O procedimento completo e os critérios de parada estão no
@@ -81,7 +83,7 @@ O procedimento completo e os critérios de parada estão no
 ## Limites
 
 - Não inclua PII, host, e-mail, token, caminho corporativo ou dado real.
-- Não edite `Novo_Ambiente_Simulado/` à mão: o próximo render o recria.
+- Não edite `.artifacts/simulado/` à mão: o próximo render o recria.
 - Não trate `hub_` como interface nativa; prompts e padrões precisam ser
   anexados, e bibliotecas precisam ser importadas.
 - Não generalize um resultado do Free para o trabalho. Runtime, permissões e

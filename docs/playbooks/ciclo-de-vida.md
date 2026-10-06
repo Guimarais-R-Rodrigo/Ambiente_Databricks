@@ -12,11 +12,11 @@ Edite o produto em `ambiente_fonte/`; nunca repare o espelho à mão. Manual é 
 
 ## 3. Gerar em árvore isolada
 
-`python tools/render_simulado.py` mostra o plano. Antes de `python tools/render_simulado.py --write`, inventarie extras e confirme que toda a árvore `Novo_Ambiente_Simulado/` pode ser substituída. Compare todo o pacote e repita os gates após integração. Recursos visuais seguem exclusivamente a [produção v2](../../tools/readme_visuals/README.md#produção-v2--caminho-recomendado).
+`python tools/render_simulado.py` mostra o plano. Antes de `python tools/render_simulado.py --write`, inventarie extras e confirme que toda a árvore `.artifacts/simulado/` pode ser substituída. Compare todo o pacote e repita os gates após integração. Recursos visuais seguem exclusivamente a [produção v2](../../tools/readme_visuals/README.md#produção-v2--caminho-recomendado).
 
 ## 4. Revisar, registrar e integrar
 
-Revise o diff contra os contratos e execute verificações proporcionais. Registre o que de fato passou no `CHANGELOG.md` com atribuição, sem declarar validação de ambiente não executada. Commit e push exigem escopo autorizado; merge e publicação são decisões distintas. ADR aceito mantém corpo imutável; mudança arquitetural exige o processo próprio.
+Revise o diff contra os contratos e execute verificações proporcionais. Registre comandos, SHA e o que de fato passou na evidência datada da tarefa, com atribuição; a raiz recebe somente marcos relevantes, conforme o [critério editorial](../ai/templates/changelog-entry.md). Não declare validação de ambiente não executada. Commit e push exigem escopo autorizado; merge e publicação são decisões distintas. ADR aceito mantém corpo imutável; mudança arquitetural exige o processo próprio.
 
 ## 5. Validar ambiente somente quando necessário e autorizado
 

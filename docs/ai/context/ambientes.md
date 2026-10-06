@@ -36,7 +36,8 @@ passado não autoriza editar description do produto numa migração apenas edito
 4. Antes de replicar, reexecute os casos relevantes no ambiente autorizado. A
    diferença MLflow/Prophet registrada em 2026 mostra por que a prova tem data.
 5. Toda nova diferença Free/trabalho ganha nota datada nesta matriz ou em
-   observações vinculadas, com fonte, versão, resultado e changelog. Preserve a
+   observações vinculadas, com fonte, versão e resultado; impacto relevante em
+   uso/compatibilidade entra como marco no changelog. Preserve a
    observação anterior; não a reescreva para fingir uma plataforma estável.
 
 Os limites oficiais atuais do Free estão na [referência](../references/databricks-genie-code.md#limites-revalidados).

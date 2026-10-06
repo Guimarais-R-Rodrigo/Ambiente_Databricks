@@ -47,7 +47,8 @@ manutenção; siga o catálogo do produto.
 5. Confira links com a caixa exata, recursos, flags e efeitos; teste intenção
    positiva, negativa e pré-requisito ausente de cada skill. Exercite bloqueios
    sem publicar, replicar ou excluir conteúdo real para provar a migração.
-6. Registre mudança e evidência no [CHANGELOG](../../CHANGELOG.md). Falha de
+6. Registre a evidência no owner da tarefa; use o [critério de marcos](../../docs/ai/templates/changelog-entry.md)
+   para o [CHANGELOG](../../CHANGELOG.md). Falha de
    ambiente ou etapa não executada não é PASS. Rollback restaura fonte, catálogo
    e adaptadores como conjunto coerente, preservando mudanças alheias.
 
