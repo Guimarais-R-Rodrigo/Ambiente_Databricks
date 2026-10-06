@@ -47,13 +47,13 @@ Preencha [feature_engineering.md](feature_engineering.md) com entidade/granulari
 
 ## 8. O que este recurso entrega?
 
-O contrato solicita diagrama textual do ponto no tempo, feature specification priorizada, código parametrizado quando solicitado, testes e registro de pressupostos e features rejeitadas. Esses itens dependem da interação; o arquivo não materializa tabela nem publica feature.
+São três entregas distintas: **especificação** (fontes, event_time, available_at, cutoff, fronteira e testes); **código proposto**, quando solicitado; e **materialização**, somente sob rota e autorização específicas. A especificação prioriza risco/custo, registra hipóteses, rejeições e testes de unicidade, cobertura, janela e parity. Nenhuma dessas etapas é inferida da anterior.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [feature_engineering.md](feature_engineering.md), preencha o briefing e selecione os recursos. O prompt recomenda `@hub-ml-feature-engineering`.
+Preencha [feature_engineering.md](feature_engineering.md). Siga a [skill correspondente](../../skills/hub-ml-feature-engineering/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. A materialização sintética `FREE_SYNTHETIC_PIT_FEATURE_MATERIALIZATION_V1` exige composição PIT verificada, destino e autorização de efeito explícitos; não é autorização genérica para qualquer feature table. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing.
 
-O [notebook](exemplo_feature_engineering.py) prepara **duas** tabelas com `mode("overwrite")`: `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`. Ele planta atraso de publicação e dados futuros para tornar o risco observável. Executar a Parte 1 pode substituir tabelas existentes com esses nomes.
+O [exemplo](exemplo_feature_engineering.py) sobrescreve `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`, os mesmos nomes de Cross-EDA. As duas fixtures não certificam produção nem execução da feature. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -65,11 +65,11 @@ Data de referência no passado não garante que o dado estava disponível naquel
 
 ## 12. Quais são as alternativas?
 
-Se a compatibilidade entre fontes ainda não foi demonstrada, use [cross_eda](../cross_eda/README.md). Para explorar uma única fonte, use [eda_completa](../eda_completa/README.md). Para validação estatística de hipóteses, use [stat_check](../stat_check/stat_check.md).
+Se a compatibilidade entre fontes ainda não foi demonstrada, use [cross_eda](../cross_eda/README.md). Para explorar uma única fonte, use [eda_completa](../eda_completa/README.md). Para validação estatística de hipóteses, use [stat_check](../stat_check/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
-Escolha casos concretos e confirme que cada feature usa somente valores disponíveis antes do cutoff. Reconte linhas após joins, verifique unicidade, cobertura e comportamento em treino e inferência. Toda feature deve ter definição e janela reproduzíveis.
+Teste um evento exatamente no cutoff conforme a fronteira `<` ou `<=` declarada. Se `available_at` for posterior à decisão, ele deve ser excluído mesmo com event_time no passado. Após **cada** join, confira chave, contagem e cardinalidade esperada/observada. Registre que testes foram executados e quais ficaram pendentes; não declare disponibilidade temporal sem evidência.
 
 ## 14. Arquivos relacionados e próximos passos
 
@@ -77,6 +77,4 @@ O [briefing](feature_engineering.md) é o ponto de uso; o [notebook](exemplo_fea
 
 ## 15. Referências
 
-A descrição local foi confrontada com [feature_engineering.md](feature_engineering.md) e [exemplo_feature_engineering.py](exemplo_feature_engineering.py). Esta revisão foi estática.
-
-A documentação oficial [Databricks Feature Store](https://docs.databricks.com/aws/en/machine-learning/feature-store) descreve recursos governados em Unity Catalog, e [Point-in-time feature joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series) descreve joins temporais para evitar uso de valores futuros. Consultadas em 13/09/2026.
+O [briefing](feature_engineering.md) define os campos e a entrega; o [notebook](exemplo_feature_engineering.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

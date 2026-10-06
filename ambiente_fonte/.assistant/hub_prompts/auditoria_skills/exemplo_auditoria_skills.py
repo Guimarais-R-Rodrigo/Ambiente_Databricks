@@ -4,9 +4,9 @@
 # MAGIC
 # MAGIC 📘 Guia local: [`README.md`](./README.md)
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Aqui somente o preparo
+# MAGIC executa código. O briefing é texto para a interação autorizada, e a
+# MAGIC resposta real deve ser registrada com evidência; continua pendente neste exemplo.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -20,11 +20,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | Spark para resolver current_user() e acesso de leitura ao arquivo publicado |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum; o insumo é um arquivo `SKILL.md` já publicado |
 # MAGIC | Escrita | **não** — apenas lê a skill selecionada |
-# MAGIC | Diferença Free × trabalho | ajuste somente o caminho da skill publicada |
+# MAGIC | Diferença Free × trabalho | confirme caminho, permissão e versão da skill; acesso no Free não prova acesso corporativo |
 
 # COMMAND ----------
 # MAGIC %md
@@ -126,9 +126,9 @@ print(frontmatter.strip()[:400])
 # MAGIC
 # MAGIC O que falta   : colar aqui a resposta que o Genie Code deu ao prompt
 # MAGIC                 da Parte 2, num chat novo, com a base da Parte 1 criada.
-# MAGIC Por que não   : prompt produz resposta de assistente, e nenhum job
-# MAGIC                 reproduz isso. Resposta inventada é pior que resposta
-# MAGIC                 nenhuma — ensina que o assistente faz algo que ele não faz.
+# MAGIC Evidência    : nenhuma resposta desta interação foi registrada e revisada.
+# MAGIC                Não invente conteúdo para completar o exemplo. O preparo
+# MAGIC                não prova execução nem conclusão canônica da skill.
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
@@ -137,9 +137,9 @@ print(frontmatter.strip()[:400])
 # MAGIC 1. Rode a Parte 1 deste notebook — ela não cria tabela; apenas lê o `SKILL.md` selecionado.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre contexto e skill selecionados com evidência disponível.
+# MAGIC    Relato do assistente não comprova sozinho leitura, importação, chamada
+# MAGIC    ou conclusão; confira os artefatos exigidos pela rota da skill.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC

@@ -3,10 +3,10 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe o notebook com **Add context** ou
 > `@`. Para uma célula específica, use `@cell`. Skill: `@hub-ml-comentar-notebook`.
 
-Antes de pedir código, veja os helpers que a skill recomendada declara: boa
-parte do que este formulário pede já tem implementação verificada, e usá-la
-evita que a lógica seja reescrita a cada conversa. Mapa completo em
-[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
+Antes de executar, siga a [skill selecionada](../../skills/hub-ml-comentar-notebook/SKILL.md),
+a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) e o contrato
+da rota suportada. Helpers são componentes dessa rota, não um bypass. O
+[Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers) é o catálogo integrado.
 
 ## Escolha o modo
 
@@ -19,7 +19,7 @@ evita que a lógica seja reescrita a cada conversa. Mapa completo em
 | Campo | Como preencher | Por que importa | Exemplo |
 |---|---|---|---|
 | `{{NOTEBOOK_OU_CELULAS}}` | Anexe notebook ou selecione células. | Evita revisar versão/trecho errado. | `@02_feature_engineering` |
-| `{{REVISAO_EDICAO_OU_DOCUMENTACAO}}` | Escolha revisar, editar ou só documentar. | Define se código pode mudar. | documentação |
+| `{{REVISAO_EDICAO_OU_DOCUMENTACAO}}` | Escolha revisar, editar ou só documentar. | Define revisão ou edição documental; código permanece preservado. | documentação |
 | `{{PUBLICO_ALVO}}` | Informe quem usará o notebook. | Calibra contexto e linguagem. | analista novo na squad |
 | `{{RESUMIDA_TECNICA_OU_DIDATICA}}` | Escolha profundidade e tamanho. | Evita comentário excessivo ou insuficiente. | técnica |
 | `{{OBJETIVO}}` | Explique decisão e papel do notebook. | Dá sentido à narrativa. | gerar features mensais |
@@ -55,7 +55,8 @@ INSTRUÇÕES
 
 CONTRATO DE SAÍDA
 - Resumo das mudanças ou recomendações.
-- Notebook organizado com sumário visual proporcional ao tamanho.
+- No modo REVISÃO, proposta de organização; nos modos autorizados, documentação
+  com sumário proporcional, preservando código e ordem.
 - Descrição de inputs/outputs, compute/dependências e forma segura de execução.
 - Alertas de qualidade, custo, segurança e idempotência encontrados.
 - Lista explícita do que foi preservado e do que não foi possível validar.

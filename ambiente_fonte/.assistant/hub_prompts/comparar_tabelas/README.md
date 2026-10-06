@@ -61,23 +61,19 @@ Confirme que os filtros produzem populações comparáveis e que as chaves não 
 
 ## 8. O que este recurso entrega?
 
-O artefato desta pasta entrega uma solicitação estruturada. Seu contrato pede veredito resumido, matriz de diferenças de schema, scorecard de conteúdo, métricas de reconciliação, diferenças priorizadas, código reproduzível quando aplicável e limitações.
-
-Esses itens são solicitados, não garantidos. A pessoa deve conferir que numeradores, denominadores, período, filtros e tolerâncias usados na resposta correspondem ao briefing. “Compatível” também não significa “correto para o negócio” sem critérios de aceite apropriados.
+O briefing solicita veredito **compatível / compatível com ressalvas / incompatível**, conforme os critérios informados; matriz de schema e conteúdo; reconciliação com numeradores e denominadores; diferenças priorizadas; código quando aplicável e limitações. Se tolerâncias não foram definidas, mantenha a classificação material pendente. O veredito não é aceite de negócio nem homologação da skill.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [comparar_tabelas.md](comparar_tabelas.md), preencha todos os campos e anexe ou selecione os dois recursos reais no Genie Code. O briefing sugere a skill conforme o foco: perfil/qualidade, Cross-EDA ou monitoramento; não existe uma skill única para qualquer comparação.
+Escolha primeiro o percurso: reconciliação determinística independente; [EDA de uma fonte](../../skills/hub-ml-eda-profissional/SKILL.md); [Cross-EDA](../../skills/hub-ml-cross-eda-ml/SKILL.md); ou [Monitoramento](../../skills/hub-ml-monitoramento-modelo/SKILL.md). Preencha [comparar_tabelas.md](comparar_tabelas.md) e anexe os dois recursos. A skill selecionada e a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) governam sua execução; SQL/PySpark direto não substitui a rota protegida de uma EDA selecionada. A exigência de EDA não se estende automaticamente a toda comparação ou a outra skill.
 
-O [notebook de exemplo](exemplo_comparar_tabelas.py) prepara duas bases sintéticas e depois mostra o prompt preenchido. O preparo chama `saveAsTable(..., mode="overwrite")` para **duas** tabelas: `workspace.default.hub_exemplo_clientes_v1` e `workspace.default.hub_exemplo_clientes_v2`. Portanto, estudar o texto é seguro, mas executar a Parte 1 pode substituir objetos existentes com esses nomes.
-
-A Parte 3 do notebook permanece marcada como não executada porque depende de uma conversa real com Genie Code. Não preencha essa seção com uma resposta inventada para “completar” o exemplo.
+O [exemplo](exemplo_comparar_tabelas.py) sobrescreve **duas** tabelas com `mode("overwrite")`: `workspace.default.hub_exemplo_clientes_v1` e `workspace.default.hub_exemplo_clientes_v2`. Estudar o briefing não exige executar o preparo. A Parte 3 é **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
 O `TIPO_COMPARACAO` define o que deve ser medido. `GRANULARIDADE` e `CHAVES` determinam se uma reconciliação linha a linha é válida. `COL_DATA_E_PERIODO` e `FILTROS` delimitam a população. `COLUNAS_CRITICAS_OU_TODAS` controla materialidade e custo.
 
-`TOLERANCIAS_OU_PROPOR` merece atenção especial: pedir que o assistente proponha um limite não transforma esse limite em política aprovada. Registre sua origem e valide se faz sentido para unidade, precisão e decisão em questão.
+`TOLERANCIAS_OU_PROPOR` merece atenção especial: pedir que o assistente proponha um limite não transforma esse limite em política aprovada. Registre sua origem e valide se faz sentido para unidade, precisão e decisão em questão. Sem tolerância aprovada, apresente diferenças e a proposta de critério como pendente antes de classificar erro material.
 
 ## 11. Limitações, riscos e armadilhas
 
@@ -87,9 +83,7 @@ A resposta de um assistente pode sugerir causas para diferenças; trate essas ca
 
 ## 12. Quais são as alternativas?
 
-Para um diagnóstico inicial de uma única fonte, use [eda_rapida](../eda_rapida/README.md) ou o briefing [eda_completa](../eda_completa/eda_completa.md). Para regras explícitas de qualidade, use [data_quality](../data_quality/data_quality.md). Para avaliar compatibilidade de múltiplas fontes com objetivo de modelagem, use [cross_eda](../cross_eda/cross_eda.md).
-
-Se a necessidade for apenas uma checagem determinística simples, um teste SQL/PySpark específico pode ser mais direto e auditável que uma conversa ampla.
+Para uma fonte, use [EDA rápida](../eda_rapida/README.md), [EDA completa](../eda_completa/README.md) ou [Qualidade](../data_quality/README.md). Para compatibilidade de fontes, use [Cross-EDA](../cross_eda/README.md). Uma checagem SQL/PySpark independente pode ser mais direta quando nenhuma rota protegida foi selecionada; não serve de bypass depois dessa seleção.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -105,6 +99,4 @@ Depois da comparação, transforme divergências materiais em testes reproduzív
 
 ## 15. Referências
 
-O comportamento local descrito aqui foi confrontado com [comparar_tabelas.md](comparar_tabelas.md) e [exemplo_comparar_tabelas.py](exemplo_comparar_tabelas.py) na base R10 iniciada a partir do merge R09. O prompt e o notebook não foram executados no Databricks nesta revisão.
-
-Para a seleção de contexto no Genie Code, consulte a documentação oficial [Navigate Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code), consultada em 13/09/2026. Ela documenta anexos e seleção de recursos com `@`; não homologa este prompt customizado.
+O [briefing](comparar_tabelas.md) define a comparação e o [exemplo](exemplo_comparar_tabelas.py) mostra o cenário sintético. Preserve população, chaves, nulos, timezone, denominadores e tolerâncias. A resposta só se torna evidência quando realmente registrada.

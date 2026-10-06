@@ -48,9 +48,7 @@ sem sustentar sua validade em dados.
 
 ## 5. Como funciona, intuitivamente?
 
-Primeiro observa schemas e objetos no catálogo configurado. Depois escolhe
-candidatas pela relação com a decisão e só aprofunda colunas, tags e constraints
-dessas candidatas. Agrupa variantes da mesma ideia e relata dúvidas por item.
+Com consulta autorizada, observe schemas e objetos do catálogo configurado; escolha candidatas e só então aprofunde colunas, tags e constraints. Com fixture textual, trabalhe apenas sobre o contexto fornecido, sem inventar consulta. Agrupe variantes e relate lacunas por item.
 
 ## 6. Exemplo de situação
 
@@ -61,16 +59,11 @@ conversacional, sem tratar a shortlist como achado sobre registros.
 
 ## 7. O que você precisa antes de usar?
 
-Informe área/decisão, consumidor, entidade/população, binding autorizado de
-`CATALOGO_PRODUTO`, schemas selecionados e limite de exploração. Confirme se há
-permissão de metadata e declare o ambiente. Nomes e tags não verificam qualidade,
-SELECT, semântica temporal ou cobertura completa.
+Informe decisão, consumidor, população e limite de exploração. Há dois percursos: **catálogo**, com binding e permissão de metadata confirmados; ou **fixture textual**, sem consulta, marcada `FORNECIDA` e com `ESCOPO_OBSERVADO` vazio. Binding não é requisito inventado para o segundo. Nomes/tags não provam SELECT, qualidade ou temporalidade.
 
 ## 8. O que este recurso entrega?
 
-O briefing pede escopo observado, shortlist deduplicada, razões de priorização,
-descartes, contra-hipóteses, risco e próximo teste. O texto sozinho não garante
-nenhuma observação nem resposta correta; shortlist não é aprovação de negócio.
+Solicita cobertura observada, shortlist deduplicada, critérios qualitativos, descartes, contra-hipóteses e próximo teste. Exemplo ilustrativo de candidata: decisão = revisão humana; característica = recência de eventos; população/grão = PENDENTE; fonte = fixture FORNECIDA; contra-hipótese = atraso de registro; próximo teste = esclarecer relógios com o dono. Viabilidade permanece `INDETERMINADO`, sem score numérico inventado.
 
 ## 9. Como usar este recurso no Hub?
 
@@ -97,10 +90,7 @@ comportamento conversacional E1; não demonstra execução de runtime nem E2.
 
 ## 12. Quais são as alternativas?
 
-Para uma ideia já escolhida, passe a
-[`micromodelo_novo`](../micromodelo_novo/README.md). Para buscar qual recurso do
-Hub usar, consulte `hub-ml-concierge`; para estudar registros autorizados depois,
-faça handoff à skill especialista de EDA/validação adequada.
+Para característica escolhida, use [Micromodelo Novo](../micromodelo_novo/README.md). Para localizar recursos do Hub, use [Concierge](../../skills/hub-ml-concierge/SKILL.md). Estudar registros exige handoff autorizado à skill especialista e sua policy.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -118,9 +108,4 @@ fluxo; após escolha humana, use `OBJETIVO_CONHECIDO`. Veja o
 
 ## 15. Referências
 
-Progressividade, binding, `ESCOPO_OBSERVADO` e estados parciais seguem o contrato
-MM03 no repositório de desenvolvimento. A especificação posterior segue schema
-MM01. A seleção da skill foi confirmada pelo usuário em chat manual no Free;
-transcrição e notebook de resposta foram avaliados, sem auditoria completa de
-chamadas internas. Runtime Databricks e MM01 permanecem não executados neste
-teste; a evidência conversacional não certifica MM04.
+Consulte os [contratos de Micromodelos](../../hub_micromodelos/contratos/README.md), o [guia do módulo](../../hub_micromodelos/README.md) e a [skill](../../skills/hub-ml-micromodelos/SKILL.md). O exemplo registra conversa E1 de 29/09/2026, caso P2c: metadata textual fornecida e três candidatas; não prova leitura de catálogo, runtime E1, validação MM01 ou homologação corporativa.

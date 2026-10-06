@@ -3,10 +3,10 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe o notebook, célula, tabela, erro ou
 > pipeline com **Add context**/`@`. Skill: `@hub-ml-tutor-databricks`.
 
-Antes de pedir código, veja os helpers que a skill recomendada declara: boa
-parte do que este formulário pede já tem implementação verificada, e usá-la
-evita que a lógica seja reescrita a cada conversa. Mapa completo em
-[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
+Consulte a [skill Tutor](../../skills/hub-ml-tutor-databricks/SKILL.md) para orientar a explicação.
+Tutoria não herda runner obrigatório de outra skill. Se a tarefa mudar para execução,
+resolva a skill e sua [policy](../../hub_padroes/skill_enforcement/policy.json).
+O [Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers) descreve os helpers.
 
 ## Como preencher cada campo
 

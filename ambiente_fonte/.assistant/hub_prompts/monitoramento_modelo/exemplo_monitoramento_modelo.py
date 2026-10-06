@@ -4,9 +4,9 @@
 # MAGIC
 # MAGIC 📘 Guia local: [`README.md`](./README.md)
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Aqui somente o preparo
+# MAGIC executa código. O briefing é texto para a interação autorizada, e a
+# MAGIC resposta real deve ser registrada com evidência; continua pendente neste exemplo.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -20,14 +20,18 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | sessão Spark compatível com as fixtures e permissões de escrita no destino confirmado |
+# MAGIC | Bibliotecas | PySpark e pacote Hub importável; dependências de análise dependem da rota escolhida |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria/sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual` para o chat consultá-las |
-# MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
+# MAGIC | Escrita | **sim, overwrite** — sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual` |
+# MAGIC | Diferença Free × trabalho | fonte real exige autorização, revisão de dados sensíveis e contrato próprio; este preparo é sintético |
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC **Antes de executar a Parte 1 ou Run all:** o preparo sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`
+# MAGIC com `mode("overwrite")`. Confira destino e autorização; pode substituir dados
+# MAGIC existentes. Você pode usar o briefing sem executar o preparo. As fixtures não provam serving, inferências, tracking ou performance de modelo real.
+# MAGIC
 # MAGIC ## Parte 1 — preparo: a base que o prompt vai citar
 
 # COMMAND ----------
@@ -55,7 +59,7 @@ for nome, df in (("referência", base_ref), ("atual", base_atual)):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A prevalência caiu de ~0,18 para ~0,11 e a taxa de nulo triplicou. As duas mudanças são reais e têm causas diferentes: uma pode ser sazonalidade, a outra é quase certamente problema de carga. Um monitoramento que trata as duas igual gera alarme que ninguém lê.
+# MAGIC **Como ler.** A fixture solicita prevalências de 0,18 e 0,11 e nulidade de 0,04 e 0,12. Confira os valores calculados; as diferenças são plantadas no gerador. Em dados reais, sazonalidade ou problema de carga seriam hipóteses a investigar, não causas demonstradas por essas taxas.
 
 # COMMAND ----------
 # MAGIC %md
@@ -75,8 +79,8 @@ for nome, df in (("referência", base_ref), ("atual", base_atual)):
 # MAGIC negócio do modelo anexado, sem alterar produção.
 # MAGIC
 # MAGIC CONTEXTO
-# MAGIC - Modelo/run/version: LightGBM binário de propensão a resposta, em produção desde 2026-01
-# MAGIC - Serving endpoint, job ou pipeline: batch diário, escrita em tabela de score
+# MAGIC - Modelo/run/version: cenário ilustrativo de LightGBM de propensão; nenhum modelo real ou produção é comprovado por estas fixtures
+# MAGIC - Serving endpoint, job ou pipeline: batch diário PROPOSTO; endpoint/job/tabela de score reais NÃO INFORMADOS
 # MAGIC - Baseline de referência: workspace.default.hub_exemplo_monitor_ref, período de treino
 # MAGIC - Dados atuais e janela: workspace.default.hub_exemplo_monitor_atual, últimos 30 dias
 # MAGIC - Target/evento e atraso do rótulo: `alvo` observável 30 dias após a decisão — a performance do mês corrente ainda não existe
@@ -121,20 +125,20 @@ for nome, df in (("referência", base_ref), ("atual", base_atual)):
 # MAGIC
 # MAGIC O que falta   : colar aqui a resposta que o Genie Code deu ao prompt
 # MAGIC                 da Parte 2, num chat novo, com a base da Parte 1 criada.
-# MAGIC Por que não   : prompt produz resposta de assistente, e nenhum job
-# MAGIC                 reproduz isso. Resposta inventada é pior que resposta
-# MAGIC                 nenhuma — ensina que o assistente faz algo que ele não faz.
+# MAGIC Evidência    : nenhuma resposta desta interação foi registrada e revisada.
+# MAGIC                Não invente conteúdo para completar o exemplo. O preparo
+# MAGIC                não prova execução nem conclusão canônica da skill.
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria/sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`.
+# MAGIC 1. Se o preparo for necessário, confirme destino e autorização: ele sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre contexto e skill selecionados com evidência disponível.
+# MAGIC    Relato do assistente não comprova sozinho leitura, importação, chamada
+# MAGIC    ou conclusão; confira os artefatos exigidos pela rota da skill.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC

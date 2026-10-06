@@ -39,19 +39,19 @@ Comece com mapa mental, defina termos e avance ao detalhe; diferencie comportame
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, público e objetivo explícitos.
+Uma pessoa intermediária em SQL e iniciante em Spark quer entender por que `pit_join` considera atraso de publicação antes de adaptá-lo. A explicação deve distinguir data do evento, disponibilidade e decisão, sem executar o módulo ou modificar o notebook.
 
 ## 7. O que você precisa antes de usar?
 
-Tenha objeto/pergunta, nível, profundidade, objetivo, ambiente, contexto e restrições. Use `NÃO INFORMADO` para lacunas em vez de inventar defaults.
+Forneça objeto/pergunta, nível, profundidade, objetivo e ambiente/versão. Anexe o módulo inteiro quando pedir explicação integral: o preparo lê o arquivo local e **imprime só as 20 primeiras linhas**; isso não comprova que o chat recebeu o conteúdo completo.
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi proposto, executado ou validado.
+Solicita resposta direta conceitual, explicação em camadas, exemplo mínimo, armadilhas/checklist, duas perguntas de autoavaliação e referências pertinentes à versão. No exercício, a resposta direta não deve entregar a adaptação pronta antes de explicar o raciocínio; ensino e solução completa são entregas diferentes.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [tutor_explicar.md](tutor_explicar.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_tutor_explicar.py) demonstra o preenchimento. O exemplo é somente leitura de `pit_join.py`; nenhuma tabela é criada.
+Preencha [tutor_explicar.md](tutor_explicar.md) e siga a [skill Tutor](../../skills/hub-ml-tutor-databricks/SKILL.md). A orientação não exige runner de outra skill; consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) se o fluxo mudar. O [preparo](exemplo_tutor_explicar.py) lê `pit_join.py` sem criar tabela; sua impressão parcial não prova contexto integral. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +63,7 @@ Explicar código não lido, usar API obsoleta ou confundir tutoria com revisão.
 
 ## 12. Quais são as alternativas?
 
-Para editar documentação use `comentar_notebook`; para avaliar correção use auditoria/revisão.
+Use [Comentar Notebook](../comentar_notebook/README.md) para documentação e [Auditoria](../auditoria_skills/README.md) para aderência/correção sob contrato. Aprender um conceito não equivale a auditar execução.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +75,4 @@ O [briefing](tutor_explicar.md), o [notebook](exemplo_tutor_explicar.py) e o [ca
 
 ## 15. Referências
 
-A descrição foi confrontada com [tutor_explicar.md](tutor_explicar.md) e [exemplo_tutor_explicar.py](exemplo_tutor_explicar.py) na base R11. Para comportamento atual de Genie Code, Agent Skills e instruções, consulte a documentação oficial do Databricks antes de operar em produção.
+O [briefing](tutor_explicar.md) define os campos e a entrega; o [notebook](exemplo_tutor_explicar.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

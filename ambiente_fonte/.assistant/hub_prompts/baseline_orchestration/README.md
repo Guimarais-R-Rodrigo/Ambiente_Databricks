@@ -4,6 +4,8 @@
 
 Briefing para estruturar baseline de ml. O prompt organiza o pedido, mas não executa a tarefa sozinho.
 
+**Antes de executar o preparo:** ele sobrescreve `workspace.default.hub_exemplo_clientes` com `mode("overwrite")`. Esse destino também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check: executar um exemplo pode substituir a base de outro. Use o briefing sem executar o preparo quando só precisar do texto.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -31,7 +33,7 @@ Use quando target, cutoff e split já definidos. Criar referência simples antes
 
 ## 4. Quando não usar?
 
-Evite quando target ou ponto no tempo ainda ambíguos. Gerar texto ou código não valida premissas ausentes.
+Target, cutoff ou split desconhecidos permitem diagnóstico, perguntas e plano condicionado. Não autorizam treino nem a conclusão de ausência de leakage. Não use o briefing para apresentar um baseline como modelo final aprovado.
 
 ## 5. Como funciona, intuitivamente?
 
@@ -39,7 +41,7 @@ Declare o instante da decisão e o que podia ser usado; compare baseline ingênu
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, período e unidade de análise explícitos.
+O exemplo pede um classificador de resposta a campanha sobre uma fixture de 4.000 linhas, com split temporal, alvo binário e modo **plano e código; não execute**. Preparar a tabela não treina o modelo. O período e a chave declarados ainda devem ser confrontados com a fonte antes de um experimento.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +49,11 @@ Tenha dataset, unidade/chave, target, cutoff, horizonte, split e métrica. Use `
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi apenas proposto, executado ou validado.
+O briefing solicita framing e pressupostos; candidatos com justificativa; código quando pedido; resultados por split, tempo e segmento; comparação com baseline ingênuo; erros, reprodutibilidade e próximos experimentos. Métricas observadas só são preenchidas após execução real; em modo plano, permanecem `NÃO EXECUTADO`.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [baseline_orchestration.md](baseline_orchestration.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_baseline_orchestration.py) demonstra o preenchimento. O exemplo sobrescreve `workspace.default.hub_exemplo_clientes`.
+Leia [baseline_orchestration.md](baseline_orchestration.md) e confira os efeitos do [exemplo](exemplo_baseline_orchestration.py) antes do preparo. Siga a [skill correspondente](../../skills/hub-ml-baseline-ml/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. O perfil `BINARY_TEMPORAL_LOCAL_V1` é uma rota sintética delimitada; tracking pessoal usa autorização própria `SER10-AUTH-1`. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing. O notebook tradicional não demonstra essas rotas e sua Parte 3 permanece **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +65,7 @@ Leakage entre splits, preprocessing fora do treino e holdout reutilizado. A inst
 
 ## 12. Quais são as alternativas?
 
-Use `eda_completa` antes dos dados estarem compreendidos; use `feature_engineering` antes do treino quando faltarem atributos.
+Use [EDA completa](../eda_completa/README.md) para compreender a fonte e [Feature Engineering](../feature_engineering/README.md) para especificar atributos antes do treino.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +77,4 @@ O [briefing](baseline_orchestration.md), o [notebook](exemplo_baseline_orchestra
 
 ## 15. Referências
 
-A descrição foi confrontada com [baseline_orchestration.md](baseline_orchestration.md) e [exemplo_baseline_orchestration.py](exemplo_baseline_orchestration.py) na base R11. Para comportamento de plataforma, consulte a documentação oficial atual do Databricks antes de operar em produção.
+O [briefing](baseline_orchestration.md) define os campos e a entrega; o [notebook](exemplo_baseline_orchestration.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

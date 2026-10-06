@@ -4,6 +4,8 @@
 
 Briefing para monitoramento técnico, de dados, drift e performance. O prompt organiza o pedido, mas não executa a tarefa sozinho.
 
+**Preparo persistente:** o notebook sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`. Ler e preencher o briefing não exige executar essas células.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -11,7 +13,7 @@ Briefing para monitoramento técnico, de dados, drift e performance. O prompt or
 | O que é? | Briefing para monitoramento técnico, de dados, drift e performance. |
 | Para que serve? | Ligar baseline, janela, atraso do rótulo, direção das métricas e owners. |
 | Use quando... | Modelo, referência e janelas podem ser identificados. |
-| Evite quando... | Rótulo ainda não maturou ou limite foi copiado sem calibração. |
+| Evite quando... | A conclusão exige performance com rótulos imaturos ou um limite sem calibração. |
 | Precisa de... | Modelo, caminho de inferência, baseline, janela, label delay, métricas, segmentos e owners. |
 | Entrega... | Briefing estruturado; evidências dependem da interação real. |
 
@@ -31,7 +33,7 @@ Use quando modelo, referência e janelas podem ser identificados. Ligar baseline
 
 ## 4. Quando não usar?
 
-Evite quando rótulo ainda não maturou ou limite foi copiado sem calibração. Gerar texto ou código não valida premissas ausentes.
+Não conclua performance preditiva com rótulos imaturos. Ainda é possível desenhar monitoramento e observar saúde operacional, cobertura/latência de rótulos e drift, com limites explícitos. Limite copiado sem calibração permanece proposta, não regra de incidente.
 
 ## 5. Como funciona, intuitivamente?
 
@@ -39,7 +41,7 @@ Separe saúde operacional, dados, drift, performance e negócio; alinhe prediç�
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, período e unidade de análise explícitos.
+Comparar duas janelas sintéticas com prevalência e nulidade diferentes, enquanto o rótulo do período atual só amadurece após 30 dias. Pedir desenho e diagnóstico de drift; performance atual fica pendente. As tabelas não comprovam predição ou serving de um modelo real.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +49,13 @@ Tenha modelo, caminho de inferência, baseline, janela, label delay, métricas, 
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi apenas proposto, executado ou validado.
+Solicita mapa de monitoramento; catálogo de métricas com fórmula, fonte, janela, direção, limite e owner; diagnóstico com evidência e severidade; código opcional; e runbook de investigação, rollback e eventual retreino. Incidente, variação esperada e causa hipotética são separados.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [monitoramento_modelo.md](monitoramento_modelo.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_monitoramento_modelo.py) demonstra o preenchimento. O código do exemplo sobrescreve `hub_exemplo_monitor_ref` e `hub_exemplo_monitor_atual`; a prosa antiga citava outro nome.
+Preencha [monitoramento_modelo.md](monitoramento_modelo.md). Siga a [skill correspondente](../../skills/hub-ml-monitoramento-modelo/SKILL.md) e consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json): `current_level` descreve a capacidade vigente; `target_level` não autoriza promoção. Os perfis `DRIFT_NUMERIC_LOCAL_V1` e `BINARY_MATURE_PERFORMANCE_V1` tratam escopos diferentes; performance exige labels maduras e sua finalização/verificação próprias. O perfil implementado tem escopo e evidência próprios; não equivale a homologação de todo pedido deste briefing.
+
+O [exemplo](exemplo_monitoramento_modelo.py) sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`. Não prova inferências, serving, métricas ou tracking de um modelo real. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +67,7 @@ Performance sobre rótulo imaturo, `abs(delta)` e retreino por um único ponto. 
 
 ## 12. Quais são as alternativas?
 
-Para qualidade use `data_quality`; para performance inicial use baseline.
+Para checks de dados, use [Qualidade](../data_quality/README.md); para avaliação inicial de modelo, [Baseline](../baseline_orchestration/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +79,4 @@ O [briefing](monitoramento_modelo.md), o [notebook](exemplo_monitoramento_modelo
 
 ## 15. Referências
 
-A descrição foi confrontada com [monitoramento_modelo.md](monitoramento_modelo.md) e [exemplo_monitoramento_modelo.py](exemplo_monitoramento_modelo.py) na base R11. Para comportamento de plataforma, consulte a documentação oficial atual do Databricks antes de operar em produção.
+O [briefing](monitoramento_modelo.md) define os campos e a entrega; o [notebook](exemplo_monitoramento_modelo.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

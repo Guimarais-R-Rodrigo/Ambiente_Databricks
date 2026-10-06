@@ -73,11 +73,9 @@ Não interprete texto bem organizado como prova de execução. Confirme comandos
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [eda_rapida.md](eda_rapida.md), leia o guia e preencha o bloco original. Selecione o contexto real na interface e indique a skill recomendada pelo formulário, `hub-ml-eda-profissional`, pelo mecanismo disponível. Antes de permitir ações, confirme o plano e o alcance de execução que você autorizou.
+Preencha [eda_rapida.md](eda_rapida.md) e selecione contexto real. Quando `hub-ml-eda-profissional` for selecionada para executar a EDA protegida, siga a [rota canônica](../../skills/hub-ml-eda-profissional/SKILL.md): `run_enforced` coleta evidência e emite Receipt; depois o handoff deve ser finalizado por `finalize_or_raise`. Exija Postflight `PASS` e `completion.authorized=true` antes de declarar conclusão. `PENDING_POSTFLIGHT` é transitório, não sucesso. Rapidez reduz profundidade opcional; não dispensa gates nem autoriza helper/SQL manual como bypass. Campos essenciais ausentes permanecem pendentes, sem inventar chave ou dados. Consulte a [policy vigente](../../hub_padroes/skill_enforcement/policy.json).
 
-O [notebook](exemplo_eda_rapida.py) tem preparo sintético, um pedido preenchido e um espaço para registrar a interação real. O preparo chama `write.mode("overwrite").saveAsTable("workspace.default.hub_exemplo_clientes")`: pode substituir uma tabela existente. **Não execute esse preparo em recurso compartilhado sem autorização específica e conferência do destino.** Um ambiente de teste não torna qualquer nome seguro por definição.
-
-O limite de não escrever, presente no prompt, não protege contra a escrita das células preparatórias do notebook. Você pode estudar o formulário e o cenário sem executar essas células. A resposta real de Genie Code permanece marcada como não executada no exemplo; esta sprint não simula essa interação nem preenche a lacuna com uma resposta inventada.
+O [notebook](exemplo_eda_rapida.py) contém preparo sintético, briefing e resposta pendente. O preparo sobrescreve `workspace.default.hub_exemplo_clientes`. A restrição de leitura do chat não impede essa escrita. É possível estudar o cenário sem executá-lo. Parte 3: **NÃO EXECUTADO**.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -97,17 +95,13 @@ O cenário do notebook usa dados sintéticos e contém uma escrita persistente s
 
 ## 12. Quais são as alternativas?
 
-Para executar diretamente um perfil com saída estruturada, examine o [script quick_profile](../../hub_scripts/quick_profile/README.md). Ele tem uma implementação definida, mas seu escopo não é equivalente à investigação conduzida pelo assistente.
-
-Para explorar relações e aprofundar hipóteses, consulte o [prompt eda_completa](../eda_completa/eda_completa.md). Para regras de qualidade já conhecidas, considere [data_quality](../data_quality/data_quality.md) ou checks diretos. Escolha pelo tipo de pergunta e pelo que falta comprovar, não apenas pelo tamanho do prompt.
+[quick_profile](../../hub_scripts/quick_profile/README.md) ou um check SQL direto podem atender a um diagnóstico determinístico independente. Não substituem a rota canônica de uma EDA já selecionada, nem com disclaimer. Para aprofundar, use [EDA completa](../eda_completa/README.md); para regras, [Qualidade](../data_quality/README.md).
 
 ## 13. Como saber se o resultado faz sentido?
 
-Releia “O que conferir na resposta” no formulário original. Confira que recurso, população, grão e período são os que você forneceu. Peça a evidência dos achados materiais: consulta, contagem, denominador, amostragem e limitações.
+Confira recurso, população consultada, grão, período, contagem, denominador e amostragem. Uma chave candidata só se torna verificada com o check correspondente. Achado observado, hipótese e sugestão devem estar separados.
 
-Procure uma conclusão que a resposta tenha tratado como fato e verifique sua sustentação. Se ela disser que a chave é única, há uma checagem correspondente sobre a população relevante? Se propuser correção, está distinguindo sugestão de alteração já executada?
-
-Uma evidência ausente pede investigação adicional ou uma conclusão mais estreita. Não aprove o resultado por sua fluência, nem exija uma certeza que os dados e o contexto disponíveis não podem oferecer.
+**Concluir ou registrar pendência:** `PENDING_POSTFLIGHT` exige handoff e `finalize_or_raise`; conclusão depende de Postflight `PASS` e `completion.authorized=true`. Falha ou entrada material ausente mantém a execução não concluída. Não produza dados para satisfazer o gate.
 
 ## 14. Arquivos relacionados e próximos passos
 
@@ -117,6 +111,4 @@ Depois do primeiro perfil, transforme os achados em checagens concretas, mantend
 
 ## 15. Referências
 
-O formulário e o notebook vinculados sustentam o contrato local, revisado na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`, em 12/09/2026. Os blocos coláveis foram preservados; não foi executada a interação Genie Code nem a escrita persistente da demonstração.
-
-As páginas oficiais de [navegação do Genie Code](https://docs.databricks.com/aws/en/genie-code/navigate-genie-code) e [modo agente](https://docs.databricks.com/aws/en/genie-code/agent-mode), consultadas em 12/09/2026, fundamentam as distinções de contexto e execução. Elas descrevem a plataforma, não homologam este prompt customizado.
+O [briefing](eda_rapida.md) define os campos e a entrega; o [notebook](exemplo_eda_rapida.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.

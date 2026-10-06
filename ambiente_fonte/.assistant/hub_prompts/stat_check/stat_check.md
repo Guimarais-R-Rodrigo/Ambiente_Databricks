@@ -3,10 +3,10 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe dataset, notebook e desenho
 > experimental com **Add context**/`@`. Skill: `@hub-ml-validacao-estatistica`.
 
-Antes de pedir código, veja os helpers que a skill recomendada declara: boa
-parte do que este formulário pede já tem implementação verificada, e usá-la
-evita que a lógica seja reescrita a cada conversa. Mapa completo em
-[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
+Antes de executar, siga a [skill selecionada](../../skills/hub-ml-validacao-estatistica/SKILL.md),
+a [policy vigente](../../hub_padroes/skill_enforcement/policy.json) e o contrato
+da rota suportada. Helpers são componentes dessa rota, não um bypass. O
+[Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers) é o catálogo integrado.
 
 ## Antes de usar
 

@@ -4,9 +4,9 @@
 # MAGIC
 # MAGIC 📘 Guia local: [`README.md`](./README.md)
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Aqui somente o preparo
+# MAGIC executa código. O briefing é texto para a interação autorizada, e a
+# MAGIC resposta real deve ser registrada com evidência; continua pendente neste exemplo.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -20,14 +20,20 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | sessão Spark compatível com as fixtures e permissões de escrita no destino confirmado |
+# MAGIC | Bibliotecas | PySpark e pacote Hub importável; dependências de análise dependem da rota escolhida |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria a tabela `workspace.default.hub_exemplo_clientes` para o chat poder consultá-la |
-# MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
+# MAGIC | Escrita | **sim, overwrite** — sobrescreve `workspace.default.hub_exemplo_clientes` |
+# MAGIC | Diferença Free × trabalho | fonte real exige autorização, revisão de dados sensíveis e contrato próprio; este preparo é sintético |
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC **Antes de executar a Parte 1 ou Run all:** o preparo sobrescreve `workspace.default.hub_exemplo_clientes`
+# MAGIC com `mode("overwrite")`. Confira destino e autorização; pode substituir dados
+# MAGIC existentes. Você pode usar o briefing sem executar o preparo. O preparo não treina modelo nem calcula SHAP.
+# MAGIC
+# MAGIC O nome também é usado por EDA, Baseline, Explainability, Novo Projeto, Pipeline e Stat Check.
+# MAGIC
 # MAGIC ## Parte 1 — preparo: a base que o prompt vai citar
 
 # COMMAND ----------
@@ -69,14 +75,15 @@ base.show(5, truncate=False)
 # MAGIC objetivo, o público e as limitações do método.
 # MAGIC
 # MAGIC CONTEXTO
-# MAGIC - Modelo/MLflow run/URI: LightGBM binário, treinado com `hub_snippets.ml.train_lgbm` sobre a base da Parte 1
+# MAGIC - Modelo/MLflow run/URI: LightGBM binário PRETENDIDO; nenhum modelo foi treinado na Parte 1. Artefato/run/URI: NÃO INFORMADO; produzir somente plano.
 # MAGIC - Dataset e split: workspace.default.hub_exemplo_clientes; treino até 2026-04, teste em 2026-05/06
 # MAGIC - Target/evento positivo: `alvo` = 1 quando o cliente respondeu à campanha
 # MAGIC - Objetivo da explicação: global e comunicação; o caso individual entra só como exemplo
 # MAGIC - Público e nível técnico: dois: um resumo para o gestor da campanha e uma seção técnica para o time de modelagem
 # MAGIC - Métodos desejados: SHAP; proponha alternativa se o custo for alto
 # MAGIC - Amostra/segmentos/período: amostra de 1.000 linhas do teste; sem segmentação
-# MAGIC - Features proibidas/PII: serverless; `shap` exige `%pip install shap==0.44.1` — ver `hub_snippets/requirements-optional.txt`
+# MAGIC - Features proibidas/PII: NÃO INFORMADO; não expor registros individuais
+# MAGIC - Ambiente/dependências: serverless; conferir SHAP e a versão compatível em `hub_snippets/requirements-optional.txt`; instalação requer autorização separada
 # MAGIC - Modo: plano e código; não execute
 # MAGIC
 # MAGIC FLUXO
@@ -114,20 +121,20 @@ base.show(5, truncate=False)
 # MAGIC
 # MAGIC O que falta   : colar aqui a resposta que o Genie Code deu ao prompt
 # MAGIC                 da Parte 2, num chat novo, com a base da Parte 1 criada.
-# MAGIC Por que não   : prompt produz resposta de assistente, e nenhum job
-# MAGIC                 reproduz isso. Resposta inventada é pior que resposta
-# MAGIC                 nenhuma — ensina que o assistente faz algo que ele não faz.
+# MAGIC Evidência    : nenhuma resposta desta interação foi registrada e revisada.
+# MAGIC                Não invente conteúdo para completar o exemplo. O preparo
+# MAGIC                não prova execução nem conclusão canônica da skill.
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `workspace.default.hub_exemplo_clientes`.
+# MAGIC 1. Se o preparo for necessário, confirme destino e autorização: ele sobrescreve `workspace.default.hub_exemplo_clientes`.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre contexto e skill selecionados com evidência disponível.
+# MAGIC    Relato do assistente não comprova sozinho leitura, importação, chamada
+# MAGIC    ou conclusão; confira os artefatos exigidos pela rota da skill.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC

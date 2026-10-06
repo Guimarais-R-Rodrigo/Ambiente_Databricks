@@ -53,7 +53,7 @@ O Hub Prompts aplica essa disciplina ao desenvolvimento assistido por IA:
 
 ## 🏗️ A Anatomia de uma Pasta de Prompt
 
-Seguindo o padrão de organização **Pasta de Objeto**, cada demanda do Hub Prompts possui uma pasta autossuficiente com dois arquivos centrais:
+Seguindo o padrão de organização **Pasta de Objeto**, cada demanda do Hub Prompts possui uma pasta autossuficiente com três componentes:
 
 ```text
 hub_prompts/
@@ -161,13 +161,19 @@ Os templates usam três convenções de preenchimento:
 
 ---
 
-## 🔄 A Sinergia Triangular: Prompts, Skills e Helpers
+## Do briefing à execução verificável
 
-O Hub Prompts não opera isoladamente. Ele fornece o contexto do problema; uma skill pode fornecer a metodologia; snippets e scripts podem fornecer implementações reutilizáveis.
+O percurso é **briefing → skill selecionada → policy/contrato → rota vigente → helpers**.
+O briefing informa o problema; a skill define método e artefatos exigidos; os helpers
+são componentes reutilizáveis. Importar um módulo não prova que foi chamado ou concluído.
 
-- **O Briefing (Prompt):** fornece objetivo, contexto de negócio, recursos e parâmetros.
-- **O Maestro (Skill):** orienta o fluxo metodológico e os guardrails, quando carregada por relevância ou selecionada por `@`.
-- **Os Instrumentos (Snippets & Scripts):** oferecem código reutilizável; não são importados nem executados automaticamente pela skill.
+Consulte a [policy](../hub_padroes/skill_enforcement/policy.json): `current_level`
+é o nível vigente; `target_level` é direção futura, sem autorização de promoção.
+Cada skill tem seu próprio escopo. A [EDA protegida](../skills/hub-ml-eda-profissional/SKILL.md)
+exige `run_enforced`, Receipt, handoff e `finalize_or_raise`, com Postflight `PASS`
+e `completion.authorized=true` para concluir. SQL/PySpark manual que produz números
+semelhantes não substitui essa rota. Essa exigência não se generaliza a toda
+comparação independente, Cross-EDA ou skill em outro nível.
 
 ---
 
@@ -185,7 +191,7 @@ hub_prompts/
 └── 📚 Documentação, Tutoria & Onboarding
 ```
 
-> **Nota de leitura:** essa árvore é uma organização **conceitual deste README**. Fisicamente, os 16 objetos ficam diretamente em `hub_prompts/<nome>/`.
+> **Nota de leitura:** essa árvore é uma organização **conceitual deste README**. Fisicamente, os 18 briefings ficam diretamente em `hub_prompts/<nome>/`.
 
 ![Roteador editorial que relaciona quatro tipos de resultado às famílias de briefing adequadas.](../hub_readmes_visual_assets/readmes/prompts/png/01_mapa_familias.png)
 
@@ -204,6 +210,8 @@ hub_prompts/
 | “Como transformar em processo?” | `pipeline` ou `novo_projeto` | implementação e onboarding |
 | “Como revisar, ensinar ou documentar?” | `auditoria_skills`, `tutor_explicar` ou `comentar_notebook` | governança e comunicação |
 | “A evidência sustenta a hipótese?” | `stat_check` | validação estatística |
+| “Que características valeria investigar?” | [descobrir_micromodelos](descobrir_micromodelos/README.md) | descoberta metadata |
+| “Já sei a decisão; como especificar a característica?” | [micromodelo_novo](micromodelo_novo/README.md) | especificação de domínio |
 
 ### Legenda dos campos de cada briefing
 
@@ -252,7 +260,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **O usuário precisa informar:** recurso, objetivo, foco, chave candidata, coluna temporal, filtros e limite de custo/tempo.
 - **Cenário de Uso:**
   > *“Recebi acesso a uma tabela nova. Antes de propor uma análise, preciso entender estrutura, qualidade e bloqueios.”*
-- **Arquivos:** `hub_prompts/eda_rapida/eda_rapida.md` · `hub_prompts/eda_rapida/exemplo_eda_rapida.py` · [README local](eda_rapida/README.md)
+- **Arquivos:** [briefing](eda_rapida/eda_rapida.md) · [exemplo](eda_rapida/exemplo_eda_rapida.py) · [README local](eda_rapida/README.md)
 
 #### `eda_completa` — Análise Exploratória Profunda
 
@@ -261,7 +269,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **O usuário precisa informar:** recurso, target, segmentos, janela, regras e restrições.
 - **Cenário de Uso:**
   > *“Vamos construir um modelo de propensão e preciso avaliar as features candidatas antes do pré-processamento.”*
-- **Arquivos:** `hub_prompts/eda_completa/eda_completa.md` · `hub_prompts/eda_completa/exemplo_eda_completa.py` · [README local](eda_completa/README.md)
+- **Arquivos:** [briefing](eda_completa/eda_completa.md) · [exemplo](eda_completa/exemplo_eda_completa.py) · [README local](eda_completa/README.md)
 
 #### `cross_eda` — Exploração Cruzada Multi-Tabelas
 
@@ -270,7 +278,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **O usuário precisa informar:** tabelas, chaves, período, grão e resultado esperado do relacionamento.
 - **Cenário de Uso:**
   > *“Quero cruzar cadastro e transações e medir correspondência, perda e multiplicação antes da tabela final.”*
-- **Arquivos:** `hub_prompts/cross_eda/cross_eda.md` · `hub_prompts/cross_eda/exemplo_cross_eda.py` · [README local](cross_eda/README.md)
+- **Arquivos:** [briefing](cross_eda/cross_eda.md) · [exemplo](cross_eda/exemplo_cross_eda.py) · [README local](cross_eda/README.md)
 
 ---
 
@@ -282,7 +290,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-analise-safra`.
 - **Cenário de Uso:**
   > *“Quero comparar a inadimplência de contratos originados em meses diferentes após maturidade equivalente.”*
-- **Arquivos:** `hub_prompts/safra/safra.md` · `hub_prompts/safra/exemplo_safra.py` · [README local](safra/README.md)
+- **Arquivos:** [briefing](safra/safra.md) · [exemplo](safra/exemplo_safra.py) · [README local](safra/README.md)
 
 #### `stat_check` — Validação Estatística de Hipóteses
 
@@ -290,7 +298,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-validacao-estatistica`.
 - **Cenário de Uso:**
   > *“Quero avaliar se a diferença observada em um teste A/B é estatisticamente e materialmente relevante.”*
-- **Arquivos:** `hub_prompts/stat_check/stat_check.md` · `hub_prompts/stat_check/exemplo_stat_check.py` · [README local](stat_check/README.md)
+- **Arquivos:** [briefing](stat_check/stat_check.md) · [exemplo](stat_check/exemplo_stat_check.py) · [README local](stat_check/README.md)
 
 #### `feature_engineering` — Engenharia de Atributos Temporais
 
@@ -298,7 +306,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-feature-engineering`.
 - **Cenário de Uso:**
   > *“Quero calcular comportamento em 30, 60 e 90 dias usando apenas dados disponíveis até a decisão.”*
-- **Arquivos:** `hub_prompts/feature_engineering/feature_engineering.md` · `hub_prompts/feature_engineering/exemplo_feature_engineering.py` · [README local](feature_engineering/README.md)
+- **Arquivos:** [briefing](feature_engineering/feature_engineering.md) · [exemplo](feature_engineering/exemplo_feature_engineering.py) · [README local](feature_engineering/README.md)
 
 #### `baseline_orchestration` — Modelo Baseline Ponta a Ponta
 
@@ -306,7 +314,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-baseline-ml`.
 - **Cenário de Uso:**
   > *“Preciso validar a esteira e estabelecer uma linha de base reproduzível antes de otimizar modelos.”*
-- **Arquivos:** `hub_prompts/baseline_orchestration/baseline_orchestration.md` · `hub_prompts/baseline_orchestration/exemplo_baseline_orchestration.py` · [README local](baseline_orchestration/README.md)
+- **Arquivos:** [briefing](baseline_orchestration/baseline_orchestration.md) · [exemplo](baseline_orchestration/exemplo_baseline_orchestration.py) · [README local](baseline_orchestration/README.md)
 
 #### `pipeline` — Construção de Pipelines Modulares
 
@@ -314,7 +322,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-pipeline-builder`.
 - **Cenário de Uso:**
   > *“Quero decompor um notebook monolítico em etapas testáveis e preparar sua automação.”*
-- **Arquivos:** `hub_prompts/pipeline/pipeline.md` · `hub_prompts/pipeline/exemplo_pipeline.py` · [README local](pipeline/README.md)
+- **Arquivos:** [briefing](pipeline/pipeline.md) · [exemplo](pipeline/exemplo_pipeline.py) · [README local](pipeline/README.md)
 
 #### `explainability` — Explicabilidade de Modelos de ML
 
@@ -322,7 +330,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-explainability`.
 - **Cenário de Uso:**
   > *“Preciso entender quais variáveis influenciaram o comportamento do modelo e comunicar as limitações da análise.”*
-- **Arquivos:** `hub_prompts/explainability/explainability.md` · `hub_prompts/explainability/exemplo_explainability.py` · [README local](explainability/README.md)
+- **Arquivos:** [briefing](explainability/explainability.md) · [exemplo](explainability/exemplo_explainability.py) · [README local](explainability/README.md)
 
 #### `monitoramento_modelo` — Acompanhamento de Performance e Drift
 
@@ -330,7 +338,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-monitoramento-modelo`.
 - **Cenário de Uso:**
   > *“Quero investigar se a população ou a performance mudou e produzir evidência para decidir o próximo passo.”*
-- **Arquivos:** `hub_prompts/monitoramento_modelo/monitoramento_modelo.md` · `hub_prompts/monitoramento_modelo/exemplo_monitoramento_modelo.py` · [README local](monitoramento_modelo/README.md)
+- **Arquivos:** [briefing](monitoramento_modelo/monitoramento_modelo.md) · [exemplo](monitoramento_modelo/exemplo_monitoramento_modelo.py) · [README local](monitoramento_modelo/README.md)
 
 ---
 
@@ -342,7 +350,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-eda-profissional`.
 - **Cenário de Uso:**
   > *“Antes de disponibilizar uma tabela, quero verificar chaves, nulos, intervalos e regras de domínio.”*
-- **Arquivos:** `hub_prompts/data_quality/data_quality.md` · `hub_prompts/data_quality/exemplo_data_quality.py` · [README local](data_quality/README.md)
+- **Arquivos:** [briefing](data_quality/data_quality.md) · [exemplo](data_quality/exemplo_data_quality.py) · [README local](data_quality/README.md)
 
 #### `comparar_tabelas` — Reconciliação entre Bases de Dados
 
@@ -350,7 +358,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** Genie Code ou `@hub-ml-cross-eda-ml`, conforme o foco.
 - **Cenário de Uso:**
   > *“Quero reconciliar uma saída legada com a nova implementação e localizar divergências.”*
-- **Arquivos:** `hub_prompts/comparar_tabelas/comparar_tabelas.md` · `hub_prompts/comparar_tabelas/exemplo_comparar_tabelas.py` · [README local](comparar_tabelas/README.md)
+- **Arquivos:** [briefing](comparar_tabelas/comparar_tabelas.md) · [exemplo](comparar_tabelas/exemplo_comparar_tabelas.py) · [README local](comparar_tabelas/README.md)
 
 #### `auditoria_skills` — Auditoria de Código Gerado por IA
 
@@ -358,19 +366,19 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-auditoria-skills`.
 - **Cenário de Uso:**
   > *“Antes de aceitar um notebook gerado com IA, quero revisar segurança, temporalidade, custo e aderência ao contrato.”*
-- **Arquivos:** `hub_prompts/auditoria_skills/auditoria_skills.md` · `hub_prompts/auditoria_skills/exemplo_auditoria_skills.py` · [README local](auditoria_skills/README.md)
+- **Arquivos:** [briefing](auditoria_skills/auditoria_skills.md) · [exemplo](auditoria_skills/exemplo_auditoria_skills.py) · [README local](auditoria_skills/README.md)
 
 ---
 
 ### 📚 Documentação, Tutoria & Onboarding
 
-#### `comentar_notebook` — Refatoração e Documentação Didática
+#### `comentar_notebook` — Revisão e documentação de notebooks
 
 - **O que faz:** orienta cabeçalhos, contexto antes do código, comentários e interpretação depois da execução.
 - **Skill recomendada:** `@hub-ml-comentar-notebook`.
 - **Cenário de Uso:**
   > *“Quero tornar um notebook denso compreensível para a equipe sem alterar silenciosamente sua lógica.”*
-- **Arquivos:** `hub_prompts/comentar_notebook/comentar_notebook.md` · `hub_prompts/comentar_notebook/exemplo_comentar_notebook.py` · [README local](comentar_notebook/README.md)
+- **Arquivos:** [briefing](comentar_notebook/comentar_notebook.md) · [exemplo](comentar_notebook/exemplo_comentar_notebook.py) · [README local](comentar_notebook/README.md)
 
 #### `tutor_explicar` — Mentoria Técnica e Explicabilidade de Código
 
@@ -378,7 +386,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** `@hub-ml-tutor-databricks`.
 - **Cenário de Uso:**
   > *“Quero entender como o plano Spark, o particionamento e o join se relacionam com a lentidão observada.”*
-- **Arquivos:** `hub_prompts/tutor_explicar/tutor_explicar.md` · `hub_prompts/tutor_explicar/exemplo_tutor_explicar.py` · [README local](tutor_explicar/README.md)
+- **Arquivos:** [briefing](tutor_explicar/tutor_explicar.md) · [exemplo](tutor_explicar/exemplo_tutor_explicar.py) · [README local](tutor_explicar/README.md)
 
 #### `novo_projeto` — Kick-off Estruturado de Projetos de Dados
 
@@ -386,7 +394,7 @@ Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o o
 - **Skill recomendada:** Genie Code; selecione uma skill especializada depois que a natureza da entrega estiver clara.
 - **Cenário de Uso:**
   > *“Vamos iniciar um projeto de precificação e quero organizar perguntas, escopo, dependências e plano antes de criar artefatos.”*
-- **Arquivos:** `hub_prompts/novo_projeto/novo_projeto.md` · `hub_prompts/novo_projeto/exemplo_novo_projeto.py` · [README local](novo_projeto/README.md)
+- **Arquivos:** [briefing](novo_projeto/novo_projeto.md) · [exemplo](novo_projeto/exemplo_novo_projeto.py) · [README local](novo_projeto/README.md)
 
 ---
 
@@ -460,11 +468,11 @@ Quando mudar materialmente o objetivo, os dados, a fase ou a skill recém-editad
 
 ### 5. Minha equipe pode criar novos modelos de briefing?
 
-Sim. Use o padrão `<nome>/<nome>.md` e `<nome>/exemplo_<nome>.py`, explique cada campo e inclua limites, saída e checklist. A skill `@hub-ml-criar-objeto` pode orientar a estrutura, mas criar arquivos continua sendo uma ação explícita.
+Sim. Inclua `<nome>/README.md`, `<nome>/<nome>.md` e `<nome>/exemplo_<nome>.py`, explique cada campo e inclua limites, saída e checklist. A skill `@hub-ml-criar-objeto` pode orientar a estrutura, mas criar arquivos continua sendo uma ação explícita.
 
 ### 6. O prompt carrega a skill e os helpers automaticamente?
 
-Não. A skill pode ser selecionada por relevância ou `@`. Snippets e scripts precisam ser importados pelo notebook. O prompt apenas fornece contexto e instruções.
+Não. O briefing fornece contexto. Após seleção, a rota da skill governa como os recursos são localizados, importados, chamados e verificados. Um import isolado não comprova execução ou conclusão.
 
 ---
 
@@ -476,14 +484,21 @@ Não. A skill pode ser selecionada por relevância ou `@`. Snippets e scripts pr
 - [Boas práticas de prompting na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
 - [Funcionalidades da Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/features-capabilities)
 
-## Guias locais por objeto
+## Guias locais e estado dos exemplos
 
-Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
-limites antes do exemplo. A migração dos legados é gradual. O
-[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
-leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
-do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+Cada pasta contém guia, briefing e exemplo. Comece pelo guia, confira as entradas
+e leia os efeitos do preparo antes de executar. Há **18 briefings**: os 16 exemplos
+conversacionais tradicionais permanecem **NÃO EXECUTADO**; os dois de Micromodelos
+registram conversas E1 delimitadas, com ressalvas próprias. Uma evidência não
+completa nem homologa os demais casos.
 
-No piloto R02, o [guia de eda_rapida](eda_rapida/README.md) explica quando
-usar o briefing e como avaliar sua resposta. Leia também o aviso de overwrite
-do notebook: o preparo escreve uma tabela, separadamente do pedido de leitura.
+- [Descobrir Micromodelos](descobrir_micromodelos/README.md): [briefing](descobrir_micromodelos/descobrir_micromodelos.md) e [exemplo](descobrir_micromodelos/exemplo_descobrir_micromodelos.py), para shortlist metadata-only.
+- [Micromodelo Novo](micromodelo_novo/README.md): [briefing](micromodelo_novo/micromodelo_novo.md) e [exemplo](micromodelo_novo/exemplo_micromodelo_novo.py), para objetivo conhecido e lacunas da especificação.
+
+**Preparo pode escrever mesmo em pedido “somente plano”.** EDA, Baseline,
+Explainability, Novo Projeto, Pipeline e Stat Check compartilham o destino
+`workspace.default.hub_exemplo_clientes`; Cross-EDA e Feature Engineering compartilham
+`workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features`.
+Os notebooks usam overwrite: confira colisões e autorização antes da Parte 1 ou Run all.
+Outros destinos estão declarados nos respectivos exemplos. Ler/preencher o briefing
+não exige executar essas células.

@@ -39,7 +39,7 @@ Mapeie entradas, saídas e efeitos; depois altere somente a camada documental pe
 
 ## 6. Exemplo de situação
 
-Preencha o briefing com um caso real equivalente ao cenário demonstrado no notebook, mantendo recursos, público e objetivo explícitos.
+Revisar `exemplo_pit_join.py` para uma pessoa experiente em SQL e iniciante em Spark, tornando explícitos o propósito do join e o risco temporal. No modo REVISÃO, entregar sugestões; editar Markdown exige modo autorizado, preservando lógica e ordem das células.
 
 ## 7. O que você precisa antes de usar?
 
@@ -47,11 +47,11 @@ Tenha notebook/células, modo, público, profundidade, objetivo, convenções e 
 
 ## 8. O que este recurso entrega?
 
-Entrega um pedido estruturado. O contrato do briefing lista os artefatos esperados; confira separadamente o que foi proposto, executado ou validado.
+Solicita resumo das sugestões ou mudanças, inputs/outputs, dependências e execução segura, riscos, elementos preservados e validações não realizadas. No modo REVISÃO, não promete notebook reescrito. Output não observado deve ficar pendente, nunca inventado para preencher um template.
 
 ## 9. Como usar este recurso no Hub?
 
-Abra [comentar_notebook.md](comentar_notebook.md), preencha os campos e selecione recursos reais. O [notebook](exemplo_comentar_notebook.py) demonstra o preenchimento. O exemplo apenas lê `exemplo_pit_join.py`; o estado atual já exige saída colada nos notebooks de exemplo.
+Preencha [comentar_notebook.md](comentar_notebook.md) e siga a [skill de documentação](../../skills/hub-ml-comentar-notebook/SKILL.md). O [exemplo](exemplo_comentar_notebook.py) lê `exemplo_pit_join.py` e pede sugestões. A presença de dados sensíveis e a permissão para sugerir células Markdown são campos distintos: classifique PII com evidência e mantenha `NÃO INFORMADO` quando não houver. Não execute o notebook alvo para obter outputs sem autorização.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -63,7 +63,7 @@ Refatorar sem autorização, repetir literalmente o código ou afirmar reexecuç
 
 ## 12. Quais são as alternativas?
 
-Para aprender código use `tutor_explicar`; para auditar output use `auditoria_skills`.
+Use [Tutor](../tutor_explicar/README.md) para aprender código e [Auditoria](../auditoria_skills/README.md) para conferir aderência. [doc_coverage](../../hub_scripts/doc_coverage/README.md) mede somente adjacência de Markdown, não qualidade da explicação.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -75,4 +75,4 @@ O [briefing](comentar_notebook.md), o [notebook](exemplo_comentar_notebook.py) e
 
 ## 15. Referências
 
-A descrição foi confrontada com [comentar_notebook.md](comentar_notebook.md) e [exemplo_comentar_notebook.py](exemplo_comentar_notebook.py) na base R11. Para comportamento atual de Genie Code, Agent Skills e instruções, consulte a documentação oficial do Databricks antes de operar em produção.
+O [briefing](comentar_notebook.md) define os campos e a entrega; o [notebook](exemplo_comentar_notebook.py) mostra o cenário e o estado da evidência. Confira a rota atual na skill antes de executar. O exemplo conversacional permanece **NÃO EXECUTADO**; a existência de código ou de outro teste não preenche essa lacuna.
