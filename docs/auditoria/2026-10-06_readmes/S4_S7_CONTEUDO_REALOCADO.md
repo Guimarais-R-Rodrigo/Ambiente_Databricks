@@ -257,6 +257,8 @@ A descrição foi confrontada com [tutor_explicar.md](tutor_explicar.md) e [exem
 
 ## ambiente_fonte/.assistant/hub_scripts/data_quality_check/README.md
 
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
+
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/data_quality_check/README.md).
 
 ```text
@@ -268,6 +270,8 @@ A validação específica da R04-B, incluindo Spark real, é registrada no relat
 ```
 
 ## ambiente_fonte/.assistant/hub_scripts/doc_coverage/README.md
+
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
 
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/doc_coverage/README.md).
 
@@ -281,6 +285,8 @@ Revisão do próprio texto não é auditoria independente; nenhuma alegação de
 
 ## ambiente_fonte/.assistant/hub_scripts/drift_detector/README.md
 
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
+
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/drift_detector/README.md).
 
 ```text
@@ -291,6 +297,8 @@ Os thresholds de monitoramento permanecem política local. A validação da R04-
 
 ## ambiente_fonte/.assistant/hub_scripts/naming_checker/README.md
 
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
+
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/naming_checker/README.md).
 
 ```text
@@ -300,6 +308,8 @@ As regras de `snake_case`, comprimento e prefixos continuam sendo política dest
 ```
 
 ## ambiente_fonte/.assistant/hub_scripts/quick_profile/README.md
+
+Nota de curadoria (06/10/2026): consulte o [Relatório R02](../../sprints/readmes_objetos/RELATORIO_R02.md) e o [run suplementar histórico com Spark](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982). A prova pertence ao cenário e à data registrados, sem reexecução atual presumida.
 
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/quick_profile/README.md).
 
@@ -313,6 +323,8 @@ Na [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-
 
 ## ambiente_fonte/.assistant/hub_scripts/rfv_calculator/README.md
 
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
+
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/rfv_calculator/README.md).
 
 ```text
@@ -322,6 +334,8 @@ A validação da sprint inclui casos sintéticos com Spark real para corte tempo
 ```
 
 ## ambiente_fonte/.assistant/hub_scripts/schema_to_yaml/README.md
+
+Nota de curadoria (06/10/2026): a evidência histórica navegável é o [Relatório R04-B](../../sprints/readmes_objetos/RELATORIO_R04B.md). O trecho original abaixo conserva o estado em que foi escrito; a referência não alega reexecução nesta revisão.
 
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/schema_to_yaml/README.md).
 
@@ -337,7 +351,7 @@ A validação de runtime da R04-B é registrada após execução. Revisão do pr
 
 [Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/skill_execution/README.md).
 
-```text
+`````text
 - [skill_execution.py](skill_execution.py): preflight L2.
 - [receipt/__init__.py](receipt/__init__.py): Receipt SE04.
 - [postflight/__init__.py](postflight/__init__.py): Postflight SE05.
