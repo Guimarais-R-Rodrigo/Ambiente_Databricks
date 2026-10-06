@@ -1,3 +1,8 @@
+"""Inventário B0 por identidade e coleta real; não executa nem qualifica testes.
+
+Rejeita etapas omitidas, extras ou duplicadas e declarações AST sem teste
+coletável. Contratos históricos permanecem ligados a seus SHAs de origem.
+"""
 from __future__ import annotations
 import ast, fnmatch, importlib.util, json, re, sys, unittest
 from collections import Counter
@@ -5,6 +10,14 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 ROOT=Path(__file__).resolve().parents[3]; REGISTRY=ROOT/"tools/skill_enforcement/parallel/coverage_registry.json"; _SHA_RE=re.compile(r"^[0-9a-f]{40}$")
+REGISTRY_SCHEMA = "SER-PARALLEL-COVERAGE-4"
+INVENTORY_SCHEMA = "SER-PARALLEL-COVERAGE-INVENTORY-4"
+# O registro resolve paths; esta fronteira conserva a identidade dos grupos SER01.
+SER01_GROUP_IDS = frozenset({
+ "ser01_object_validation", "ser01_certifier", "ser01_promotion_certifier",
+ "ser01_legacy_create_l3", "ser01_free_probe",
+})
+
 def _load(name,path):
  spec=importlib.util.spec_from_file_location(name,path)
  if spec is None or spec.loader is None: raise RuntimeError(f"MODULE_LOAD_FAILED:{path}")
@@ -169,8 +182,31 @@ def _validate_override(test_id,override):
  return issues
 def _classify(method,default,overrides):
  override=overrides.get(method); return {"test_id":method,**override} if override else {"test_id":method,"classification":default}
+def _expected_ast_methods(argv, paths):
+ """A named unittest selector promises only that class/method, not its siblings."""
+ tokens = list(argv)
+ selected = {}
+ if "-m" in tokens:
+  index = tokens.index("-m")
+  if index + 1 < len(tokens) and tokens[index + 1] == "unittest" and "discover" not in tokens:
+   for target in tokens[index + 2:]:
+    if target.startswith("-"): continue
+    path, selector = _module_target_path(target)
+    if path is not None: selected.setdefault(path, []).append(selector)
+ methods = []
+ for path in paths:
+  for method in ast_test_methods(path):
+   selectors = selected.get(path, [None])
+   suffix = method.split("::", 1)[1]
+   if any(selector is None or suffix == selector or suffix.startswith(selector + ".") for selector in selectors):
+    methods.append(method)
+ return methods
+
 def _row(step_id,classification,argv,command_only,overrides,description=None):
- paths=_command_test_paths(argv); ast_methods=[m for path in paths for m in ast_test_methods(path)]
+ paths=_command_test_paths(argv)
+ try: ast_methods=_expected_ast_methods(argv, paths); ast_errors=[]
+ except (OSError, UnicodeDecodeError, SyntaxError) as exc:
+  ast_methods=[]; ast_errors=["AST_COLLECTION_ERROR:" + type(exc).__name__]
  if step_id in command_only:
   collection_errors=_command_only_errors(argv); test_ids=[]
   status="COMMAND_ONLY" if not collection_errors else ("MISSING" if any("MISSING" in item for item in collection_errors) else "COLLECTION_ERROR")
@@ -179,27 +215,122 @@ def _row(step_id,classification,argv,command_only,overrides,description=None):
   if collection_errors: status="MISSING" if any("MISSING" in item for item in collection_errors) else "COLLECTION_ERROR"
   elif test_ids: status="MAPPED"
   else: status="EMPTY_METHOD_MAP"
+  uncollected = sorted(set(ast_methods) - set(test_ids))
+  if uncollected:
+   collection_errors.extend("AST_TEST_NOT_COLLECTED:" + method for method in uncollected)
+   if status == "MAPPED": status = "COLLECTION_ERROR"
+ if ast_errors:
+  collection_errors.extend(ast_errors)
+  status = "COLLECTION_ERROR"
  default="CURRENT_INVARIANT" if classification=="MIXED_METHOD_CLASSIFICATION" else classification
  row={"step_id":step_id,"classification":classification,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"ast_methods":sorted(set(ast_methods)),"test_methods":[_classify(x,default,overrides) for x in test_ids],"mapping_status":status,"collection_errors":collection_errors,"duplicate_test_ids":sorted(x for x,count in Counter(test_ids).items() if count>1)}
  if description is not None: row["description"]=description
  return row
-def inventory():
- cfg=json.loads(REGISTRY.read_text(encoding="utf-8"))
- if not isinstance(cfg,dict) or cfg.get("schema_version")!="SER-PARALLEL-COVERAGE-3": return {"schema_version":"SER-PARALLEL-COVERAGE-INVENTORY-3","status":"FAIL","issues":["COVERAGE_REGISTRY_SCHEMA_INVALID"]}
- overrides=cfg.get("method_overrides",{}); command_only=set(cfg.get("command_only_steps",[])); issues=[]
- if not isinstance(overrides,dict): overrides={}; issues.append("OVERRIDES_NOT_OBJECT")
+def _step_identity_issues(source, actual, expected):
+ """Compare identities from the executable owner, never only cardinality."""
+ issues = []
+ if not actual: issues.append(source + "_DISCOVERY_EMPTY")
+ counts = Counter(actual)
+ for step_id, count in counts.items():
+  if count > 1: issues.append(source + "_STEP_DUPLICATE:" + step_id)
+ for step_id in sorted(set(expected) - set(actual)):
+  issues.append(source + "_STEP_MISSING:" + step_id)
+ for step_id in sorted(set(actual) - set(expected)):
+  issues.append(source + "_STEP_UNEXPECTED:" + step_id)
+ return issues
+
+def registry_issues(cfg):
+ """Versioned live contract; frozen v3 campaign inventories remain historical."""
+ if not isinstance(cfg, dict) or cfg.get("schema_version") != REGISTRY_SCHEMA:
+  return ["COVERAGE_REGISTRY_SCHEMA_INVALID"]
+ issues = []
+ step_policy = cfg.get("step_policy")
+ if not isinstance(step_policy, dict) or not step_policy:
+  issues.append("STEP_POLICY_EMPTY_OR_INVALID")
+ elif any(not isinstance(key, str) or not isinstance(value, str) or value not in {"CURRENT_INVARIANT", "MIXED_METHOD_CLASSIFICATION"} for key, value in step_policy.items()):
+  issues.append("STEP_POLICY_CLASSIFICATION_INVALID")
+ ci_policy = cfg.get("ci_step_policy")
+ if not isinstance(ci_policy, dict) or not ci_policy:
+  issues.append("CI_STEP_POLICY_EMPTY_OR_INVALID")
  else:
-  for test_id,override in overrides.items(): issues.extend(_validate_override(test_id,override))
+  for step_id, policy in ci_policy.items():
+   if not isinstance(step_id, str) or not step_id.startswith("ci:") or step_id == "ci:sef":
+    issues.append("CI_STEP_POLICY_ID_INVALID:" + str(step_id))
+   if not isinstance(policy, dict) or set(policy) != {"classification", "mapping_mode"}:
+    issues.append("CI_STEP_POLICY_SCHEMA_INVALID:" + str(step_id))
+   elif policy["classification"] != "CURRENT_INVARIANT" or not isinstance(policy["mapping_mode"], str) or policy["mapping_mode"] not in {"command", "unittest"}:
+    issues.append("CI_STEP_POLICY_CLASSIFICATION_INVALID:" + str(step_id))
+ command_only = cfg.get("command_only_steps")
+ if not isinstance(command_only, list) or any(not isinstance(item, str) for item in command_only):
+  issues.append("COMMAND_ONLY_STEPS_INVALID")
+ else:
+  if len(command_only) != len(set(command_only)): issues.append("COMMAND_ONLY_STEP_DUPLICATE")
+  if isinstance(ci_policy, dict):
+   declared = {step_id for step_id, policy in ci_policy.items() if isinstance(policy, dict) and policy.get("mapping_mode") == "command"}
+   actual = {step_id for step_id in command_only if step_id.startswith("ci:")}
+   if declared != actual: issues.append("CI_COMMAND_ONLY_POLICY_MISMATCH")
+ overrides = cfg.get("method_overrides")
+ if not isinstance(overrides, dict): issues.append("OVERRIDES_NOT_OBJECT")
+ else:
+  for test_id, override in overrides.items(): issues.extend(_validate_override(test_id, override))
+ retired = cfg.get("retired_method_overrides", {})
+ if not isinstance(retired, dict): issues.append("RETIRED_OVERRIDES_NOT_OBJECT")
+ else:
+  for test_id, record in retired.items():
+   if not isinstance(record, dict) or set(record) != {"override", "retirement_sha", "reason", "successor_ids"}:
+    issues.append("RETIRED_OVERRIDE_SCHEMA_INVALID:" + test_id); continue
+   issues.extend(_validate_override(test_id, record["override"]))
+   if not isinstance(record["retirement_sha"], str) or _SHA_RE.fullmatch(record["retirement_sha"]) is None:
+    issues.append("RETIRED_OVERRIDE_SHA_INVALID:" + test_id)
+   if not isinstance(record["reason"], str) or not record["reason"].strip():
+    issues.append("RETIRED_OVERRIDE_REASON_INVALID:" + test_id)
+   successors = record["successor_ids"]
+   if not isinstance(successors, list) or not successors or any(not isinstance(item, str) or not item for item in successors):
+    issues.append("RETIRED_OVERRIDE_SUCCESSORS_INVALID:" + test_id)
+   if isinstance(overrides, dict) and test_id in overrides: issues.append("RETIRED_OVERRIDE_STILL_ACTIVE:" + test_id)
+ groups = cfg.get("ser01_groups")
+ if not isinstance(groups, list) or not groups:
+  issues.append("SER01_GROUPS_EMPTY_OR_INVALID")
+ else:
+  for group in groups:
+   if not isinstance(group, dict) or not isinstance(group.get("group_id"), str) or not isinstance(group.get("path"), str):
+    issues.append("SER01_GROUP_SCHEMA_INVALID")
+   elif not isinstance(group.get("mapping_mode", "unittest"), str) or group.get("mapping_mode", "unittest") not in {"command", "unittest"}:
+    issues.append("SER01_GROUP_MAPPING_MODE_INVALID:" + group["group_id"])
+ return issues
+
+def _unique_object(pairs):
+ result = {}
+ for key, value in pairs:
+  if key in result: raise ValueError("DUPLICATE_REGISTRY_KEY:" + key)
+  result[key] = value
+ return result
+
+def inventory():
+ try:
+  cfg = json.loads(REGISTRY.read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
+ except (OSError, UnicodeDecodeError, ValueError) as exc:
+  return {"schema_version": INVENTORY_SCHEMA, "status": "FAIL", "issues": ["COVERAGE_REGISTRY_UNREADABLE:" + type(exc).__name__]}
+ issues = registry_issues(cfg)
+ if issues: return {"schema_version": INVENTORY_SCHEMA, "status": "FAIL", "issues": sorted(set(issues))}
+ overrides=cfg["method_overrides"]; command_only=set(cfg["command_only_steps"])
  certify=_load("_parallel_coverage_certify",ROOT/"tools/skill_enforcement/certify_local.py"); ci=_load("_parallel_coverage_ci",ROOT/"tools/ci_local.py")
  se08=[]
- for name,argv in certify.PROFILE_STEPS["se08"]:
+ se08_steps = certify.PROFILE_STEPS["se08"]
+ issues.extend(_step_identity_issues("SE08", [name for name, _ in se08_steps], cfg["step_policy"]))
+ for name,argv in se08_steps:
   classification=cfg["step_policy"].get(name,"UNCLASSIFIED")
   if classification=="UNCLASSIFIED": issues.append("STEP_POLICY_UNCLASSIFIED:"+name)
   se08.append(_row(name,classification,list(argv),command_only,overrides))
  ci_rows=[]
+ ci_ids = ["ci:" + name for name, _, _ in ci.ETAPAS if name != "sef"]
+ issues.extend(_step_identity_issues("CI_NON_SEF", ci_ids, cfg["ci_step_policy"]))
+ if sum(name == "sef" for name, _, _ in ci.ETAPAS) != 1: issues.append("CI_SEF_STEP_NOT_UNIQUE")
  for name,description,argv in ci.ETAPAS:
   if name=="sef": continue
-  ci_rows.append(_row("ci:"+name,"CURRENT_INVARIANT",list(argv),command_only,overrides,description))
+  step_id = "ci:" + name
+  classification = cfg["ci_step_policy"].get(step_id, {}).get("classification", "UNCLASSIFIED")
+  ci_rows.append(_row(step_id,classification,list(argv),command_only,overrides,description))
  ser01=[]
  for config in cfg["ser01_groups"]:
   path=ROOT/config["path"]; step_id=config["group_id"]
@@ -207,22 +338,26 @@ def inventory():
    row={**config,"classification":"CURRENT_INVARIANT","exists":path.is_file(),"test_methods":[],"ast_methods":ast_test_methods(path) if path.is_file() else [],"mapping_status":"COMMAND_ONLY" if path.is_file() else "MISSING","collection_errors":[],"duplicate_test_ids":[]}
   else:
    row=_row(step_id,"MIXED_CURRENT_AND_TEMPORAL" if step_id=="ser01_certifier" else "CURRENT_INVARIANT",[sys.executable,str(path.relative_to(ROOT)),"-v"],command_only,overrides); row={**config,"exists":path.is_file(),**row}
+  row.setdefault("step_id", step_id)
   ser01.append(row)
+ issues.extend(_step_identity_issues("SER01", [row["step_id"] for row in ser01], SER01_GROUP_IDS))
  rows=[*se08,*ci_rows,*ser01]
- if len(se08)!=21: issues.append(f"SE08_STEP_COUNT:{len(se08)}")
- if len(ci_rows)!=9: issues.append(f"CI_NON_SEF_COUNT:{len(ci_rows)}")
- if len(ser01)!=5: issues.append(f"SER01_GROUP_COUNT:{len(ser01)}")
+ known_ids = {row["step_id"] for row in rows}
+ for step_id in sorted(command_only - known_ids): issues.append("COMMAND_ONLY_STEP_NOT_OBSERVED:" + step_id)
  for row in rows:
   if row["mapping_status"] in {"UNCLASSIFIED","MISSING","EMPTY_METHOD_MAP","COLLECTION_ERROR"}: issues.append(f"METHOD_MAP_INCOMPLETE:{row['step_id']}:{row['mapping_status']}")
   if row.get("duplicate_test_ids"): issues.append(f"DUPLICATE_TEST_ID:{row['step_id']}:{','.join(row['duplicate_test_ids'])}")
  observed_occurrences=[item["test_id"] for group in rows for item in group.get("test_methods",[])]; observed=set(observed_occurrences)
  for test_id,override in overrides.items():
   if test_id not in observed: issues.append("TEMPORAL_OVERRIDE_NOT_OBSERVED:"+test_id); continue
-  if isinstance(override,dict):
-   for successor in override.get("successor_ids",[]):
-    if successor not in observed: issues.append(f"TEMPORAL_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
+  for successor in override["successor_ids"]:
+   if successor not in observed: issues.append(f"TEMPORAL_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
+ for test_id, record in cfg.get("retired_method_overrides", {}).items():
+  if test_id in observed: issues.append("RETIRED_OVERRIDE_OBSERVED:" + test_id)
+  for successor in [*record["successor_ids"], *record["override"]["successor_ids"]]:
+   if successor not in observed: issues.append(f"RETIRED_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
  counts=Counter(observed_occurrences)
- return {"schema_version":"SER-PARALLEL-COVERAGE-INVENTORY-3","status":"PASS" if not issues else "FAIL","issues":sorted(set(issues)),"se08":se08,"ci_non_sef":ci_rows,"ser01":ser01,"counts":{"se08":len(se08),"ci_non_sef":len(ci_rows),"ser01":len(ser01),"method_occurrences":len(observed_occurrences),"unique_methods":len(counts)},"test_id_occurrences":dict(sorted(counts.items())),"temporal_overrides":overrides}
+ return {"schema_version":INVENTORY_SCHEMA,"status":"PASS" if not issues else "FAIL","issues":sorted(set(issues)),"se08":se08,"ci_non_sef":ci_rows,"ser01":ser01,"counts":{"se08":len(se08),"ci_non_sef":len(ci_rows),"ser01":len(ser01),"method_occurrences":len(observed_occurrences),"unique_methods":len(counts)},"test_id_occurrences":dict(sorted(counts.items())),"temporal_overrides":overrides,"retired_temporal_overrides":cfg.get("retired_method_overrides", {})}
 def _json_cli(payload):
  return json.dumps(payload,ensure_ascii=True,indent=2,sort_keys=True)+"\n"
 def main():
