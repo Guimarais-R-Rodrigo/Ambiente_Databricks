@@ -8022,15 +8022,6 @@
       "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
     },
     {
-      "path": "PLANO_HUB.md",
-      "line": 614,
-      "line_sha256": "2d792709ad83cb7e6debcf34ecc0366dde6302e7cb327e42f7ba4e339dc39ecc",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "dated_historical_evidence",
-      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
-    },
-    {
       "path": "docs/ai/compatibility.md",
       "line": 26,
       "line_sha256": "e4eecd10402c4735db5605c53f7fd0631430fa9ff1342cd0a126a1f26cb25d97",

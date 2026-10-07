@@ -51,6 +51,8 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0028](ADR-0028-manual-tecnico-v2-canonico.md) | Manual Técnico V2 como única edição técnica vigente; catálogo e termos integrados | execução local autorizada em 07/10/2026; substitui edição e cópia raiz previstas no ADR-0010 |
 | [0029](ADR-0029-faxina-fonte-e-prototipo.md) | fonte ambiente_databricks e retirada recuperável do protótipo | execução local autorizada em 07/10/2026 |
 
+| [0030](ADR-0030-historia-consolidada.md) | plano e changelog reunidos numa entrada de construção histórica, com recuperação Git | execução local autorizada em 07/10/2026 |
+
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 
 [Voltar ao índice de documentação](../README.md)

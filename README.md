@@ -17,6 +17,7 @@ Este repositório mantém o produto e as ferramentas que o validam e distribuem.
 | importar uma função no notebook | seguir o [bootstrap do Manual Técnico](ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md#bootstrap), conferir dependências e usar o exemplo do objeto |
 | orientar uma análise com a Genie Code | escolher uma [skill do produto](ambiente_databricks/.assistant/skills/README.md) e preencher um [briefing](ambiente_databricks/.assistant/hub_prompts/README.md) |
 | criar ou alterar um recurso | ler os [padrões do Hub](ambiente_databricks/.assistant/hub_padroes/README.md) e o [contrato de manutenção](AGENTS.md) |
+| entender como o projeto foi construído | ler a [construção histórica consolidada](CHANGELOG.md), com intenção, etapas e marcos |
 | trabalhar no repositório com uma IA | começar pelas [rotas de manutenção](docs/ai/README.md), que indicam regras, procedimentos e ferramentas |
 | preparar instalação ou atualização | seguir o [runbook de replicação](docs/playbooks/replicacao-trabalho.md); destino, acesso e efeitos precisam de autorização própria |
 | avaliar qualidade ou investigar regressão | consultar [testes e evidências](docs/testes/README.md) e [classes de defeito protegidas](docs/auditoria/README.md#classes-de-defeito-que-viraram-guardas) |
@@ -193,8 +194,8 @@ normas do molde    : 78 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 289 arquivos
 instrucoes         : 12630/20000 caracteres
-repo (identidade)  : 1768 arquivos varridos no repositório editável/derivado
-repo (links)       : 2108 links fora da raiz analisada
+repo (identidade)  : 1769 arquivos varridos no repositório editável/derivado
+repo (links)       : 2103 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)

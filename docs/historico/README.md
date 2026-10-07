@@ -2,7 +2,7 @@
 
 - [Cronologia integral de 13/08 a 06/10/2026](changelog/README.md): 198 entradas na ordem original, manifesto e recuperação dos bytes.
 - [Protótipo Concierge](concierge.md): localização congelada e rota canônica atual.
-- [Marcos atuais](../../CHANGELOG.md), [decisões](../decisions/README.md) e [owners vivos](../ai/context/projeto.md#owners-vivos) continuam separados da evidência antiga.
+- [Construção histórica consolidada](../../CHANGELOG.md): intenção do plano, trajetória e marcos; única entrada inicial para conhecer a evolução. [Decisões](../decisions/README.md) e [owners vivos](../ai/context/projeto.md#owners-vivos) continuam responsáveis pelos contratos e pelo estado corrente.
 
 A [readequação documental de 06/10/2026](readequacao_readmes_2026-10-06/README_RAIZ_TEMAS.md) preserva a cronologia transferida do README raiz e o [ciclo de vida anterior](readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md).
 
