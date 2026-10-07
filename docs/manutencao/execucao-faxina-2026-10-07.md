@@ -43,7 +43,7 @@ e manifesto original. Isso não recria uma segunda pasta de produto no checkout.
 
 Implementação integrada no commit local `031fc559`, seguida de correções dos gates
 da migração. O CI agregado inicial reprovou quatro etapas; as correções e repetições
-focais serão registradas abaixo. A execução local não é homologação de destino. Apoios da mesma sessão não satisfazem
+focais estão registradas abaixo. A execução local não é homologação de destino. Apoios da mesma sessão não satisfazem
 auditoria independente A1/A2. Copilot no VS Code do trabalho e runtime Databricks
 permanecem NOT_RUN nesta execução local.
 
@@ -113,9 +113,69 @@ após deixar de produzir saída; não gerou sumário e é **INTERRUPTED**, sem c
 ou aprovação. O resultado verificável usa as receitas separadas de `ci_local.py`
 e os módulos afetados. Os logs locais ficam em `.artifacts/faxina/` (ignorados).
 
+
+## Resultado final observado
+
+Implementação e correções: `247ee609e25073966ff7237780551365dd2df298`.
+O fechamento seguinte altera somente esta evidência documental. Não houve push,
+merge, instalação de dependências, publicação Free ou transposição ao trabalho.
+Stash SER00 anterior e branch de origem permanecem preservados.
+
+| Verificação | Revisão / comando | Resultado e alcance |
+|---|---|---|
+| Fonte e snapshot README | `247ee609`: `python -B tools/validate_assistant.py --conferir-readme` | **PASS**, exit 0, zero falhas/avisos; contagens atuais 1.758 arquivos e 1.965 links no repo |
+| Temas | `4be343b1`, etapa `temas` do `ci_local.py --verbose` | **PASS**, 759 testes, 18 skips; código temático e payload não mudaram em `247ee609` |
+| Skill Enforcement | `247ee609`: `python -B tools/ci_local.py --etapa sef --verbose` | **PASS**, exit 0, perfil `DIAGNOSTIC_SE08_NO_RENDER`; não é certificação Genie/runtime |
+| Regressões IA | `247ee609`: `python -B tools/ci_local.py --etapa ai-regressoes --verbose` | **PASS**, exit 0, 173 testes, nove skips explícitos de ambiente |
+| READMEs / fronteira | `247ee609`: `python -B tools/ci_local.py --etapa readmes --verbose` | **FAIL** técnico, exit 1; 79 testes, uma falha por dependência no Python isolado, três skips; bloqueio de ambiente descrito acima |
+| Contratos IA | `247ee609`: `python -B tools/ai_controls.py --check` | **PASS**, cinco skills/cópias, 215 requisitos, 708 pares de produto, zero avisos; não certifica loader nativo |
+| Render | `python -B tools/render_simulado.py --check` | **PASS**, equivalência integral do payload gerado após o preflight registrado |
+| Compilação CI | `python -B tools/ci_workflows.py --check` | **PASS**, nomes dos checks, receitas exclusivas e dependências fail-closed preservados |
+| Recuperação Concierge | `python -B tools/verify_concierge_history.py` | **PASS**, 19 blobs com tamanho/SHA256 conferidos; nada restaurado no checkout |
+| Fronteira de pacote | `python -B tools/package_boundary.py` | **PASS**, zero erros; predecessor visual não pode contornar o ledger, mesmo com metadata antiga restaurada |
+| QA visual | `node tools/readme_visuals/validate_production.mjs` | **PASS**, 7.829 checks, zero falhas; inspeção visual local, sem aceite independente |
+
+O CI agregado inicial teve dez etapas aprovadas na revisão `031fc559`:
+biblioteca (45 IDs core sem skips), ferramentas, transição, Micromodelos e aceite
+extraído, Concierge/pacote/regressões/integração, controles IA e validação simples.
+As quatro etapas que falharam foram corrigidas e repetidas como indicado acima;
+READMEs mantém o bloqueio do host. A rodada agregada `4be343b1` passou Temas e
+reprovou o snapshot de contagem (1.757 versus 1.758); foi interrompida para corrigir
+isso e a proteção do sucessor visual. **Não há reivindicação de CI agregado final
+inteiramente aprovado.** Os resultados por revisão acima são as provas disponíveis.
+
+Auditoria auxiliar de mesma sessão revisou o último diff e confirmou que o P2
+sobre restaurar metadata antiga está resolvido; nenhum outro P1/P2 permaneceu na
+revisão. O teste negativo restaura o blob predecessor e exige falha com e sem
+ledger. Mantém-se o limite de independência A0/contexto completo.
+
+**Pendências de destino:** resolver a dependência `typing_extensions` no ambiente
+Python isolado de testes e repetir READMEs; executar CI remoto, Copilot no VS Code
+do trabalho e runtime Databricks (todos **NOT_RUN** aqui). A limpeza do checkout
+foi implementada; essas provas não são substituídas por documentação.
+
+### Integridade dos logs locais
+
+Os arquivos abaixo são ignorados, não pertencem ao payload e não precisam ser
+carregados como contexto da próxima LLM. Hashes permitem conferir a cópia local;
+um clone novo terá este relatório e o código, mas não esses logs de execução.
+
+| Log em `.artifacts/faxina/` | SHA256 |
+|---|---|
+| `snapshot-corrigido.log` | `db2227f90723008e0f56dc079ee073dc9329981774e278ad13a1b9db2fa17166` |
+| `ci-final.log` | `baab1a59b7450e82a056ecce4c09232337e501076178f09f2f4ebdce0c681e6f` |
+| `sef-final.log` | `31a0f565daebcd5b0cabb369d3c7daf2aaf38ad2fe5b41481a9eb61ac346e8eb` |
+| `ai-final.log` | `1cea28bab899c307eb11ff8731e7ca1341d8ee2cdb64cadd1ce38c9a7d086c0c` |
+| `readmes-final.log` | `090924ae2f1fb978e05732ded56aca99bfb9078061f301c3cd7da61f92dba75c` |
+| `ai-controls-final.json` | `cade46e38513694a2d0f2a45a948b75f0af94f410db1058d77636b4d588c01ac` |
+| `qa-visual-final.json` | `5ee03368f560307c33e6b580e551351c9ce251d82139ba5722ec4071a12c749a` |
+| `preflight-render-final.json` | `fad77d6d915292e3a513d6ea4eeacd1bd90e9567e7c4744b7f2a8d6b52064e31` |
+| `promocao-diagrama.json` | `d8d092a78b419d9eba8792debc28b3e9d823978642b71075ba2c1cb6e5ff543a` |
+
 ## Reversão
 
-As mudanças permanecem revisáveis no Git local. Os lotes dos executores foram integrados; worktrees isolados serão arquivados
-com snapshot recuperável após a conferência final.
+As mudanças permanecem revisáveis no Git local. Os lotes dos executores foram integrados; os dois worktrees foram arquivados
+com snapshots recuperáveis pelo app. O registro ignorado do executor de manuais
+foi preservado em `.artifacts/faxina/executores/manuais-integracao.txt`.
 Não usar reset destrutivo: recuperar somente arquivos deste lote, preservando o
 trabalho documental anterior e quaisquer alterações alheias.
