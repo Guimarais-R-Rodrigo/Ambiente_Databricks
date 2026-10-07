@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""MM01 Local Certification v1.
+"""MM01 Local Certification v1 — frozen historical route.
 
-Mechanical, fail-closed local executor for the MM01 certification gates.
+Mechanical, fail-closed executor of the original MM01 certification plan.
+It is not a current-main certifier. Use --diagnose for read-only workflow drift
+and docs/manutencao/certificadores-congelados.md for current routes and lineage.
 It does not decide whether MM01 is fit for merge and it does not replace
 independent audit or explicit human acceptance.
 """
@@ -28,6 +30,9 @@ from urllib.parse import urlparse
 REPOSITORY = "Guimarais-R-Rodrigo/Ambiente_Databricks"
 DEFAULT_BRANCH = "micromodelos/mm01-contrato-canonico"
 BUNDLE_SCHEMA = "mm01-local-certification/v1"
+ROUTE_STATUS = "HISTORICAL_FROZEN"
+WORKFLOW_PIN_ORIGIN_SHA = "b9bfec9912ea79781eb6e355c881c2f3185acc4d"
+CURRENT_PROCEDURE = "docs/manutencao/certificadores-congelados.md"
 PYTHON_MAJOR_MINOR = (3, 12)
 NODE_MAJOR = 22
 PNPM_VERSION = "10.34.5"
@@ -411,12 +416,74 @@ def check_workflow_drift(repo_root: Path) -> dict[str, dict[str, object]]:
                 + expected_blob
                 + " found "
                 + actual_blob
+                + "; v1 is a frozen historical route. Run --diagnose and read "
+                + CURRENT_PROCEDURE
+                + "; do not refresh historical pins to certify current main."
             )
         if missing:
             raise CertificationError(
                 "workflow drift detected in " + rel + ": " + repr(missing)
             )
     return report
+
+
+def diagnose_frozen_workflows(repo_root: Path) -> dict[str, object]:
+    """Observe all v1 workflow inputs without executing or certifying any gate."""
+    if set(WORKFLOW_EXPECTED_BLOBS) != set(WORKFLOW_SOURCES):
+        raise CertificationError("workflow blob pin set does not match workflow sources")
+    if set(WORKFLOW_REQUIRED_SNIPPETS) != set(WORKFLOW_SOURCES):
+        raise CertificationError("workflow snippet set does not match workflow sources")
+    workflows = {}
+    incompatible = []
+    for rel in WORKFLOW_SOURCES:
+        path = repo_root / rel
+        expected = WORKFLOW_EXPECTED_BLOBS[rel]
+        issues = []
+        actual = None
+        missing = []
+        # A read-only diagnosis does not follow workflow files or parents outside
+        # the selected checkout. Certification's frozen checks remain unchanged.
+        if any(part.is_symlink() for part in (path, *path.parents)):
+            issues.append("WORKFLOW_SYMLINK")
+        elif not path.is_file():
+            issues.append("WORKFLOW_MISSING_OR_NOT_FILE")
+        else:
+            actual = git(repo_root, "hash-object", rel)
+            text = path.read_text(encoding="utf-8")
+            missing = [snippet for snippet in WORKFLOW_REQUIRED_SNIPPETS[rel]
+                       if snippet not in text]
+            if actual != expected:
+                issues.append("FROZEN_BLOB_MISMATCH")
+            if missing:
+                issues.append("FROZEN_SNIPPETS_MISSING")
+        workflows[rel] = {
+            "expected_git_blob": expected,
+            "actual_git_blob": actual,
+            "missing_snippets": missing,
+            "issues": issues,
+        }
+        if issues:
+            incompatible.append(rel)
+    return {
+        "schema": "mm01-frozen-workflow-diagnostic/v1",
+        "route_status": ROUTE_STATUS,
+        "observed_at_utc": utc_now(),
+        "head_sha": git(repo_root, "rev-parse", "HEAD"),
+        "tree_sha": git(repo_root, "rev-parse", "HEAD^{tree}"),
+        "worktree_clean": not git(repo_root, "--no-optional-locks", "status",
+                                   "--porcelain=v1", "--untracked-files=all"),
+        "workflow_pin_origin_sha": WORKFLOW_PIN_ORIGIN_SHA,
+        "status": "INCOMPATIBLE_WITH_FROZEN_V1" if incompatible else "FROZEN_INPUTS_MATCH",
+        "certification_status": "NOT_RUN",
+        "incompatible_workflows": incompatible,
+        "workflows": workflows,
+        "current_procedure": CURRENT_PROCEDURE,
+        "next_action": (
+            "Use current regression routes documented in current_procedure. "
+            "A new certification needs a separately versioned and reviewed gate "
+            "reconciliation; preserve v1 pins and historical results."
+        ),
+    }
 
 
 def git_state(repo_root: Path) -> dict[str, object]:
@@ -840,10 +907,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--expected-main-sha")
     parser.add_argument("--expected-branch", default=DEFAULT_BRANCH)
     parser.add_argument("--output-dir")
-    parser.add_argument(
+    inspection = parser.add_mutually_exclusive_group()
+    inspection.add_argument(
         "--describe",
         action="store_true",
-        help="Print the current gate plan and exit without executing it.",
+        help="Print the frozen historical v1 gate plan without executing it.",
+    )
+    inspection.add_argument(
+        "--diagnose",
+        action="store_true",
+        help="Read-only drift report; exit 1 for incompatibility, never certification PASS.",
     )
     return parser.parse_args(argv)
 
@@ -851,6 +924,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def describe() -> int:
     payload = {
         "schema": BUNDLE_SCHEMA,
+        "route_status": ROUTE_STATUS,
+        "workflow_pin_origin_sha": WORKFLOW_PIN_ORIGIN_SHA,
+        "current_procedure": CURRENT_PROCEDURE,
+        "certification_status": "NOT_RUN",
         "repository": REPOSITORY,
         "expected_branch_default": DEFAULT_BRANCH,
         "required_step_ids": sorted(REQUIRED_STEP_IDS),
@@ -870,6 +947,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     if args.describe:
         return describe()
+    if args.diagnose:
+        payload = diagnose_frozen_workflows(Path(__file__).resolve().parents[1])
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+        return 1 if payload["incompatible_workflows"] else 0
     if not args.expected_sha or not args.expected_main_sha or not args.output_dir:
         raise CertificationError(
             "--expected-sha, --expected-main-sha and --output-dir are mandatory"

@@ -5093,7 +5093,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O02",
@@ -5136,7 +5137,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O03",
@@ -5179,7 +5181,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O04",
@@ -5224,7 +5227,8 @@
       "native_test_gaps": [
         "T21",
         "T34"
-      ]
+      ],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O05",
@@ -5266,7 +5270,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O06",
@@ -5311,7 +5316,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T34"
-      ]
+      ],
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C13-O07",
@@ -5362,7 +5368,8 @@
         "decision": "docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md",
         "scope": "Granularidade do registro; source e revisões capturadas da campanha IA permanecem históricos.",
         "verification": "Local implementation; native compatibility unchanged."
-      }
+      },
+      "owner": ".agents/skills/README.md"
     },
     {
       "id": "C14-O01",
@@ -5406,7 +5413,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O02",
@@ -5448,7 +5456,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O03",
@@ -5490,7 +5499,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O04",
@@ -5532,7 +5542,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O05",
@@ -5573,7 +5584,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O06",
@@ -5614,7 +5626,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O07",
@@ -5654,7 +5667,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O08",
@@ -5696,7 +5710,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O09",
@@ -5738,7 +5753,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O10",
@@ -5781,7 +5797,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O11",
@@ -5829,7 +5846,8 @@
         "decision": "docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md",
         "scope": "Granularidade do registro; source e revisões capturadas da campanha IA permanecem históricos.",
         "verification": "Local implementation; native compatibility unchanged."
-      }
+      },
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C14-O12",
@@ -5874,7 +5892,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/validar-assistant/SKILL.md"
     },
     {
       "id": "C15-O01",
@@ -5919,7 +5938,8 @@
       "native_test_gaps": [
         "T11",
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O02",
@@ -5962,7 +5982,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T11"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O03",
@@ -6008,7 +6029,8 @@
       "native_test_gaps": [
         "T11",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O04",
@@ -6055,7 +6077,8 @@
         "T11",
         "T24",
         "T34"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O05",
@@ -6099,7 +6122,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T11"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O06",
@@ -6143,7 +6167,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T11"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O07",
@@ -6188,7 +6213,8 @@
       "native_test_gaps": [
         "T11",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C15-O08",
@@ -6238,7 +6264,8 @@
         "decision": "docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md",
         "scope": "Granularidade do registro; source e revisões capturadas da campanha IA permanecem históricos.",
         "verification": "Local implementation; native compatibility unchanged."
-      }
+      },
+      "owner": ".agents/skills/render-simulado/SKILL.md"
     },
     {
       "id": "C16-O01",
@@ -6283,7 +6310,8 @@
       "native_test_gaps": [
         "T12",
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O02",
@@ -6330,7 +6358,8 @@
         "T11",
         "T12",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O03",
@@ -6374,7 +6403,8 @@
       "native_test_gaps": [
         "T12",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O04",
@@ -6421,7 +6451,8 @@
         "T12",
         "T24",
         "T34"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O05",
@@ -6463,7 +6494,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O06",
@@ -6505,7 +6537,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O07",
@@ -6548,7 +6581,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O08",
@@ -6591,7 +6625,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O09",
@@ -6636,7 +6671,8 @@
       "native_test_gaps": [
         "T12",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O10",
@@ -6679,7 +6715,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O11",
@@ -6724,7 +6761,8 @@
       "native_test_gaps": [
         "T12",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O12",
@@ -6767,7 +6805,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C16-O13",
@@ -6810,7 +6849,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T12"
-      ]
+      ],
+      "owner": ".agents/skills/publicar-free/SKILL.md"
     },
     {
       "id": "C17-O01",
@@ -6854,7 +6894,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O02",
@@ -6898,7 +6939,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O03",
@@ -6940,7 +6982,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O04",
@@ -6984,7 +7027,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T22"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O05",
@@ -7029,7 +7073,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T22"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O06",
@@ -7073,7 +7118,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O07",
@@ -7117,7 +7163,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T21"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O08",
@@ -7158,7 +7205,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O09",
@@ -7202,7 +7250,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O10",
@@ -7250,7 +7299,8 @@
         "decision": "docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md",
         "scope": "Granularidade do registro; source e revisões capturadas da campanha IA permanecem históricos.",
         "verification": "Local implementation; native compatibility unchanged."
-      }
+      },
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C17-O11",
@@ -7293,7 +7343,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/forward-test-skills/SKILL.md"
     },
     {
       "id": "C18-O01",
@@ -7339,7 +7390,8 @@
       "native_test_gaps": [
         "T21",
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O02",
@@ -7381,7 +7433,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O03",
@@ -7425,7 +7478,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O04",
@@ -7466,7 +7520,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O05",
@@ -7509,7 +7564,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O06",
@@ -7551,7 +7607,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O07",
@@ -7594,7 +7651,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O08",
@@ -7637,7 +7695,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O09",
@@ -7678,7 +7737,8 @@
       "mapping_verification_status": "PASS",
       "mapping_review_scope": "Exact baseline excerpt, target anchor and semantic preservation reviewed; not native behavior.",
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
-      "native_test_gaps": []
+      "native_test_gaps": [],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O10",
@@ -7723,7 +7783,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O11",
@@ -7766,7 +7827,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O12",
@@ -7810,7 +7872,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     },
     {
       "id": "C18-O13",
@@ -7854,7 +7917,8 @@
       "reviewer": "Independent executor reviewer, context-full same-origin A0_light",
       "native_test_gaps": [
         "T24"
-      ]
+      ],
+      "owner": ".agents/skills/replicar-trabalho/SKILL.md"
     }
   ],
   "historical_exceptions": [

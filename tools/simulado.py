@@ -21,8 +21,20 @@ def ignored(path: Path) -> bool:
     return bool(IGNORE_NAMES.intersection(path.parts)) or path.suffix in {".pyc", ".pyo"}
 
 
+def reject_link_ancestors(path: Path) -> None:
+    """Validate the lexical path before resolve() can hide linked ancestors.
+
+    This is a local preflight, not a guarantee against concurrent replacement.
+    Callers must keep the checkout exclusive while rendering or checking it.
+    """
+    for ancestor in (path, *path.parents):
+        if ancestor.is_symlink() or getattr(ancestor, "is_junction", lambda: False)():
+            raise ValueError(f"link simbólico/junction recusado no caminho: {ancestor}")
+
+
 def inventory(base: Path, *, source: bool = False) -> dict[str, dict]:
-    if base.is_symlink() or not base.is_dir():
+    reject_link_ancestors(base)
+    if not base.is_dir():
         raise ValueError(f"raiz ausente ou link simbólico: {base}")
     result = {}
     candidates = []
@@ -41,8 +53,8 @@ def inventory(base: Path, *, source: bool = False) -> dict[str, dict]:
         candidates = list(base.rglob("*"))
     for path in sorted(candidates):
         relative = path.relative_to(base)
-        if path.is_symlink():
-            raise ValueError(f"link simbólico recusado: {relative.as_posix()}")
+        if path.is_symlink() or getattr(path, "is_junction", lambda: False)():
+            raise ValueError(f"link simbólico/junction recusado: {relative.as_posix()}")
         if source and ignored(relative):
             continue
         if path.is_dir():

@@ -7,6 +7,10 @@ Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem
 - Estado por frente: [owners vivos](docs/ai/context/projeto.md#owners-vivos).
 - Registro integral anterior à reorganização de 06/10/2026 (13/08 a 06/10): [arquivo histórico](docs/historico/changelog/2026-08-13_a_2026-10-06.md).
 
+## 2026-10-07
+
+- (Codex) Correção integrada de contenção local, guardas de CI/instruções IA e execução integral core; rotas documentais e certificadores históricos explicitados, com metadados reduzidos opt-in no contexto de tarefa. Preserva runtime, evidência congelada e policy; publicação e homologação exigem provas próprias. [Decisão e limites](docs/decisions/ADR-0027-correcao-controles-auditoria-integrada.md).
+
 ## 2026-10-06
 
 - (Codex) Guarda de preservação dos testes core passa a fingerprint tipado estável entre Python 3.11 e 3.12, mantendo hashes históricos; a receita completa do kit ganha regressão em PR nos dois runtimes. Não certifica Windows nem destino institucional. [Contrato e migração](docs/manutencao/fingerprint-core.md).

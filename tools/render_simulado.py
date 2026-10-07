@@ -51,11 +51,10 @@ def main() -> int:
     parser.add_argument("--username", default=DEFAULT_USERNAME)
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[1]
-    source = (repo_root / SOURCE).resolve()
-    if not source.exists():
-        print(f"FAIL fonte não encontrada: {source}")
-        return 1
+    # Preserve lexical ancestors until inventory() has rejected source links.
+    # Resolving here hid a linked ambiente_fonte before the destructive write.
+    repo_root = Path(__file__).absolute().parents[1]
+    source = repo_root / SOURCE
 
     try:
         username = validate_username_component(args.username)
@@ -64,8 +63,8 @@ def main() -> int:
         return 1
 
     try:
-        target_root = simulated_root(repo_root, args.output_root)
         inventory(source, source=True)  # Fail closed on missing input or source symlinks.
+        target_root = simulated_root(repo_root, args.output_root)
         if target_root.exists():
             for path in target_root.rglob("*"):
                 if path.is_symlink():

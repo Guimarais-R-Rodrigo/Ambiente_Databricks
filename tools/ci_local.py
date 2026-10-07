@@ -5,17 +5,8 @@
 Executa, em ordem, e sempre até o fim — um gate que para no primeiro erro
 esconde os outros e obriga a rodar de novo para cada um:
 
-1. Temas — assets/geração V06 + Visual Lab V05 + HTML/tabelas V04 + Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)
-2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
-3. Skill Enforcement — perfil SE08 cumulativo em modo local read-only, sem renderer;
-4. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
-5. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
-6. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
-7. READMEs — contrato, migração e regressões de convivência com o Concierge;
-8. Concierge — estrutura do pacote;
-9. Concierge — regressões do verificador;
-10. Concierge — integração canônica e espelho.
-   Essas etapas não avaliam roteamento conversacional; esse gate continua no Genie Code.
+A lista corrente de etapas e comandos é gerada de ETAPAS ao final desta ajuda.
+Essas etapas não avaliam roteamento conversacional; esse gate continua no Genie Code.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
@@ -45,6 +36,7 @@ import argparse
 import importlib.util
 import locale
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -105,8 +97,8 @@ ETAPAS = [
     ),
     (
         "biblioteca",
-        "regressões de hub_snippets",
-        [sys.executable, "tools/tests/runtime/test_core.py"],
+        "regressões de hub_snippets: todos os IDs core executados, sem skips",
+        [sys.executable, "-B", "tools/run_core_tests.py"],
     ),
     (
         "ferramentas",
@@ -213,8 +205,18 @@ def rodar(comando: list[str], mostrar_saida: bool) -> tuple[int, str, float]:
     return proc.returncode, saida, duracao
 
 
+def ajuda_etapas() -> str:
+    """Renderiza a enumeração viva, sem duplicar nomes, descrições ou receitas."""
+    lines = ["Etapas executadas, em ordem:"]
+    for index, (nome, descricao, comando) in enumerate(ETAPAS, 1):
+        recipe = shlex.join(["python" if part == sys.executable else part for part in comando])
+        lines.extend([f"{index}. {nome}: {descricao}", f"   {recipe}"])
+    return "\n".join(lines)
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, epilog=ajuda_etapas(),
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--verbose", action="store_true", help="mostra a saída completa de cada etapa"
     )

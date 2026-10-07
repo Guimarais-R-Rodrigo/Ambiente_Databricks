@@ -17,6 +17,7 @@ import sys
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from markdown_links import markdown_destinations, is_remote_destination
 
 VERSION = '1.0.0'
 SKILLS = ('forward-test-skills', 'publicar-free', 'render-simulado', 'replicar-trabalho', 'validar-assistant')
@@ -25,9 +26,10 @@ REGISTRY = 'docs/ai/standards/registry.json'
 BASELINE = 'docs/auditoria/2026-10-06_ai-instrucoes/baseline.json'
 BASELINE_SHA256 = '9354ac85c5441dca40a59d5d8b73457895d200d685fb25cbd4ecfe9a93378fda'
 MANIFEST = '.claude/skills/.generated.json'
+NATIVE_ENTRIES = 'docs/ai/native-entries.json'
+TRACEABILITY = 'docs/ai/traceability-inventory.json'
 EVIDENCE_DATA = {MAP, BASELINE, 'docs/auditoria/2026-10-06_ai-instrucoes/source-controls.json', 'docs/auditoria/2026-10-06_ai-instrucoes/traceability.json', 'docs/auditoria/2026-10-06_ai-instrucoes/reference-scan.json', 'docs/auditoria/2026-10-06_ai-instrucoes/traceability.csv'}
 LEGACY = re.compile(r'\.claude/(?:CLAUDE\.md|rules/[\w.-]+\.md|context/[\w.-]+\.md|templates/[\w.-]+\.md|skills/README\.md)')
-LINK = re.compile(r'\[[^\]\n]+\]\(([^\s)]+)(?:\s+"[^"]*")?\)')
 
 class ContractError(ValueError):
     pass
@@ -154,6 +156,12 @@ def expected_outputs(root: Path, control: dict) -> tuple[dict[str, bytes], dict]
     return output, manifest
 
 def verify_ownership(root: Path, output: dict[str, bytes], control: dict) -> None:
+    # Preflight every output, including the ownership manifest, before any write.
+    # A matching path/hash does not imply exclusive ownership of its inode.
+    for relative in output:
+        path = safe(root, relative)
+        if path.exists() and path.stat().st_nlink > 1:
+            raise ContractError(f'HARDLINK_OUTPUT: {relative}')
     old_path = safe(root, MANIFEST)
     old = read_json(old_path) if old_path.exists() else None
     managed = {e['destination']: e['output_sha256'] for e in old.get('entries', [])} if old else control.get('adopted_outputs', {})
@@ -206,9 +214,10 @@ def anchors(text: str) -> set[str]:
     return result
 
 def check_link(root: Path, origin: str, raw: str) -> None:
-    if raw.startswith(('http:', 'https:', 'mailto:', 'data:')) or '<' in raw:
+    if is_remote_destination(raw):
         return
-    target, _, fragment = unquote(raw).partition('#')
+    target, _, fragment = raw.partition('#')
+    target, fragment = unquote(target.partition('?')[0]), unquote(fragment)
     if target.startswith('/') or '\\' in target:
         raise ContractError(f'LINK_OUTSIDE_ROOT: {origin} -> {raw}')
     # Normalize lexical components without realpath/case canonicalization.
@@ -237,7 +246,192 @@ def check_link(root: Path, origin: str, raw: str) -> None:
         if fragment not in anchors(resolved.read_text(encoding='utf-8')):
             raise ContractError(f'ANCHOR_MISSING: {origin} -> {raw}')
 
-def check_registry(root: Path, release: bool, today: dt.date) -> list[str]:
+def native_mechanism(relative: str) -> str | None:
+    """Classify repository instruction candidates, not observed client support."""
+    path = PurePosixPath(relative)
+    name = path.name.casefold()
+    if name in ('agents.md', 'agents.override.md'):
+        return 'agents-override' if name == 'agents.override.md' else 'agents-directory'
+    if name in ('claude.md', 'claude.local.md'):
+        return 'claude-instructions'
+    if name == 'gemini.md':
+        return 'gemini-instructions'
+    for family in ('.claude', '.grok', '.gemini'):
+        parts = tuple(p.casefold() for p in path.parts)
+        if any(parts[i:i + 2] == (family, 'rules') for i in range(len(parts) - 1)) and name.endswith('.md'):
+            return 'provider-rules'
+    return None
+
+
+def universal_history(text: str) -> bool:
+    flattened = ' '.join(text.split())
+    return bool(re.search(r'(?:antes de (?:qualquer|toda)|sempre leia|leia sempre|obrigat[oó]ri[oa]|always read|before (?:every|any)).{0,150}(?:CHANGELOG|docs/sprints|docs/auditoria)', flattened, re.I)
+                or re.search(r'@[^\s`<>]*(?:CHANGELOG|docs/sprints|docs/auditoria)', text, re.I))
+
+
+def check_native_entries(root: Path, paths: list[str]) -> set[str]:
+    manifest = read_json(safe(root, NATIVE_ENTRIES))
+    if manifest.get('schema_version') != 1 or not manifest.get('revision'):
+        raise ContractError('NATIVE_MANIFEST_SCHEMA')
+    entries = manifest.get('entries')
+    if not isinstance(entries, list) or not entries:
+        raise ContractError('NATIVE_MANIFEST_EMPTY')
+    # Ignoring a new instruction in Git must not hide it from the bootstrap gate.
+    proc = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard', '-z'], cwd=root, capture_output=True, check=True)
+    ignored = [p.decode('utf-8') for p in proc.stdout.split(b'\0') if p]
+    live = {p for p in paths + ignored if native_mechanism(p)
+            and not p.startswith(('.artifacts/', 'Ambiente_Antigo/'))}
+    declared = {}
+    for entry in entries:
+        if not isinstance(entry, dict) or any(not isinstance(entry.get(k), str) or not entry[k].strip()
+                for k in ('path', 'mechanism', 'role', 'owner', 'load_condition', 'sha256', 'review_reason')):
+            raise ContractError('NATIVE_ENTRY_INCOMPLETE')
+        name = entry['path']
+        if name in declared:
+            raise ContractError(f'NATIVE_ENTRY_DUPLICATE: {name}')
+        if entry['mechanism'] != native_mechanism(name) or entry['role'] not in ('core', 'shim', 'scoped-rule', 'override'):
+            raise ContractError(f'NATIVE_ENTRY_CLASSIFICATION: {name}')
+        if not isinstance(entry.get('shadows'), list):
+            raise ContractError(f'NATIVE_SHADOW_DECLARATION: {name}')
+        safe(root, name)
+        declared[name] = entry
+    if live != set(declared):
+        raise ContractError(f'NATIVE_ENTRY_INVENTORY: unclassified={sorted(live - set(declared))}; absent={sorted(set(declared) - live)}')
+    for name, entry in declared.items():
+        data = safe(root, name).read_bytes()
+        if universal_history(data.decode('utf-8')):
+            raise ContractError(f'UNIVERSAL_HISTORY: {name}')
+        if digest(data) != entry['sha256']:
+            raise ContractError(f'NATIVE_ENTRY_CHANGED: {name}; review content and manifest together')
+        expected_shadows = []
+        if entry['mechanism'] == 'agents-override':
+            sibling = str(PurePosixPath(name).with_name('AGENTS.md'))
+            expected_shadows = [sibling] if sibling in live else []
+            if entry['role'] != 'override':
+                raise ContractError(f'NATIVE_ENTRY_CLASSIFICATION: {name}')
+        if entry['shadows'] != expected_shadows:
+            raise ContractError(f'NATIVE_SHADOW_DECLARATION: {name}')
+    return live
+
+
+def canonical_digest(value) -> str:
+    return digest(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode())
+
+
+def requirement_identity(req: dict) -> dict:
+    source = req['source']
+    return {'id': req['id'], 'control_id': req['control_id'], 'obligation': req['obligation'],
+            'target': req['target'], 'owner': req['owner'], 'load_condition': req['load_condition'],
+            'disposition': req['disposition'], 'test_ids': req['test_ids'],
+            'source': {'sha': source.get('sha', source.get('commit')), 'path': source['path'],
+                       'line_start': source['line_start'], 'line_end': source['line_end'],
+                       'quote': source['quote']}}
+
+
+def claim_identity(claim: dict) -> dict:
+    return {k: claim[k] for k in ('id', 'provider', 'product', 'surface', 'url', 'kind', 'scope', 'paraphrase', 'owner', 'test_ids')}
+
+
+def traceability_revision(root: Path) -> dict:
+    manifest = read_json(safe(root, TRACEABILITY))
+    revisions = manifest.get('revisions')
+    if manifest.get('schema_version') != 1 or not isinstance(revisions, list) or not revisions:
+        raise ContractError('TRACEABILITY_SCHEMA')
+    previous = None
+    for number, revision in enumerate(revisions, 1):
+        if (revision.get('version') != number or
+                any(not isinstance(revision.get(k), str) or not revision[k].strip()
+                    for k in ('reviewed_at_utc', 'owner', 'reason')) or
+                revision.get('previous_sha256') != (canonical_digest(previous) if previous else None)):
+            raise ContractError('TRACEABILITY_REVISION_CHAIN')
+        for group in ('requirements', 'claims'):
+            values = revision.get(group)
+            if not isinstance(values, list) or not values:
+                raise ContractError('TRACEABILITY_INVENTORY_EMPTY')
+            ids = set()
+            for entry in values:
+                if (not isinstance(entry, dict) or not isinstance(entry.get('id'), str)
+                        or not entry['id'].strip() or entry['id'] in ids
+                        or not isinstance(entry.get('identity_sha256'), str)
+                        or not re.fullmatch(r'[0-9a-f]{64}', entry['identity_sha256'])):
+                    raise ContractError('TRACEABILITY_IDENTITY_INVALID')
+                ids.add(entry['id'])
+            if previous:
+                old = {e['id']: e['identity_sha256'] for e in previous[group]}
+                new = {e['id']: e['identity_sha256'] for e in values}
+                delta = {'added': sorted(new.keys() - old.keys()),
+                         'removed': sorted(old.keys() - new.keys()),
+                         'changed': sorted(k for k in new.keys() & old.keys() if new[k] != old[k])}
+                if revision.get('changes', {}).get(group) != delta:
+                    raise ContractError(f'TRACEABILITY_MIGRATION_DELTA: {group}')
+        previous = revision
+    if manifest.get('active_version') != len(revisions):
+        raise ContractError('TRACEABILITY_ACTIVE_VERSION')
+    return revisions[-1]
+
+
+def check_identity_inventory(items: list[dict], expected: list[dict], identity, group: str) -> None:
+    actual = {item['id']: canonical_digest(identity(item)) for item in items}
+    wanted = {item['id']: item['identity_sha256'] for item in expected}
+    if actual.keys() != wanted.keys():
+        raise ContractError(f'{group}_IDENTITY_INVENTORY: missing={sorted(wanted.keys() - actual.keys())}; added={sorted(actual.keys() - wanted.keys())}')
+    for key in actual:
+        if actual[key] != wanted[key]:
+            raise ContractError(f'{group}_IDENTITY_CHANGED: {key}; explicit versioned migration required')
+
+
+def check_requirements(root: Path, control: dict, revision: dict) -> list[dict]:
+    requirements = control.get('requirements', [])
+    if not isinstance(requirements, list) or not requirements:
+        raise ContractError('REQUIREMENT_COVERAGE')
+    if {r.get('control_id') for r in requirements} != {f'C{i:02}' for i in range(1, 23)}:
+        raise ContractError('REQUIREMENT_COVERAGE')
+    ids, sources = set(), {}
+    for req in requirements:
+        if any(not isinstance(req.get(k), str) or not req[k].strip()
+               for k in ('id', 'control_id', 'obligation', 'owner', 'load_condition', 'disposition')):
+            raise ContractError('REQUIREMENT_INCOMPLETE')
+        if req['id'] in ids:
+            raise ContractError(f'REQUIREMENT_ID_DUPLICATE: {req["id"]}')
+        ids.add(req['id'])
+        if not isinstance(req.get('test_ids'), list) or not req['test_ids'] or any(not isinstance(t, str) or not t.strip() for t in req['test_ids']):
+            raise ContractError(f'REQUIREMENT_TEST_IDS: {req["id"]}')
+        targets = req.get('target')
+        targets = [targets] if isinstance(targets, str) else targets
+        if not isinstance(targets, list) or not targets or any(not isinstance(t, str) or not t for t in targets):
+            raise ContractError(f'REQUIREMENT_TARGET: {req["id"]}')
+        for target in targets:
+            check_link(root, 'index.md', target)
+        source = req.get('source')
+        if not isinstance(source, dict):
+            raise ContractError(f'SOURCE_SCHEMA: {req["id"]}')
+        sha = source.get('sha', source.get('commit'))
+        if (not isinstance(sha, str) or not re.fullmatch(r'[0-9a-f]{40}', sha)
+                or ('sha' in source and 'commit' in source and source['sha'] != source['commit'])
+                or not isinstance(source.get('path'), str) or not source['path']
+                or not isinstance(source.get('quote'), str) or not source['quote']
+                or type(source.get('line_start')) is not int or type(source.get('line_end')) is not int
+                or not 1 <= source['line_start'] <= source['line_end']):
+            raise ContractError(f'SOURCE_SCHEMA: {req["id"]}')
+        safe(root, source['path'])
+        key = (sha, source['path'])
+        if key not in sources:
+            kind = subprocess.run(['git', 'cat-file', '-t', sha], cwd=root, capture_output=True)
+            data = subprocess.run(['git', 'show', sha + ':' + source['path']], cwd=root, capture_output=True)
+            if kind.returncode or kind.stdout.strip() != b'commit' or data.returncode:
+                raise ContractError(f'SOURCE_GIT_UNAVAILABLE: {req["id"]}; full source commit required')
+            sources[key] = data.stdout
+        data = sources[key]
+        lines = data.decode('utf-8').splitlines()
+        if source['line_end'] > len(lines) or '\n'.join(lines[source['line_start'] - 1:source['line_end']]) != source['quote']:
+            raise ContractError(f'SOURCE_QUOTE_MISMATCH: {req["id"]}')
+        if 'sha256' in source and digest(data) != source['sha256']:
+            raise ContractError(f'SOURCE_BLOB_HASH: {req["id"]}')
+    check_identity_inventory(requirements, revision['requirements'], requirement_identity, 'REQUIREMENT')
+    return requirements
+
+
+def check_registry(root: Path, release: bool, today: dt.date, revision: dict | None = None) -> list[str]:
     registry = read_json(safe(root, REGISTRY))
     claims = registry.get('claims', [])
     if not claims:
@@ -249,7 +443,7 @@ def check_registry(root: Path, release: bool, today: dt.date) -> list[str]:
             raise ContractError('CLAIM_ID_INVALID')
         ids.add(cid)
         required = ('provider', 'product', 'surface', 'url', 'reviewed_at_utc', 'documented_version', 'installed_version', 'scope', 'kind', 'paraphrase', 'snapshot', 'snapshot_sha256', 'test_ids', 'owner', 'state')
-        if any(k not in claim or claim[k] in ('', None, []) for k in required):
+        if any(not isinstance(claim.get(k), str) or not claim[k].strip() for k in required if k != 'test_ids') or not isinstance(claim.get('test_ids'), list) or not claim['test_ids'] or any(not isinstance(t, str) or not t.strip() for t in claim['test_ids']):
             raise ContractError(f'CLAIM_INCOMPLETE: {cid}')
         if not claim['url'].startswith('https://') or claim['state'] not in ('DOCUMENTED', 'OBSERVED', 'SUPPORTED'):
             raise ContractError(f'CLAIM_INVALID: {cid}')
@@ -258,7 +452,7 @@ def check_registry(root: Path, release: bool, today: dt.date) -> list[str]:
             raise ContractError(f'SNAPSHOT_HASH: {cid}')
         reviewed = dt.datetime.fromisoformat(claim['reviewed_at_utc'].replace('Z', '+00:00'))
         source = read_json(snapshot)
-        if source.get('reviewed_at_utc') != claim['reviewed_at_utc'] or source.get('url') != claim['url'] or source.get('id') != cid:
+        if source.get('reviewed_at_utc') != claim['reviewed_at_utc'] or source.get('url') != claim['url'] or source.get('id') != cid or source.get('paraphrase') != claim['paraphrase']:
             raise ContractError(f'REVIEW_BINDING: {cid}')
         age = (today - reviewed.date()).days
         if age < 0:
@@ -271,6 +465,8 @@ def check_registry(root: Path, release: bool, today: dt.date) -> list[str]:
             raise ContractError(f'SUPPORT_WITHOUT_EVIDENCE: {cid}')
         if claim['state'] != 'DOCUMENTED':
             raise ContractError(f'PROMOTION_REQUIRES_VALIDATED_EVIDENCE_FORMAT: {cid}')
+    revision = revision or traceability_revision(root)
+    check_identity_inventory(claims, revision['claims'], claim_identity, 'CLAIM')
     return warnings
 
 def check(root: Path, *, release: bool = False, migration_freeze: bool = False, today: dt.date | None = None) -> dict:
@@ -305,16 +501,10 @@ def check(root: Path, *, release: bool = False, migration_freeze: bool = False, 
     for relative in control['retired_sources']:
         if (root / relative).exists():
             raise ContractError(f'LEGACY_LOADER_PRESENT: {relative}')
-    requirements = control.get('requirements', [])
-    covered = {r.get('control_id') for r in requirements}
-    if covered != {f'C{i:02}' for i in range(1, 23)}:
-        raise ContractError('REQUIREMENT_COVERAGE')
-    for req in requirements:
-        if any(not req.get(k) for k in ('id', 'source', 'obligation', 'target', 'load_condition', 'test_ids', 'disposition')):
-            raise ContractError('REQUIREMENT_INCOMPLETE')
-        for target in req['target'] if isinstance(req['target'], list) else [req['target']]:
-            check_link(root, 'index.md', target)
-    warnings = check_registry(root, release, today)
+    native_entries = check_native_entries(root, paths)
+    revision = traceability_revision(root)
+    requirements = check_requirements(root, control, revision)
+    warnings = check_registry(root, release, today, revision)
     if not set(control.get('evidence_data_files', [])) <= EVIDENCE_DATA:
         raise ContractError('EVIDENCE_EXCLUSION_NOT_ALLOWLISTED')
     exceptions = {(e['path'], e['line_sha256'], e['legacy_source']) for e in control.get('historical_exceptions', [])}
@@ -332,12 +522,14 @@ def check(root: Path, *, release: bool = False, migration_freeze: bool = False, 
             continue
         for line in text.splitlines():
             for legacy in LEGACY.findall(line):
+                if legacy in native_entries:
+                    continue  # Reviewed live extension, never a historical exception.
                 key = (relative, digest(line.encode()), legacy)
                 if key not in exceptions:
                     raise ContractError(f'LEGACY_REFERENCE: {relative}: {legacy}')
                 seen_exceptions.add(key)
         if relative == 'AGENTS.md' or relative.startswith(('docs/ai/', '.agents/skills/', '.claude/skills/')):
-            for raw in LINK.findall(text):
+            for raw in markdown_destinations(text):
                 check_link(root, relative, raw)
     if exceptions - seen_exceptions:
         raise ContractError('STALE_HISTORICAL_EXCEPTION')

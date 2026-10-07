@@ -178,6 +178,50 @@ class BundleCliTests(unittest.TestCase):
         self.assertEqual(renamed["path"], "docs/historico/falha renomeada.md")
         self.assertEqual(renamed["original_path"], "docs/historico/falha.md")
 
+    def test_selected_only_profile_omits_unselected_names_and_preserves_body(self) -> None:
+        private_name = "nome-pessoa-SINTETICA-privado.txt"
+        self.write(private_name, "SYNTHETIC OMITTED CONTENT\n")
+        self.write("AGENTS.md", "Alteração selecionada sintética\n")
+        self.task("--allow-dirty")
+        before_body = (self.root / ".artifacts/contexto-revisar.txt").read_bytes()
+        audit = self.read_manifest()
+        self.assertIn(private_name, json.dumps(audit, ensure_ascii=False))
+        self.task("--allow-dirty", "--manifest-profile", "selected-only")
+        manifest = self.read_manifest()
+        text = json.dumps(manifest, ensure_ascii=False)
+        self.assertNotIn(private_name, text)
+        self.assertNotIn("SYNTHETIC OMITTED CONTENT", text)
+        self.assertNotIn("docs/historico/falha.md", text)
+        self.assertEqual(before_body, (self.root / ".artifacts/contexto-revisar.txt").read_bytes())
+        self.assertEqual(2, manifest["schema_version"])
+        self.assertEqual("selected-only", manifest["manifest_profile"])
+        self.assertEqual(audit["included"], manifest["included"])
+        self.assertEqual(audit["metrics"], manifest["metrics"])
+        self.assertEqual([], manifest["excluded"])
+        self.assertEqual(len(audit["excluded"]), manifest["path_disclosure"]["excluded_paths_omitted"])
+        self.assertEqual(2, manifest["path_disclosure"]["dirty_entries_total"])
+        self.assertEqual(1, manifest["path_disclosure"]["dirty_entries_omitted"])
+        self.assertEqual([{"status": " M", "path": "AGENTS.md"}], manifest["dirty_entries"])
+
+    def test_selected_only_rename_does_not_disclose_old_unselected_name(self) -> None:
+        old = "docs/historico/falha.md"
+        new = "docs/selected-new.md"
+        self.git("mv", old, new)
+        self.task("--allow-dirty", "--manifest-profile", "selected-only", "--include", new)
+        manifest = self.read_manifest()
+        self.assertNotIn(old, json.dumps(manifest))
+        self.assertEqual(1, manifest["path_disclosure"]["original_paths_omitted"])
+        self.assertEqual([{"status": "R ", "path": new}], manifest["dirty_entries"])
+
+    def test_manifest_profile_is_explicit_and_task_only(self) -> None:
+        self.task()
+        old = (self.root / ".artifacts/contexto-revisar.txt.manifest.json").read_bytes()
+        self.task("--manifest-profile", "audit")
+        self.assertEqual(old, (self.root / ".artifacts/contexto-revisar.txt.manifest.json").read_bytes())
+        for mode in ("canonical", "security", "full"):
+            self.cli("--mode", mode, "--manifest-profile", "selected-only", ok=False)
+        self.task("--manifest-profile", "invalid", ok=False)
+
     def test_task_and_old_modes_do_not_ingest_their_own_output(self) -> None:
         self.task("--saida", "saída com espaço.txt", "--allow-dirty")
         self.task("--saida", "saída com espaço.txt", "--allow-dirty")

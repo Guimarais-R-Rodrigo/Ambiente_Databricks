@@ -63,3 +63,70 @@ Integrações são mínimas e geradas quando necessário, sem settings pessoais,
 MCP, hooks, credenciais ou permissões implícitos. Nenhuma alegação de suporte
 nativo é feita por este índice: testes indisponíveis ficam BLOCKED. A remoção
 das origens antigas é trabalho do integrador, após cobertura e consumidores.
+
+## Guardas locais de manutenção
+
+`python tools/ai_controls.py --generate` faz o preflight de todos os destinos e
+manifesto antes da primeira escrita: tipo, ownership, hash anterior, symlinks
+(inclusive ancestrais) e hardlinks com `st_nlink > 1`. Um hardlink bloqueia o lote,
+inclusive quando liga dois outputs geridos. Preserve o nome e os bytes externos;
+não remova o vínculo alheio para contornar a falha. A proteção é local e não
+certifica contenção contra mudanças concorrentes de filesystem nem junctions
+Windows sem ensaio nesse host. `--check` continua somente leitura.
+
+O [inventário de entradas nativas](native-entries.json) classifica os candidatos
+AGENTS/override, CLAUDE/local, GEMINI e regras Markdown de famílias de clientes,
+inclusive entradas novas ignoradas pelo Git. O gate exclui apenas a saída gerada
+`.artifacts/` e a quarentena read-only; não inspeciona settings pessoais/globais
+nem afirma carregamento nativo. Arquivos por diretório são extensões legítimas:
+antes de adicioná-los, revise conteúdo e precedência, incremente `revision` e
+registre path, mecanismo, papel, owner, condição, hash e motivo. Overrides devem
+listar explicitamente em `shadows` o AGENTS irmão que substituem. Conteúdo alterado
+exige revisão do hash; o manifesto não concede permissão nem dispensa o bloqueio
+de histórico universal. A identificação é uma guarda estática, não análise
+semântica completa de linguagem natural nem homologação de cliente.
+
+A [identidade versionada](traceability-inventory.json) confere cada obrigação e
+claim, não apenas seus grupos. Requer IDs únicos, owner e campos tipados, fonte
+Git por SHA completo, linhas/trecho exatos e hash de blob quando registrado. As
+duas codificações históricas de origem (`sha` e `commit`/`sha256`) são aceitas sem
+reescrever citações. Um checkout sem esses commits falha com
+`SOURCE_GIT_UNAVAILABLE`; use histórico completo, sem substituir a prova por HEAD.
+O registry deve manter a paráfrase idêntica ao snapshot datado além de ID, URL,
+data e hash. DOCUMENTED não é promovido pelo inventário ou pela validação.
+
+Para crescer, dividir, remover ou reformular uma obrigação/claim legitimamente:
+
+1. Preserve as revisões anteriores e toda evidência histórica congelada. Explique
+   a decisão, owner e revisão em UTC; ajuste apenas a declaração viva autorizada.
+2. Acrescente uma revisão ao inventário, com versão seguinte, `previous_sha256`
+   do JSON canônico da revisão anterior e os IDs/digests esperados completos.
+   A função `canonical_digest` ordena chaves, usa UTF-8 sem escapes ASCII e
+   separadores compactos. `requirement_identity`/`claim_identity` definem os
+   campos identitários, sem impor uma contagem fixa eterna.
+3. Declare para obrigações e claims os IDs `added`, `removed` e `changed` em
+   `changes`; atualize `active_version`. O gate compara o delta exato e o vínculo
+   entre revisões. Mudança de paráfrase requer novo snapshot datado, preservando o
+   anterior; uma simples renovação de data não é nova revisão oficial comprovada.
+4. Revise o diff e execute `python tools/ai_controls.py --check --release` e a
+   suíte `test_ai*.py` após preparar o derivado conforme a skill de render.
+
+Esses metadados tornam mudanças acidentais visíveis e migrações revisáveis. Não
+são fronteira de segurança contra alguém autorizado a editar código e inventário,
+nem prova de preservação semântica, teste nativo ou revisão institucional A1.
+
+O parser compartilhado [markdown_links.py](../../tools/markdown_links.py) é usado
+por `ai_controls --check` e pelos scanners de Markdown, extras e comentários de
+notebook do validador geral. Confere destinos inline/imagens, referências
+completas/colapsadas/atalhos definidos, caminhos entre ângulos, títulos, escapes,
+parênteses balanceados, entidades e percent-encoding. Referências em listas e
+citações e imagens dentro de links também entram. Caixa do path é conferida;
+o gate IA mantém sua validação de âncoras, e o geral mantém contrato de path.
+
+Código inline, cercas (inclusive em listas/citações) e comentários HTML são
+exemplos, não links navegáveis. Nos notebooks, os comentários são reunidos antes
+do parsing para resolver definições em outra linha; código Python permanece fora
+desse scanner. A expansão não altera nem certifica execução de exemplos. É um
+subconjunto explícito, não renderizador completo CommonMark/HTML: links HTML,
+extensões específicas de renderizadores e intenção semântica pedem revisão
+separada. Referência sem definição é texto no Markdown, não destino existente.

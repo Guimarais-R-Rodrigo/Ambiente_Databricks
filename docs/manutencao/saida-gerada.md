@@ -80,11 +80,25 @@ continuam separados; não se presume equivalência entre labels de imagem.
 
 ## Limites e retenção
 
-Os check names atuais foram observados no GitHub como nomes simples de jobs do
-app GitHub Actions. Rulesets visíveis retornaram lista vazia; a consulta de branch
-protection retornou 403. Configuração de required checks segue **BLOCKED por
-acesso**, e check-runs do SHA candidato são **NOT_RUN até publicação autorizada**.
-Prova estática e testes locais não afirmam equivalência remota já homologada.
+A observação inicial da implementação (06/10/2026, commit
+`5a721ff47`) identificou check names simples de jobs do app GitHub Actions,
+rulesets visíveis vazios e resposta 403 na consulta de branch protection.
+A configuração de required checks ficou **BLOCKED por acesso nessa consulta**;
+esse registro histórico não descreve o resultado das execuções posteriores.
+
+Em **06/10/2026 às 23:38 UTC**, a leitura dos check-runs do SHA exato
+`2c5975c0718ef9e30ec3fc26998338036262e87c` observou **24 check-runs
+completed/success e oito workflows success**. Evidências: [CI principal](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/37545776499),
+[kit pós-merge](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/37545776743)
+e [SE02](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/37545776535).
+Essa é uma observação datada desse SHA, não aprovação automática de uma nova
+candidata. Para outra árvore, consulte os check-runs correspondentes e registre
+SHA, horário e links; a existência de merge, sozinha, não prova CI.
+
+A leitura de branch com `protected=false` não revoga a resposta 403 histórica
+de outro endpoint nem prova quais checks seriam exigidos por outra configuração.
+CI remoto, prova estática e testes locais não homologam Databricks, ACLs,
+publicação ou aceite humano.
 
 As matrizes vivas V08/V13 migram somente o path do derivado. Checkpoints, provas
 brutas, snapshots, baseline B0 e baseline da campanha IA continuam históricos.

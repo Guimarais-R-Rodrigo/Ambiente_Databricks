@@ -56,6 +56,27 @@ python -B tools/package_boundary.py
 python -B tools/tests/runtime/test_core.py -v
 ```
 
+## Execução integral, separada do fingerprint
+
+Desde a correção de 07/10/2026, a etapa `biblioteca` do agregado usa
+[`run_core_tests.py`](../../tools/run_core_tests.py). Ele primeiro confere o
+schema, a proveniência, o digest e a contagem do contrato existente, sem mudar
+seus hashes. Em seguida exige cada ID protegido iniciado, concluído e aprovado
+exatamente uma vez. Skip, inclusive em setup de módulo/classe, duplicação,
+filtragem por `load_tests`, ausência de casos, falha e erro impedem PASS.
+
+```sh
+python -B tools/run_core_tests.py -v
+```
+
+O JSON de stdout registra IDs esperados, iniciados, concluídos, aprovados,
+faltantes, extras, duplicados e skips; o log de execução fica em stderr. A CLI
+`test_core.py` permanece disponível para diagnóstico, mas seu exit 0 sozinho
+pode incluir skips. O novo runner é o gate de execução integral. Isso não amplia
+a semântica coberta pelo fingerprint para todo o módulo, nem comprova runtime
+Databricks. O mapeamento B0 desse comando continua coletando os métodos da suíte
+real e recusa argumentos que desviem a coleta.
+
 ## Prova cross-version e limites
 
 O [workflow do kit](../../.github/workflows/kit-transicao-trabalho.yml) executa,
@@ -71,8 +92,33 @@ O caso de sintaxe PEP 695 é explicitamente não aplicável a 3.11; sua execuç�
 real pertence à perna 3.12. Um teste sintético de AST sozinho não substitui a
 matriz real nem os estágios downstream da receita.
 
-O fingerprint de métodos em `skill_enforcement/parallel/coverage.py` é outro
-contrato: permanece inalterado, inclusive hashes históricos. Sua regressão é
-observada pelo agregado nos dois runtimes. Esta correção não reclassifica a
-falha histórica SER L2 versus L3 nem certifica Windows, Databricks, ACLs,
-ambiente institucional, transporte ou promoção de policy.
+## B0: contrato e execução separados
+
+O fingerprint de métodos em
+[`skill_enforcement/parallel/coverage.py`](../../tools/skill_enforcement/parallel/coverage.py)
+é outro contrato: permanece inalterado, inclusive hashes históricos. Usa
+`ast.dump` bruto com hashes originados no AST do CPython 3.12; não herda a
+normalização `core-tests-ast-v2`. Seu runtime de referência para esta reprodução
+é CPython 3.12. Nem `ci_local.py::ETAPAS` nem `PROFILE_STEPS['se08']` executam
+`test_ser_parallel_b0` ou o inventário B0. O verde da matriz do kit em 3.11/3.12
+não comprova compatibilidade cross-version desse fingerprint.
+
+Execute as rotas próprias no ambiente de referência já preparado, separadamente
+do agregado e sem instalar dependências como consequência implícita:
+
+```sh
+python -B -m unittest tools.tests.test_ser_parallel_b0 -v
+python -B -m tools.skill_enforcement.parallel.coverage
+```
+
+O primeiro comando executa regressões; o segundo confronta identidade e coleta,
+não executa todos os IDs coletados nem qualifica host/campanha. Registre versão
+Python, SHA, comando e resultado. Outro interpretador exige verificação específica;
+divergência de AST não autoriza recalcular hashes históricos. Na auditoria de
+06/10/2026 do SHA `2c5975c0718ef9e30ec3fc26998338036262e87c`, a coleta direta
+passou em 3.12. A análise de 3.11 foi apenas projeção do schema AST; a execução
+do helper em 3.13.5 encontrou dois digests divergentes e não qualifica esse runtime.
+
+Esta correção documental não reclassifica a falha histórica SER L2 versus L3
+nem certifica Windows, Databricks, ACLs, ambiente institucional, transporte ou
+promoção de policy.

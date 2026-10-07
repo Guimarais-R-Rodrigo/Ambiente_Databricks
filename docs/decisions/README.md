@@ -46,8 +46,8 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; [B0 integrada](../sprints/skill_enforcement_rollout/PARALELO/B0/README.md) pela PR #113; perfil 2/1 qualificado no freeze indicado, 3/2 não qualificado |
 | [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; módulo integrado pela PR #119 (`63601e09`) |
 | [0025](ADR-0025-arquitetura-instrucoes-ia.md) | núcleo AGENTS e documentação neutra; adaptadores mínimos e evidência por superfície | aceito para implementação local; compatibilidade/auditoria não presumidas |
-
 | [0026](ADR-0026-arquitetura-projeto-e-historia.md) | navegação por tarefa, retenção reversível e fronteiras de pacote/derivação | aceito para execução local; lotes e homologação com provas próprias |
+| [0027](ADR-0027-correcao-controles-auditoria-integrada.md) | contenção, contratos de execução, rastreabilidade e reconciliação após auditoria integrada | implementação local autorizada em 07/10/2026; publicação e homologação separadas |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

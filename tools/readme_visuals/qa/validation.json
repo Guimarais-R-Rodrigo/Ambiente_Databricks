@@ -2,7 +2,7 @@
   "historical_freeze": false,
   "status": "passed",
   "scope": "all",
-  "checks": 7807,
+  "checks": 7829,
   "failures": [],
   "measurements": [
     {
