@@ -191,14 +191,15 @@ def check(root: Path = ROOT) -> list[str]:
             # qualquer outra alteração continua reprovando.
             if item['destination'].startswith('tools/readme_visuals/qa/figures/') and destination.suffix == '.json':
                 data = data.replace(b'ambiente_databricks/', b'ambiente_fonte/')
-            if hashlib.sha256(data).hexdigest() != item['source_sha256']:
-                if item['destination'] == SUCCESSOR_FIGURE:
-                    try:
-                        check_visual_successor(root, item, manifest['source_commit'], data)
-                    except (OSError, ValueError, KeyError, TypeError) as exc:
-                        errors.append('VISUAL_SUCCESSOR_INVALID:' + str(exc))
-                else:
-                    errors.append(f'MOVED_RESOURCE_CHANGED:{item["destination"]}')
+            if item['destination'] == SUCCESSOR_FIGURE:
+                # A figura vigente deve ser a sucessora mesmo quando os bytes
+                # antigos são restaurados: a baseline não substitui este contrato.
+                try:
+                    check_visual_successor(root, item, manifest['source_commit'], data)
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    errors.append('VISUAL_SUCCESSOR_INVALID:' + str(exc))
+            elif hashlib.sha256(data).hexdigest() != item['source_sha256']:
+                errors.append(f'MOVED_RESOURCE_CHANGED:{item["destination"]}')
         elif item['destination'] == 'tools/readme_visuals/qa/validation.json':
             report = json.loads(destination.read_text(encoding='utf-8'))
             if report.get('status') != 'passed' or report.get('scope') != 'all' or report.get('failures'):

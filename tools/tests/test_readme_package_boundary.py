@@ -93,6 +93,17 @@ class PackageBoundaryTests(unittest.TestCase):
         path.write_bytes(path.read_bytes() + b' ')
         self.assertIn('MOVED_RESOURCE_CHANGED:' + relative, boundary.check(root))
 
+    def test_restored_predecessor_cannot_bypass_successor_contract(self):
+        root = self.fixture()
+        ledger = json.loads((root / boundary.VISUAL_SUCCESSOR).read_text(encoding='utf-8'))
+        old = subprocess.check_output(['git', 'cat-file', 'blob',
+                                      ledger['source_commit'] + ':' + ledger['source']], cwd=ROOT)
+        path = root / boundary.SUCCESSOR_FIGURE
+        path.write_bytes(old.replace(b'ambiente_fonte/', b'ambiente_databricks/'))
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+        (root / boundary.VISUAL_SUCCESSOR).unlink()
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
     def test_moved_build_input_symlink_fails(self):
         root = self.fixture()
         rel = 'tools/readme_visuals/assets/headers/src/copy.json'
