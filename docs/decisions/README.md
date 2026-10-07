@@ -48,9 +48,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0025](ADR-0025-arquitetura-instrucoes-ia.md) | núcleo AGENTS e documentação neutra; adaptadores mínimos e evidência por superfície | aceito para implementação local; compatibilidade/auditoria não presumidas |
 | [0026](ADR-0026-arquitetura-projeto-e-historia.md) | navegação por tarefa, retenção reversível e fronteiras de pacote/derivação | aceito para execução local; lotes e homologação com provas próprias |
 | [0027](ADR-0027-correcao-controles-auditoria-integrada.md) | contenção, contratos de execução, rastreabilidade e reconciliação após auditoria integrada | implementação local autorizada em 07/10/2026; publicação e homologação separadas |
-
 | [0028](ADR-0028-manual-tecnico-v2-canonico.md) | Manual Técnico V2 como única edição técnica vigente; catálogo e termos integrados | execução local autorizada em 07/10/2026; substitui edição e cópia raiz previstas no ADR-0010 |
-
 | [0029](ADR-0029-faxina-fonte-e-prototipo.md) | fonte ambiente_databricks e retirada recuperável do protótipo | execução local autorizada em 07/10/2026 |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.

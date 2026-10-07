@@ -4,6 +4,7 @@ import ast
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -11,6 +12,60 @@ ROOT = Path(__file__).resolve().parents[1]
 FINGERPRINT_SCHEMA = 'core-tests-ast-v2'
 CORE_PATH = 'tools/tests/runtime/test_core.py'
 TYPE_PARAM_NODES = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+VISUAL_SUCCESSOR = 'tools/tests/runtime/visual_successor.json'
+SUCCESSOR_FIGURE = 'tools/readme_visuals/qa/figures/raiz.02_arquitetura_ecossistema.json'
+
+
+def check_visual_successor(root: Path, item: dict, source_commit: str, data: bytes) -> None:
+    """Sucessão de três campos de uma figura, com predecessor Git e assets atuais.
+
+    data já desfez somente o prefixo da fonte. O ledger não altera os hashes
+    históricos nem dispensa integridade das demais figuras ou campos.
+    """
+    ledger = json.loads((root / VISUAL_SUCCESSOR).read_text(encoding='utf-8'),
+                        object_pairs_hook=_unique_object)
+    if (ledger['schema_version'] != 1 or ledger['source_commit'] != source_commit
+            or ledger['source'] != item['source'] or ledger['destination'] != item['destination']
+            or ledger['original_sha256'] != item['source_sha256']
+            or ledger['label'] != 'ambiente_databricks/' or ledger['font_size'] != 32):
+        raise ValueError('VISUAL_SUCCESSOR_PROVENANCE')
+    # O checkout da ferramenta é owner da história Git; root também pode ser
+    # uma cópia isolada de dados usada nos testes negativos.
+    original = subprocess.run(['git', 'cat-file', 'blob', source_commit + ':' + item['source']],
+                              cwd=ROOT, capture_output=True, check=False)
+    if original.returncode or hashlib.sha256(original.stdout).hexdigest() != item['source_sha256']:
+        raise ValueError('VISUAL_SUCCESSOR_PREDECESSOR')
+    before = json.loads(original.stdout)
+    current = json.loads(data)
+    live = json.loads((root / item['destination']).read_text(encoding='utf-8'))
+    if live['texts'][1]['text'] != ledger['label'] or live['texts'][1]['size'] != ledger['font_size']:
+        raise ValueError('VISUAL_SUCCESSOR_LABEL')
+    allowed = [['sha256'], ['svg_sha256'], ['texts', 1, 'width']]
+    if [change['path'] for change in ledger['approved_changes']] != allowed:
+        raise ValueError('VISUAL_SUCCESSOR_FIELDS')
+    expected_bytes = original.stdout
+    for change in ledger['approved_changes']:
+        left, right = before, current
+        for part in change['path'][:-1]:
+            left, right = left[part], right[part]
+        key = change['path'][-1]
+        if left[key] != change['old'] or right[key] != change['new']:
+            raise ValueError('VISUAL_SUCCESSOR_VALUE')
+        old = json.dumps(change['old']).encode()
+        new = json.dumps(change['new']).encode()
+        if expected_bytes.count(old) != 1:
+            raise ValueError('VISUAL_SUCCESSOR_AMBIGUOUS_REPLACEMENT')
+        expected_bytes = expected_bytes.replace(old, new)
+    if data != expected_bytes:
+        raise ValueError('VISUAL_SUCCESSOR_UNAPPROVED_BYTES')
+    product_assets = root / 'ambiente_databricks/.assistant/hub_readmes_visual_assets'
+    for field, path_field in [('sha256', 'published'), ('svg_sha256', 'source')]:
+        relative = current[path_field]
+        if not isinstance(relative, str) or Path(relative).is_absolute() or '..' in Path(relative).parts:
+            raise ValueError('VISUAL_SUCCESSOR_ASSET_PATH')
+        asset = product_assets / relative
+        if asset.is_symlink() or hashlib.sha256(asset.read_bytes()).hexdigest() != current[field]:
+            raise ValueError('VISUAL_SUCCESSOR_ASSET_MISMATCH')
 
 
 def canonical_ast(value):
@@ -117,16 +172,33 @@ def check(root: Path = ROOT) -> list[str]:
         if not path.is_file() or path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             errors.append(f'PROTECTED_RESOURCE:{relative}')
     for item in moves:
-        if (root / item['source']).exists():
-            errors.append(f'MAINTAINER_FILE_IN_PAYLOAD:{item["source"]}')
+        # source_commit/source/source_sha256 identificam a árvore congelada.
+        # Somente a presença atual acompanha a renomeação autorizada da fonte.
+        live_source = item['source']
+        if live_source.startswith('ambiente_fonte/'):
+            live_source = 'ambiente_databricks/' + live_source[len('ambiente_fonte/'):]
+        if (root / live_source).exists():
+            errors.append(f'MAINTAINER_FILE_IN_PAYLOAD:{live_source}')
         destination = root / item['destination']
         if not destination.is_file():
             errors.append(f'MOVED_RESOURCE_MISSING:{item["destination"]}')
         elif destination.is_symlink() or any(p.is_symlink() for p in destination.parents if p != root):
             errors.append(f'MOVED_RESOURCE_SYMLINK:{item["destination"]}')
         elif item['destination'] not in ('tools/tests/runtime/test_core.py', 'tools/readme_visuals/qa/validation.json'):
-            if hashlib.sha256(destination.read_bytes()).hexdigest() != item['source_sha256']:
-                errors.append(f'MOVED_RESOURCE_CHANGED:{item["destination"]}')
+            data = destination.read_bytes()
+            # Metadados QA apontam à fonte renomeada. Preserve o digest original
+            # e aceite só esse delta textual reversível nas figuras realocadas;
+            # qualquer outra alteração continua reprovando.
+            if item['destination'].startswith('tools/readme_visuals/qa/figures/') and destination.suffix == '.json':
+                data = data.replace(b'ambiente_databricks/', b'ambiente_fonte/')
+            if hashlib.sha256(data).hexdigest() != item['source_sha256']:
+                if item['destination'] == SUCCESSOR_FIGURE:
+                    try:
+                        check_visual_successor(root, item, manifest['source_commit'], data)
+                    except (OSError, ValueError, KeyError, TypeError) as exc:
+                        errors.append('VISUAL_SUCCESSOR_INVALID:' + str(exc))
+                else:
+                    errors.append(f'MOVED_RESOURCE_CHANGED:{item["destination"]}')
         elif item['destination'] == 'tools/readme_visuals/qa/validation.json':
             report = json.loads(destination.read_text(encoding='utf-8'))
             if report.get('status') != 'passed' or report.get('scope') != 'all' or report.get('failures'):

@@ -69,13 +69,42 @@ class PackageBoundaryTests(unittest.TestCase):
         path.write_bytes(path.read_bytes() + b' ')
         self.assertIn('MOVED_RESOURCE_CHANGED:' + rel, boundary.check(root))
 
+    def test_changed_namespace_figure_other_field_fails(self):
+        root = self.fixture()
+        path = root / boundary.SUCCESSOR_FIGURE
+        path.write_bytes(path.read_bytes().replace(b'"height": 760', b'"height": 761', 1))
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
+    def test_visual_successor_missing_ledger_fails(self):
+        root = self.fixture()
+        (root / boundary.VISUAL_SUCCESSOR).unlink()
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
+    def test_visual_successor_asset_mismatch_fails(self):
+        root = self.fixture()
+        asset = root / 'ambiente_databricks/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png'
+        asset.write_bytes(asset.read_bytes() + b'changed')
+        self.assertIn('VISUAL_SUCCESSOR_INVALID:VISUAL_SUCCESSOR_ASSET_MISMATCH', boundary.check(root))
+
+    def test_other_figure_namespace_does_not_allow_content_mutation(self):
+        root = self.fixture()
+        relative = 'tools/readme_visuals/qa/figures/assistant.01_escolha_ponto_de_partida.json'
+        path = root / relative
+        path.write_bytes(path.read_bytes() + b' ')
+        self.assertIn('MOVED_RESOURCE_CHANGED:' + relative, boundary.check(root))
+
     def test_moved_build_input_symlink_fails(self):
         root = self.fixture()
         rel = 'tools/readme_visuals/assets/headers/src/copy.json'
         path = root / rel
         other = root / 'borrowed.json'
         path.rename(other)
-        path.symlink_to(other)
+        try:
+            path.symlink_to(other)
+        except OSError as exc:
+            if getattr(exc, 'winerror', None) == 1314:
+                self.skipTest('Windows sem privilégio de symlink (WinError 1314); guarda não certificada')
+            raise
         self.assertIn('MOVED_RESOURCE_SYMLINK:' + rel, boundary.check(root))
 
     def test_runtime_resources_without_maintainer_checkout(self):

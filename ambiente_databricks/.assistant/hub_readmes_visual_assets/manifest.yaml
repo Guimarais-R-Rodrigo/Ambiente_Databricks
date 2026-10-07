@@ -4,15 +4,15 @@ approved_direction: sprint_0
 contracts: specs/visual_contracts.yaml
 inputs:
   - path: tools/readme_visuals/production.mjs
-    sha256: ff30a5cc06db5618717421ed13c14ddf99562cebd99d6e0530464f4d332d889d
+    sha256: aa7caca5eb2307c04475ba6fe7c89f5f4d7f169665046b62396f3d5021534621
   - path: tools/readme_visuals/validate_production.mjs
-    sha256: e66cf529f7f3df7e280d60baed745e6d1041db7a70742ed927c14b606f49cfa7
+    sha256: bf032ec266d359b065fb4125aac5b1f16eaaef70f85946780d379d8f54752787
   - path: tools/readme_visuals/lib.mjs
-    sha256: 36808cbff404537b53cee21a4eef914721cffb16ac82d9a08e8d876c8f2977bb
+    sha256: 62da1508241890aec30a803636b318f736e5405d488d036763610c9f58f4eeea
   - path: tools/readme_visuals/headers.mjs
     sha256: 09fcbba11bbe366442ad64741e207a2df452bac3b0dc0b6213ec3da286da512b
   - path: tools/readme_visuals/archetypes/top.mjs
-    sha256: 6ebdc9c9b65d321e2f0d94ad1a75ef77e3c0fa06ec3d3f8ce0755508a6ad5ed6
+    sha256: 0f43f038fe6fe0a6f53c29966fe5d9abaeb0e4dbbfde763c8bc875b8b1be089d
   - path: tools/readme_visuals/archetypes/snippets.mjs
     sha256: f1986dcb7a1cd22ece37579114977253522b5b4e043157bd3331cc4727d7d617
   - path: tools/readme_visuals/archetypes/scripts.mjs
@@ -28,13 +28,13 @@ inputs:
   - path: tools/readme_visuals/assets/headers/src/fundo_tecnologico_original.png
     sha256: 4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml
-    sha256: a7c70ca4d17435c8fe7ae8347ffa1c684b10f67a105a66c0ab1934c3c096c339
+    sha256: 10febc17c8abdbffd9821686fc46e446e9d8240f3c961917bf71e1014b586c3e
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/approved_signatures.json
     sha256: 0ddbe98dc5046493553ba507cea70a72ce48e075eac3192fcda178667090888d
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/approved_headers.json
     sha256: 3f1b7f56014b8f884fb21923fe3153047dc62910802a8a15451042ff8230ce9a
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/editorial_corrections.json
-    sha256: ee8cf7eeb5b932d6202767ab5e501ef1615611d8b169e7c17ce294184aa53226
+    sha256: 999e8a98727ce92dd2b48ee687662c8243ffba4c82297d8157c84e247bf74b49
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/prototype_copy.yaml
     sha256: efe513c51b37bed7f3eb3fbac13efbecd25a01547f57615ec2a2b3d8cd0f8493
   - path: ambiente_databricks/.assistant/hub_readmes_visual_assets/visual_system/tokens.yaml
@@ -199,8 +199,8 @@ assets:
     archetype: architectural_cutaway
     source: readmes/raiz/sources/02_arquitetura_ecossistema.svg
     published: readmes/raiz/png/02_arquitetura_ecossistema.png
-    sha256: d6882c0b60257cae22b6deaef0aedfb02f21f8dc1b21163bd4f5f5d98c0e4775
-    svg_sha256: 14db7ed43cecd236befab63b6b24b266599012bcc60cfabf69ab40aeeba38bbc
+    sha256: 44ec0ce54f7f2f7747a63b30169ed250d3fbc3b41eed8a2acc85260b97faf2bf
+    svg_sha256: 3d5ce67c22728eadc3bad30a2521646031a34b7541d77c12f8c2a12311188f01
     width: 1600
     height: 760
     chrome: compact

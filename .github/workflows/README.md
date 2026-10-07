@@ -30,7 +30,7 @@ podem limitar o disparo ou a execução. Referência: [GitHub Actions — workfl
 | Arquivo e check principal | Quando roda | O que protege e por que manter |
 |---|---|---|
 | [ci.yml](ci.yml): `validar` e jobs de Temas | todos os PRs; push em `main` e `codex/temas-v*` | gate local agregado, instruções IA, estrutura e regressões; cinco perfis comuns e 12 jobs derivados. É o ponto central da manutenção |
-| [kit-transicao-trabalho.yml](kit-transicao-trabalho.yml): `preparar` | manual; PR/push em `main` quando filtros de paths são satisfeitos | prepara e testa o pacote extraído, contratos Spark local e integração temática do ZIP. Manter enquanto houver distribuição |
+| [kit-transicao-trabalho.yml](kit-transicao-trabalho.yml): `preparar` | manual; PR com filtros; push em `main` com filtros | prepara e testa o pacote extraído, contratos Spark local e integração temática do ZIP. Manter enquanto houver distribuição |
 | [micromodelos-mm01-ci.yml](micromodelos-mm01-ci.yml): `validar-mm01` | todos os PRs; push em `main` e `micromodelos/mm01-*` | descobre `test_micromodelo*.py` e aceite do pacote de Micromodelos. O nome MM01 é histórico: o alcance atual é maior |
 | [skill-enforcement-se01.yml](skill-enforcement-se01.yml): `se01` | PR e push em `main`, com filtros | contratos estruturados, regressão SE01, render e snapshot README; publica artifact da skill renderizada |
 | [skill-enforcement-se02.yml](skill-enforcement-se02.yml): `se02` | PR com filtros nos eventos opened/reopened/synchronize/ready_for_review; push em `main` com filtros | certificação reproduzível do perfil SE02 e artifacts de evidência/preflight. Em PR draft o job é pulado pela condição explícita |

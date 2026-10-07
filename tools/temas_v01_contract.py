@@ -463,9 +463,9 @@ def main() -> int:
     args=parser.parse_args()
     try:
         if args.print_dictionary:
-            print(dictionary(read_json(SCHEMA_PATH)),end='')
+            sys.stdout.buffer.write(dictionary(read_json(SCHEMA_PATH)).encode('utf-8'))
         elif args.print_operational_dictionary:
-            print(operational_dictionary(read_json(SCHEMA_PATH)), end='')
+            sys.stdout.buffer.write(operational_dictionary(read_json(SCHEMA_PATH)).encode('utf-8'))
         else:
             print(json.dumps(check_package(),ensure_ascii=False,indent=2))
         return 0

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-07",
+  "owner": "Codex coordenador; promoção local autorizada nesta sessão",
+  "reason": "Renomeação da fonte para ambiente_databricks exige atualizar o rótulo visual e sua largura; somente este diagrama foi promovido com QA local. Não autoriza outras alterações de metadata.",
+  "source_commit": "126a2e125cca2251527f187a58696243414c6859",
+  "source": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/raiz.02_arquitetura_ecossistema.json",
+  "destination": "tools/readme_visuals/qa/figures/raiz.02_arquitetura_ecossistema.json",
+  "original_sha256": "1eed10033d4c5573cebe67d7933a1acdab8f6ef8bf38991c35913584b37d8c4b",
+  "approved_changes": [
+    {
+      "path": [
+        "sha256"
+      ],
+      "old": "d6882c0b60257cae22b6deaef0aedfb02f21f8dc1b21163bd4f5f5d98c0e4775",
+      "new": "44ec0ce54f7f2f7747a63b30169ed250d3fbc3b41eed8a2acc85260b97faf2bf"
+    },
+    {
+      "path": [
+        "svg_sha256"
+      ],
+      "old": "14db7ed43cecd236befab63b6b24b266599012bcc60cfabf69ab40aeeba38bbc",
+      "new": "3d5ce67c22728eadc3bad30a2521646031a34b7541d77c12f8c2a12311188f01"
+    },
+    {
+      "path": [
+        "texts",
+        1,
+        "width"
+      ],
+      "old": 255.796875,
+      "new": 340.265625
+    }
+  ],
+  "label": "ambiente_databricks/",
+  "font_size": 32
+}
