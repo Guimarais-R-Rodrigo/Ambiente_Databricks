@@ -17,7 +17,7 @@ SPEC.loader.exec_module(v12)
 MATRIX_PATH = ROOT / "docs" / "sprints" / "sistema_temas" / "V12" / "matriz_homologacao.json"
 V01_MATRIX = ROOT / "docs" / "sprints" / "sistema_temas" / "V01" / "matriz_testes.json"
 V11_TEST = ROOT / "tools" / "tests" / "test_temas_v11.py"
-AIBI_FIXTURE = ROOT / "ambiente_fonte" / ".assistant" / "hub_padroes" / "identidade_visual" / "aibi" / "dashboard_sintetico.json"
+AIBI_FIXTURE = ROOT / "ambiente_databricks" / ".assistant" / "hub_padroes" / "identidade_visual" / "aibi" / "dashboard_sintetico.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "temas-v12-ci.yml"
 SHA = "a" * 64
 COMMIT = "b" * 40

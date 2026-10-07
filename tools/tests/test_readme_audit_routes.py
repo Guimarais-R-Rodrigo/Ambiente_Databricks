@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
-VISUAL = Path("ambiente_fonte/.assistant/hub_readmes_visual_assets")
+VISUAL = Path("ambiente_databricks/.assistant/hub_readmes_visual_assets")
 
 
 class ReadmeAuditRoutesTests(unittest.TestCase):
@@ -37,7 +37,7 @@ class ReadmeAuditRoutesTests(unittest.TestCase):
             ("prompt/analisar_campanha/README.md", "não certifica uma nova execução"),
         ):
             with self.subTest(rel=rel):
-                text = (ROOT / "ambiente_fonte/.assistant/hub_padroes" / rel).read_text(encoding="utf-8")
+                text = (ROOT / "ambiente_databricks/.assistant/hub_padroes" / rel).read_text(encoding="utf-8")
                 self.assertNotRegex(text, r"esta R01|desta sprint")
                 self.assertIn(limit, text)
                 self.assertIn("ambiente", text)

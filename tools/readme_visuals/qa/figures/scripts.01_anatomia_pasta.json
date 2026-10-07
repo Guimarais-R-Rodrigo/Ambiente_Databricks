@@ -12,7 +12,7 @@
   "question": "Como um Hub Script é organizado?",
   "alt": "Vista explodida de uma pasta de Hub Script com interface, implementação e notebook de exemplo.",
   "caption": "O exemplo demonstra o contrato específico da ferramenta, que pode retornar estruturas diferentes.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_scripts/README.md",
   "anchor": "arquitetura-e-o-padrao-pasta-de-objeto",
   "approved_signature": false,
   "texts": [

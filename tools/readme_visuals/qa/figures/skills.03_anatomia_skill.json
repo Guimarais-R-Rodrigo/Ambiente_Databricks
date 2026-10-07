@@ -11,7 +11,7 @@
   "question": "O que fica dentro e fora de SKILL.md?",
   "alt": "Dossiê de uma Agent Skill mostrando frontmatter e instruções dentro de SKILL.md e recursos opcionais ao lado.",
   "caption": "O mecanismo Agent Skills reconhece o pacote; o conteúdo metodológico e seus recursos são mantidos pelo Hub.",
-  "owner_readme": "ambiente_fonte/.assistant/skills/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/skills/README.md",
   "anchor": "estrutura-de-uma-skill-profissional",
   "approved_signature": true,
   "texts": [

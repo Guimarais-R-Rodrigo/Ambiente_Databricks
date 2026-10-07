@@ -7,10 +7,10 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "ambiente_fonte/.assistant"
+SOURCE = ROOT / "ambiente_databricks/.assistant"
 MIRROR = ROOT / ".artifacts/simulado/Users/usuario-free/.assistant"
 REGISTRY = ROOT / "docs/sprints/sistema_temas/V08/MATRIZ_INTEGRACAO.json"
-ROOT_MANUAL = ROOT / "MANUAL_TECNICO.md"
+ROOT_MANUAL = ROOT / "MANUAL_TECNICO_V2.md"
 HEX = re.compile(r"#[0-9A-Fa-f]{6}")
 
 UPDATED_RELATIVE = [
@@ -27,7 +27,7 @@ UPDATED_RELATIVE = [
     "hub_padroes/README.md",
     "hub_padroes/identidade_visual/README.md",
     "hub_padroes/identidade_visual/GUIA_OPERACIONAL.md",
-    "MANUAL_TECNICO.md",
+    "MANUAL_TECNICO_V2.md",
 ]
 
 
@@ -52,7 +52,7 @@ OPERATIONAL_GUIDANCE = {
         "não muda automaticamente", "não concede aprovação ou publicação"),
     "hub_padroes/identidade_visual/GUIA_OPERACIONAL.md": (
         "Visual Lab", "_resolvido", "opt-in", "não publica", "requirements-temas.txt"),
-    "MANUAL_TECNICO.md": (
+    "MANUAL_TECNICO_V2.md": (
         "Sistema de Temas", "ResolvedTheme", "theme.schema.json", "_resolvido",
         "SHAP/Matplotlib", "Kaplan–Meier", "não muda dados"),
     "hub_padroes/README.md": (
@@ -85,7 +85,7 @@ class MatrixTests(unittest.TestCase):
             "skill.baseline", "skill.safra", "skill.monitoramento",
             "skill.explainability", "skill.comentar_notebook", "patterns.index",
             "patterns.identity", "patterns.identity.first_use", "manual.canonical",
-            "manual.root_copy", "manual.simulated_copy", "runtime.visual_objects",
+            "manual.simulated_copy", "runtime.visual_objects",
         }
         self.assertEqual(set(self.rows), expected)
 
@@ -109,9 +109,9 @@ class MirrorTests(unittest.TestCase):
             self.assertEqual(source.read_bytes(), mirror.read_bytes(), relative)
 
     def test_all_manual_copies_are_identical(self):
-        canonical = (SOURCE / "MANUAL_TECNICO.md").read_bytes()
-        self.assertEqual(ROOT_MANUAL.read_bytes(), canonical)
-        self.assertEqual((MIRROR / "MANUAL_TECNICO.md").read_bytes(), canonical)
+        canonical = (SOURCE / "MANUAL_TECNICO_V2.md").read_bytes()
+        self.assertFalse((ROOT / "MANUAL_TECNICO.md").exists())
+        self.assertEqual((MIRROR / "MANUAL_TECNICO_V2.md").read_bytes(), canonical)
 
 
 class CurrentStateTests(unittest.TestCase):
@@ -132,9 +132,9 @@ class CurrentStateTests(unittest.TestCase):
         assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["hub_padroes/identidade_visual/GUIA_OPERACIONAL.md"])
 
     def test_manual_live_heading_and_state_are_current(self):
-        content = text("MANUAL_TECNICO.md")
+        content = text("MANUAL_TECNICO_V2.md")
         self.assertNotIn("## Sistema de Temas — V04 integrada no Git; V05 candidata em fechamento", content)
-        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["MANUAL_TECNICO.md"])
+        assert_operational_guidance(self, content, OPERATIONAL_GUIDANCE["MANUAL_TECNICO_V2.md"])
 
 
 class EdaVisualTemplateTests(unittest.TestCase):

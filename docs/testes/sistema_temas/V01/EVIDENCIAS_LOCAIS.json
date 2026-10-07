@@ -91,7 +91,7 @@
   "protected_comparison": {
     "base": "b88a9ccdde6e61892bc25eb7cf4f4b2577badb23",
     "protected_counts": {
-      "ambiente_fonte": 441,
+      "ambiente_databricks": 441,
       "Novo_Ambiente_Simulado": 441,
       "MANUAL_TECNICO.md": 1,
       "tools/ci_local.py": 1,

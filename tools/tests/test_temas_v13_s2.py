@@ -16,7 +16,7 @@ if str(ROOT) not in sys.path:
 from tools import temas_v09_transicao as v09  # noqa: E402
 from tools import temas_v13_preflight as preflight  # noqa: E402
 
-THEME_ROOT = "ambiente_fonte/.assistant"
+THEME_ROOT = "ambiente_databricks/.assistant"
 THEME_REL = "hub_padroes/identidade_visual/exemplos/legado_notebook.json"
 THEME_PATH = ROOT / THEME_ROOT / THEME_REL
 

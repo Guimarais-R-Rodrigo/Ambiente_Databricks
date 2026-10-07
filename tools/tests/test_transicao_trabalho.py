@@ -24,7 +24,7 @@ COMMIT = "a" * 40
 def manifest(entries=None, **kwargs):
     entries = entries or [{"path": x, "sha256": hashlib.sha256(b"ok").hexdigest(), "bytes": 2,
                          "object_type": "FILE"} for x in
-                        (".assistant_instructions.md", ".assistant/README.md", ".assistant/MANUAL_TECNICO.md")]
+                        (".assistant_instructions.md", ".assistant/README.md", ".assistant/MANUAL_TECNICO_V2.md")]
     data = {"schema_version": 2, "source_commit": COMMIT, "worktree_dirty": False, "files": entries, **kwargs}
     raw = json.dumps(data).encode()
     return raw, hashlib.sha256(raw).hexdigest()
@@ -246,7 +246,7 @@ class SparkContractTests(unittest.TestCase):
         cls.spark=SparkSession.builder.master("local[2]").appName("hub-acceptance-synthetic").config("spark.ui.enabled","false").config("spark.sql.shuffle.partitions","2").getOrCreate()
         cls.temp=tempfile.TemporaryDirectory()
         cls.session=core.AcceptanceSession(cls.temp.name,Path(cls.temp.name)/"x","0"*64,COMMIT)
-        sys.path.insert(0,str(TOOLS.parent/"ambiente_fonte/.assistant"))
+        sys.path.insert(0,str(TOOLS.parent/"ambiente_databricks/.assistant"))
     @classmethod
     def tearDownClass(cls):
         cls.spark.stop();cls.temp.cleanup()

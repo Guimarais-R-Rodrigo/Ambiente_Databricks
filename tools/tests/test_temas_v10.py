@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / "ambiente_fonte" / ".assistant"
+PRODUCT = ROOT / "ambiente_databricks" / ".assistant"
 APP = PRODUCT / "hub_padroes" / "identidade_visual" / "databricks_app"
 MIRROR = ROOT / ".artifacts/simulado" / "Users" / "usuario-free" / ".assistant" / "hub_padroes" / "identidade_visual" / "databricks_app"
 sys.path.insert(0, str(PRODUCT))

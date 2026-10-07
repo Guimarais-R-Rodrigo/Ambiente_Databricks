@@ -275,7 +275,7 @@ class PublishContentGuardTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
         base = Path(self.temp.name)
-        self.fonte = base / "ambiente_fonte"
+        self.fonte = base / "ambiente_databricks"
         self.espelho = base / "espelho"
         # write_bytes, e não write_text: no Windows o modo texto traduz \\n para
         # \\r\\n, e o teste passaria a medir a tradução do sistema operacional em
@@ -513,7 +513,7 @@ class ReviewRegressionTests(unittest.TestCase):
     def test_csi_invalid_limit_fails_before_spark_access(self):
         from numbers import Integral
         from typing import Dict, List
-        path = TOOLS.parent / "ambiente_fonte/.assistant/hub_snippets/spark/psi_calculator/psi_calculator.py"
+        path = TOOLS.parent / "ambiente_databricks/.assistant/hub_snippets/spark/psi_calculator/psi_calculator.py"
         ns = {"Integral": Integral, "DataFrame": object, "List": List, "Dict": Dict,
               "LIMITE_CATEGORIAS_CSI": 1000}
         check = self._load_function(path, "_validar_max_categorias", ns)
@@ -602,13 +602,13 @@ class ManualTecnicoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.repo = TOOLS.parent
-        cls.source = cls.repo / "ambiente_fonte/.assistant/MANUAL_TECNICO.md"
+        cls.source = cls.repo / "ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md"
         cls.text = cls.source.read_text(encoding="utf-8")
 
     def test_manual_copies_are_identical(self):
         from project_policy import SAFE_SIMULATED_USERNAME
-        derived = self.repo / ".artifacts/simulado/Users" / SAFE_SIMULATED_USERNAME / ".assistant/MANUAL_TECNICO.md"
-        self.assertEqual(self.source.read_bytes(), (self.repo / "MANUAL_TECNICO.md").read_bytes())
+        derived = self.repo / ".artifacts/simulado/Users" / SAFE_SIMULATED_USERNAME / ".assistant/MANUAL_TECNICO_V2.md"
+        self.assertFalse((self.repo / "MANUAL_TECNICO.md").exists())
         self.assertEqual(self.source.read_bytes(), derived.read_bytes())
         for root in (self.source.parent, derived.parent):
             self.assertFalse((root / "CATALOGO_HELPERS.md").exists())
@@ -630,8 +630,8 @@ class ManualTecnicoTests(unittest.TestCase):
         self.assertGreaterEqual(len(anchors), 31)
         for target in re.findall(r'\]\(#([^\s)]+)\)', self.text):
             self.assertIn(target, anchors)
-        for number, code in enumerate(re.findall(r'```python\n(.*?)```', self.text, re.S), 1):
-            ast.parse(code, filename=f"MANUAL_TECNICO.md:bloco-{number}")
+        for number, code in enumerate(re.findall(r'```python\n(.*?)```', self.text.split('<a id="contratos-operacionais-integrados">', 1)[1], re.S), 1):
+            ast.parse(code, filename=f"MANUAL_TECNICO_V2.md:bloco-{number}")
 
     def test_manual_portable_examples_as_written(self):
         import re
@@ -643,7 +643,7 @@ class ManualTecnicoTests(unittest.TestCase):
                 tag = re.search(r"^# EXEMPLO: (\w+)$", code, re.M)
                 if tag and tag[1] in labels:
                     with self.subTest(example=tag[1]), redirect_stdout(StringIO()):
-                        exec(compile(code, f"MANUAL_TECNICO.md:{tag[1]}", "exec"), {})
+                        exec(compile(code, f"MANUAL_TECNICO_V2.md:{tag[1]}", "exec"), {})
                     found.add(tag[1])
         self.assertEqual(found, labels)
 

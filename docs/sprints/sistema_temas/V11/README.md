@@ -40,7 +40,7 @@ O escopo entregue inclui:
 
 Isso é deliberado: a documentação oficial verificada descreve capacidades de tema e oferece `Export theme` / `Import theme`, mas não publica um schema estável e completo do JSON de tema exportado. Alterar o contrato central ou gerar um JSON supostamente nativo sem esse contrato criaria uma interpretação paralela e insegura.
 
-A ponte fica em `ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/` e possui espelho byte a byte na [saída gerada vigente](../../../manutencao/saida-gerada.md), `.artifacts/simulado/`. `Novo_Ambiente_Simulado` é o nome preservado nas evidências históricas da V11.
+A ponte fica em `ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/` e possui espelho byte a byte na [saída gerada vigente](../../../manutencao/saida-gerada.md), `.artifacts/simulado/`. `Novo_Ambiente_Simulado` é o nome preservado nas evidências históricas da V11.
 
 ## Como a projeção funciona
 

@@ -107,4 +107,4 @@ ajuda verbal, onde começa, como experimenta, como desfaz e por que salvar não
 altera o padrão compartilhado. Essa avaliação humana está **PENDENTE**; nenhum
 participante ou tempo de conclusão foi inventado nesta entrega.
 
-[Voltar à V01](README.md) · [Operação atual: Manual Técnico](../../../../MANUAL_TECNICO.md)
+[Voltar à V01](README.md) · [Operação atual: Manual Técnico](../../../../ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md)

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.1",
+  "revision": "2026-10-07.2",
   "entries": [
     {
       "path": "AGENTS.md",
@@ -8,8 +8,8 @@
       "role": "core",
       "owner": "docs/ai/README.md",
       "load_condition": "Entrada do projeto conforme cliente e configuração; descoberta nativa não certificada.",
-      "sha256": "32a62046563053f4c1ca7a1dd808e6ea2195bdbd767f75830c7c19c7701571ac",
-      "review_reason": "Inventário inicial reconciliado com a arquitetura vigente; nenhuma nova entrada ativada.",
+      "sha256": "1d765be9937ac996fd8f83ce3276a68d9557e29468b78f79e6e70c860e696b28",
+      "review_reason": "Rename autorizado ambiente_fonte -> ambiente_databricks; mesmos mecanismos e invariantes, revisão de contexto completo registrada na execução da faxina.",
       "shadows": []
     },
     {

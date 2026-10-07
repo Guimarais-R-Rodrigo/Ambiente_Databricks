@@ -35,7 +35,7 @@ Distribuição por diretório de topo (worktree CRLF):
 | Diretório | CRLF | LF |
 |---|---:|---:|
 | `Novo_Ambiente_Simulado/` | 314 | 3 |
-| `ambiente_fonte/` | 262 | 55 |
+| `ambiente_databricks/` | 262 | 55 |
 | `docs/` | 42 | 24 |
 | `.claude/` | 12 | 7 |
 | `tools/` | 10 | 1 |

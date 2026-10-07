@@ -116,7 +116,7 @@ No mesmo head, o CI local mediu **1355 arquivos**, **1850 links fora da raiz** e
 - nenhum tema é registrado globalmente apenas por instalar o pacote;
 - `theme_lab`, promoção de variante e publicação continuam processos distintos;
 - o kit continua offline e sem credenciais Databricks;
-- nenhuma alteração foi feita em `ambiente_fonte/.assistant` ou `Novo_Ambiente_Simulado` pela entrega funcional V09;
+- nenhuma alteração foi feita em `ambiente_databricks/.assistant` ou `Novo_Ambiente_Simulado` pela entrega funcional V09;
 - nenhuma mudança foi feita em dados, métricas, amostragem, denominadores, thresholds, embeddings ou lógica analítica.
 
 ## Critérios de aceite — resultado final

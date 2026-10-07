@@ -219,7 +219,7 @@ class V13S6OperationalRehearsalTests(unittest.TestCase):
 
     def test_no_product_or_simulated_tree_is_an_s6_artifact(self):
         doc = (ROOT / "docs/sprints/sistema_temas/V13/S6_ENSAIOS_OPERACIONAIS.md").read_text(encoding="utf-8")
-        self.assertIn("não altera `ambiente_fonte/`", doc)
+        self.assertIn("não altera `ambiente_databricks/`", doc)
         self.assertIn("não edita `Novo_Ambiente_Simulado/`", doc)
 
     def test_rehearsal_report_is_json_serializable_without_custom_encoder(self):

@@ -25,7 +25,7 @@ class PackageBoundaryTests(unittest.TestCase):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         root = Path(tmp.name)
-        for path in ('tools/tests/runtime', 'ambiente_fonte/.assistant'):
+        for path in ('tools/tests/runtime', 'ambiente_databricks/.assistant'):
             shutil.copytree(ROOT / path, root / path, ignore=shutil.ignore_patterns('__pycache__'))
         moves = json.loads((root / 'tools/tests/runtime/relocation_manifest.json').read_text())['files']
         for item in moves:
@@ -39,18 +39,18 @@ class PackageBoundaryTests(unittest.TestCase):
         root = self.fixture()
         contract = json.loads((root / 'tools/tests/runtime/package_contract.json').read_text())
         rel = next(p for p in contract['protected'] if p.endswith('.svg'))
-        (root / 'ambiente_fonte/.assistant' / rel).unlink()
+        (root / 'ambiente_databricks/.assistant' / rel).unlink()
         self.assertIn('PROTECTED_RESOURCE:' + rel, boundary.check(root))
 
     def test_removed_fixture_fails(self):
         root = self.fixture()
         rel = 'skills/hub-ml-explainability/tests/linear_fixture.json'
-        (root / 'ambiente_fonte/.assistant' / rel).unlink()
+        (root / 'ambiente_databricks/.assistant' / rel).unlink()
         self.assertIn('PROTECTED_RESOURCE:' + rel, boundary.check(root))
 
     def test_reintroduced_qa_fails(self):
         root = self.fixture()
-        rel = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
+        rel = 'ambiente_databricks/.assistant/hub_readmes_visual_assets/qa/validation.json'
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text('{}')
@@ -81,7 +81,7 @@ class PackageBoundaryTests(unittest.TestCase):
     def test_runtime_resources_without_maintainer_checkout(self):
         with tempfile.TemporaryDirectory() as tmp:
             isolated = Path(tmp) / '.assistant'
-            shutil.copytree(ROOT / 'ambiente_fonte/.assistant', isolated,
+            shutil.copytree(ROOT / 'ambiente_databricks/.assistant', isolated,
                             ignore=shutil.ignore_patterns('__pycache__'))
             code = '''import sys,json,pathlib
 sys.path.insert(0,sys.argv[1])

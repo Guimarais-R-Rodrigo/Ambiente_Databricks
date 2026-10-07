@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           changed="$(git diff --name-only "$V08_BASE_SHA"..HEAD)"
-          forbidden="$(printf '%s\n' "$changed" | grep -E '^ambiente_fonte/\.assistant/(hub_snippets|hub_scripts)/.*\.py$' || true)"
+          forbidden="$(printf '%s\n' "$changed" | grep -E '^ambiente_databricks/\.assistant/(hub_snippets|hub_scripts)/.*\.py$' || true)"
           if [ -n "$forbidden" ]; then
             echo 'V08_RUNTIME_EDIT_FORBIDDEN'
             printf '%s\n' "$forbidden"

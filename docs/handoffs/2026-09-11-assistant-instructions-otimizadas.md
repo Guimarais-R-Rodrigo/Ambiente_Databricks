@@ -1,7 +1,7 @@
 # Assistant Instructions orientado ao Hub — fundamento e validação
 
 Data da revisão: 11/09/2026. Base: `ceb315e92515771e1ab3725ea7a559590c4a1659`.
-Arquivo de produto: `ambiente_fonte/.assistant_instructions.md`.
+Arquivo de produto: `ambiente_databricks/.assistant_instructions.md`.
 
 ## Decisão
 
@@ -103,7 +103,7 @@ Compare prioritariamente correção, integridade dos contratos, respeito ao esco
 
 ## Instalação e alcance da entrega
 
-No Git, a autoria permanece em `ambiente_fonte/.assistant_instructions.md`. No espelho: `Novo_Ambiente_Simulado/Users/<username>/.assistant_instructions.md`. Nenhum conteúdo de skill, helper, manual ou imagem precisa ser modificado para esta revisão.
+No Git, a autoria permanece em `ambiente_databricks/.assistant_instructions.md`. No espelho: `Novo_Ambiente_Simulado/Users/<username>/.assistant_instructions.md`. Nenhum conteúdo de skill, helper, manual ou imagem precisa ser modificado para esta revisão.
 
 No workspace, o ponto correto é o arquivo aberto em Genie Code → Settings → User instructions → Open instructions file. Estar no Git ou em uma pasta arbitrária do workspace não ativa instruções pessoais. Não criar uma cópia dentro de `.assistant/skills` nem mudar instruções globais de administrador.
 

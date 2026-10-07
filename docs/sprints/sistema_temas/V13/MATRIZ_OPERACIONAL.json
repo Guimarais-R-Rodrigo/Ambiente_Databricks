@@ -8,7 +8,7 @@
     "references_only": true,
     "preflight_stage": "S2_NOT_IMPLEMENTED",
     "remote_mutation_performed_by_s1": false,
-    "source_root": "ambiente_fonte/",
+    "source_root": "ambiente_databricks/",
     "derived_root": ".artifacts/simulado/",
     "derived_root_editable": false
   },
@@ -97,9 +97,9 @@
       "artifact": {
         "kind": "canonical_source_and_contracts",
         "refs": [
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/README.md",
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json",
-          "ambiente_fonte/.assistant/hub_snippets/visual/tema/tema.py",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/README.md",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/theme.schema.json",
+          "ambiente_databricks/.assistant/hub_snippets/visual/tema/tema.py",
           "docs/sprints/sistema_temas/V02/README.md"
         ]
       },
@@ -191,8 +191,8 @@
       "artifact": {
         "kind": "canonical_source_and_user_guides",
         "refs": [
-          "ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/README.md",
-          "ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md",
+          "ambiente_databricks/.assistant/hub_snippets/visual/theme_lab/README.md",
+          "ambiente_databricks/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md",
           "docs/sprints/sistema_temas/V05/README.md"
         ]
       },
@@ -386,8 +386,8 @@
       "artifact": {
         "kind": "app_source_and_derived_bundle_builder",
         "refs": [
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/README.md",
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/README.md",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
           "tools/temas_v10_app.py",
           "docs/sprints/sistema_temas/V10/README.md"
         ]
@@ -411,7 +411,7 @@
       "rollback": {
         "strategy": "use_v10_deploy_rollback_contract_after_explicit_authorization",
         "refs": [
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
           "docs/sprints/sistema_temas/V10/README.md"
         ]
       },
@@ -461,7 +461,7 @@
             "required": true,
             "strategy": "use_v10_deploy_rollback_contract_after_explicit_authorization",
             "refs": [
-              "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md"
+              "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md"
             ]
           }
         }
@@ -491,9 +491,9 @@
       "artifact": {
         "kind": "aibi_projection_and_fail_closed_binding",
         "refs": [
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/README.md",
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py",
-          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/README.md",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py",
+          "ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json",
           "docs/sprints/sistema_temas/V11/README.md"
         ]
       },

@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / "ambiente_fonte" / ".assistant"
+PRODUCT = ROOT / "ambiente_databricks" / ".assistant"
 AIBI = PRODUCT / "hub_padroes" / "identidade_visual" / "aibi"
 MIRROR = ROOT / ".artifacts/simulado" / "Users" / "usuario-free" / ".assistant" / "hub_padroes" / "identidade_visual" / "aibi"
 sys.path.insert(0, str(PRODUCT))

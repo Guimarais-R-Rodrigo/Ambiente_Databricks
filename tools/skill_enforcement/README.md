@@ -6,7 +6,7 @@ A estratégia vigente é local-first: testes e validações determinísticas rod
 
 ## Rotas atuais e leitura da história
 
-A [policy vigente](../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) determina `current_level`, `scope_mode` e `rollout_mode`. Criar Objeto está L3/audit, `stage_specific`, com `object_validation` repo-side; a auditoria também possui rota própria. Os oito perfis sintéticos de [B1](../../docs/sprints/skill_enforcement_rollout/README.md) têm runners e evidência delimitada, sem promoção automática de nível. [B0](../../docs/sprints/skill_enforcement_rollout/PARALELO/B0/README.md) é infraestrutura de execução de manutenção, não runner analítico.
+A [policy vigente](../../ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json) determina `current_level`, `scope_mode` e `rollout_mode`. Criar Objeto está L3/audit, `stage_specific`, com `object_validation` repo-side; a auditoria também possui rota própria. Os oito perfis sintéticos de [B1](../../docs/sprints/skill_enforcement_rollout/README.md) têm runners e evidência delimitada, sem promoção automática de nível. [B0](../../docs/sprints/skill_enforcement_rollout/PARALELO/B0/README.md) é infraestrutura de execução de manutenção, não runner analítico.
 
 As seções SE01–SE08 abaixo descrevem o histórico cumulativo. `execution_contract.mode="audit"` descreve o contrato de execução; `policy.rollout_mode="enforce"` descreve a política da skill quando aplicável. Não são campos equivalentes e não devem ser igualados por edição.
 
@@ -19,14 +19,14 @@ python -B tools/skill_enforcement/validate_contracts.py
 python -B tools/skill_enforcement/validate_contracts.py --json
 ```
 
-O validador lê o contrato, resolve módulos sob `ambiente_fonte/.assistant/`, inspeciona fachadas públicas por AST e confere templates relativos sem executar helpers analíticos.
+O validador lê o contrato, resolve módulos sob `ambiente_databricks/.assistant/`, inspeciona fachadas públicas por AST e confere templates relativos sem executar helpers analíticos.
 
 ## SE02 — preflight L2
 
 Implementação publicada:
 
 ```text
-ambiente_fonte/.assistant/hub_scripts/skill_execution/skill_execution.py
+ambiente_databricks/.assistant/hub_scripts/skill_execution/skill_execution.py
 ```
 
 Fachada:
@@ -38,7 +38,7 @@ from hub_scripts.skill_execution import run_preflight
 Acionador fino da skill piloto:
 
 ```text
-ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/preflight.py
+ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/scripts/preflight.py
 ```
 
 Testes:
@@ -53,7 +53,7 @@ python -B tools/tests/test_skill_enforcement_se02.py -v
 Runner da skill piloto:
 
 ```text
-ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/run.py
+ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/scripts/run.py
 ```
 
 Ele verifica release, deriva provenance runtime, reutiliza o preflight, chama a primitive protegida `quick_profile` e produz `ExecutionTraceV0`.
@@ -71,7 +71,7 @@ Os resultados comportamentais históricos E02/E12 pertencem à documentação SE
 Engine publicada:
 
 ```text
-ambiente_fonte/.assistant/hub_scripts/skill_execution/receipt/__init__.py
+ambiente_databricks/.assistant/hub_scripts/skill_execution/receipt/__init__.py
 ```
 
 Responsabilidades:
@@ -97,9 +97,9 @@ O Receipt é evidência verificável. Isoladamente ele não autoriza conclusão 
 Componentes publicados:
 
 ```text
-ambiente_fonte/.assistant/hub_scripts/skill_execution/postflight/__init__.py
-ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/run_enforced.py
-ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/postflight.py
+ambiente_databricks/.assistant/hub_scripts/skill_execution/postflight/__init__.py
+ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/scripts/run_enforced.py
+ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/scripts/postflight.py
 ```
 
 A rota L4 reutiliza `run.py::run`, coleta evidência adicional de imports, calls/completions e templates carregados, reemite o Receipt vinculando o trace enriquecido e só autoriza `completion.status=COMPLETED` quando `PostflightV1.status=PASS`.
@@ -178,7 +178,7 @@ A suíte cobre 12 variantes estruturais e o scorer da coleta comportamental.
 
 Registry publicado:
 
-`ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json`
+`ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json`
 
 Validação:
 

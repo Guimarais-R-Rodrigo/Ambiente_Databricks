@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PRODUCT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+PRODUCT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 APP_SOURCE = PRODUCT / "hub_padroes" / "identidade_visual" / "databricks_app"
 APP_FILES = ("app.py", "app_service.py", "app.yaml", "requirements.txt", "README.md", "GUIA_PRIMEIRO_USO.md", "DEPLOY_ROLLBACK.md")
 MANIFEST = "V10_APP_MANIFEST.json"

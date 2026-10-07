@@ -1,7 +1,7 @@
 # Dependências para rodar o gate local (tools/ci_local.py) num checkout limpo.
 #
 # Este arquivo é de MANUTENÇÃO e não é publicado no workspace. As dependências
-# do produto ficam em ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt,
+# do produto ficam em ambiente_databricks/.assistant/hub_snippets/requirements-optional.txt,
 # que registra runtime e combinações medidas — outro arquivo, outro propósito.
 #
 # Versões com piso e sem teto: o gate local precisa rodar em máquina nova sem

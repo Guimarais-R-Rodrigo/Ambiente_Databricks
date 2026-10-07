@@ -6,7 +6,7 @@ replicação manual no trabalho. Cada efeito precisa estar no escopo autorizado.
 
 ## Invariantes
 
-- Este Git é a fonte canônica. Edite o produto somente em `ambiente_fonte/`
+- Este Git é a fonte canônica. Edite o produto somente em `ambiente_databricks/`
   (`.assistant/` e sua instrução irmã); workspaces são cópias operacionais.
 - `.artifacts/simulado/` é derivado de `tools/render_simulado.py`: nunca
   edite à mão. `--write` substitui toda a árvore; inventarie extras, preserve
@@ -55,7 +55,7 @@ da tarefa (teste, auditoria ou handoff; commit/PR para manutenção trivial).
 `CHANGELOG.md` reúne apenas marcos de uso, arquitetura, contrato ou risco material;
 siga o [template](docs/ai/templates/changelog-entry.md). Não leia o histórico
 inteiro por padrão; consulte o trecho relevante ao retomar/investigar.
-Valide `ambiente_fonte/` antes de concluir e reporte comando, SHA, resultado,
+Valide `ambiente_databricks/` antes de concluir e reporte comando, SHA, resultado,
 limites e bloqueios: PASS só com observação; NOT_RUN e BLOCKED não são aprovação.
 Entregue diff/arquivos, evidência, efeitos realizados e pendentes; mudanças de
 arquitetura exigem ADR e a retomada incompleta exige handoff verificável.

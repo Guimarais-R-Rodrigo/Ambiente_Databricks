@@ -11,7 +11,7 @@
   "question": "Que tarefa cada família de script atende e qual retorno produz?",
   "alt": "Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade, estabilidade, transformação analítica e governança técnica.",
   "caption": "Cada instrumento responde a uma pergunta e devolve uma estrutura própria; a tabela do README permanece o catálogo canônico.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_scripts/README.md",
   "anchor": "catalogo-detalhado",
   "approved_signature": true,
   "texts": [

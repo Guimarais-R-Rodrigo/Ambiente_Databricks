@@ -33,7 +33,7 @@ CAMPAIGNS = {
 
 # Shared jobs are executable recipes, not bags of command substrings. Keep
 # environment dimensions and ordered steps explicit; labels alone are editorial.
-APP_REQUIREMENTS = "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt"
+APP_REQUIREMENTS = "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt"
 NODE_INSTALL = "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n"
 PREPARE_DERIVED = ("python -B tools/validate_assistant.py --conferir-readme\n"
                    "python -B tools/render_simulado.py --write\n"

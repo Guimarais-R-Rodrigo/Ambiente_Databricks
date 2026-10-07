@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "source_commit": "8dd8da57de89122241890b8b6b059fd2f9be25d0",
+  "scope": "Only immutable historical hrefs, not live links; open snapshot URLs in the companion README",
+  "entries": [
+    {
+      "source": "docs/decisions/ADR-0011-concierge-hub.md",
+      "source_sha256": "8fe2ab15b9e68d147f36372c75ff6c451812c3e3b08f2bb570f77e9100ae1f12",
+      "href": "../../ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md",
+      "object_type": "blob",
+      "object_id": "3d18ec95c64c1713bdd8151eb6dde1f440d11b35",
+      "target_sha256": "49fc2e86392ca93898f87912d888d90d954b186ad4a18f8800e49e4dba4fbb2f"
+    },
+    {
+      "source": "docs/decisions/ADR-0012-readmes-de-objeto.md",
+      "source_sha256": "8484f3a8ab3e6071a11b437c0a19b7cc349af0661cffb3d9297f7f0c0fd11910",
+      "href": "../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md",
+      "target": "ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md",
+      "object_type": "blob",
+      "object_id": "8dc7481b4f51b087c0b54a5722a33bbd99532fc0",
+      "target_sha256": "a9c802872a305cc62426531dbc0216f36e1644b7f41209a6266f57352140890f"
+    },
+    {
+      "source": "docs/historico/readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md",
+      "source_sha256": "064171ca27ee6a0d14625f28c0d2d4e53517f29a1b2cdebd983311721e3dab5d",
+      "href": "../../../ambiente_fonte/README.md",
+      "target": "ambiente_fonte/README.md",
+      "object_type": "blob",
+      "object_id": "276d24d2ab692c23fec5d6be0ba10f1564ffd673",
+      "target_sha256": "be84d1e7e68d198806bfb2f97a0236fe240b6ec21473d6eed5d21cfe6ea008f0"
+    },
+    {
+      "source": "docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md",
+      "source_sha256": "7132379ab9616f8876dcf3d742eff80c2ce9d367b96a09b15530d0374a4ef2eb",
+      "href": "../../../ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
+      "target": "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
+      "object_type": "blob",
+      "object_id": "50f9e866fbb9eb4a4bce8d0e12b7750f4b79dfe7",
+      "target_sha256": "ed55ee8217ae8f7e72ba49be517c6b94ce0b824cb49c032c92c1ef3d05377ea0"
+    },
+    {
+      "source": "docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md",
+      "source_sha256": "7132379ab9616f8876dcf3d742eff80c2ce9d367b96a09b15530d0374a4ef2eb",
+      "href": "../../../ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md",
+      "target": "ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md",
+      "object_type": "blob",
+      "object_id": "0e7bd1a6916cac75389664aaa2344886d93eba85",
+      "target_sha256": "27336a5d84f612ba14420818c813469e2efc27729299176e528b38ad0b8ce86b"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement/SE07/PILOTO_README_L3.md",
+      "source_sha256": "db08fc91b09be995e0a0f4677eb1c44f0de2c2feb62a25bdebb1a933060217e2",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/_windows_writer.py",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/_windows_writer.py",
+      "object_type": "blob",
+      "object_id": "90368d6054c2664e5f8c7684dff948683fbd6e79",
+      "target_sha256": "794c06ccd6dc48c61a0b766d4bca8cd242fe46c592b238903b2c939548d0487e"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement/SE07/PILOTO_README_L3.md",
+      "source_sha256": "db08fc91b09be995e0a0f4677eb1c44f0de2c2feb62a25bdebb1a933060217e2",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/run.py",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/run.py",
+      "object_type": "blob",
+      "object_id": "f01c7afc4febe73520e3982771d08d0bb792b312",
+      "target_sha256": "4eef76769d38a9f88cdbbb60014c19ccb54fc8020c373d2173561cc2f09de985"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-analise-safra/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/SKILL.md",
+      "object_type": "blob",
+      "object_id": "382650aaa7ccbba170a502800426c9da238d17b9",
+      "target_sha256": "410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-auditoria-skills/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-auditoria-skills/SKILL.md",
+      "object_type": "blob",
+      "object_id": "794422cbada91c3f0dc570303ffe0a405e479a58",
+      "target_sha256": "2774133b9f123a18a3c91b10dab912172d299126a0f7c48539613ebd30c43a59"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
+      "object_type": "blob",
+      "object_id": "67f9f89b7c8ba8532256d6ce30f3b157b6e32112",
+      "target_sha256": "ae4dda1856809ad3dc88625daf326d981e86707685fdaf32306057cd24f94149"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
+      "object_type": "blob",
+      "object_id": "8289c0d4300051bd54739943401da3ddb897f2dc",
+      "target_sha256": "0c91f15313ba49ab7240be2cc1fb35e4676a46e2549c3d6c11cdf09a080d6974"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-concierge/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-concierge/SKILL.md",
+      "object_type": "blob",
+      "object_id": "74f704c5a265eb62752434cb3c664fa07d969a0e",
+      "target_sha256": "0898977483ad548f0801553cd9829d721886d7d03cf1e4f9f83dac9490fd639f"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
+      "object_type": "blob",
+      "object_id": "2d84c8d4954f527278830bc7f082a6d9764fe72f",
+      "target_sha256": "1073ef7f381ea354edfcc374cd8ba4905a47b82da8615ee9d26d3a1a9b5f809b"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "object_type": "blob",
+      "object_id": "0d52eea3fcc9a917cef416e1978f9c967b2f9646",
+      "target_sha256": "d1cbee03b68977a76a1eab9f40f1631aefab76ecf35004cdad0e693701a10cc0"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
+      "object_type": "blob",
+      "object_id": "4845eccfe080a8df5d84f291648b9ced17322784",
+      "target_sha256": "9478d7f83a09b0d7fad9a3882070b730e781bbbc5129862fd71784dc907b7cdd"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-explainability/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-explainability/SKILL.md",
+      "object_type": "blob",
+      "object_id": "426fac8081c4b71d71656062fa386710ae2a0d78",
+      "target_sha256": "2ee6b58853e36cc0b99ab67d48d38d7e514732c55148f99d0a97318f94eac0dc"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-feature-engineering/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-feature-engineering/SKILL.md",
+      "object_type": "blob",
+      "object_id": "1842ca4d9fe782bf866a30fee266357222aea640",
+      "target_sha256": "e22ce16d5a9a09e35d79f2e7fbc7a70919c13e48ede557db72ff7dbddc25d0dc"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
+      "object_type": "blob",
+      "object_id": "993a30c013606733c9686b89553b715d52d3c9a6",
+      "target_sha256": "dd1002ee6e8dae3f38324bda504b16d5481a53e3c7ef1b74a1e11b2fba3a537d"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "object_type": "blob",
+      "object_id": "e0494c834faa9bd481f7ec13e2d77a5c444c674c",
+      "target_sha256": "5cff01d7919f9a0774c843db276bcbd59d8d297b609b707c598e02c48bb1617b"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/SKILL.md",
+      "object_type": "blob",
+      "object_id": "fa6a507b1f69fb608797e1fbeed7f293030fb066",
+      "target_sha256": "8034dfcb390f2f4ab891ed9f9515446dc2f24e41afd45b5931adbd5d01153c7d"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_bloco_codigo.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_bloco_codigo.md",
+      "object_type": "blob",
+      "object_id": "ad160ac3372e3b4a471603f54e276a35bbd1f116",
+      "target_sha256": "d11d5c34b37e3437a075889cf92ccc2412517c4cd6dd6e87ae41e9dfbe35ee41"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_notebook.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/templates/explicacao_notebook.md",
+      "object_type": "blob",
+      "object_id": "95991068fbb77fd2923d43090764b0ddd6b00c41",
+      "target_sha256": "54ddef509cf66d5b2fedba6663330b5238540f9c1fcf0b51b5498e9c74b5f5a1"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/REVISAO_TRANSVERSAL_DADOS_AUSENTES_2026-09-29.md",
+      "source_sha256": "4b0435ce4a552139ac1c172e3d1d937d6f7ca8b5c359176f0a232dedfe4e7ecf",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/SKILL.md",
+      "object_type": "blob",
+      "object_id": "4d59e623363d06d2ea304df7bfc9d642a3f4286f",
+      "target_sha256": "fde7164bd1131397550a6f5848c8611c41fa5bda09ae5cb09d56c7d82a4c2e42"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/TRIAGEM_CAUSAL_POS_FAILS_B1_2026-09-30.md",
+      "source_sha256": "d301a6a26ef1791900d00769c80ac4bb96bcad0fe5bdab778a9382cac441911a",
+      "href": "../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "object_type": "blob",
+      "object_id": "0d52eea3fcc9a917cef416e1978f9c967b2f9646",
+      "target_sha256": "d1cbee03b68977a76a1eab9f40f1631aefab76ecf35004cdad0e693701a10cc0"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/RQ-CE-STATIC_T01.md",
+      "source_sha256": "de42bc57e6d67a290a8710e0cca9e70e311ca214c37d0716fd74b1b55b7917dc",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
+      "object_type": "blob",
+      "object_id": "108937477a4331170a0d162ef305a52d1cc37809",
+      "target_sha256": "e1572c9122df89a0b6d91b052036124fb2a6070ddc42b035c64e264c50343c40"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/RQ-CE-STATIC_T01.md",
+      "source_sha256": "de42bc57e6d67a290a8710e0cca9e70e311ca214c37d0716fd74b1b55b7917dc",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+      "object_type": "blob",
+      "object_id": "0717afa2561471ba97a39390f1c3462ecefc9bfc",
+      "target_sha256": "02cc1a674b9efb115e8d1d8634d7b0872533c497605d11224d64ea56632b5464"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/RQ-TRUST-COMBINED_T01.md",
+      "source_sha256": "d016f1b4d5cb40071e9309c6a3d5a48436efe973bf7e2a74722e3480a616531e",
+      "href": "../../../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+      "target": "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+      "object_type": "blob",
+      "object_id": "b6bc0892cf30f233dbe6ff049afc43f12493cced",
+      "target_sha256": "4d8c4981f7b728b5c83d467d2d4d2e047b21f2f47299ec125e961906e22e05fc"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/RQ-TRUST-COMBINED_T01.md",
+      "source_sha256": "d016f1b4d5cb40071e9309c6a3d5a48436efe973bf7e2a74722e3480a616531e",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/diagnostic_contract.json",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/diagnostic_contract.json",
+      "object_type": "blob",
+      "object_id": "8e3379351c34e3c26ee39d70f4c24a6bb09c7884",
+      "target_sha256": "98659037ac1c89eb0d3b846bc554cf319d0d98dcceb17a8b6c093ce670a0d711"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/RQ-TRUST-COMBINED_T01.md",
+      "source_sha256": "d016f1b4d5cb40071e9309c6a3d5a48436efe973bf7e2a74722e3480a616531e",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/verify_diagnostic.py",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/verify_diagnostic.py",
+      "object_type": "blob",
+      "object_id": "fd42465bd3d0ac764e5e87bdfafd31e70f80e297",
+      "target_sha256": "7313dac642aebf28a60e944b7f797812d80b20ebb107267e9fdd156c7219d184"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/genie_evidencias/SD-PB-A_T01.md",
+      "source_sha256": "1fbddb8a673dd592c8a300cb0687f91d68cd8cfa8be77c3106458d91ee89c43a",
+      "href": "../../../../ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "target": "ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "object_type": "blob",
+      "object_id": "e0494c834faa9bd481f7ec13e2d77a5c444c674c",
+      "target_sha256": "5cff01d7919f9a0774c843db276bcbd59d8d297b609b707c598e02c48bb1617b"
+    }
+  ]
+}

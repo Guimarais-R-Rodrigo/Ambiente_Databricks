@@ -231,7 +231,7 @@ def validate_matrix(data: dict[str, Any]) -> None:
         _fail("PREFLIGHT_BOUNDARY", "S1 não pode implementar o preflight da S2")
     if rules["remote_mutation_performed_by_s1"] is not False:
         _fail("REMOTE_MUTATION", "S1 deve permanecer sem mutação remota")
-    if rules["source_root"] != "ambiente_fonte/" or rules["derived_root"] != SIMULATED_ROOT.as_posix() + "/":
+    if rules["source_root"] != "ambiente_databricks/" or rules["derived_root"] != SIMULATED_ROOT.as_posix() + "/":
         _fail("SOURCE_DERIVED", "raízes fonte/derivado divergentes")
     if rules["derived_root_editable"] is not False:
         _fail("DERIVED_EDITABLE", "saída gerada não pode ser fonte editável")

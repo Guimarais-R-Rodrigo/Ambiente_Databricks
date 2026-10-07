@@ -2,7 +2,7 @@
 
 **Rota principal: pacote mínimo com commit fixo → pasta pessoal de conferência → aceite técnico → promoção seletiva → aceite visual e da Genie.** Este é o procedimento vigente, atualizado em 11/09/2026. Foi desenhado para outro computador, **sem Databricks CLI**, com operações de instalação pela interface. Não exige clonar Git no workspace corporativo.
 
-Mantém as decisões atuais: `.assistant_instructions.md` otimizado, READMEs/widgets/imagens já escolhidos e `MANUAL_TECNICO.md`. Não restaura pastas de rascunhos, catálogo de helpers ou glossário independentes. A instalação aqui é **pessoal**, não publicação para squad/workspace inteiro.
+Mantém as decisões atuais: `.assistant_instructions.md` otimizado, READMEs/widgets/imagens já escolhidos e `MANUAL_TECNICO_V2.md`. Não restaura pastas de rascunhos, catálogo de helpers ou glossário independentes. A instalação aqui é **pessoal**, não publicação para squad/workspace inteiro.
 
 Use o [checklist](checklist-replicacao.md) enquanto executa e o [roteiro da Genie e das imagens](testes-genie-trabalho.md) depois da instalação técnica. Estes documentos integram o kit offline: não é necessário ler o repositório inteiro no computador do trabalho.
 
@@ -71,7 +71,7 @@ Get-FileHash -Algorithm SHA256 .\02_IMPORTAR_ACEITE_<commit>.zip
 
 Substitua o trecho `<commit>` pelo nome real do arquivo. Compare hashes sem diferenciar maiúsculas/minúsculas. A referência precisa vir de canal confiável. Um hash incluído no mesmo download detecta corrupção; **não é assinatura digital nem prova independente de autenticidade**.
 
-Abra o ZIP 01 no computador: na raiz devem existir `.assistant_instructions.md`, `.assistant/` e `MANIFEST.json`. Não deve existir uma camada extra `Users/usuario-free` ou `ambiente_fonte`.
+Abra o ZIP 01 no computador: na raiz devem existir `.assistant_instructions.md`, `.assistant/` e `MANIFEST.json`. Não deve existir uma camada extra `Users/usuario-free` ou `ambiente_databricks`.
 
 O manifesto v2 do Hub informa `source_commit`, `worktree_dirty=false`, paths, SHA256, tamanho e `object_type` (`FILE` ou `NOTEBOOK`). Ele cobre também `hub_micromodelos/`; o notebook de aceite sintético usa a mesma instalação e fixa o commit de origem. Não misture ZIPs de commits diferentes.
 
@@ -229,12 +229,12 @@ hub_scripts/
 hub_snippets/
 ```
 
-Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 15 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
+Além deles, há `README.md`, `MANUAL_TECNICO_V2.md` e `skills/` com as 15 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
 
 1. Pela UI, crie uma pasta de rollback pessoal fora de `.assistant/skills/`, se a política permitir. Não use as pastas nativas de descoberta para guardar cópias.
 2. Para cada um dos seis diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
 3. Em `skills/`, substitua **somente** as 15 pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
-4. Substitua `README.md` e `MANUAL_TECNICO.md` pelos arquivos candidatos. Retire `CATALOGO_HELPERS.md` e `GLOSSARIO.md` somente se forem as cópias geridas pelo Hub, preservando o backup.
+4. Substitua `README.md` e `MANUAL_TECNICO_V2.md` pelos arquivos candidatos. Retire `CATALOGO_HELPERS.md` e `GLOSSARIO.md` somente se forem as cópias geridas pelo Hub, preservando o backup.
 5. **Preserve `.assistant/.mcp_servers.json`, skills alheias, arquivos pessoais e instruções administrativas.** Não copie configuração MCP de outro ambiente.
 6. Só depois de o Hub estar no lugar, atualize `.assistant_instructions.md` na raiz do seu usuário. Prefira mover/importar o FILE exato do pacote, sem alterar a redação durante a instalação. Preserve no backup qualquer conteúdo pessoal anterior; não concatene instruções conflitantes automaticamente.
 7. Em **Genie Code → Settings → User instructions → Open instructions file**, confirme que abre esse arquivo, com o ponto inicial e o conteúdo “operação integrada do Hub”. Se for oferecido **Add instructions file**, use-o para localizar/criar o arquivo nativo e inserir o conteúdo aprovado, conferindo depois o hash. O arquivo sem ponto não ativa o mecanismo.

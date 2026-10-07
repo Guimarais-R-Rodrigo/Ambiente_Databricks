@@ -37,3 +37,12 @@ próximo passo. Um check estático ou prompt injetado nunca substitui discovery.
 T29 exige manifesto do pacote, SHA/branch conferidos e leitura efetiva. Variantes
 negativas: pacote antigo, arquivo ausente, branch errada, SHA divergente e contexto
 contraditório. Upload e instruções persistentes requerem autorização própria.
+
+## Copilot no VS Code — perfil de trabalho
+
+Aplicar T17–T21 no checkout atualizado, registrando versão do VS Code, extensão
+Copilot, harness, modelo e configurações efetivas. Conferir AGENTS e cinco skills
+únicas em Customizations/References e observar uma invocação real. Repetir com
+`.agents/skills` e `.claude/skills` coexistindo; duplicação é FAIL a resolver
+para esse perfil. Não inferir suporte pela marca do modelo nem alterar settings
+sem necessidade/escopo próprio. Estado desta entrega: NOT_RUN no cliente destino.

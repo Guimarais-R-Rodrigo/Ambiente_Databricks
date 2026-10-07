@@ -39,7 +39,7 @@ class ValidateCreateReadmeTests(unittest.TestCase):
         cls.fixture = tempfile.TemporaryDirectory(prefix="sef-readme-repository-")
         cls.repo = Path(cls.fixture.name) / "repo"
         git(ROOT, "clone", "--no-local", "--no-hardlinks", "--config", "core.autocrlf=false", "--", str(ROOT), str(cls.repo))
-        cls.assistant = cls.repo / "ambiente_fonte/.assistant"
+        cls.assistant = cls.repo / "ambiente_databricks/.assistant"
         cls.relative = "hub_padroes/piloto_readme_fixture/README.md"
         folder = (cls.assistant / cls.relative).parent
         folder.mkdir()
@@ -48,7 +48,7 @@ class ValidateCreateReadmeTests(unittest.TestCase):
         manifest = cls.assistant / gate.MANIFEST
         if not manifest.exists():
             manifest.write_text(json.dumps({"fixture": "synthetic_release_for_repo_gate"}) + "\n", encoding="utf8")
-        git(cls.repo, "add", "ambiente_fonte/.assistant/hub_padroes/piloto_readme_fixture/guia.md", "ambiente_fonte/.assistant/" + gate.MANIFEST)
+        git(cls.repo, "add", "ambiente_databricks/.assistant/hub_padroes/piloto_readme_fixture/guia.md", "ambiente_databricks/.assistant/" + gate.MANIFEST)
         git(cls.repo, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.invalid", "commit", "-qm", "synthetic absent README fixture")
         cls.sha = git(cls.repo, "rev-parse", "HEAD")
 
@@ -107,7 +107,7 @@ class ValidateCreateReadmeTests(unittest.TestCase):
             if self.out.exists():
                 for path in self.out.iterdir():
                     if path.is_file(): shutil.copy2(path, destination / path.name)
-                overlay_candidate = self.out / "overlay/ambiente_fonte/.assistant" / self.relative
+                overlay_candidate = self.out / "overlay/ambiente_databricks/.assistant" / self.relative
                 if overlay_candidate.exists(): shutil.copy2(overlay_candidate, destination / "overlay_README.md")
 
     def test_valid_candidate_executes_real_validator_and_preserves_original(self):
@@ -180,7 +180,7 @@ class ValidateCreateReadmeTests(unittest.TestCase):
         self.candidate["context"]["type_confirmed"] = False
         result = self.validate()
         self.assertIn("PREFLIGHT_BLOCKED", result["issues"])
-        self.assertFalse((self.out / "overlay/ambiente_fonte/.assistant" / self.relative).exists())
+        self.assertFalse((self.out / "overlay/ambiente_databricks/.assistant" / self.relative).exists())
 
     def test_object_readme_marker_is_not_an_aggregator(self):
         self.candidate["content_utf8"] += "\n<!-- readme-objeto: 1.0.0 -->\n"; self.rebind()

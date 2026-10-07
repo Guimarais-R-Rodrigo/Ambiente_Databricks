@@ -146,6 +146,6 @@ A skill roteável `hub-ml-micromodelos` pertence à MM04; fingerprint pertence �
 
 ## Estado corrente e próxima decisão
 
-O módulo de domínio foi integrado pela PR #119 em `63601e09` (30/09/2026), como registra o [plano de integração](PLANO_INTEGRACAO_HUB_MICROMODELOS.md). A skill permanece L1/audit. Comece pelo [guia de uso do módulo](../../../ambiente_fonte/.assistant/hub_micromodelos/README.md) ou pelo [quickstart sintético](../../../ambiente_fonte/.assistant/hub_micromodelos/exemplos/recencia_contato/README.md).
+O módulo de domínio foi integrado pela PR #119 em `63601e09` (30/09/2026), como registra o [plano de integração](PLANO_INTEGRACAO_HUB_MICROMODELOS.md). A skill permanece L1/audit. Comece pelo [guia de uso do módulo](../../../ambiente_databricks/.assistant/hub_micromodelos/README.md) ou pelo [quickstart sintético](../../../ambiente_databricks/.assistant/hub_micromodelos/exemplos/recencia_contato/README.md).
 
 E0 sintético, provas E1 Free e E2 corporativo são dimensões separadas. O [plano E2](PLANO_PREPARACAO_E2.md) registra portas ainda não executadas no trabalho. FULL R1 e FULL R2 de MM03 permanecem resultados históricos, sem reclassificação; integração não promove a policy nem homologa fontes corporativas.

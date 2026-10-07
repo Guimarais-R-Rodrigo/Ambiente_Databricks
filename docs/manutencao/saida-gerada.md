@@ -1,6 +1,6 @@
 # Saída gerada e CI da release atual
 
-`ambiente_fonte/` continua fonte canônica. O output-root compartilhado de renderer,
+`ambiente_databricks/` continua fonte canônica. O output-root compartilhado de renderer,
 publicador e pacote é `.artifacts/simulado/`, definido em `tools/project_policy.py`.
 O nome `Novo_Ambiente_Simulado/` permanece apenas em evidências, snapshots e aliases
 históricos de proteção. Esses registros não instruem uma release atual a ler a

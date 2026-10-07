@@ -21,7 +21,7 @@ import uuid
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "ambiente_fonte/.assistant"))
+sys.path.insert(0, str(ROOT / "ambiente_databricks/.assistant"))
 sys.path.insert(0, str(ROOT / "tools"))
 from hub_scripts.skill_execution.receipt import sha256_digest
 from markdown_contract import anchors, markdown_links, mask_fences
@@ -279,7 +279,7 @@ def validate_candidate(candidate, *, repo_root, evidence_dir):
             raise ValueError("BASE_MISMATCH_OR_DIRTY")
         if git("rev-parse", "--is-shallow-repository") != "false":
             raise ValueError("COMPLETE_HISTORY_REQUIRED")
-        assistant = repo / "ambiente_fonte/.assistant"
+        assistant = repo / "ambiente_databricks/.assistant"
         _destination(assistant, relative)
         for key, path in (("template_sha256", TEMPLATE), ("release_sha256", MANIFEST)):
             target = assistant / path
@@ -292,7 +292,7 @@ def validate_candidate(candidate, *, repo_root, evidence_dir):
         git("checkout", "--detach", binding["base_sha"], cwd=overlay)
         if git("rev-parse", "--is-shallow-repository", cwd=overlay) != "false" or git("status", "--porcelain=v1", "--untracked-files=all", cwd=overlay):
             raise ValueError("OVERLAY_BASE_NOT_CLEAN_AND_COMPLETE")
-        overlay_assistant = overlay / "ambiente_fonte/.assistant"
+        overlay_assistant = overlay / "ambiente_databricks/.assistant"
         target = _destination(overlay_assistant, relative)
         preflight_path = overlay_assistant / "skills/hub-ml-criar-objeto/scripts/preflight.py"
         preflight_code, preflight_output = run([sys.executable, "-B", str(preflight_path), "--context-json", json.dumps(context, ensure_ascii=False)], overlay)

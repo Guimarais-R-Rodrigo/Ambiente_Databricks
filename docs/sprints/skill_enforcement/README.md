@@ -4,7 +4,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 
 ## Política atual do produto
 
-A [policy](../../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) é a autoridade de níveis. Criar Objeto está L3/audit, `stage_specific`, após SER01; a menção L2 abaixo pertence à SE07. A [continuidade SER/B1](../skill_enforcement_rollout/README.md) separa capacidade técnica, comportamento e promoção. DoD incompleto e residual SE07 não foram apagados.
+A [policy](../../../ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json) é a autoridade de níveis. Criar Objeto está L3/audit, `stage_specific`, após SER01; a menção L2 abaixo pertence à SE07. A [continuidade SER/B1](../skill_enforcement_rollout/README.md) separa capacidade técnica, comportamento e promoção. DoD incompleto e residual SE07 não foram apagados.
 
 ## Documentos canônicos
 

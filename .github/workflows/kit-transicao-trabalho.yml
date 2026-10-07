@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'tools/**'
-      - 'ambiente_fonte/**'
+      - 'ambiente_databricks/**'
       - '.github/workflows/**'
       - 'docs/ai/**'
       - 'docs/playbooks/**'
@@ -12,7 +12,7 @@ on:
     branches: [main]
     paths:
       - 'tools/**'
-      - 'ambiente_fonte/**'
+      - 'ambiente_databricks/**'
       - '.github/workflows/**'
       - 'docs/ai/**'
       - "tools/aceite_trabalho.py"
@@ -22,7 +22,7 @@ on:
       - "tools/temas_v09_transicao.py"
       - "tools/tests/test_transicao_trabalho.py"
       - "tools/tests/test_aceite_micromodelos_trabalho.py"
-      - "ambiente_fonte/.assistant/hub_micromodelos/**"
+      - "ambiente_databricks/.assistant/hub_micromodelos/**"
       - "tools/tests/test_temas_v09.py"
       - "tools/ci_local.py"
       - "tools/skill_enforcement/**"

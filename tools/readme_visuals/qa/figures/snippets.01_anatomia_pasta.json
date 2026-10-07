@@ -12,7 +12,7 @@
   "question": "Como um snippet é estruturado fisicamente?",
   "alt": "Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.",
   "caption": "O notebook consome a API pública; a implementação permanece atrás da fachada.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_snippets/README.md",
   "anchor": "arquitetura-e-o-padrao-pasta-de-objeto",
   "approved_signature": false,
   "texts": [

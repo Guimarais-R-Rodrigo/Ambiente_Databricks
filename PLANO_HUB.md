@@ -446,7 +446,7 @@ teste descrevem o que foi observado na época. Renomear ali falsifica o registro
 
 | Camada | `x_` / `hub-ml-` | Renomeia? |
 |---|---:|---|
-| `ambiente_fonte/`, `tools/`, `.claude/`, canônicos, `docs/playbooks/`, `GUIA_REPLICACAO_TEMPORARIO.md` | **471 / 162** | **sim** |
+| `ambiente_databricks/`, `tools/`, `.claude/`, canônicos, `docs/playbooks/`, `GUIA_REPLICACAO_TEMPORARIO.md` | **471 / 162** | **sim** |
 | `docs/testes/`, `CHANGELOG.md`, `docs/auditoria/`, `docs/handoffs/`, `docs/decisions/` | **187 / 108** | **não**, com nota de cabeçalho |
 
 Os números da v1 (601 e 262) foram medidos sobre um universo que **incluía as

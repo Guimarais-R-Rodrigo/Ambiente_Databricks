@@ -28,7 +28,7 @@ jobs:
         run: |
           python -m pip install -r tools/requirements-dev.txt
           python -m pip install 'ipywidgets>=8,<9'
-          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
       - name: Dependências do compositor V06
         run: |
           npm install --global pnpm@10.34.5
@@ -44,7 +44,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')
+          path = Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')
           compile(path.read_text(encoding='utf-8'), str(path), 'exec')
           print('OK: sintaxe V11 compilada em memória')
           PY

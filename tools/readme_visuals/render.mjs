@@ -27,7 +27,7 @@ const baseline=[];
 for(const item of previous.assets){
   const record={id:item.id,files:[]};
   for(const rel of [item.source,item.published]){
-    const repoPath=`ambiente_fonte/.assistant/hub_readmes_visual_assets/${rel}`;
+    const repoPath=`ambiente_databricks/.assistant/hub_readmes_visual_assets/${rel}`;
     const bytes=execFileSync('git',['show',`${baselineCommit}:${repoPath}`],{cwd:ROOT,maxBuffer:20*1024*1024});
     const dest=path.join(OUT,'baseline',rel);
     let exists;try{exists=await fs.readFile(dest);}catch(e){if(e.code!=='ENOENT')throw e;}
@@ -67,7 +67,7 @@ const inputs=[];
 for(const rel of sourcePaths){
   const bytes=await fs.readFile(path.join(ASSET,rel));
   await write(path.join(OUT,'contracts',rel),bytes);
-  inputs.push({path:`ambiente_fonte/.assistant/hub_readmes_visual_assets/${rel}`,sha256:sha(bytes)});
+  inputs.push({path:`ambiente_databricks/.assistant/hub_readmes_visual_assets/${rel}`,sha256:sha(bytes)});
 }
 for(const rel of ['tools/readme_visuals/lib.mjs','tools/readme_visuals/render.mjs','tools/readme_visuals/archetypes/signatures.mjs','tools/readme_visuals/package.json','tools/readme_visuals/pnpm-lock.yaml','tools/readme_visuals/.node-version','tools/readme_visuals/document.mjs','tools/readme_visuals/contact_sheet.mjs','tools/readme_visuals/scale_samples.mjs','tools/readme_visuals/validate.mjs']) {
   inputs.push({path:rel,sha256:sha(await fs.readFile(path.join(ROOT,rel)))});

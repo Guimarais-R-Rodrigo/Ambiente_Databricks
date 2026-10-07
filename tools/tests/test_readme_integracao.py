@@ -101,7 +101,7 @@ class ReadmeConciergeIntegrationTests(unittest.TestCase):
         self.assertFalse((ROOT / 'docs/decisions/ADR-0011-readmes-de-objeto.md').exists())
 
     def test_instructions_preserve_both_optional_discovery_and_readme_contract(self) -> None:
-        text = (ROOT / 'ambiente_fonte/.assistant_instructions.md').read_text(encoding='utf-8')
+        text = (ROOT / 'ambiente_databricks/.assistant_instructions.md').read_text(encoding='utf-8')
         self.assertIn('Concierge é opcional', text)
         self.assertIn('hub-ml-concierge', text)
         self.assertIn('README', text)
@@ -109,12 +109,34 @@ class ReadmeConciergeIntegrationTests(unittest.TestCase):
         self.assertLessEqual(len(text), 20_000)
 
     def test_manual_and_instructions_mirrors_match(self) -> None:
-        source = ROOT / 'ambiente_fonte'
+        source = ROOT / 'ambiente_databricks'
         target = ROOT / '.artifacts/simulado/Users/usuario-free'
-        for rel in ('.assistant_instructions.md', '.assistant/MANUAL_TECNICO.md'):
+        for rel in ('.assistant_instructions.md', '.assistant/MANUAL_TECNICO_V2.md'):
             with self.subTest(path=rel):
                 self.assertEqual((source / rel).read_bytes(), (target / rel).read_bytes())
-        self.assertEqual((ROOT / 'MANUAL_TECNICO.md').read_bytes(), (source / '.assistant/MANUAL_TECNICO.md').read_bytes())
+        self.assertFalse((ROOT / 'MANUAL_TECNICO.md').exists())
+
+    def test_v2_preserves_fourteen_semantic_syntax_examples(self) -> None:
+        import ast
+        import re
+        expected = [
+            'funcao', 'introspeccao', 'fachada', 'bootstrap', 'spark_sessao',
+            'spark_lazy', 'widget', 'qualidade_preparo', 'qualidade_chamada',
+            'qualidade_conferencia', 'politica_consumidor', 'split_temporal',
+            'metricas_binarias', 'sdk_remoto',
+        ]
+        hub = ROOT / 'ambiente_databricks/.assistant'
+        for relative in ('MANUAL_TECNICO_V2.md', 'manuais_v2/partes/MT_REFERENCIA_OPERACIONAL.md'):
+            with self.subTest(path=relative):
+                content = (hub / relative).read_text(encoding='utf-8')
+                blocks = re.findall(r'```python\n(.*?)```', content, re.S)
+                selected = []
+                for block in blocks:
+                    marker = re.search(r'^# CONTRATO_SINTAXE: E(\d{2}):([a-z_]+)$', block, re.M)
+                    if marker:
+                        selected.append((int(marker[1]), marker[2]))
+                        ast.parse(block, filename=f'{relative}:{marker[0]}')
+                self.assertEqual(selected, list(enumerate(expected, 1)))
 
 
 if __name__ == '__main__':

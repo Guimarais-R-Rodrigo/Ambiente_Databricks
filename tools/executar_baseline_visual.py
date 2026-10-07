@@ -62,7 +62,7 @@ def main():
     for name, doc in [('inventario_base.json', before), ('inventario_candidata.json', candidate)]:
         gravar(root, out / name, doc)
     changes = comparar_protegidos(before, candidate)
-    protected = [r for r in before['arquivos'] if r['path'].startswith(RAIZES_PROTEGIDAS) or r['path'] == 'MANUAL_TECNICO.md']
+    protected = [r for r in before['arquivos'] if r['path'].startswith(RAIZES_PROTEGIDAS) or r['path'] == 'MANUAL_TECNICO_V2.md']
     gravar(root, out / 'manifesto_protecao.json', {'source_commit': before['commit'], 'arquivos': protected, 'diferencas': changes})
     resultados, captures, qa = [], {}, {}
     for label, checkout in [('base', base), ('candidata', root)]:
@@ -90,7 +90,7 @@ def main():
                 resultados.append(result)
                 report = sandbox / 'tools/readme_visuals/qa/validation.json'
                 if not report.exists():
-                    report = sandbox / 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
+                    report = sandbox / 'ambiente_databricks/.assistant/hub_readmes_visual_assets/qa/validation.json'
                 # Usar apenas relatório emitido agora; o arquivo já versionado não
                 # comprova execução desta rodada. Um crash sem regravação não passa.
                 diff = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=normal'], cwd=sandbox, text=True)
@@ -104,7 +104,7 @@ def main():
                     reason = 'Execução não produziu relatório de QA novo verificável.'
                     if missing:
                         path = missing.group(2)
-                        path = 'ambiente_fonte/' + path.split('/ambiente_fonte/', 1)[1] if '/ambiente_fonte/' in path else Path(path).name
+                        path = 'ambiente_databricks/' + path.split('/ambiente_databricks/', 1)[1] if '/ambiente_databricks/' in path else Path(path).name
                         reason = missing.group(1) + ': arquivo esperado pelo validador global ausente: ' + path
                     qa[label] = {'status': 'nao_confirmado', 'failures': [reason]}
                 (out / ('qa_visual_' + label + '.json')).write_text(json.dumps(qa[label], ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
@@ -115,7 +115,7 @@ def main():
                     resultados.append(family_result)
                     family_path = sandbox / ('tools/readme_visuals/qa/sprint_' + family + '.json')
                     if not family_path.exists():
-                        family_path = sandbox / ('ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_' + family + '.json')
+                        family_path = sandbox / ('ambiente_databricks/.assistant/hub_readmes_visual_assets/qa/sprint_' + family + '.json')
                     if family_result['codigo'] == 0 and family_path.is_file():
                         family_report = json.loads(family_path.read_text(encoding='utf-8'))
                         family_result['verificacoes_visuais'] = family_report.get('checks')

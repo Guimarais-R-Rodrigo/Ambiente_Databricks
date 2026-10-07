@@ -16,7 +16,7 @@ os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["SPARK_LOCAL_IP"] = "127.0.0.1"
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT = Path(os.environ.get("SER14_ASSISTANT_ROOT", str(ROOT / "ambiente_fonte/.assistant")))
+ASSISTANT = Path(os.environ.get("SER14_ASSISTANT_ROOT", str(ROOT / "ambiente_databricks/.assistant")))
 sys.path.insert(0, str(ASSISTANT))
 from hub_scripts.skill_execution.domain_context import digest
 

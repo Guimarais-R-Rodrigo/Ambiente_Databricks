@@ -11,7 +11,7 @@ Isso não equivale a publicação no Databricks nem a homologação operacional.
 
 Para quem nunca entrou no Hub: o visual e sua rotina continuam iguais. A nova
 capacidade confere dados de uma proposta sem desenhar gráficos. Comece pelo
-[guia operacional](../../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
+[guia operacional](../../../../ambiente_databricks/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
 Não há seletor para procurar, tabela para consultar ou pacote para publicar nesta etapa.
 
 ## Escopo entregue

@@ -30,19 +30,19 @@ Antes da criação desta candidata, não havia outra frente PSEF materialmente c
 
 ## Fontes canônicas observadas
 
-- `ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json`
-- `ambiente_fonte/.assistant/skills/README.md`
-- `ambiente_fonte/.assistant/skills/*/SKILL.md` e artefatos estruturais existentes
-- `ambiente_fonte/.assistant_instructions.md`
-- `ambiente_fonte/.assistant/MANUAL_TECNICO.md`
-- `ambiente_fonte/.assistant/hub_prompts/README.md`
+- `ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json`
+- `ambiente_databricks/.assistant/skills/README.md`
+- `ambiente_databricks/.assistant/skills/*/SKILL.md` e artefatos estruturais existentes
+- `ambiente_databricks/.assistant_instructions.md`
+- `ambiente_databricks/.assistant/MANUAL_TECNICO.md`
+- `ambiente_databricks/.assistant/hub_prompts/README.md`
 - `docs/sprints/skill_enforcement/` e checkpoints SE07/SE08
 
 A policy observada possui 14 skills. Nenhum nível foi recalculado ou promovido nesta sprint.
 
 ## Inventário
 
-O Git tree recursivo de `main` retornou 16 diretórios de família e 49 blobs sob `ambiente_fonte/.assistant/hub_prompts/`:
+O Git tree recursivo de `main` retornou 16 diretórios de família e 49 blobs sob `ambiente_databricks/.assistant/hub_prompts/`:
 - 1 README raiz;
 - 16 READMEs locais;
 - 16 briefings `.md`;
@@ -51,8 +51,8 @@ O Git tree recursivo de `main` retornou 16 diretórios de família e 49 blobs so
 ## Limites da sprint
 
 PSEF00 **não altera**:
-- `ambiente_fonte/.assistant/hub_prompts/**`;
-- `ambiente_fonte/.assistant/skills/**`;
+- `ambiente_databricks/.assistant/hub_prompts/**`;
+- `ambiente_databricks/.assistant/skills/**`;
 - `policy.json`;
 - `.assistant_instructions.md`;
 - `MANUAL_TECNICO.md`;

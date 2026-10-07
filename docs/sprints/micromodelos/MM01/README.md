@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-> **Nota administrativa — 06/10/2026.** MM01 integrada pela PR #51 em `73d7659d`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_fonte/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
+> **Nota administrativa — 06/10/2026.** MM01 integrada pela PR #51 em `73d7659d`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_databricks/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
 
 ## Registro histórico preservado
 
@@ -209,7 +209,7 @@ O workflow MM01 executa, em Python 3.12:
 python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
 python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v
 python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v
-python -B tools/validate_assistant.py --root ambiente_fonte
+python -B tools/validate_assistant.py --root ambiente_databricks
 ```
 
 São **47 métodos canônicos + 3 R02 + 1 R03 = 51 métodos permanentes**, além de subtests e fixtures negativas.

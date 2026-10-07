@@ -1,9 +1,9 @@
-"""Bateria de validação local do ambiente_fonte/.
+"""Bateria de validação local do ambiente_databricks/.
 
 Recria os checks estruturais da auditoria do Codex (2026-08-13) como ferramenta
 permanente do projeto. Uso:
 
-    python tools/validate_assistant.py [--root ambiente_fonte]
+    python tools/validate_assistant.py [--root ambiente_databricks]
 
 Exit code 0 = aprovado (FAILs ausentes); 1 = pelo menos um FAIL.
 """
@@ -16,7 +16,7 @@ import re
 import sys
 from pathlib import Path
 
-# Este validador importa helpers estáticos a partir de ambiente_fonte/.assistant.
+# Este validador importa helpers estáticos a partir de ambiente_databricks/.assistant.
 # Não deve criar __pycache__ na própria árvore que ele audita.
 sys.dont_write_bytecode = True
 
@@ -25,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from readme_objeto_contract import check_readme_objects
 from repo_inventory import git_paths
 from markdown_links import markdown_destinations, local_destination_path
+from historical_links import load as load_historical_links
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
 from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
 from skill_enforcement import se07_policy, validate_contracts  # noqa: E402
@@ -1523,6 +1524,12 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
     ficavam sem verificação de link algum.
     """
     verificados = 0
+    try:
+        historical = load_historical_links(REPO_ROOT)
+    except (ValueError, OSError, KeyError) as exc:
+        problems.append(f"referências históricas: {exc}")
+        historical = set()
+    used_historical = set()
     for caminho in iter_repo_files():
         if caminho.suffix != ".md" or not caminho.is_file():
             continue
@@ -1539,7 +1546,14 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
                 continue
             verificados += 1
             if not alvo_existe(caminho.parent, alvo):
-                problems.append(f"{relativo}: link relativo quebrado -> {alvo}")
+                key = (relativo.as_posix(), raw)
+                if key in historical:
+                    used_historical.add(key)
+                else:
+                    problems.append(f"{relativo}: link relativo quebrado -> {alvo}")
+    if historical - used_historical:
+        problems.append("referências históricas: entrada não consumida pelo checker")
+    print(f"links históricos  : {len(used_historical)} referências recuperáveis no Git (não links locais)")
     # Mesma guarda do check corporativo, e pelo mesmo motivo: varredura vazia é
     # indistinguível de varredura limpa na saída, e o README prometia que ambas
     # reprovassem. Só uma reprovava — uma auditoria mostrou.
@@ -1588,7 +1602,7 @@ def main() -> int:
     )
     parser.add_argument("--conferir-readme-remoto", action="store_true",
                         help="confere somente o bloco remoto; exige CLI/autenticação Databricks")
-    parser.add_argument("--root", default="ambiente_fonte", type=Path)
+    parser.add_argument("--root", default="ambiente_databricks", type=Path)
     args = parser.parse_args()
 
     root = (REPO_ROOT / args.root).resolve()

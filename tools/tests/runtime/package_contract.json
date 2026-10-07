@@ -24,7 +24,7 @@
     "sha256": "f76821ddb5fc879a9d95a2f2e614527079bcd58f69438a830c756f1dc09fb4c3",
     "provenance": {
       "source_commit": "126a2e125cca2251527f187a58696243414c6859",
-      "source_path": "ambiente_fonte/.assistant/hub_snippets/tests/test_core.py",
+      "source_path": "ambiente_databricks/.assistant/hub_snippets/tests/test_core.py",
       "source_sha256": "b48baa202b292fb2070b8bbb207d0bbb0a1e27ec2e73b3398b9d67b094ce8491",
       "legacy_ast_sha256": "62652bb85dbe70936d1bee99098ed87a556de7245ed83c7c2acbb85e87e663b8",
       "legacy_python": "3.12"

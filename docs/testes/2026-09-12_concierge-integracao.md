@@ -5,7 +5,7 @@ Ambiente local: Linux, Python 3.13.5. Sem conexão Databricks.
 
 ## Escopo
 
-Integração autorizada da skill em `ambiente_fonte/.assistant/skills/`, mantendo
+Integração autorizada da skill em `ambiente_databricks/.assistant/skills/`, mantendo
 protótipo histórico congelado. Atualizados política de skills, instruções,
 READMEs, Manual/cópia, ADR, roteiros de forward test e estágios do CI. O simulado
 foi gerado exclusivamente pelo renderer. Helpers, prompts, imagens e os corpos
@@ -59,7 +59,7 @@ humano adicional; o gate inteiro foi então reexecutado e aprovado.
 
 ## Evidências específicas da funcionalidade
 
-[Resultados do pacote](../../ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/RESULTADOS.md)
+[Resultados do pacote](../../ambiente_databricks/.assistant/skills/hub-ml-concierge/tests/RESULTADOS.md)
 separam validação estática, regressões do verificador e aceite conversacional.
 O CI executa 14 regressões do verificador e 12 testes de integração, além das
 suítes já existentes. O renderer produziu um espelho conferido por conteúdo.
@@ -71,4 +71,4 @@ consulta a dados reais. Os testes locais de Spark opcionais da suíte de transi�
 permanecem skips, não PASS. A publicação e o aceite no destino continuam pendentes.
 
 A documentação oficial de Agent Skills foi reconferida em 12/09/2026; consulte
-[Fontes do pacote](../../ambiente_fonte/.assistant/skills/hub-ml-concierge/docs/fontes.md).
+[Fontes do pacote](../../ambiente_databricks/.assistant/skills/hub-ml-concierge/docs/fontes.md).

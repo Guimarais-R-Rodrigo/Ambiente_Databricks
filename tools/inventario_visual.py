@@ -38,7 +38,7 @@ PADROES = {
 }
 IMAGEM_MD = re.compile(r'!\[([^\]]*)\]\(([^\n)]+)\)|<img\b[^>]*?src=[\'\"]([^\'\"]+)[\'\"][^>]*>', re.I)
 CENTRAIS = ('/constants/colors/', '/constants/styles/', '/visual_system/tokens.')
-RAIZES_PROTEGIDAS = ('ambiente_fonte/', SIMULATED_ROOT.as_posix() + '/', 'Novo_Ambiente_Simulado/')
+RAIZES_PROTEGIDAS = ('ambiente_databricks/', SIMULATED_ROOT.as_posix() + '/', 'Novo_Ambiente_Simulado/')
 
 
 def git(root: Path, *args: str) -> str:
@@ -54,10 +54,8 @@ def git(root: Path, *args: str) -> str:
 def camada(path: str) -> str:
     if path.startswith((SIMULATED_ROOT.as_posix() + '/', 'Novo_Ambiente_Simulado/')):
         return 'derivado'
-    if path.startswith('ambiente_fonte/'):
+    if path.startswith('ambiente_databricks/'):
         return 'produto'
-    if path.startswith('novas_funcionalidades/'):
-        return 'experimental'
     if path.startswith('tools/'):
         return 'ferramenta'
     return 'governanca'
@@ -182,13 +180,13 @@ def inventariar(root: Path) -> dict[str, Any]:
                     imagens_md[rel] = refs
         arquivos.append(row)
     fonte = [a for a in arquivos if a['camada'] == 'produto']
-    if not fonte or not any(o['path'].startswith('ambiente_fonte/') for o in ocorrencias):
+    if not fonte or not any(o['path'].startswith('ambiente_databricks/') for o in ocorrencias):
         raise ValueError('Varredura vazia no produto; inventário não certificado')
     if git(root, 'status', '--porcelain', '--untracked-files=normal') or git(root, 'rev-parse', 'HEAD') != commit:
         raise ValueError('Checkout mudou durante o inventário')
     locais = {}
     for rel in modulos:
-        prefix = 'ambiente_fonte/.assistant/'
+        prefix = 'ambiente_databricks/.assistant/'
         if rel.startswith(prefix):
             nome = rel[len(prefix):-3].replace('/', '.')
             if nome.endswith('.__init__'):
@@ -196,7 +194,7 @@ def inventariar(root: Path) -> dict[str, Any]:
             locais[nome] = rel
     arestas = []
     for rel, info in modulos.items():
-        if not rel.startswith('ambiente_fonte/.assistant/'):
+        if not rel.startswith('ambiente_databricks/.assistant/'):
             continue
         for imp in info['imports']:
             candidates = [imp['origem']] if imp['origem'] else imp['nomes']
@@ -224,7 +222,7 @@ def inventariar(root: Path) -> dict[str, Any]:
 def comparar_protegidos(base: dict[str, Any], atual: dict[str, Any]) -> list[str]:
     def subset(doc: dict[str, Any]) -> dict[str, str]:
         return {r['path']: r['sha256'] for r in doc['arquivos']
-                if r['path'].startswith(RAIZES_PROTEGIDAS) or r['path'] == 'MANUAL_TECNICO.md'}
+                if r['path'].startswith(RAIZES_PROTEGIDAS) or r['path'] == 'MANUAL_TECNICO_V2.md'}
     antes, depois = subset(base), subset(atual)
     if not antes or not depois:
         raise ValueError('Conjunto protegido vazio')

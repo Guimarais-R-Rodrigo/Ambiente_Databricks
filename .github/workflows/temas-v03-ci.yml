@@ -5,12 +5,12 @@ on:
   pull_request:
     paths:
       - 'tools/**'
-      - 'ambiente_fonte/**'
+      - 'ambiente_databricks/**'
       - '.github/workflows/**'
       - 'docs/ai/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/**'
-      - 'ambiente_fonte/.assistant/hub_snippets/visual/tema/**'
-      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/**'
+      - 'ambiente_databricks/.assistant/hub_snippets/visual/theme_plotly/**'
+      - 'ambiente_databricks/.assistant/hub_snippets/visual/tema/**'
+      - 'ambiente_databricks/.assistant/hub_padroes/identidade_visual/**'
       - 'tools/tests/test_temas_v03.py'
       - 'tools/tests/test_visual_legado_v00.py'
       - 'docs/sprints/sistema_temas/V03/**'

@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import readme_objeto_contract as rc
 
 REAL = Path(__file__).resolve().parents[2]
-TEXT = (REAL / "ambiente_fonte/.assistant" / rc.TEMPLATE).read_text(encoding="utf-8")
+TEXT = (REAL / "ambiente_databricks/.assistant" / rc.TEMPLATE).read_text(encoding="utf-8")
 VERSION, HEADINGS = rc.template_contract(TEXT)
 
 
@@ -20,7 +20,7 @@ class ReadmeContractTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.repo = Path(self.temp.name)
-        self.root = self.repo / "ambiente_fonte"
+        self.root = self.repo / "ambiente_databricks"
         self.base = self.root / ".assistant"
         template = self.base / rc.TEMPLATE
         template.parent.mkdir(parents=True)

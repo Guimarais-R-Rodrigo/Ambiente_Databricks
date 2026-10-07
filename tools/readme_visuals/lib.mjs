@@ -9,7 +9,7 @@ import YAML from 'yaml';
 
 export const TOOL = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(TOOL, '../..');
-export const ASSET = path.join(ROOT, 'ambiente_fonte/.assistant/hub_readmes_visual_assets');
+export const ASSET = path.join(ROOT, 'ambiente_databricks/.assistant/hub_readmes_visual_assets');
 export const QA = path.join(TOOL, 'qa');
 export const HEADER_SOURCE = path.join(TOOL, 'assets/headers/src');
 export const OUT = path.join(ROOT, 'READMEs_refeitos/readmes_viasual_melhorado/sprint_0');

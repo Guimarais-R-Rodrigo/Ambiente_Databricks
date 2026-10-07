@@ -12,7 +12,7 @@
   "question": "Quem mede, quem decide e quem orquestra?",
   "alt": "Três zonas separando diagnóstico, política consumidora e orquestração Databricks.",
   "caption": "Um Hub Script não agenda, notifica nem interrompe outro processo por conta própria.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_scripts/README.md",
   "anchor": "diagnostico-nao-e-enforcement",
   "approved_signature": false,
   "texts": [

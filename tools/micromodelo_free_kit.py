@@ -18,34 +18,34 @@ FILES = (
     "tools/free_kit/RUN_FREE.py",
     "tools/free_kit/SETUP_METADATA_FREE.py",
     "docs/sprints/micromodelos/KIT_FREE.md",
-    "ambiente_fonte/.assistant_instructions.md",
-    "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+    "ambiente_databricks/.assistant_instructions.md",
+    "ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json",
 )
 PRODUCT_FILES = (
-    "ambiente_fonte/.assistant/hub_snippets/ml/__init__.py",
-    "ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/__init__.py",
-    "ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/mlflow_run.py",
-    "ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/README.md",
-    "ambiente_fonte/.assistant/skills/hub-ml-micromodelos/SKILL.md",
-    "ambiente_fonte/.assistant/skills/hub-ml-micromodelos/execution_contract.json",
-    "ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/README.md",
-    "ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md",
-    "ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/exemplo_micromodelo_novo.py",
-    "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/README.md",
-    "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
-    "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/exemplo_descobrir_micromodelos.py",
+    "ambiente_databricks/.assistant/hub_snippets/ml/__init__.py",
+    "ambiente_databricks/.assistant/hub_snippets/ml/mlflow_run/__init__.py",
+    "ambiente_databricks/.assistant/hub_snippets/ml/mlflow_run/mlflow_run.py",
+    "ambiente_databricks/.assistant/hub_snippets/ml/mlflow_run/README.md",
+    "ambiente_databricks/.assistant/skills/hub-ml-micromodelos/SKILL.md",
+    "ambiente_databricks/.assistant/skills/hub-ml-micromodelos/execution_contract.json",
+    "ambiente_databricks/.assistant/hub_prompts/micromodelo_novo/README.md",
+    "ambiente_databricks/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md",
+    "ambiente_databricks/.assistant/hub_prompts/micromodelo_novo/exemplo_micromodelo_novo.py",
+    "ambiente_databricks/.assistant/hub_prompts/descobrir_micromodelos/README.md",
+    "ambiente_databricks/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
+    "ambiente_databricks/.assistant/hub_prompts/descobrir_micromodelos/exemplo_descobrir_micromodelos.py",
 ) + tuple(
-    "ambiente_fonte/.assistant/hub_micromodelos/" + path.relative_to(
-        ROOT / "ambiente_fonte/.assistant/hub_micromodelos").as_posix()
-    for path in sorted((ROOT / "ambiente_fonte/.assistant/hub_micromodelos").rglob("*"))
+    "ambiente_databricks/.assistant/hub_micromodelos/" + path.relative_to(
+        ROOT / "ambiente_databricks/.assistant/hub_micromodelos").as_posix()
+    for path in sorted((ROOT / "ambiente_databricks/.assistant/hub_micromodelos").rglob("*"))
     if path.is_file() and "__pycache__" not in path.parts
 )
 DESTINATION = {
     "tools/free_kit/RUN_FREE.py": "RUN_FREE.py",
     "tools/free_kit/SETUP_METADATA_FREE.py": "SETUP_METADATA_FREE.py",
     "docs/sprints/micromodelos/KIT_FREE.md": "README.md",
-    "ambiente_fonte/.assistant_instructions.md": "product_overlay/.assistant_instructions.md",
-    "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json":
+    "ambiente_databricks/.assistant_instructions.md": "product_overlay/.assistant_instructions.md",
+    "ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json":
         "product_overlay/.assistant/hub_padroes/skill_enforcement/policy.json",
 }
 REQUIREMENTS = "PyYAML>=6.0\nregex>=2024.11.6\njsonschema>=4.23\n"
@@ -96,7 +96,7 @@ def build(output: Path) -> dict[str, str]:
         shutil.copyfile(sources[rel], dest)
         digests[packaged] = hashlib.sha256(dest.read_bytes()).hexdigest()
     for rel in PRODUCT_FILES:
-        relative = Path(rel).relative_to("ambiente_fonte")
+        relative = Path(rel).relative_to("ambiente_databricks")
         packaged = (Path("product_overlay") / relative).as_posix()
         dest = output / packaged
         dest.parent.mkdir(parents=True, exist_ok=True)

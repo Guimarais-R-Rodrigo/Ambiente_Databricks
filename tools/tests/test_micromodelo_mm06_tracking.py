@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO / "ambiente_fonte/.assistant"))
+sys.path.insert(0, str(REPO / "ambiente_databricks/.assistant"))
 tracking = importlib.import_module("hub_snippets.ml.mlflow_run.mlflow_run")
 facade = importlib.import_module("hub_snippets.ml.mlflow_run")
 

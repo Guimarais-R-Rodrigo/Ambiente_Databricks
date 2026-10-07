@@ -79,7 +79,7 @@ def validate_manifest(raw: bytes, expected_sha256: str, expected_commit: str) ->
         require(bool(re.fullmatch(r"[a-f0-9]{64}", entry.get("sha256", ""))), "SHA256 inválido.")
         require(type(entry.get("bytes")) is int and entry["bytes"] >= 0, "Tamanho inválido.")
         seen.add(path)
-    require({".assistant_instructions.md", ".assistant/README.md", ".assistant/MANUAL_TECNICO.md"} <= seen,
+    require({".assistant_instructions.md", ".assistant/README.md", ".assistant/MANUAL_TECNICO_V2.md"} <= seen,
             "Pacote não contém as três entradas escolhidas.")
     return obj
 

@@ -35,4 +35,4 @@ jobs:
           python -B tools/temas_v01_contract.py
           python -B tools/tests/test_temas_v02.py
       - name: Exemplo sintético sem Spark ou dados externos
-        run: python -B ambiente_fonte/.assistant/hub_snippets/visual/tema/exemplo_tema.py
+        run: python -B ambiente_databricks/.assistant/hub_snippets/visual/tema/exemplo_tema.py

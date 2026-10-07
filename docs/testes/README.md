@@ -9,7 +9,7 @@
 | Transporte por conteúdo | [Micromodelos PR119, 30/09/2026](../sprints/micromodelos/PLANO_INTEGRACAO_HUB_MICROMODELOS.md), `63601e09`, readback 691/691 da release | homologação corporativa ou algoritmo correto |
 | Genie | [resultados B1](../sprints/skill_enforcement_rollout/GENIE_SKILLS_RESULTADOS_2026-09-28.md) e [retestes focais](../sprints/skill_enforcement_rollout/README.md) | runner/Receipt quando não observados |
 | Interface e UAT | [jornadas V12](../sprints/sistema_temas/V12/README.md), `a6309a4d`, e [handoff V13](../sprints/sistema_temas/V13/README.md), `62e94048` | readiness global; `A11-01=FAIL` e bloqueios persistem |
-| Autoridade | [policy atual](../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) e [ownership V14](../sprints/sistema_temas/V14/README.md) | autorização de um novo efeito remoto |
+| Autoridade | [policy atual](../../ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json) e [ownership V14](../sprints/sistema_temas/V14/README.md) | autorização de um novo efeito remoto |
 
 Resultados de campanhas diferentes não são somados como certificação única. As seções datadas abaixo preservam o alcance original.
 

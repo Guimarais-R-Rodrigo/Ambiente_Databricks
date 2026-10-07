@@ -98,7 +98,7 @@ class FreeKitTests(unittest.TestCase):
                 source = root / rel
                 source.parent.mkdir(parents=True, exist_ok=True)
                 source.write_text("synthetic", encoding="utf-8")
-            extra = root / "ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/segredo.txt"
+            extra = root / "ambiente_databricks/.assistant/hub_prompts/micromodelo_novo/segredo.txt"
             extra.write_text("nunca transportar", encoding="utf-8")
             with patch.object(kit, "ROOT", root):
                 output = Path(temp) / "package"

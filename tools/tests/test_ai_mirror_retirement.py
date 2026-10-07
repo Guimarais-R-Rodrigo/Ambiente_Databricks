@@ -33,7 +33,7 @@ class MirrorRetirementTests(unittest.TestCase):
         self.assertTrue(all(item['path'] == manifest['retired_path'] for item in manifest['retired_records']))
 
     def test_each_source_exception_retained_with_same_hash_origin_and_reason(self):
-        source = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml'
+        source = 'ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml'
         current = [item for item in self.control['historical_exceptions'] if item['path'] == source]
         def project(item, retired=False):
             return (item['line'], item['line_sha256'], item['legacy_source_sha256'] if retired else

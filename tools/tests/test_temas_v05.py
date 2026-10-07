@@ -16,7 +16,7 @@ from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / "ambiente_fonte/.assistant"
+PRODUCT = ROOT / "ambiente_databricks/.assistant"
 sys.path.insert(0, str(PRODUCT))
 
 from hub_snippets.visual.tema import ThemeError, load_reference_theme, resolve_theme

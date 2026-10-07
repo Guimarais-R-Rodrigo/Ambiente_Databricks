@@ -41,7 +41,7 @@
   },
   "critical_invariants": [
     "fonte canônica",
-    "ambiente_fonte/",
+    "ambiente_databricks/",
     "nunca\n  edite à mão",
     "Ambiente_Antigo/",
     "PII ou segredo",
@@ -261,7 +261,7 @@
         "quote": "- Valide `ambiente_fonte/` com `python tools/validate_assistant.py` antes de concluir.",
         "sha": "f2843eafae84d44cd751f307101de84f11981bd7"
       },
-      "obligation": "Validar ambiente_fonte antes de concluir.",
+      "obligation": "Validar ambiente_databricks antes de concluir.",
       "target": "AGENTS.md#conclusao",
       "owner": "AGENTS.md",
       "conditional_route": "Toda sessão com mudança",
@@ -2445,7 +2445,7 @@
         "quote": "- `ambiente_fonte/` é o único lugar onde o produto (`.assistant_instructions.md` +\n  `.assistant/`) é editado.",
         "sha": "f2843eafae84d44cd751f307101de84f11981bd7"
       },
-      "obligation": "Só ambiente_fonte é editável para produto.",
+      "obligation": "Só ambiente_databricks é editável para produto.",
       "target": "AGENTS.md#invariantes",
       "owner": "AGENTS.md",
       "conditional_route": "Toda tarefa",
@@ -5070,8 +5070,8 @@
       "disposition": "PRESERVED",
       "preservation_or_retirement_reason": "Mantida separação Git/workspace; exemplar transportado fica explicitamente fora das skills reais.",
       "owner_evidence": [
-        "ambiente_fonte/.assistant/skills/README.md",
-        "ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md"
+        "ambiente_databricks/.assistant/skills/README.md",
+        "ambiente_databricks/.assistant/hub_padroes/skill/exemplo/SKILL.md"
       ],
       "test_ids": [
         "T09",
@@ -8031,69 +8031,6 @@
       "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
     },
     {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 45,
-      "line_sha256": "5a0612127cc4cbb3e9dce8b2fd48a735c3f3806a0a89662f7e9c6da07998e4d2",
-      "legacy_source": ".claude/rules/fonte-de-verdade.md",
-      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 121,
-      "line_sha256": "18489602bec49efffff12720a3202f746b41b79755b0aa00995fd576b3f7e6ca",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 296,
-      "line_sha256": "4d360d512775d807b97689afd0b0c369c16c6704f979a0cf8b4c0d4ec9ee16eb",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 334,
-      "line_sha256": "833f8aad36e7fa7545fd99c87f3e87f5a54f3336fc5f797457ec147d7aa51389",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
-      "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml",
-      "line": 28,
-      "line_sha256": "8bd7e994eab1ae6eb7d2bd28916dd321dc1da11b2b9f7041ea04607d0b62e520",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "frozen_product_fact_sources",
-      "reason": "Protected metadata bytes retained; lookup replacement_routes for current maintenance owner; no active loader claim."
-    },
-    {
       "path": "docs/ai/compatibility.md",
       "line": 26,
       "line_sha256": "e4eecd10402c4735db5605c53f7fd0631430fa9ff1342cd0a126a1f26cb25d97",
@@ -8713,33 +8650,6 @@
       "replacement": "docs/ai/context/ambientes.md + evidência datada",
       "category": "dated_historical_evidence",
       "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
-    },
-    {
-      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
-      "line": 11,
-      "line_sha256": "e96f1f72fa2c662dc46c913ca3788c086fb275c1b07d6b55fd7655997a72ba10",
-      "legacy_source": ".claude/CLAUDE.md",
-      "replacement": "docs/ai/README.md + mapa em AGENTS.md",
-      "category": "archived_prototype_source",
-      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product."
-    },
-    {
-      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
-      "line": 12,
-      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
-      "legacy_source": ".claude/rules/fonte-de-verdade.md",
-      "replacement": "AGENTS.md + docs/ai/rules/fontes-e-derivados.md",
-      "category": "archived_prototype_source",
-      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product."
-    },
-    {
-      "path": "novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md",
-      "line": 12,
-      "line_sha256": "4f394a072243adcfc2a2189cc5353c893fd21741cf7f6905549cd0d098f104d5",
-      "legacy_source": ".claude/rules/docs-e-readmes.md",
-      "replacement": "docs/ai/rules/documentacao.md",
-      "category": "archived_prototype_source",
-      "reason": "Prototype sources explicitly bound to historical commit 9fa7371; root marks archive, not installable product."
     }
   ],
   "evidence_data_files": [
@@ -8775,5 +8685,5 @@
     ".claude/templates/handoff.md": "docs/ai/templates/handoff.md"
   },
   "native_acceptance": "BLOCKED unless per-surface evidence says otherwise; static PASS is not SUPPORTED",
-  "exemplar_notice": "ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md is transported template, not operational skill; IA-12 remains separate product-documentation scope"
+  "exemplar_notice": "ambiente_databricks/.assistant/hub_padroes/skill/exemplo/SKILL.md is transported template, not operational skill; IA-12 remains separate product-documentation scope"
 }

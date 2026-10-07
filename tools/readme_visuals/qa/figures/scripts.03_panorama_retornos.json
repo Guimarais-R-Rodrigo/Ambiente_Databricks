@@ -12,7 +12,7 @@
   "question": "Quais contratos de retorno existem nos Hub Scripts?",
   "alt": "Panorama de entradas e dos diferentes tipos de retorno produzidos pelos sete Hub Scripts.",
   "caption": "O consumidor interpreta o contrato específico do script e codifica separadamente qualquer reação operacional.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_scripts/README.md",
   "anchor": "passo-a-passo-operacional-como-usar-um-script",
   "approved_signature": false,
   "texts": [

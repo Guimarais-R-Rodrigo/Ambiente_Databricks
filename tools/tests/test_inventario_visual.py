@@ -19,7 +19,7 @@ class InventarioVisualTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name).resolve()
         self.run_git('init', '-q')
-        self.module = self.root / 'ambiente_fonte/.assistant/hub_snippets/visual/demo/demo.py'
+        self.module = self.root / 'ambiente_databricks/.assistant/hub_snippets/visual/demo/demo.py'
         self.module.parent.mkdir(parents=True)
         self.module.write_text('COR = "#005CA9"\n\ndef desenhar(x: int = 1) -> str:\n    return str(x)\n', encoding='utf-8')
         (self.root / '.gitignore').write_text('.artifacts/\n', encoding='utf-8')
@@ -146,7 +146,7 @@ class InventarioVisualTests(unittest.TestCase):
     def test_camadas_separadas(self):
         self.assertEqual(v.camada('Novo_Ambiente_Simulado/a.py'), 'derivado')
         self.assertEqual(v.camada('.artifacts/simulado/a.py'), 'derivado')
-        self.assertEqual(v.camada('novas_funcionalidades/a.py'), 'experimental')
+        self.assertEqual(v.camada('docs/historico/concierge.md'), 'governanca')
         self.assertEqual(v.camada('tools/a.py'), 'ferramenta')
 
     def test_protecao_igual(self):
@@ -160,8 +160,8 @@ class InventarioVisualTests(unittest.TestCase):
         next(r for r in after['arquivos'] if r['path'] == p)['sha256'] = 'alterado'
         self.assertEqual(v.comparar_protegidos(before, after), [p])
         after['arquivos'] = [r for r in after['arquivos'] if r['path'] != p]
-        after['arquivos'].append({'path': 'ambiente_fonte/novo.png', 'sha256': 'novo'})
-        self.assertEqual(v.comparar_protegidos(before, after), sorted([p, 'ambiente_fonte/novo.png']))
+        after['arquivos'].append({'path': 'ambiente_databricks/novo.png', 'sha256': 'novo'})
+        self.assertEqual(v.comparar_protegidos(before, after), sorted([p, 'ambiente_databricks/novo.png']))
 
     def test_conjunto_protegido_vazio_reprova(self):
         with self.assertRaisesRegex(ValueError, 'Conjunto protegido vazio'):
@@ -175,7 +175,7 @@ class InventarioVisualTests(unittest.TestCase):
         self.assertEqual(json.loads(target.read_text()), {'a': 1})
 
     def test_saida_no_produto_recusada(self):
-        target = self.root / 'ambiente_fonte/resultado.json'
+        target = self.root / 'ambiente_databricks/resultado.json'
         with self.assertRaisesRegex(ValueError, 'Saída deve estar'):
             v.gravar(self.root, target, {})
         self.assertFalse(target.exists())

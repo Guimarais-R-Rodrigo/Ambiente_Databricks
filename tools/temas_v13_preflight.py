@@ -14,7 +14,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-PRODUCT = ROOT / "ambiente_fonte" / ".assistant"
+PRODUCT = ROOT / "ambiente_databricks" / ".assistant"
 AIBI = PRODUCT / "hub_padroes" / "identidade_visual" / "aibi"
 for _path in (ROOT, PRODUCT, AIBI):
     if str(_path) not in sys.path:

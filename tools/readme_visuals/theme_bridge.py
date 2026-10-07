@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT = ROOT / "ambiente_fonte" / ".assistant"
+ASSISTANT = ROOT / "ambiente_databricks" / ".assistant"
 TEMA_FILE = ASSISTANT / "hub_snippets" / "visual" / "tema" / "tema.py"
 EXAMPLES = ASSISTANT / "hub_padroes" / "identidade_visual" / "exemplos"
 THEME_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")

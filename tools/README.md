@@ -6,6 +6,14 @@
 As ferramentas convertem regras editoriais e arquiteturais em verificações que
 podem reprovar uma mudança.
 
+## Escolher a ferramenta
+
+O [catálogo de manutenção](CATALOGO.md) separa gates atuais, bibliotecas de apoio,
+probes que exigem ambiente autorizado e rotas históricas. Comece por ele ao levar
+o clone ao trabalho. Os [workflows](../.github/workflows/README.md) documentam quais
+comandos o GitHub executa e seus efeitos. Ferramenta presente não concede execução
+remota, instalação, publicação, exclusão ou homologação.
+
 ## Comandos por objetivo
 
 | Objetivo | Comando |
@@ -14,6 +22,7 @@ podem reprovar uma mudança.
 | conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
 | conferir saída ignorada por paths/bytes/tipos | `python tools/render_simulado.py --check` |
+| conferir recuperação do protótipo retirado | `python tools/verify_concierge_history.py` |
 | conferir DAG e checks de CI | `python tools/ci_workflows.py --check` |
 | gerar/validar recursos visuais vigentes | [rota de produção v2](readme_visuals/README.md#produção-v2--caminho-recomendado) |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
@@ -178,7 +187,7 @@ verificação monotônica e exige `fetch-depth: 0`.
 
 Essas verificações não importam helpers nem executam código Markdown. Não provam
 clareza, estatística, veracidade de links externos ou compatibilidade de runtime.
-Use o [checklist editorial](../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md)
+Use o [checklist editorial](../ambiente_databricks/.assistant/hub_padroes/readme/checklist_objeto.md)
 e registre quem fez a revisão. Código que executa não é sinônimo de análise correta.
 
 ## Composição READMEs + Concierge — R02-I

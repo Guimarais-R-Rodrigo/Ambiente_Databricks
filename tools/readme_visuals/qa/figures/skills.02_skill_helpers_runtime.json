@@ -12,7 +12,7 @@
   "question": "Onde termina o método e começa a execução?",
   "alt": "Dois planos separando método da Agent Skill e execução explícita de helpers no notebook.",
   "caption": "Orientação metodológica e código executável são responsabilidades diferentes.",
-  "owner_readme": "ambiente_fonte/.assistant/skills/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/skills/README.md",
   "anchor": "relacao-entre-skills-hub-snippets-e-hub-scripts",
   "approved_signature": false,
   "texts": [

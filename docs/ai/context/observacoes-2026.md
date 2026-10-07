@@ -43,7 +43,7 @@ quebrou `import numpy`; isoladas funcionaram. A orientação da rodada era uma
 biblioteca por notebook.
 
 São dados históricos, não receita atual de instalação nem permissão para
-instalar. O [inventário de opcionais](../../../ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt)
+instalar. O [inventário de opcionais](../../../ambiente_databricks/.assistant/hub_snippets/requirements-optional.txt)
 e os resultados da sessão nova precisam ser confrontados com runtime e política.
 
 ## Quotas e publicacao

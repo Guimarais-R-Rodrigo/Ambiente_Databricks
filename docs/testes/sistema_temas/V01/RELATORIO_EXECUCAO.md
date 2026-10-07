@@ -72,7 +72,7 @@ catálogo removido continua dívida registrada na V00, não corrigida aqui.
 
 ## Preservação, publicação e aceite
 
-Não foram editados `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, `MANUAL_TECNICO.md`,
+Não foram editados `ambiente_databricks/`, `Novo_Ambiente_Simulado/`, `MANUAL_TECNICO.md`,
 `tools/ci_local.py` ou os workflows permanentes anteriores. Não foi necessário
 renderizar o espelho nem transportar arquivos ao Databricks. As oito etapas do
 CI convivem com o workflow separado V01, que tem apenas permissão de leitura.

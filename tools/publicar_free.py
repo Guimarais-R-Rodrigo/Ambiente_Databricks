@@ -41,7 +41,7 @@ from project_policy import (  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SIMULADO = simulated_root(REPO_ROOT)
-FONTE = REPO_ROOT / "ambiente_fonte"
+FONTE = REPO_ROOT / "ambiente_databricks"
 CLI_PROFILE: str | None = None
 
 # O render copia exatamente estes dois itens da fonte. Mantê-los aqui permite

@@ -41,4 +41,10 @@ validar links, inventário e exemplos. A retirada de cópias remotas antigas nã
 ## Referências
 
 - [ADR-0007](ADR-0007-catalogo-e-pasta-de-objeto.md), preservado em seu corpo.
-- [Manual Técnico](../../MANUAL_TECNICO.md).
+- [Manual Técnico da edição decidida](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/8dd8da57de89122241890b8b6b059fd2f9be25d0/MANUAL_TECNICO.md).
+
+## Registro de sucessão — 2026-10-07
+
+O ADR-0028 substitui somente o nome da edição vigente e a cópia integral na
+raiz. O corpo decisório acima permanece histórico. A referência do livro aponta
+ao commit em que a edição anterior estava presente.

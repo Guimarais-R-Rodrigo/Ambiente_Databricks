@@ -28,9 +28,9 @@ MAX_BYTES = 2 * 1024 * 1024
 TYPES = {"snippet", "script", "prompt", "readme", "notebook", "skill"}
 SECTIONS = {"constants", "display", "ml", "spark", "testing", "visual"}
 TOOL = "tools/skill_enforcement/ser01_object_validation.py"
-PREFLIGHT = "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/preflight.py"
-POLICY = "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
-DOMAIN_RECEIPT = "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/object_validation.py"
+PREFLIGHT = "ambiente_databricks/.assistant/skills/hub-ml-criar-objeto/scripts/preflight.py"
+POLICY = "ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json"
+DOMAIN_RECEIPT = "ambiente_databricks/.assistant/skills/hub-ml-criar-objeto/scripts/object_validation.py"
 REQUIRED_COMMANDS = {"identity_before", "status_before", "history", "preflight",
                      "baseline_validator", "clone", "checkout", "stage", "validator",
                      "overlay_head", "overlay_index", "overlay_diff", "overlay_untracked",
@@ -410,7 +410,7 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
         if code or preflight.get("status") != "PASS":
             raise Blocked("CANONICAL_PREFLIGHT_BLOCKED")
         check("destination_matches_preflight", preflight.get("destination_relative") == binding["destination_relative"])
-        assistant = repo / "ambiente_fonte/.assistant"
+        assistant = repo / "ambiente_databricks/.assistant"
         destination = assistant.joinpath(*safe_relative(binding["destination_relative"]).parts)
         _no_aliases(destination)
         if os.path.lexists(destination) or not destination.parent.is_dir():
@@ -427,7 +427,7 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
         git("clone", "clone", "--no-local", "--no-hardlinks", "--no-checkout", "--config", "core.autocrlf=false",
             "--", str(repo), str(overlay))
         git("checkout", "checkout", "--detach", binding["base_sha"], cwd=overlay)
-        overlay_assistant = overlay / "ambiente_fonte/.assistant"
+        overlay_assistant = overlay / "ambiente_databricks/.assistant"
         target = overlay_assistant / binding["destination_relative"]
         _no_aliases(target)
         if binding["grouped"]:
@@ -437,7 +437,7 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
             _no_aliases(path)
             with path.open("xb") as stream:
                 stream.write(text.encode("utf-8"))
-        repo_paths = ["ambiente_fonte/.assistant/" + p for p in sorted(candidate["files"])]
+        repo_paths = ["ambiente_databricks/.assistant/" + p for p in sorted(candidate["files"])]
         git("stage", "add", "--", *repo_paths, cwd=overlay)
         # git add ocorre SOMENTE no clone; o inventário Git do validator vê
         # todos os bytes novos, em vez de certificar acidentalmente a base antiga.

@@ -9,7 +9,7 @@ ação rapidamente; um agente deve encontrar o owner sem navegar por duplicaçõ
 |---|---|---|
 | Repositório | `README.md` da raiz | finalidade, arquitetura, gates e contribuição |
 | Governança | `docs/README.md` | decisões, auditorias, testes, playbooks e histórico |
-| Produto | `ambiente_fonte/.assistant/README.md` | instalação e uso no Databricks |
+| Produto | `ambiente_databricks/.assistant/README.md` | instalação e uso no Databricks |
 | Coleção | README da coleção | catálogo local, contrato, exemplo mínimo e limites |
 | Objeto | README junto ao recurso | conceito aplicado, adequação, requisitos, interpretação e exemplo |
 
@@ -61,19 +61,20 @@ melhore entrada/sumário/navegação sem reescrever evidência antiga.
 
 ## Manual tecnico
 
-O [Manual canônico](../../../ambiente_fonte/.assistant/MANUAL_TECNICO.md) explica
-em profundidade para leitores não técnicos e é dono do catálogo integrado de
-helpers e do glossário (ADR-0010). Edite ali, sincronize a cópia de leitura
-`MANUAL_TECNICO.md` da raiz e gere a cópia do simulado pelo renderer. As três
-cópias devem permanecer idênticas. Não criar catálogo/glossário paralelo.
+O [Manual canônico](../../../ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md) é a
+única redação técnica vigente e o dono do catálogo integrado de helpers e do
+glossário (ADR-0028, sucessor do ADR-0010). Edite o livro no produto, sincronize
+as partes de leitura e confira o manifesto; gere a cópia do simulado pelo renderer.
+Não existe cópia integral na raiz Git. O manual do usuário é complementar,
+com foco na jornada de uso, e não substitui o contrato técnico.
 
 Essa regra não autoriza editar o produto numa tarefa de manutenção da camada IA.
 Use [fontes e derivados](fontes-e-derivados.md) para pré-condições e efeitos.
 
 ## Readme de objeto
 
-Contrato vigente: `readme-objeto: 1.0.0`, conforme [template](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md),
-[checklist](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md)
+Contrato vigente: `readme-objeto: 1.0.0`, conforme [template](../../../ambiente_databricks/.assistant/hub_padroes/readme/template_objeto.md),
+[checklist](../../../ambiente_databricks/.assistant/hub_padroes/readme/checklist_objeto.md)
 e ADR-0012. São quinze seções para README de objeto; índices, skills e outros
 agregadores não herdam mecanicamente esse formato.
 

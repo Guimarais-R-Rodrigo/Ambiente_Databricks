@@ -113,7 +113,7 @@ Entre a RC certificada e o SHA de integração da SE08 (`431c46fcffc9345ad4c2428
 - `.github/workflows/kit-transicao-trabalho.yml`;
 - `tools/tests/test_skill_enforcement_se07.py`.
 
-Não houve mudança em `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, policy,
+Não houve mudança em `ambiente_databricks/`, `Novo_Ambiente_Simulado/`, policy,
 certifier ou conteúdo publicado no Free. No Windows, quando `Path.is_junction`
 existe, o helper corretivo continua chamando a mesma API; no Python 3.11 sem essa
 API, o fallback foi provado pelo workflow que originalmente falhou.

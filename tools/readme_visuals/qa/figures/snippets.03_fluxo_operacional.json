@@ -12,7 +12,7 @@
   "question": "Como usar um snippet do exemplo à validação?",
   "alt": "Jornada em notebook desde a consulta ao exemplo até a interpretação do resultado.",
   "caption": "O snippet acelera a implementação, mas o notebook ainda configura dependências, executa a API e valida o retorno.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_snippets/README.md",
   "anchor": "passo-a-passo-operacional-como-usar-um-snippet",
   "approved_signature": false,
   "texts": [

@@ -1,12 +1,12 @@
 ---
 name: validar-assistant
 description: >-
-  Valida localmente ambiente_fonte/ e interpreta contadores, avisos e falhas
+  Valida localmente ambiente_databricks/ e interpreta contadores, avisos e falhas
   antes de commit do produto, render ou publicação. Use para checar a estrutura
   do Hub; não para executar análise de dados, publicar ou certificar runtime.
 ---
 
-# Validar o ambiente_fonte
+# Validar o ambiente_databricks
 
 ## Intenção e pré-condições
 
@@ -98,6 +98,6 @@ ACL, seleção Genie, publicação, CI agregado ou homologação corporativa.
   relatar seu resumo real, sem publicar.
 - **Negativo de intenção:** “Faça EDA da tabela.” Não selecionar esta rotina
   como execução analítica; encaminhar ao
-  [catálogo do produto](../../../ambiente_fonte/.assistant/skills/README.md).
+  [catálogo do produto](../../../ambiente_databricks/.assistant/skills/README.md).
 - **Pré-requisito ausente:** fonte ou dependência indisponível. Parar no
   bloqueio, sem inventar contadores ou PASS e sem instalar silenciosamente.

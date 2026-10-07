@@ -11,7 +11,7 @@
   "question": "O que compõe um briefing técnico forte?",
   "alt": "Blueprint de um briefing com objetivo e contexto, recursos, restrições, modo de trabalho, contrato de saída e validação final.",
   "caption": "O template permanece o contrato copiável; a figura mostra como seus blocos reduzem ambiguidade e tornam o aceite verificável.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_prompts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_prompts/README.md",
   "anchor": "estrutura-do-hub-prompts",
   "approved_signature": true,
   "texts": [

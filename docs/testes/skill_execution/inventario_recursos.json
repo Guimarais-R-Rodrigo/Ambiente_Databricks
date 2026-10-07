@@ -2,13 +2,13 @@
   "schema_version": "0.1",
   "status": "provisional_observational_not_enforced",
   "source_main_commit": "28669f99db27cf23df73549297bbf57eda033f58",
-  "scope": "14 SKILL.md canônicas em ambiente_fonte/.assistant/skills",
+  "scope": "14 SKILL.md canônicas em ambiente_databricks/.assistant/skills",
   "classification_rule": "required = esperado sempre que o fluxo-base descrito pela skill se aplica; conditional = depende de condição objetiva do caso; optional = agrega estrutura/apresentação sem ser necessário ao núcleo. Esta classificação existe somente para mensuração SE00 e não altera os SKILL.md.",
   "skills": [
     {
       "skill": "hub-ml-eda-profissional",
       "pilot": true,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
       "helpers": [
         {"id": "hub_scripts.quick_profile.quick_profile", "class": "required", "when": "EDA ampla"},
         {"id": "hub_scripts.data_quality_check.data_quality_check", "class": "required", "when": "EDA ampla"},
@@ -32,7 +32,7 @@
     {
       "skill": "hub-ml-cross-eda-ml",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-cross-eda-ml/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.spark.safe_display", "class": "conditional", "when": "exibição controlada necessária"},
         {"id": "hub_snippets.visual.theme_plotly", "class": "conditional", "when": "ResolvedTheme aplicável"},
@@ -50,7 +50,7 @@
     {
       "skill": "hub-ml-validacao-estatistica",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-validacao-estatistica/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.statistics.bootstrap_ci", "class": "conditional", "when": "IC via bootstrap"},
         {"id": "hub_snippets.statistics.bootstrap_metric", "class": "conditional", "when": "métrica via bootstrap"},
@@ -71,7 +71,7 @@
     {
       "skill": "hub-ml-feature-engineering",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-feature-engineering/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-feature-engineering/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.spark.add_time_features", "class": "conditional", "when": "features temporais"},
         {"id": "hub_snippets.spark.add_rolling_features", "class": "conditional", "when": "janelas móveis"},
@@ -96,7 +96,7 @@
     {
       "skill": "hub-ml-analise-safra",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-analise-safra/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.statistics.vintage_table", "class": "required", "when": "análise de safra"},
         {"id": "hub_snippets.statistics.vintage_rates", "class": "required", "when": "taxas por safra"},
@@ -117,7 +117,7 @@
     {
       "skill": "hub-ml-baseline-ml",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.ml.model_suite.run_suite", "class": "conditional", "when": "suite de modelos"},
         {"id": "hub_snippets.ml.binary_model_metrics", "class": "conditional", "when": "classificação binária"},
@@ -138,7 +138,7 @@
     {
       "skill": "hub-ml-explainability",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-explainability/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-explainability/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.ml.shap_utils.shap_summary", "class": "conditional", "when": "SHAP global"},
         {"id": "hub_snippets.ml.shap_utils.shap_dependence", "class": "conditional", "when": "dependência SHAP"},
@@ -160,7 +160,7 @@
     {
       "skill": "hub-ml-monitoramento-modelo",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.statistics.psi", "class": "conditional", "when": "PSI pertinente"},
         {"id": "hub_scripts.data_quality_check.data_quality_check", "class": "required", "when": "qualidade da base de monitoramento"},
@@ -183,7 +183,7 @@
     {
       "skill": "hub-ml-pipeline-builder",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-pipeline-builder/SKILL.md",
       "helpers": [
         {"id": "hub_scripts.registry", "class": "conditional", "when": "registro/registry no escopo"},
         {"id": "hub_scripts.run_tests", "class": "required", "when": "pipeline preparado para validação"},
@@ -200,7 +200,7 @@
     {
       "skill": "hub-ml-comentar-notebook",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.display.index_generator", "class": "optional", "when": "notebook longo"}
       ],
@@ -212,7 +212,7 @@
     {
       "skill": "hub-ml-tutor-databricks",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-tutor-databricks/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-tutor-databricks/SKILL.md",
       "helpers": [
         {"id": "hub_snippets.spark.safe_display", "class": "conditional", "when": "exemplo executável com exibição"},
         {"id": "hub_snippets.spark.null_summary", "class": "conditional", "when": "explicação de nulos"}
@@ -227,7 +227,7 @@
     {
       "skill": "hub-ml-auditoria-skills",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-auditoria-skills/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-auditoria-skills/SKILL.md",
       "helpers": [],
       "templates": [
         {"id": "templates/checklist_auditoria.md", "class": "required", "when": "auditoria"},
@@ -239,7 +239,7 @@
     {
       "skill": "hub-ml-criar-objeto",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
       "helpers": [],
       "templates": [
         {"id": "templates/SKILL_TEMPLATE.md", "class": "conditional", "when": "criação/manutenção de skill"},
@@ -262,7 +262,7 @@
     {
       "skill": "hub-ml-concierge",
       "pilot": false,
-      "source": "ambiente_fonte/.assistant/skills/hub-ml-concierge/SKILL.md",
+      "source": "ambiente_databricks/.assistant/skills/hub-ml-concierge/SKILL.md",
       "helpers": [],
       "templates": [
         {"id": "templates/briefing_proposta.md", "class": "conditional", "when": "proposta estruturada"},

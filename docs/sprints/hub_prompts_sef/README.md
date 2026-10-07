@@ -1,6 +1,6 @@
 # Hub Prompts × Skill Enforcement Framework — PSEF
 
-O inventário 16/49 é o freeze PSEF00. O [catálogo operacional](../../../ambiente_fonte/.assistant/hub_prompts/README.md) contém os briefings correntes; sua evolução não comprova execução das etapas PSEF01–07.
+O inventário 16/49 é o freeze PSEF00. O [catálogo operacional](../../../ambiente_databricks/.assistant/hub_prompts/README.md) contém os briefings correntes; sua evolução não comprova execução das etapas PSEF01–07.
 
 **Iniciativa:** reconciliação pós-SE08 da camada `hub_prompts` com skills e Skill Enforcement Framework.
 
@@ -60,6 +60,6 @@ Não existe, nesta iniciativa, um segundo framework de enforcement próprio para
 
 ## Fonte e derivado
 
-A fonte editável continua em `ambiente_fonte/`. `Novo_Ambiente_Simulado/` nomeia o derivado histórico do freeze PSEF00. Para uma nova release, a [saída gerada vigente](../../manutencao/saida-gerada.md) é `.artifacts/simulado/`, materializada pelo renderer canônico quando houver alteração autorizada na fonte.
+A fonte editável continua em `ambiente_databricks/`. `Novo_Ambiente_Simulado/` nomeia o derivado histórico do freeze PSEF00. Para uma nova release, a [saída gerada vigente](../../manutencao/saida-gerada.md) é `.artifacts/simulado/`, materializada pelo renderer canônico quando houver alteração autorizada na fonte.
 
 PSEF00 é documental: não modifica prompts produtivos, skills, policy, instruções globais, Manual Técnico ou derivado.

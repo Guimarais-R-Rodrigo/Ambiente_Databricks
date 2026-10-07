@@ -1,6 +1,6 @@
 # MM02 — spec fingerprint
 
-> **Nota administrativa — 06/10/2026.** MM02 integrada pela PR #109 em `073762fd`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_fonte/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
+> **Nota administrativa — 06/10/2026.** MM02 integrada pela PR #109 em `073762fd`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_databricks/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
 
 ## Registro histórico preservado
 

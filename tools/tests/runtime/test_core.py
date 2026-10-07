@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 
-ASSISTANT_ROOT = Path(__file__).resolve().parents[3] / "ambiente_fonte" / ".assistant"
+ASSISTANT_ROOT = Path(__file__).resolve().parents[3] / "ambiente_databricks" / ".assistant"
 sys.path.insert(0, str(ASSISTANT_ROOT))
 
 from hub_snippets.constants.format_br import fmt_brl, fmt_pct

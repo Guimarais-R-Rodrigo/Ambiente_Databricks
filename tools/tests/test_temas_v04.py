@@ -13,7 +13,7 @@ from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / "ambiente_fonte/.assistant"
+PRODUCT = ROOT / "ambiente_databricks/.assistant"
 sys.path.insert(0, str(PRODUCT))
 
 import pandas as pd

@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import test_ai_controls as fixture
+import verify_concierge_history as recovery
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE = 'docs/historico/changelog/2026-08-13_a_2026-10-06.md'
@@ -118,18 +119,34 @@ class HistoryRetentionTests(unittest.TestCase):
             self.assertEqual(digest(line.encode()), e['line_sha256'])
             self.assertIn(e['legacy_source'], line)
 
-    def test_concierge_retains_all_non_navigation_bytes(self):
+    def test_concierge_original_blobs_are_recoverable_without_retired_directory(self):
         manifest = json.loads((ROOT / 'docs/historico/concierge-manifest.json').read_text(encoding='utf-8'))
         self.assertEqual(manifest['source_commit'], BASE)
         self.assertEqual(len(manifest['entries']), 19)
-        for entry in manifest['entries']:
-            with self.subTest(path=entry['path']):
-                path = ROOT / entry['path']
-                self.assertTrue(path.is_file())
-                if entry['disposition'] == 'retained_exactly':
-                    self.assertEqual(digest(path.read_bytes()), entry['sha256'])
-                else:
-                    self.assertEqual(entry['path'], 'novas_funcionalidades/README.md')
+        self.assertFalse((ROOT / 'novas_funcionalidades').exists())
+        self.assertEqual(recovery.verify_manifest(ROOT, manifest), 19)
+
+    def test_concierge_recovery_rejects_changed_hash_and_missing_blob(self):
+        manifest = json.loads((ROOT / 'docs/historico/concierge-manifest.json').read_text(encoding='utf-8'))
+        manifest['entries'][0]['sha256'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'HISTORY_BLOB_MISMATCH'):
+            recovery.verify_manifest(ROOT, manifest)
+        manifest['entries'][0]['path'] = 'novas_funcionalidades/missing.md'
+        with self.assertRaisesRegex(ValueError, 'HISTORY_BLOB_UNAVAILABLE'):
+            recovery.verify_manifest(ROOT, manifest)
+
+    def test_concierge_recovery_rejects_empty_duplicate_and_unsafe_inventory(self):
+        original = json.loads((ROOT / 'docs/historico/concierge-manifest.json').read_text(encoding='utf-8'))
+        for label, change in (
+            ('MANIFEST_COUNT_INVALID', {'entries': []}),
+            ('MANIFEST_DUPLICATE_PATH', {'entries': [original['entries'][0]] * 19}),
+            ('SOURCE_COMMIT_INVALID', {'source_commit': 'HEAD'}),
+        ):
+            with self.subTest(reason=label), self.assertRaisesRegex(ValueError, label):
+                recovery.verify_manifest(ROOT, {**original, **change})
+        original['entries'][0]['path'] = 'novas_funcionalidades/../Ambiente_Antigo/private.md'
+        with self.assertRaisesRegex(ValueError, 'MANIFEST_PATH_INVALID'):
+            recovery.verify_manifest(ROOT, original)
 
 
 class HistoricalExceptionBoundaryTests(unittest.TestCase):

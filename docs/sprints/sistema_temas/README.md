@@ -79,7 +79,7 @@ homologação Databricks ainda pendente.
 Para quem nunca entrou no Hub: nada é ativado automaticamente. O laboratório
 precisa ser aberto explicitamente no notebook, não muda o padrão da equipe e não
 publica temas. O
-[guia de primeiro uso](../../../ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md)
+[guia de primeiro uso](../../../ambiente_databricks/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md)
 explica o fluxo operacional da V05.
 
 Não houve publicação Databricks, auditoria independente ou homologação visual da
@@ -104,7 +104,7 @@ permanecem o default.
 Para quem nunca entrou no Hub: não há nada para ativar no Databricks. A V04 não
 instala seletor, não cria CSS global e não migra notebooks automaticamente. Leia o
 [README V04](V04/README.md), o [checkpoint](V04/CHECKPOINT_V04.md) e o
-[guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
+[guia operacional](../../../ambiente_databricks/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
 
 ### Entradas históricas preservadas
 
@@ -157,7 +157,7 @@ scripts em um notebook corporativo. `tools/` é manutenção local, não compone
 a publicar no workspace.
 
 O Manual Técnico existente permanece dono da orientação operacional do produto:
-[Manual Técnico](../../../MANUAL_TECNICO.md). V00 não o altera porque não entrega
+[Manual Técnico](../../../ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md). V00 não o altera porque não entrega
 uma nova operação ao usuário do Hub. As instruções de primeiro uso do laboratório
 foram incorporadas na V05; os parágrafos históricos abaixo permanecem como
 registro do estado observado em seus respectivos fechamentos.

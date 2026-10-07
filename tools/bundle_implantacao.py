@@ -92,7 +92,7 @@ def main() -> int:
     commit = commit_proc.stdout.strip()
 
     status_proc = subprocess.run(
-        ["git", "status", "--porcelain", "--", "ambiente_fonte"],
+        ["git", "status", "--porcelain", "--", "ambiente_databricks"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -110,7 +110,7 @@ def main() -> int:
     output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    if output.is_relative_to(SOURCE.resolve()) or output.is_relative_to((REPO_ROOT / "ambiente_fonte").resolve()):
+    if output.is_relative_to(SOURCE.resolve()) or output.is_relative_to((REPO_ROOT / "ambiente_databricks").resolve()):
         print("FAIL saída do pacote não pode ficar dentro do produto")
         return 1
     if output.exists():

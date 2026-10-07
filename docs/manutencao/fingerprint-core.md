@@ -39,7 +39,7 @@ O campo histórico `core_assertion_ast_sha256` foi mantido intacto. O novo campo
 `core_assertion_fingerprint` documenta schema, digest e proveniência:
 
 - Commit de origem: `126a2e125cca2251527f187a58696243414c6859`.
-- Fonte original: `ambiente_fonte/.assistant/hub_snippets/tests/test_core.py`.
+- Fonte original: `ambiente_databricks/.assistant/hub_snippets/tests/test_core.py`.
 - SHA-256 dos bytes originais: `b48baa202b292fb2070b8bbb207d0bbb0a1e27ec2e73b3398b9d67b094ce8491`.
 - AST textual legado, Python 3.12: `62652bb85dbe70936d1bee99098ed87a556de7245ed83c7c2acbb85e87e663b8`.
 - Fingerprint v2, original e realocado: `f76821ddb5fc879a9d95a2f2e614527079bcd58f69438a830c756f1dc09fb4c3`.

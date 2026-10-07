@@ -78,7 +78,7 @@ ETAPAS = [
     ),
     (
         "validacao",
-        "validação local do ambiente_fonte",
+        "validação local do ambiente_databricks",
         [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
     ),
     (
@@ -128,12 +128,12 @@ ETAPAS = [
     (
         "concierge-pacote",
         "estrutura do pacote Concierge",
-        [sys.executable, "ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/validar_pacote.py"],
+        [sys.executable, "ambiente_databricks/.assistant/skills/hub-ml-concierge/tests/validar_pacote.py"],
     ),
     (
         "concierge-regressoes",
         "regressões do verificador Concierge",
-        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "ambiente_fonte/.assistant/skills/hub-ml-concierge/tests", "-p", "test_*.py", "-v"],
+        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "ambiente_databricks/.assistant/skills/hub-ml-concierge/tests", "-p", "test_*.py", "-v"],
     ),
     (
         "concierge-integracao",

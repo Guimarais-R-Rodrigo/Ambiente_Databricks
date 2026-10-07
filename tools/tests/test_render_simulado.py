@@ -23,7 +23,7 @@ class RendererBytesTests(unittest.TestCase):
             (repo / "tools").mkdir()
             for name in ("render_simulado.py", "project_policy.py", "simulado.py", "notebook_marker.py"):
                 shutil.copyfile(ROOT / "tools" / name, repo / "tools" / name)
-            source = repo / "ambiente_fonte"
+            source = repo / "ambiente_databricks"
             (source / ".assistant").mkdir(parents=True)
             copied = b"preserved bytes\r\nsecond line\r\n"
             (source / ".assistant_instructions.md").write_bytes(copied)

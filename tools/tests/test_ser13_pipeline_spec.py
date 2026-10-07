@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PATH = ROOT / "ambiente_fonte/.assistant/skills/hub-ml-pipeline-builder/scripts/preflight.py"
+PATH = ROOT / "ambiente_databricks/.assistant/skills/hub-ml-pipeline-builder/scripts/preflight.py"
 spec = importlib.util.spec_from_file_location("pipeline_spec_candidate", PATH)
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)

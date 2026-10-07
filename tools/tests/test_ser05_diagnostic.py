@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT = ROOT / "ambiente_fonte/.assistant"
+ASSISTANT = ROOT / "ambiente_databricks/.assistant"
 if str(ASSISTANT) not in sys.path:
     sys.path.insert(0, str(ASSISTANT))
 

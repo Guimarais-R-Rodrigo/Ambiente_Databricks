@@ -113,7 +113,7 @@ def check(root: Path = ROOT) -> list[str]:
         return ['PACKAGE_CONTRACT_INVALID:' + str(exc)]
     errors = []
     for relative, digest in contract['protected'].items():
-        path = root / 'ambiente_fonte/.assistant' / relative
+        path = root / 'ambiente_databricks/.assistant' / relative
         if not path.is_file() or path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             errors.append(f'PROTECTED_RESOURCE:{relative}')
     for item in moves:

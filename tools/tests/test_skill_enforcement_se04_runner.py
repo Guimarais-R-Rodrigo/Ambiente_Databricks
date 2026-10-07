@@ -9,7 +9,7 @@ from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+SOURCE_ASSISTANT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 SKILL = "hub-ml-eda-profissional"
 SOURCE_SKILL = SOURCE_ASSISTANT / "skills" / SKILL
 RUNNER_PATH = SOURCE_SKILL / "scripts" / "run.py"

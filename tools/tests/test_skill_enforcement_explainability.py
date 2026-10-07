@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-ASSISTANT = Path(__file__).resolve().parents[2] / "ambiente_fonte/.assistant"
+ASSISTANT = Path(__file__).resolve().parents[2] / "ambiente_databricks/.assistant"
 SKILL = ASSISTANT / "skills/hub-ml-explainability"
 
 

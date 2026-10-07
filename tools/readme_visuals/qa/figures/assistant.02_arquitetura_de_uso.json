@@ -11,7 +11,7 @@
   "question": "O que pertence ao contexto e o que pertence ao runtime?",
   "alt": "Duas rotas paralelas, uma de contexto para a Genie Code e outra de execução no notebook, conectadas por um checkpoint conforme a política configurada.",
   "caption": "Instruções, skills, briefing e recursos orientam a conversa; snippets e scripts entram no runtime somente por importação ou chamada explícita.",
-  "owner_readme": "ambiente_fonte/.assistant/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/README.md",
   "anchor": "arquitetura-completa-do-ecossistema",
   "approved_signature": true,
   "texts": [

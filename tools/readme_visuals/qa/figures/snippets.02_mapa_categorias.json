@@ -12,7 +12,7 @@
   "question": "Como as seis categorias se organizam funcionalmente?",
   "alt": "Paisagem funcional com as seis categorias do Hub Snippets em áreas distintas.",
   "caption": "As categorias agrupam helpers por natureza de problema e não constituem uma sequência obrigatória.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_snippets/README.md",
   "anchor": "mapa-de-categorias-do-hub-snippets",
   "approved_signature": false,
   "texts": [

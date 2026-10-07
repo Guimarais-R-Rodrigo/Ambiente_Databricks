@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+SOURCE_ASSISTANT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 SKILL = "hub-ml-eda-profissional"
 SOURCE_SKILL = SOURCE_ASSISTANT / "skills" / SKILL
 VALIDATOR_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "validate_contracts.py"
