@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2026-10-07 — Navegação de ferramentas e workflows (Codex)
+
+Documenta as oito subpastas de manutenção sem entrada, cria índice individual de
+`tools/` e rótulos humanos dos 20 workflows. Registra necessidade dos arquivos Git
+e do plano histórico da raiz, com proposta de migração por domínio; não altera
+código, YAML, produto ou pins. [Diagnóstico e plano](docs/manutencao/organizacao-tools-raiz-workflows-2026-10-07.md).
+
 ## 2026-10-07 — Faxina para manutenção no trabalho (Codex)
 
 Fonte renomeada para `ambiente_databricks/`, com código, testes, CI e instruções migrados; protótipo Concierge duplicado retirado com recuperação Git verificável; Manual Técnico V2 adotado como edição única vigente (ADR-0028/0029). Workflows e ferramentas catalogados, perfil Copilot VS Code documentado e referências históricas preservadas com prova específica. [Execução e validação](docs/manutencao/execucao-faxina-2026-10-07.md).

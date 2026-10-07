@@ -7,6 +7,7 @@ instalado, comece pelo [guia do produto](../../ambiente_databricks/.assistant/RE
 |---|---|
 | Executar validação, render ou preparar pacote | [Ferramentas](../../tools/README.md) e [skills do mantenedor](../../.agents/skills/README.md) |
 | Entender espelho gerado e perfis de CI | [Saída gerada](saida-gerada.md) |
+| Avaliar arquivos da raiz e reorganizar ferramentas | [Diagnóstico e plano por sprints](organizacao-tools-raiz-workflows-2026-10-07.md) |
 | Entender cada workflow | [Catálogo de workflows](../../.github/workflows/README.md) |
 | Criar um objeto com contrato e exemplo | [Checklist](CHECKLIST_OBJETO_NOVO.md) |
 | Investigar proteção dos testes core | [Fingerprint entre runtimes](fingerprint-core.md) |

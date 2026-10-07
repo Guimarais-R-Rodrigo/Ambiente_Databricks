@@ -10,6 +10,9 @@ pelo projeto; manter instrumentos históricos com sua linhagem explícita. Uma
 ferramenta histórica não deve ser usada para certificar o HEAD atual por analogia.
 Este catálogo orienta a manutenção e não substitui o catálogo de helpers do Manual.
 
+O [índice individual da raiz](INDICE_ARQUIVOS.md) complementa as famílias abaixo.
+A classificação documental não implica que os módulos já foram movidos para subpastas.
+
 ## Próxima ação
 
 | Objetivo | Entrada | Efeito e condição |

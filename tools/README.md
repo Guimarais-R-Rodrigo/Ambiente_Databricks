@@ -14,6 +14,26 @@ o clone ao trabalho. Os [workflows](../.github/workflows/README.md) documentam q
 comandos o GitHub executa e seus efeitos. Ferramenta presente não concede execução
 remota, instalação, publicação, exclusão ou homologação.
 
+## Organização e estado da arrumação
+
+A etapa anterior catalogou as ferramentas; não fez uma reorganização física da
+raiz. Os módulos ainda compartilham imports, caminhos de CI e registros de campanha.
+Esta revisão acrescenta entradas às subpastas existentes e o
+[índice de todos os arquivos da raiz](INDICE_ARQUIVOS.md).
+
+| Subpasta | O que contém |
+|---|---|
+| [tests](tests/README.md) | Suítes, fixtures e núcleo realocado |
+| [skill_enforcement](skill_enforcement/README.md) | Contratos e certificação SEF/SER; [coordenação local](skill_enforcement/parallel/README.md) |
+| [readme_visuals](readme_visuals/README.md) | Geração visual; [compositores](readme_visuals/archetypes/README.md), [QA](readme_visuals/qa/README.md) e [testes](readme_visuals/tests/README.md) |
+| [free_kit](free_kit/README.md) | Fontes dos notebooks sintéticos de laboratório |
+
+`tools/` reúne código executável; `docs/` reúne orientação, decisões e evidência.
+A documentação longa de manutenção fica em `docs/manutencao`, enquanto o README
+próximo ao código explica entrada, efeitos e owner. Mover scripts para `docs/`
+não resolveria os acoplamentos. A proposta por domínio e a separação de estado
+vigente/histórico estão no [plano de organização](../docs/manutencao/organizacao-tools-raiz-workflows-2026-10-07.md).
+
 ## Comandos por objetivo
 
 | Objetivo | Comando |
