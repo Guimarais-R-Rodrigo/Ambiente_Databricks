@@ -100,7 +100,30 @@ def _collect_file(path,selector=None):
  finally:
   if previous is None: sys.modules.pop(module_name,None)
   else: sys.modules[module_name]=previous
+
+def _guarded_core_target(argv):
+ """Map only the maintained core runner recipe; still collect the real tests.
+
+ This is inventory, not execution proof. The runner separately requires all
+ frozen IDs to execute without skips. Unknown flags/root overrides fail closed.
+ """
+ tokens = list(argv)
+ script = "tools/run_core_tests.py"
+ module = "tools.run_core_tests"
+ if script not in tokens and module not in tokens: return None
+ target = ROOT / "tools/tests/runtime/test_core.py"
+ errors = []
+ args = [token for token in tokens[1:] if token not in ("-B", "-v", "--verbose")]
+ executable = Path(tokens[0]).name.lower() if tokens else ""
+ if (not tokens or not (tokens[0] == sys.executable or executable.startswith("python"))
+     or args not in ([script], ["-m", module])):
+  errors.append("CORE_RUNNER_ARGS_UNSUPPORTED")
+ if not (ROOT / script).is_file(): errors.append("CORE_RUNNER_MISSING:" + script)
+ return target, errors
+
 def _command_test_paths(argv):
+ mapped = _guarded_core_target(argv)
+ if mapped is not None: return [mapped[0]]
  tokens=list(argv); paths=[]
  if "discover" in tokens and "-s" in tokens and "-p" in tokens:
   start=ROOT/tokens[tokens.index("-s")+1]; pattern=tokens[tokens.index("-p")+1]
@@ -123,6 +146,12 @@ def _command_test_paths(argv):
  return dedup
 def _collect_command(argv):
  tokens=list(argv); paths=_command_test_paths(argv)
+ mapped = _guarded_core_target(argv)
+ if mapped is not None:
+  target, errors = mapped
+  if errors: return [], errors, paths
+  ids, errors = _collect_file(target)
+  return ids, errors, paths
  if "-m" in tokens:
   idx=tokens.index("-m")
   if idx+1<len(tokens) and tokens[idx+1]=="unittest":

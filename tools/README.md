@@ -22,6 +22,7 @@ podem reprovar uma mudança.
 | executar smoke no Databricks | importar/submeter `tools/spark_smoke_test.py` |
 | criar pacote de auditoria | `python tools/bundle_para_auditoria.py --mode canonical` |
 | preparar contexto de uma tarefa | [recortes explícitos e expansão](../docs/ai/task-context.md) |
+| diagnosticar compatibilidade MM01 v1 congelada | `python -B tools/mm01_local_certify.py --diagnose` |
 | conferir identidade/coleta B0 | `python -B -m tools.skill_enforcement.parallel.coverage` |
 | criar ZIP de implantação | `python tools/bundle_implantacao.py` |
 
@@ -261,3 +262,13 @@ PASS neste inventário prova identidade e descoberta, não execução dos testes
 qualificação do host, release B0, campanha, runtime ou homologação no Databricks.
 Esses resultados pertencem aos comandos e às evidências próprios. Dependência
 local ausente permanece falha de coleta/bloqueio; não há fallback para AST-only.
+
+## Certificadores com contexto histórico
+
+MM01 Local Certification v1 e SER pré-promoção preservam o corpus original;
+seus resultados não são gates genéricos do HEAD. A [rota vigente e linhagem](../docs/manutencao/certificadores-congelados.md)
+distingue diagnóstico MM01, regressões atuais, SER pós-promoção e falhas históricas.
+`mm01_local_certify.py --describe` mostra o plano congelado; `--diagnose` lê os
+workflows sem instalar dependências, executar gates ou gerar bundle. Exit 1
+indica incompatibilidade com v1; exit 0 indica somente inputs compatíveis.
+Nenhum desses modos emite certificação PASS.

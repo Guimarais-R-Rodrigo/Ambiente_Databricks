@@ -97,8 +97,9 @@ resposta antes de montar a base.
 O grão esperado é um contato por linha. A função não recebe chave de cliente,
 não remove duplicatas, não verifica maturação da campanha e não valida a
 independência dos contatos. Essas condições pertencem à preparação e à revisão
-do analista. É necessária uma sessão Spark compatível com as operações usadas;
-esta R01 não certificou runtime Databricks.
+do analista. É necessária uma sessão Spark compatível com as operações usadas. Este exemplo
+não certifica o runtime Databricks do leitor; confirme versão e ambiente antes
+de executar.
 
 ## 8. O que este recurso entrega?
 

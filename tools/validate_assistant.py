@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from readme_objeto_contract import check_readme_objects
 from repo_inventory import git_paths
-from markdown_contract import mask_code
+from markdown_links import markdown_destinations, local_destination_path
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
 from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
 from skill_enforcement import se07_policy, validate_contracts  # noqa: E402
@@ -54,8 +54,6 @@ REPO_IGNORE = {
 #
 # Sequências típicas de mojibake (UTF-8 lido como latin-1/cp1252).
 MOJIBAKE_RE = re.compile(r"Ã[£¡©ªµ§¢³º]|â€[œ\x9d™“”]|Ã‚|Ã©|Ã§Ã")
-
-MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)#?\s]+)(?:[#?][^)]*)?\)")
 
 
 def iter_files(root: Path, suffix: str) -> list[Path]:
@@ -591,9 +589,9 @@ def check_markdown(root: Path, problems: list[str]) -> tuple[int, int]:
         text = md.read_text(encoding="utf-8")
         if text.count("```") % 2 != 0:
             problems.append(f"{md}: cercas ``` desbalanceadas")
-        for match in MD_LINK_RE.finditer(mask_code(text)):
-            target = match.group(1)
-            if target.startswith(("http://", "https://", "mailto:")):
+        for raw in markdown_destinations(text):
+            target = local_destination_path(raw)
+            if target is None:
                 continue
             links_checked += 1
             if not alvo_existe(md.parent, target):
@@ -614,16 +612,21 @@ def check_notebook_links(root: Path, problems: list[str]) -> tuple[int, int]:
     notebooks = [p for p in iter_files(root, ".py") if eh_notebook(p)]
     links_checked = 0
     for nb in notebooks:
-        for linha in nb.read_text(encoding="utf-8").splitlines():
-            if not linha.lstrip().startswith("#"):
-                continue  # link só conta dentro de comentário/`# MAGIC %md`
-            for match in MD_LINK_RE.finditer(linha):
-                target = match.group(1)
-                if target.startswith(("http://", "https://", "mailto:")):
-                    continue
-                links_checked += 1
-                if not alvo_existe(nb.parent, target):
-                    problems.append(f"{nb}: link relativo quebrado -> {target}")
+        # Keep the existing comment scope, but parse as a document so reference
+        # definitions and fenced examples can span more than one notebook line.
+        comments = []
+        for line in nb.read_text(encoding="utf-8").splitlines():
+            if line.lstrip().startswith("#"):
+                comments.append(re.sub(r"^\s*#(?: MAGIC)? ?", "", line))
+            else:
+                comments.append("")
+        for raw in markdown_destinations("\n".join(comments)):
+            target = local_destination_path(raw)
+            if target is None:
+                continue
+            links_checked += 1
+            if not alvo_existe(nb.parent, target):
+                problems.append(f"{nb}: link relativo quebrado -> {target}")
     return len(notebooks), links_checked
 
 
@@ -1468,9 +1471,9 @@ def check_worktree_hygiene(problems: list[str]) -> int:
         if CORPORATE_RE.search(content) or PERSONAL_RE.search(content) or MOJIBAKE_RE.search(content):
             problems.append(f"worktree: higiene de conteúdo inválida: {rel}")
         if p.suffix == ".md":
-            for match in MD_LINK_RE.finditer(mask_code(content)):
-                target = match.group(1)
-                if not target.startswith(("http://", "https://", "mailto:")) and not alvo_existe(p.parent, target):
+            for raw in markdown_destinations(content):
+                target = local_destination_path(raw)
+                if target is not None and not alvo_existe(p.parent, target):
                     problems.append(f"worktree: link quebrado em {rel}: {target}")
     return count
 
@@ -1530,9 +1533,9 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
             texto = caminho.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
-        for match in MD_LINK_RE.finditer(mask_code(texto)):
-            alvo = match.group(1)
-            if alvo.startswith(("http://", "https://", "mailto:")):
+        for raw in markdown_destinations(texto):
+            alvo = local_destination_path(raw)
+            if alvo is None:
                 continue
             verificados += 1
             if not alvo_existe(caminho.parent, alvo):

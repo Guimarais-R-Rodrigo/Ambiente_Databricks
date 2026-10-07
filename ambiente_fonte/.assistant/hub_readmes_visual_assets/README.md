@@ -60,7 +60,7 @@ cuidados com caminhos relativos e acessibilidade.
 
 Use os PNGs canônicos compartilhados; não crie cópias por notebook. Para mudar aparência, encaminhe a proposta ao mantenedor. Variante gerada continua candidata até revisão; não substitui automaticamente um asset aprovado. Assets congelados mantêm seus hashes e o [contrato de variantes](specs/theme_generation.yaml).
 
-A geração e suas dependências pertencem ao [guia externo de manutenção do compositor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/ai-architecture-20261006/tools/readme_visuals/README.md), executado no checkout autorizado: revisar diff → validar → gerar o derivado. Gerar não publica por inferência.
+A geração e suas dependências pertencem ao [guia externo de manutenção do compositor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/main/tools/readme_visuals/README.md), executado no checkout autorizado: revisar diff → validar → gerar o derivado. Gerar não publica por inferência.
 
 ## Ler as figuras por finalidade
 

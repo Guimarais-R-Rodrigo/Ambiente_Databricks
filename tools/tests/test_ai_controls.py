@@ -41,13 +41,25 @@ class AIControlsTests(unittest.TestCase):
             'protected_roots': protected_roots, 'protected': protected}
         self.json(ai.BASELINE, self.baseline)
         self.baseline_sha = ai.digest((self.root / ai.BASELINE).read_bytes())
-        self.control = {'adapters': [{'source': f'.agents/skills/{name}', 'destination': f'.claude/skills/{name}'} for name in ai.SKILLS], 'adopted_outputs': {}, 'critical_invariants': ['Fonte única', 'Dados sintéticos', 'Autorização explícita'], 'retired_sources': ['.claude/'+'CLAUDE.md'], 'requirements': [{'id': f'R{i}', 'control_id': f'C{i:02}', 'source': 'historical source', 'obligation': 'preserve obligation', 'target': 'AGENTS.md#contrato', 'load_condition': 'session', 'test_ids': ['T04'], 'disposition': 'migrated'} for i in range(1, 23)], 'historical_exceptions': [], 'evidence_data_files': [ai.MAP, ai.BASELINE]}
+        self.write('historical-source.md', 'preserve obligation\n')
+        subprocess.run(['git', 'add', 'historical-source.md'], cwd=self.root, check=True)
+        subprocess.run(['git', '-c', 'user.name=Codex', '-c', 'user.email=codex@openai.com', 'commit', '-qm', 'Synthetic source evidence'], cwd=self.root, check=True)
+        source_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=self.root, text=True).strip()
+        self.source = {'path': 'historical-source.md', 'sha': source_sha, 'line_start': 1, 'line_end': 1, 'quote': 'preserve obligation'}
+        self.control = {'adapters': [{'source': f'.agents/skills/{name}', 'destination': f'.claude/skills/{name}'} for name in ai.SKILLS], 'adopted_outputs': {}, 'critical_invariants': ['Fonte única', 'Dados sintéticos', 'Autorização explícita'], 'retired_sources': ['.claude/'+'CLAUDE.md'], 'requirements': [{'id': f'R{i}', 'control_id': f'C{i:02}', 'source': dict(self.source), 'owner': 'tests', 'obligation': 'preserve obligation', 'target': 'AGENTS.md#contrato', 'load_condition': 'session', 'test_ids': ['T04'], 'disposition': 'migrated'} for i in range(1, 23)], 'historical_exceptions': [], 'evidence_data_files': [ai.MAP, ai.BASELINE]}
+        extra = dict(self.control['requirements'][0], id='R1-extra')
+        extra['source'] = dict(self.source)
+        self.control['requirements'].append(extra)
         self.save_control()
-        self.snapshot = {'id': 'TEST', 'url': 'https://example.org/official', 'reviewed_at_utc': '2026-10-06T00:00:00Z'}
+        self.snapshot = {'id': 'TEST', 'url': 'https://example.org/official', 'reviewed_at_utc': '2026-10-06T00:00:00Z', 'paraphrase': 'fixture'}
         self.snapshot_path = 'docs/ai/standards/2026-10-06/TEST.json'
         self.json(self.snapshot_path, self.snapshot)
         self.claim = {'id': 'TEST', 'provider': 'Test', 'product': 'Synthetic', 'surface': 'Fixture', 'url': self.snapshot['url'], 'reviewed_at_utc': self.snapshot['reviewed_at_utc'], 'documented_version': 'fixture', 'installed_version': 'fixture', 'scope': 'fixture', 'kind': 'documented', 'paraphrase': 'fixture', 'snapshot': self.snapshot_path, 'snapshot_sha256': ai.digest((self.root / self.snapshot_path).read_bytes()), 'test_ids': ['T07'], 'owner': 'tests', 'state': 'DOCUMENTED'}
         self.save_registry()
+        self.advance_traceability()
+        self.native_entries = []
+        for name, role in (('AGENTS.md', 'core'), ('CLAUDE.md', 'shim'), ('GEMINI.md', 'shim')):
+            self.register_native(name, role)
         subprocess.run(['git', 'add', '.'], cwd=self.root, check=True)
         ai.generate(self.root)
 
@@ -67,6 +79,207 @@ class AIControlsTests(unittest.TestCase):
 
     def save_registry(self):
         self.json(ai.REGISTRY, {'stale_after_days': 30, 'claims': [self.claim]})
+
+    def advance_traceability(self):
+        path = self.root / ai.TRACEABILITY
+        data = json.loads(path.read_text()) if path.exists() else {'schema_version': 1, 'active_version': 0, 'revisions': []}
+        claims = json.loads((self.root / ai.REGISTRY).read_text())['claims']
+        previous = data['revisions'][-1] if data['revisions'] else None
+        revision = {'version': data['active_version'] + 1,
+                    'previous_sha256': ai.canonical_digest(previous) if previous else None,
+                    'reviewed_at_utc': '2026-10-06T00:00:00Z', 'owner': 'tests',
+                    'reason': 'Explicit synthetic identity migration',
+                    'requirements': [{'id': r['id'], 'identity_sha256': ai.canonical_digest(ai.requirement_identity(r))} for r in self.control['requirements']],
+                    'claims': [{'id': c['id'], 'identity_sha256': ai.canonical_digest(ai.claim_identity(c))} for c in claims]}
+        if previous:
+            revision['changes'] = {}
+            for group in ('requirements', 'claims'):
+                old = {e['id']: e['identity_sha256'] for e in previous[group]}
+                new = {e['id']: e['identity_sha256'] for e in revision[group]}
+                revision['changes'][group] = {'added': sorted(new.keys() - old.keys()),
+                    'removed': sorted(old.keys() - new.keys()),
+                    'changed': sorted(k for k in new.keys() & old.keys() if new[k] != old[k])}
+        data['active_version'] += 1
+        data['revisions'].append(revision)
+        self.json(ai.TRACEABILITY, data)
+
+    def test_one_missing_obligation_with_control_still_covered_is_rejected(self):
+        self.control['requirements'].pop()
+        self.save_control()
+        self.assertFails('REQUIREMENT_IDENTITY_INVENTORY')
+
+    def test_duplicate_requirement_id_rejected(self):
+        self.control['requirements'][-1]['id'] = self.control['requirements'][0]['id']
+        self.save_control()
+        self.assertFails('REQUIREMENT_ID_DUPLICATE')
+
+    def test_requirement_owner_missing_or_whitespace_rejected(self):
+        for owner in (None, '   '):
+            self.control['requirements'][0]['owner'] = owner
+            self.save_control()
+            self.assertFails('REQUIREMENT_INCOMPLETE')
+
+    def test_source_exact_quote_and_bounds_rejected(self):
+        source = self.control['requirements'][0]['source']
+        for change in ({'quote': 'invented quote'}, {'line_end': 2}, {'line_start': 0}, {'sha': '0' * 40}):
+            with self.subTest(change=change):
+                source.clear()
+                source.update(self.source)
+                source.update(change)
+                self.save_control()
+                self.assertFails('SOURCE_QUOTE_MISMATCH|SOURCE_SCHEMA|SOURCE_GIT_UNAVAILABLE')
+
+    def test_forged_source_identity_even_with_exact_text_is_rejected(self):
+        self.write('other-source.md', self.source['quote'] + '\n')
+        subprocess.run(['git', 'add', 'other-source.md'], cwd=self.root, check=True)
+        subprocess.run(['git', '-c', 'user.name=Codex', '-c', 'user.email=codex@openai.com', 'commit', '-qm', 'Other synthetic evidence'], cwd=self.root, check=True)
+        sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=self.root, text=True).strip()
+        self.control['requirements'][0]['source'].update(sha=sha, path='other-source.md')
+        self.save_control()
+        self.assertFails('REQUIREMENT_IDENTITY_CHANGED')
+
+    def test_historical_commit_and_blob_hash_encoding_supported(self):
+        source = self.control['requirements'][0]['source']
+        source['commit'] = source.pop('sha')
+        source['sha256'] = ai.digest((self.root / source['path']).read_bytes())
+        self.save_control()
+        self.assertEqual(self.check()['status'], 'PASS')
+        source['sha256'] = '0' * 64
+        self.save_control()
+        self.assertFails('SOURCE_BLOB_HASH')
+
+    def test_obligation_semantic_change_requires_explicit_migration(self):
+        self.control['requirements'][0]['obligation'] = 'Changed reviewed obligation'
+        self.save_control()
+        self.assertFails('REQUIREMENT_IDENTITY_CHANGED')
+        self.advance_traceability()
+        self.assertEqual(self.check()['status'], 'PASS')
+
+    def test_valid_but_changed_requirement_correspondence_requires_migration(self):
+        changes = {'target': 'docs/ai/README.md', 'owner': 'different owner',
+                   'load_condition': 'different trigger', 'disposition': 'different disposition',
+                   'test_ids': ['T99']}
+        req = self.control['requirements'][0]
+        original = dict(req)
+        for key, value in changes.items():
+            with self.subTest(field=key):
+                req.clear()
+                req.update(original)
+                req[key] = value
+                self.save_control()
+                self.assertFails('REQUIREMENT_IDENTITY_CHANGED')
+        self.advance_traceability()
+        self.assertEqual(self.check()['status'], 'PASS')
+
+    def test_nonempty_claim_owner_and_test_mapping_drift_rejected(self):
+        for key, value in (('owner', 'different owner'), ('test_ids', ['T99'])):
+            with self.subTest(field=key):
+                original = self.claim[key]
+                self.claim[key] = value
+                self.save_registry()
+                self.assertFails('CLAIM_IDENTITY_CHANGED')
+                self.claim[key] = original
+
+    def test_explicit_requirement_removal_migration_preserves_prior_revision(self):
+        original = json.loads((self.root / ai.TRACEABILITY).read_text())['revisions'][0]
+        self.control['requirements'].pop()
+        self.save_control()
+        self.advance_traceability()
+        self.assertEqual(self.check()['status'], 'PASS')
+        current = json.loads((self.root / ai.TRACEABILITY).read_text())
+        self.assertEqual(original, current['revisions'][0])
+        self.assertEqual(['R1-extra'], current['revisions'][1]['changes']['requirements']['removed'])
+        current['revisions'][1]['changes']['requirements']['removed'] = []
+        self.json(ai.TRACEABILITY, current)
+        self.assertFails('TRACEABILITY_MIGRATION_DELTA')
+
+    def test_traceability_previous_hash_and_duplicate_id_rejected(self):
+        self.advance_traceability()
+        data = json.loads((self.root / ai.TRACEABILITY).read_text())
+        data['revisions'][1]['previous_sha256'] = '0' * 64
+        self.json(ai.TRACEABILITY, data)
+        self.assertFails('TRACEABILITY_REVISION_CHAIN')
+        data['revisions'][1]['previous_sha256'] = ai.canonical_digest(data['revisions'][0])
+        data['revisions'][1]['requirements'].append(data['revisions'][1]['requirements'][0])
+        self.json(ai.TRACEABILITY, data)
+        self.assertFails('TRACEABILITY_IDENTITY_INVALID')
+
+    def test_claim_paraphrase_bound_to_snapshot(self):
+        self.claim['paraphrase'] = 'Unsupported paraphrase'
+        self.save_registry()
+        self.assertFails('REVIEW_BINDING')
+
+    def test_coherent_claim_change_still_requires_identity_migration(self):
+        self.claim['paraphrase'] = self.snapshot['paraphrase'] = 'Reviewed changed paraphrase'
+        self.json(self.snapshot_path, self.snapshot)
+        self.claim['snapshot_sha256'] = ai.digest((self.root / self.snapshot_path).read_bytes())
+        self.save_registry()
+        self.assertFails('CLAIM_IDENTITY_CHANGED')
+        self.advance_traceability()
+        self.assertEqual(self.check()['status'], 'PASS')
+
+    def test_claim_identity_replacement_rejected(self):
+        self.claim['id'] = self.snapshot['id'] = 'NEW'
+        self.json(self.snapshot_path, self.snapshot)
+        self.claim['snapshot_sha256'] = ai.digest((self.root / self.snapshot_path).read_bytes())
+        self.save_registry()
+        self.assertFails('CLAIM_IDENTITY_INVENTORY')
+
+    def register_native(self, name, role='scoped-rule', shadows=None):
+        entry = {'path': name, 'mechanism': ai.native_mechanism(name), 'role': role,
+                 'owner': 'tests', 'load_condition': 'synthetic scope',
+                 'sha256': ai.digest((self.root / name).read_bytes()),
+                 'review_reason': 'Explicit synthetic review', 'shadows': shadows or []}
+        self.native_entries = [e for e in self.native_entries if e['path'] != name] + [entry]
+        self.json(ai.NATIVE_ENTRIES, {'schema_version': 1, 'revision': 'test-v1', 'entries': self.native_entries})
+
+    def test_unclassified_native_entries_rejected(self):
+        for name in ('AGENTS.override.md', 'tools/AGENTS.md', '.claude/' + 'rules/synthetic-new.md', 'tools/CLAUDE.md', 'tools/GEMINI.md'):
+            with self.subTest(name=name):
+                self.write(name, 'Before any task read CHANGELOG.md in full.\n')
+                self.assertFails('NATIVE_ENTRY_INVENTORY')
+                (self.root / name).unlink()
+
+    def test_legitimate_reviewed_scoped_rule_is_allowed(self):
+        for name in ('tools/AGENTS.md', '.claude/' + 'rules/synthetic-new.md'):
+            self.write(name, '# Scoped procedure\nUse the common contract and targeted tests.\n')
+            self.register_native(name)
+        self.assertEqual(self.check()['status'], 'PASS')
+
+    def test_reviewed_entry_still_cannot_require_universal_history(self):
+        name = 'tools/AGENTS.md'
+        self.write(name, 'Before any task read CHANGELOG.md in full.\n')
+        self.register_native(name)
+        self.assertFails('UNIVERSAL_HISTORY')
+
+    def test_changed_registered_rule_requires_review(self):
+        name = 'tools/AGENTS.md'
+        self.write(name, '# Safe scoped rules\n')
+        self.register_native(name)
+        self.write(name, '# Changed scoped rules\n')
+        self.assertFails('NATIVE_ENTRY_CHANGED')
+
+    def test_override_requires_explicit_shadow_classification(self):
+        name = 'AGENTS.override.md'
+        self.write(name, '# Reviewed override\nUse AGENTS.md as the common contract.\n')
+        self.register_native(name, 'override')
+        self.assertFails('NATIVE_SHADOW_DECLARATION')
+        self.register_native(name, 'override', ['AGENTS.md'])
+        self.assertEqual(self.check()['status'], 'PASS')
+
+    def test_ignored_native_entry_cannot_bypass_inventory(self):
+        self.write('.gitignore', '.artifacts/\nAGENTS.override.md\n')
+        self.write('AGENTS.override.md', '# Ignored but loadable override\n')
+        self.assertFails('NATIVE_ENTRY_INVENTORY')
+
+    def test_duplicate_and_missing_native_manifest_entries_rejected(self):
+        self.native_entries.append(self.native_entries[0])
+        self.json(ai.NATIVE_ENTRIES, {'schema_version': 1, 'revision': 'test', 'entries': self.native_entries})
+        self.assertFails('NATIVE_ENTRY_DUPLICATE')
+        self.native_entries.pop()
+        self.native_entries.pop()
+        self.json(ai.NATIVE_ENTRIES, {'schema_version': 1, 'revision': 'test', 'entries': self.native_entries})
+        self.assertFails('NATIVE_ENTRY_INVENTORY')
 
     def check(self, **kwargs):
         with patch.object(ai, 'BASELINE_SHA256', self.baseline_sha):
@@ -160,6 +373,60 @@ class AIControlsTests(unittest.TestCase):
         original.symlink_to(self.root / 'other', target_is_directory=True)
         self.assertFails('SYMLINK')
 
+    def test_hardlink_external_output_and_manifest_block_all_writes(self):
+        # Use the last output as well as the manifest to catch partial writes.
+        for relative in ('.claude/skills/validar-assistant/SKILL.md', ai.MANIFEST):
+            with self.subTest(relative=relative):
+                path = self.root / relative
+                external = tempfile.TemporaryDirectory(prefix='ai external sentinel ')
+                self.addCleanup(external.cleanup)
+                foreign = Path(external.name) / 'foreign-sentinel'
+                foreign.hardlink_to(path)
+                before_external = foreign.read_bytes()
+                source = self.root / '.agents/skills/forward-test-skills/SKILL.md'
+                original = source.read_bytes()
+                source.write_bytes(original + b'\nAuthorized synthetic update.\n')
+                before = self.tree()
+                try:
+                    with self.assertRaisesRegex(ai.ContractError, 'HARDLINK_OUTPUT'):
+                        ai.generate(self.root)
+                    self.assertEqual(before_external, foreign.read_bytes())
+                    self.assertEqual(before, self.tree())
+                finally:
+                    foreign.unlink()
+                    source.write_bytes(original)
+
+    def test_hardlink_between_outputs_blocks_all_writes(self):
+        for name in ('forward-test-skills', 'validar-assistant'):
+            self.write(f'.agents/skills/{name}/shared.txt', 'identical resource\n')
+        ai.generate(self.root)
+        first = self.root / '.claude/skills/forward-test-skills/shared.txt'
+        last = self.root / '.claude/skills/validar-assistant/shared.txt'
+        last.unlink()
+        last.hardlink_to(first)
+        source = self.root / '.agents/skills/forward-test-skills/shared.txt'
+        source.write_text('changed resource\n')
+        before = self.tree()
+        with self.assertRaisesRegex(ai.ContractError, 'HARDLINK_OUTPUT'):
+            ai.generate(self.root)
+        self.assertEqual(before, self.tree())
+
+    def test_ancestor_symlink_generation_preserves_external_tree(self):
+        original = self.root / '.claude'
+        external = tempfile.TemporaryDirectory(prefix='ai external adapters ')
+        self.addCleanup(external.cleanup)
+        foreign = Path(external.name) / 'foreign-claude'
+        original.rename(foreign)
+        original.symlink_to(foreign, target_is_directory=True)
+        source = self.root / '.agents/skills/forward-test-skills/SKILL.md'
+        source.write_bytes(source.read_bytes() + b'\nSynthetic update.\n')
+        before = {p.relative_to(foreign).as_posix(): p.read_bytes()
+                  for p in foreign.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(ai.ContractError, 'SYMLINK'):
+            ai.generate(self.root)
+        self.assertEqual(before, {p.relative_to(foreign).as_posix(): p.read_bytes()
+                                for p in foreign.rglob('*') if p.is_file()})
+
     def test_safe_path_rejects_absolute_backslash_and_traversal(self):
         for name in ('../x', '/tmp/x', 'a\\b', 'a/../b', './a'):
             with self.subTest(name=name), self.assertRaisesRegex(ai.ContractError, 'UNSAFE_PATH'):
@@ -226,7 +493,7 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('LEGACY_LOADER_PRESENT')
 
     def test_incomplete_requirement_coverage_rejected(self):
-        self.control['requirements'].pop()
+        self.control['requirements'].pop(-2)
         self.save_control()
         self.assertFails('REQUIREMENT_COVERAGE')
 

@@ -183,7 +183,8 @@ Prompt não é pacote Python: esta pasta não precisa de `__init__.py`.
 
 As afirmações sobre campos e entrega foram confrontadas com o
 [formulário](analisar_campanha.md). O [notebook](exemplo_analisar_campanha.py)
-é evidência histórica da demonstração, não de uma execução desta sprint.
+é evidência histórica da demonstração e não certifica uma nova execução nem o
+runtime do leitor. Confirme versão, ambiente e resultados na interação real.
 O [Manual Técnico](../../../MANUAL_TECNICO.md#genie) delimita contexto e execução
 no ecossistema.
 

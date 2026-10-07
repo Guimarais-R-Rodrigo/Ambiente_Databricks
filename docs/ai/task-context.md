@@ -77,6 +77,35 @@ outros editores. Para reprodução limpa, use checkout isolado do SHA e mantenha
 saídas em `.artifacts/` ou fora do repositório. Não compartilhe manifestos dirty
 sem conferir também nomes de arquivos e informações privadas.
 
+### Manifesto com nomes limitados à seleção
+
+Para preparar um recorte cujo sidecar não enumere os nomes omitidos, escolha
+explicitamente o perfil de metadados reduzidos:
+
+```sh
+python tools/bundle_para_auditoria.py --mode task --task instrucoes-ia \
+  --manifest-profile selected-only
+```
+
+Esse perfil usa schema 2, mantém o corpo, os hashes, os motivos e os paths dos
+arquivos incluídos. Substitui a enumeração dos omitidos por contagens por motivo
+e limita `dirty_entries` aos arquivos incluídos. O nome anterior de um rename
+fora da seleção também é omitido, com contador explícito. Não publica hashes de
+nomes omitidos: nomes previsíveis poderiam ser reconstruídos por tentativa.
+
+É uma redução de metadados, não anonimização. Conteúdo, nomes selecionados,
+textos da rota e nome da saída ainda precisam de revisão antes de compartilhar.
+`worktree_dirty` continua descrevendo todo o checkout; omitir nomes não o torna
+limpo, nem elimina o limite de snapshot não atômico. `excluded: []` no schema 2
+significa nomes suprimidos, não ausência de exclusões; consulte
+`path_disclosure` e `metrics.excluded_files`.
+
+Sem a opção, ou com `--manifest-profile audit`, o schema 1 e o inventário detalhado
+original são preservados para rastreabilidade local. Use-o somente onde essa
+exposição de nomes é apropriada. A opção é exclusiva de `task`; não muda o corpus
+ou a semântica dos modos `canonical`, `security` e `full`. Nenhum perfil concede
+permissão de transmissão ou substitui a revisão do destinatário e dos dados.
+
 ## Recuperar o corpus amplo
 
 As interfaces anteriores continuam disponíveis, sem ignore global de história:

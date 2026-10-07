@@ -16,6 +16,7 @@ import hashlib
 import json
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 if __package__:
@@ -56,6 +57,41 @@ def _changes(status: str) -> list[dict[str, str]]:
     return result
 
 
+def _manifest_paths(profile: str, included: list[dict], excluded: list[dict],
+                    changes: list[dict]) -> dict:
+    """Limit optional task metadata without changing the selected file bytes.
+
+    selected-only omits unselected names rather than hashing them: hashes of
+    predictable private filenames would still permit dictionary guessing.
+    """
+    if profile == "audit":
+        return {"dirty_entries": changes, "excluded": excluded}
+    selected = {entry["path"] for entry in included}
+    visible_changes = []
+    original_names_omitted = 0
+    for change in changes:
+        if change["path"] not in selected:
+            continue
+        visible = dict(change)
+        if "original_path" in visible and visible["original_path"] not in selected:
+            del visible["original_path"]
+            original_names_omitted += 1
+        visible_changes.append(visible)
+    return {
+        "dirty_entries": visible_changes,
+        "excluded": [],
+        "manifest_profile": "selected-only",
+        "path_disclosure": {
+            "scope": "included file paths only; no redaction of selected content or route text",
+            "excluded_paths_omitted": len(excluded),
+            "excluded_reason_counts": dict(sorted(Counter(item["reason"] for item in excluded).items())),
+            "dirty_entries_total": len(changes),
+            "dirty_entries_omitted": len(changes) - len(visible_changes),
+            "original_paths_omitted": original_names_omitted,
+        },
+    }
+
+
 def _destination(value: str, tracked: set[str]) -> Path:
     path = Path(value)
     if not path.is_absolute():
@@ -83,12 +119,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--allow-dirty", action="store_true", help="permite revisão do worktree sujo e untracked não ignorado")
     parser.add_argument("--task", help="nome de rota em docs/ai/task-context.json; somente --mode task")
     parser.add_argument("--include", action="append", default=[], metavar="PATH", help="arquivo exato adicional, relativo ao repositório; repetível em task")
+    parser.add_argument("--manifest-profile", choices=("audit", "selected-only"), default=None,
+                        help="somente task: audit preserva todos os nomes; selected-only omite nomes fora da seleção")
     args = parser.parse_args(argv)
     mode = "full" if args.incluir_espelho else args.mode
     if mode == "task" and not args.task:
         parser.error("--mode task exige --task")
-    if mode != "task" and (args.task or args.include):
-        parser.error("--task/--include exigem --mode task sem --incluir-espelho")
+    if mode != "task" and (args.task or args.include or args.manifest_profile):
+        parser.error("--task/--include/--manifest-profile exigem --mode task sem --incluir-espelho")
 
     try:
         status = _git("status", "--porcelain=v1", "-z", "--untracked-files=all")
@@ -183,18 +221,19 @@ def main(argv: list[str] | None = None) -> int:
         payload = (header + "".join(parts)).encode("utf-8")
         if sidecar is not None:
             manifest = {
-                "schema_version": 1, "kind": "task-context-not-full-audit", "task": args.task,
+                "schema_version": 2 if args.manifest_profile == "selected-only" else 1,
+                "kind": "task-context-not-full-audit", "task": args.task,
                 "description": task["description"], "git_commit": commit,
                 "worktree_dirty": dirty, "allow_dirty": args.allow_dirty,
                 "content_source": "worktree", "atomic_git_snapshot": False,
-                "dirty_entries": _changes(status),
                 "inventory": "git ls-files -z; untracked não ignorado somente com --allow-dirty",
                 "route_config": {"path": CONFIG, "sha256": hashlib.sha256(config_bytes).hexdigest()},
-                "included": included, "excluded": excluded, "exclusion_notes": task["exclusions"],
+                "included": included, "exclusion_notes": task["exclusions"],
                 "expand": task["expand"],
                 "metrics": {"included_files": len(included), "included_content_bytes": content_bytes,
                             "excluded_files": len(excluded)},
                 "bundle": {"name": destination.name, "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()},
+                **_manifest_paths(args.manifest_profile or "audit", included, excluded, _changes(status)),
             }
             sidecar_payload = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         destination.parent.mkdir(parents=True, exist_ok=True)

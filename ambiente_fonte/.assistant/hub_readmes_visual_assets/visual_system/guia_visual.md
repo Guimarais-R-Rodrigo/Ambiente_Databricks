@@ -33,4 +33,4 @@ Rótulos e legendas acompanham as cores; cor isolada nunca define significado.
 
 ## Alteração de recursos visuais
 
-Encaminhe mudanças ao mantenedor e preserve as regras de semântica, legibilidade e acessibilidade acima. O [guia de autoria externo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/readme-readequacao-20261006/tools/readme_visuals/README.md) mantém a receita de geração. Gerar uma variante não a aprova.
+Encaminhe mudanças ao mantenedor e preserve as regras de semântica, legibilidade e acessibilidade acima. O [guia de autoria externo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/main/tools/readme_visuals/README.md) mantém a receita de geração. Gerar uma variante não a aprova.

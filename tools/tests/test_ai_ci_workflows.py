@@ -154,6 +154,122 @@ class CIWorkflowTests(unittest.TestCase):
                         else "temas-widgets-app-24")
             self.assertEqual(expected,upstream)
 
+    def shared_jobs(self):
+        return yaml.safe_load(self.path.read_text())["jobs"]
+
+    def assert_shared_rejected(self, key, job):
+        with self.assertRaisesRegex(ValueError, "SHARED_"):
+            ci.check_shared_profile(key, job)
+
+    def test_shared_profiles_exact_and_editorial_step_names_do_not_matter(self):
+        for key, job in self.shared_jobs().items():
+            if key not in ci.SHARED_PROFILES:
+                continue
+            with self.subTest(profile=key):
+                ci.check_shared_profile(key, job)
+                for step in job["steps"]:
+                    step["name"] = "Editorial label"
+                ci.check_shared_profile(key, job)
+
+    def test_all_shared_steps_are_unconditional_and_cannot_ignore_errors(self):
+        for key in ci.SHARED_PROFILES:
+            original = self.shared_jobs()[key]
+            for index in range(len(original["steps"])):
+                for field, value in (("if", "${{ false }}"), ("if", False),
+                                     ("if", "${{ always() }}"),
+                                     ("continue-on-error", True),
+                                     ("continue-on-error", "${{ true }}")):
+                    with self.subTest(profile=key, step=index, field=field, value=value):
+                        job = copy.deepcopy(original)
+                        job["steps"][index][field] = value
+                        self.assert_shared_rejected(key, job)
+            for field, value in (("if", "${{ false }}"), ("continue-on-error", True),
+                                 ("defaults", {"run": {"shell": "bash {0}"}})):
+                job = copy.deepcopy(original)
+                job[field] = value
+                self.assert_shared_rejected(key, job)
+
+    def test_every_shared_step_is_unique_ordered_and_required(self):
+        for key in ci.SHARED_PROFILES:
+            original = self.shared_jobs()[key]
+            for index in range(len(original["steps"])):
+                for operation in ("remove", "duplicate", "reorder"):
+                    with self.subTest(profile=key, step=index, operation=operation):
+                        job = copy.deepcopy(original)
+                        steps = job["steps"]
+                        if operation == "remove":
+                            del steps[index]
+                        elif operation == "duplicate":
+                            steps.insert(index, copy.deepcopy(steps[index]))
+                        else:
+                            other = (index + 1) % len(steps)
+                            steps[index], steps[other] = steps[other], steps[index]
+                        self.assert_shared_rejected(key, job)
+
+    def test_command_text_is_not_enough_without_exact_execution(self):
+        for key in ci.SHARED_PROFILES:
+            original = self.shared_jobs()[key]
+            for index, step in enumerate(original["steps"]):
+                if "run" not in step:
+                    continue
+                for mask in (lambda s: "# " + s, lambda s: "echo " + s,
+                             lambda s: "if false; then\n" + s + "\nfi",
+                             lambda s: s + " || true", lambda s: "exit 0\n" + s):
+                    with self.subTest(profile=key, step=index, mask=mask(step["run"])):
+                        job = copy.deepcopy(original)
+                        job["steps"][index]["run"] = mask(step["run"])
+                        self.assert_shared_rejected(key, job)
+                for field, value in (("working-directory", "elsewhere"),
+                                     ("shell", "bash {0}"), ("env", {"PYTHONPATH": "elsewhere"})):
+                    job = copy.deepcopy(original)
+                    job["steps"][index][field] = value
+                    self.assert_shared_rejected(key, job)
+
+    def test_shared_environment_dimensions_and_dependencies_are_exact(self):
+        for key in ci.SHARED_PROFILES:
+            original = self.shared_jobs()[key]
+            changes = [
+                ("runner", lambda j: j.update({"runs-on": "windows-latest"})),
+                ("seed", lambda j: j["env"].update(SOURCE_DATE_EPOCH="42")),
+                ("pythonutf8", lambda j: j["env"].update(PYTHONUTF8="0")),
+                ("python", lambda j: j["steps"][1]["with"].update({"python-version": "3.11"})),
+                ("node", lambda j: j["steps"][2]["with"].update({"node-version": "20"})),
+                ("cache", lambda j: j["steps"][1]["with"].update({"cache-dependency-path": "other.txt"})),
+                ("deps", lambda j: j["steps"][3].update(run="python -m pip install -r other.txt")),
+            ]
+            if "SOURCE_DATE_EPOCH" in original["env"]:
+                changes.append(("missing_seed", lambda j: j["env"].pop("SOURCE_DATE_EPOCH")))
+            if key != "validar":
+                changes.append(("widgets", lambda j: j["steps"][3].update(
+                    run=j["steps"][3]["run"].replace("ipywidgets>=8,<9", "ipywidgets>=7,<8"))))
+            if "-app" in key:
+                changes.append(("app", lambda j: j["steps"][4].update(
+                    run="echo " + j["steps"][4]["run"])))
+            for dimension, mutate in changes:
+                with self.subTest(profile=key, dimension=dimension):
+                    job = copy.deepcopy(original)
+                    mutate(job)
+                    self.assert_shared_rejected(key, job)
+
+    def test_original_escaped_mutants_fail_the_public_check(self):
+        original = self.path.read_text()
+        common = "      run: python tools/ci_local.py\n"
+        widgets = "      run: " + ci.FULL_SUITE + "\n"
+        prefix, rest = original.split("  temas-widgets:", 1)
+        variants = [original.replace(command, "      if: ${{ false }}\n" + command, 1)
+                    for command in (common, widgets)]
+        variants.append(prefix + "  temas-widgets:" + rest.replace(
+            "        python-version: '3.12'", "        python-version: '3.11'", 1))
+        variants.extend(original.replace("jobs:\n", field + "\njobs:\n", 1)
+                        for field in ("env: {PYTHONPATH: elsewhere}", "defaults: {run: {shell: 'bash {0}'}}"))
+        for variant in variants:
+            with self.subTest(variant=variants.index(variant)):
+                self.assertNotEqual(original, variant)
+                self.path.write_text(variant)
+                with self.assertRaisesRegex(ValueError, "SHARED_"):
+                    ci.check(self.root)
+        self.path.write_text(original)
+
     @unittest.skipUnless(shutil.which("bash"), "Linux CI shell is unavailable in this environment")
     def test_failure_cancelled_skipped_unknown_and_missing_never_green(self):
         for _,(_,upstream) in ci.CAMPAIGNS.items():

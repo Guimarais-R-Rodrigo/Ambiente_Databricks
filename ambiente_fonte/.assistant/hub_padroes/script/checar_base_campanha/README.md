@@ -85,7 +85,8 @@ ou chaves ausentes, e não se deve concluir apenas pelo total qual é a causa.
 
 O script gera alerta de grão quando as contagens diferem. O analista investiga
 a chave e o processo de preparação antes de calcular taxas. Estes números são
-ilustrativos, não resultados de uma execução desta sprint.
+ilustrativos, não resultados de uma execução observada. Confirme versão,
+ambiente e resultados na execução real.
 
 ## 7. O que você precisa antes de usar?
 

@@ -102,6 +102,52 @@ class SimuladoParityTests(unittest.TestCase):
                 finally:
                     link.unlink()
 
+    @unittest.skipIf(os.name == "nt", "symlink privileges are runner-specific")
+    def test_source_root_link_rejected_before_any_output_mutation(self):
+        # Both directories belong to this disposable fixture. The sentinel is
+        # deliberately outside the repository, never a user file.
+        with tempfile.TemporaryDirectory(prefix="external synthetic source ") as raw:
+            external = Path(raw)
+            shutil.copytree(self.source, external / "source")
+            external_source = external / "source"
+            (external_source / ".assistant/module.py").write_bytes(b"synthetic external only\n")
+            before_source = inventory(external_source, source=True)
+            before_target = inventory(self.target)
+            shutil.rmtree(self.source)
+            self.source.symlink_to(external_source, target_is_directory=True)
+            for args in ((), ("--write",), ("--check",)):
+                with self.subTest(args=args):
+                    result = self.render(*args)
+                    self.assertNotEqual(0, result.returncode, result.stdout)
+                    self.assertIn("link simbólico", result.stdout)
+                    self.assertEqual(before_target, inventory(self.target))
+                    self.assertEqual(before_source, inventory(external_source, source=True))
+            self.assertTrue(parity_errors(self.repo))
+
+    @unittest.skipIf(os.name == "nt", "symlink privileges are runner-specific")
+    def test_inventory_and_renderer_refuse_lexical_repository_ancestor(self):
+        before = inventory(self.target)
+        with tempfile.TemporaryDirectory(prefix="lexical ancestor fixture ") as raw:
+            alias = Path(raw) / "repository-link"
+            alias.symlink_to(self.repo, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "link simbólico"):
+                inventory(alias / "ambiente_fonte", source=True)
+            self.assertTrue(parity_errors(alias))
+            result = subprocess.run(
+                [sys.executable, "-B", str(alias / "tools/render_simulado.py"), "--write"],
+                cwd=self.repo, capture_output=True, text=True, timeout=15,
+            )
+            self.assertNotEqual(0, result.returncode, result.stdout)
+            self.assertEqual(before, inventory(self.target))
+
+    def test_inventory_rejects_junction_ancestor_before_reading(self):
+        # This exercises the portable guard only; native Windows remains untested.
+        with mock.patch.object(Path, "is_junction", create=True,
+                               side_effect=lambda: True), \
+             mock.patch.object(Path, "read_bytes", side_effect=AssertionError("must not read")):
+            with self.assertRaisesRegex(ValueError, "junction"):
+                inventory(self.source, source=True)
+
     def test_publisher_preserves_custom_neutral_username_without_remote_calls(self):
         import publicar_free as publisher
         self.assertEqual(0, self.render("--write", "--username", "fixture-user").returncode)
