@@ -6,7 +6,7 @@ os.environ["JAVA_HOME"]=str(jdk4py.JAVA_HOME)
 os.environ["PYSPARK_PYTHON"]=sys.executable
 os.environ["SPARK_LOCAL_IP"]="127.0.0.1"
 root=Path(__file__).resolve().parents[2]
-assistant=Path(os.environ.get("SER06_ASSISTANT_ROOT", str(root/"ambiente_fonte/.assistant")))
+assistant=Path(os.environ.get("SER06_ASSISTANT_ROOT", str(root/"ambiente_databricks/.assistant")))
 sys.path.insert(0,str(assistant))
 from hub_scripts.skill_execution.domain_context import digest
 from hub_scripts.skill_execution.receipt import build_execution_receipt

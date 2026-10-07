@@ -1,6 +1,7 @@
 """Shared AI/general link scanner regressions for integrated audit AI-GAP-03."""
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 import unittest
@@ -85,13 +86,24 @@ class MarkdownDestinationTests(unittest.TestCase):
 
 
 class SharedLinkGuardTests(unittest.TestCase):
+
+    def fixture_symlink(self, path, target, **kwargs):
+        try:
+            path.symlink_to(target, **kwargs)
+        except OSError as exc:
+            if getattr(exc, 'winerror', None) == 1314:
+                self.skipTest('Windows sem privilegio de symlink (WinError 1314); gate de producao inalterado')
+            raise
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix='markdown links with spaces ')
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         self.origin = self.root / 'README.md'
-        for name in ('Present.md', 'with space.md', 'file#name?.md', 'paren(one).md'):
-            (self.root / name).write_text('# Existing anchor\n', encoding='utf-8')
+        punctuation = 'file#name.md' if os.name == 'nt' else 'file#name?.md'
+        self.encoded_punctuation = 'file%23name.md' if os.name == 'nt' else 'file%23name%3F.md'
+        for name in ('Present.md', 'with space.md', punctuation, 'paren(one).md'):
+            (self.root / name).write_text('# Existing anchor\n', encoding='utf-8', newline='\n')
 
     def ai_errors(self, text):
         errors = []
@@ -103,7 +115,7 @@ class SharedLinkGuardTests(unittest.TestCase):
         return errors
 
     def validator_errors(self, text):
-        self.origin.write_text(text, encoding='utf-8')
+        self.origin.write_text(text, encoding='utf-8', newline='\n')
         errors = []
         validator.check_markdown(self.root, errors)
         return errors
@@ -123,6 +135,7 @@ class SharedLinkGuardTests(unittest.TestCase):
 
 [ref]: Present.md#existing-anchor
 '''
+        text = text.replace('file%23name%3F.md', self.encoded_punctuation)
         self.assertEqual([], self.ai_errors(text))
         self.assertEqual([], self.validator_errors(text))
 
@@ -153,11 +166,11 @@ class SharedLinkGuardTests(unittest.TestCase):
 
     def test_angle_traversal_and_symlink_still_rejected_by_ai(self):
         self.assertIn('LINK_OUTSIDE_ROOT', self.ai_errors('[escape](<../outside.md>)')[0])
-        (self.root / 'link.md').symlink_to(self.root / 'Present.md')
+        self.fixture_symlink(self.root / 'link.md', self.root / 'Present.md')
         self.assertIn('SYMLINK', self.ai_errors('[link](<link.md>)')[0])
 
     def test_repo_and_untracked_scanners_use_shared_reference_parser(self):
-        self.origin.write_text('[required][ref]\n\n[ref]: missing.md\n', encoding='utf-8')
+        self.origin.write_text('[required][ref]\n\n[ref]: missing.md\n', encoding='utf-8', newline='\n')
         with patch.object(validator, 'REPO_ROOT', self.root), patch.object(validator, 'iter_repo_files', return_value=[self.origin]):
             errors = []
             self.assertEqual(validator.check_repo_links(self.root / 'product', errors), 1)
@@ -179,7 +192,7 @@ class SharedLinkGuardTests(unittest.TestCase):
 # MAGIC ```
 # MAGIC [actual](actual-missing.md)
 print("[python literal](not-markdown.md)")
-''', encoding='utf-8')
+''', encoding='utf-8', newline='\n')
         errors = []
         count, links = validator.check_notebook_links(self.root, errors)
         self.assertEqual((count, links), (1, 2))

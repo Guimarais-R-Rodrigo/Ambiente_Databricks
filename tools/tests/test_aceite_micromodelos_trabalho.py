@@ -13,7 +13,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 ACCEPTANCE = REPO / "tools" / "aceite_micromodelos_trabalho.py"
-PRODUCT = REPO / "ambiente_fonte" / ".assistant" / "hub_micromodelos"
+PRODUCT = REPO / "ambiente_databricks" / ".assistant" / "hub_micromodelos"
 
 
 class ExtractedProductAcceptanceTests(unittest.TestCase):

@@ -12,7 +12,7 @@
   "question": "Quais fontes de contexto podem orientar a Genie Code?",
   "alt": "Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.",
   "caption": "O contexto depende da superfície, das permissões, das instruções aplicáveis e dos recursos fornecidos com @ ou Add Context.",
-  "owner_readme": "ambiente_fonte/.assistant/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/README.md",
   "anchor": "como-o-contexto-chega-ao-genie-code",
   "approved_signature": false,
   "texts": [

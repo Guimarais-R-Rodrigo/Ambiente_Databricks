@@ -25,7 +25,7 @@ class SimuladoParityTests(unittest.TestCase):
         (self.repo / "tools").mkdir()
         for name in ("render_simulado.py", "project_policy.py", "simulado.py", "notebook_marker.py"):
             shutil.copyfile(TOOLS / name, self.repo / "tools" / name)
-        self.source = self.repo / "ambiente_fonte"
+        self.source = self.repo / "ambiente_databricks"
         (self.source / ".assistant/empty").mkdir(parents=True)
         (self.source / ".assistant_instructions.md").write_bytes(b"instructions\r\n")
         (self.source / ".assistant/module.py").write_bytes(b"value = 1\r\n")
@@ -74,7 +74,7 @@ class SimuladoParityTests(unittest.TestCase):
         self.assertEqual(0, self.render("--write", "--output-root", alternate).returncode)
         self.assertEqual([], parity_errors(self.repo, alternate))
         self.assertEqual([], parity_errors(self.repo))
-        for bad in (".", ".artifacts", "ambiente_fonte", "../escape", ".artifacts/../escape"):
+        for bad in (".", ".artifacts", "ambiente_databricks", "../escape", ".artifacts/../escape"):
             with self.subTest(bad=bad):
                 self.assertNotEqual(0, self.render("--write", "--output-root", bad).returncode)
         self.assertTrue((self.source / ".assistant/module.py").is_file())
@@ -131,7 +131,7 @@ class SimuladoParityTests(unittest.TestCase):
             alias = Path(raw) / "repository-link"
             alias.symlink_to(self.repo, target_is_directory=True)
             with self.assertRaisesRegex(ValueError, "link simbólico"):
-                inventory(alias / "ambiente_fonte", source=True)
+                inventory(alias / "ambiente_databricks", source=True)
             self.assertTrue(parity_errors(alias))
             result = subprocess.run(
                 [sys.executable, "-B", str(alias / "tools/render_simulado.py"), "--write"],

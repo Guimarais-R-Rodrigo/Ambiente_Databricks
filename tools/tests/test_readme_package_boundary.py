@@ -25,7 +25,7 @@ class PackageBoundaryTests(unittest.TestCase):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         root = Path(tmp.name)
-        for path in ('tools/tests/runtime', 'ambiente_fonte/.assistant'):
+        for path in ('tools/tests/runtime', 'ambiente_databricks/.assistant'):
             shutil.copytree(ROOT / path, root / path, ignore=shutil.ignore_patterns('__pycache__'))
         moves = json.loads((root / 'tools/tests/runtime/relocation_manifest.json').read_text())['files']
         for item in moves:
@@ -39,18 +39,18 @@ class PackageBoundaryTests(unittest.TestCase):
         root = self.fixture()
         contract = json.loads((root / 'tools/tests/runtime/package_contract.json').read_text())
         rel = next(p for p in contract['protected'] if p.endswith('.svg'))
-        (root / 'ambiente_fonte/.assistant' / rel).unlink()
+        (root / 'ambiente_databricks/.assistant' / rel).unlink()
         self.assertIn('PROTECTED_RESOURCE:' + rel, boundary.check(root))
 
     def test_removed_fixture_fails(self):
         root = self.fixture()
         rel = 'skills/hub-ml-explainability/tests/linear_fixture.json'
-        (root / 'ambiente_fonte/.assistant' / rel).unlink()
+        (root / 'ambiente_databricks/.assistant' / rel).unlink()
         self.assertIn('PROTECTED_RESOURCE:' + rel, boundary.check(root))
 
     def test_reintroduced_qa_fails(self):
         root = self.fixture()
-        rel = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
+        rel = 'ambiente_databricks/.assistant/hub_readmes_visual_assets/qa/validation.json'
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text('{}')
@@ -69,19 +69,59 @@ class PackageBoundaryTests(unittest.TestCase):
         path.write_bytes(path.read_bytes() + b' ')
         self.assertIn('MOVED_RESOURCE_CHANGED:' + rel, boundary.check(root))
 
+    def test_changed_namespace_figure_other_field_fails(self):
+        root = self.fixture()
+        path = root / boundary.SUCCESSOR_FIGURE
+        path.write_bytes(path.read_bytes().replace(b'"height": 760', b'"height": 761', 1))
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
+    def test_visual_successor_missing_ledger_fails(self):
+        root = self.fixture()
+        (root / boundary.VISUAL_SUCCESSOR).unlink()
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
+    def test_visual_successor_asset_mismatch_fails(self):
+        root = self.fixture()
+        asset = root / 'ambiente_databricks/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png'
+        asset.write_bytes(asset.read_bytes() + b'changed')
+        self.assertIn('VISUAL_SUCCESSOR_INVALID:VISUAL_SUCCESSOR_ASSET_MISMATCH', boundary.check(root))
+
+    def test_other_figure_namespace_does_not_allow_content_mutation(self):
+        root = self.fixture()
+        relative = 'tools/readme_visuals/qa/figures/assistant.01_escolha_ponto_de_partida.json'
+        path = root / relative
+        path.write_bytes(path.read_bytes() + b' ')
+        self.assertIn('MOVED_RESOURCE_CHANGED:' + relative, boundary.check(root))
+
+    def test_restored_predecessor_cannot_bypass_successor_contract(self):
+        root = self.fixture()
+        ledger = json.loads((root / boundary.VISUAL_SUCCESSOR).read_text(encoding='utf-8'))
+        old = subprocess.check_output(['git', 'cat-file', 'blob',
+                                      ledger['source_commit'] + ':' + ledger['source']], cwd=ROOT)
+        path = root / boundary.SUCCESSOR_FIGURE
+        path.write_bytes(old.replace(b'ambiente_fonte/', b'ambiente_databricks/'))
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+        (root / boundary.VISUAL_SUCCESSOR).unlink()
+        self.assertTrue(any(e.startswith('VISUAL_SUCCESSOR_INVALID:') for e in boundary.check(root)))
+
     def test_moved_build_input_symlink_fails(self):
         root = self.fixture()
         rel = 'tools/readme_visuals/assets/headers/src/copy.json'
         path = root / rel
         other = root / 'borrowed.json'
         path.rename(other)
-        path.symlink_to(other)
+        try:
+            path.symlink_to(other)
+        except OSError as exc:
+            if getattr(exc, 'winerror', None) == 1314:
+                self.skipTest('Windows sem privilégio de symlink (WinError 1314); guarda não certificada')
+            raise
         self.assertIn('MOVED_RESOURCE_SYMLINK:' + rel, boundary.check(root))
 
     def test_runtime_resources_without_maintainer_checkout(self):
         with tempfile.TemporaryDirectory() as tmp:
             isolated = Path(tmp) / '.assistant'
-            shutil.copytree(ROOT / 'ambiente_fonte/.assistant', isolated,
+            shutil.copytree(ROOT / 'ambiente_databricks/.assistant', isolated,
                             ignore=shutil.ignore_patterns('__pycache__'))
             code = '''import sys,json,pathlib
 sys.path.insert(0,sys.argv[1])

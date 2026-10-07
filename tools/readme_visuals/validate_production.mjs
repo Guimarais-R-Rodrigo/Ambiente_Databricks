@@ -14,7 +14,7 @@ function check(ok,msg){checks.push({pass:!!ok,message:msg});if(!ok)errors.push(m
 const lum=c=>{const v=c.slice(1).match(/../g).map(h=>parseInt(h,16)/255).map(n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4);return v[0]*.2126+v[1]*.7152+v[2]*.0722;};
 const contrast=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05);
 check(contracts.length===21 && new Set(contracts.map(c=>c.id)).size===21,'21 contratos únicos');
-const readmes=['README.md',...['','hub_snippets/','hub_scripts/','skills/','hub_prompts/'].map(p=>`ambiente_fonte/.assistant/${p}README.md`)];
+const readmes=['README.md',...['','hub_snippets/','hub_scripts/','skills/','hub_prompts/'].map(p=>`ambiente_databricks/.assistant/${p}README.md`)];
 const editorial=JSON.parse(await fs.readFile(path.join(ASSET,'specs/editorial_corrections.json'),'utf8'));
 for(const c of editorial.corrections)check(sha(await fs.readFile(path.join(ROOT,c.source)))===c.source_sha256,`Fonte da correção factual: ${c.source}`);
 for(const c of contracts.filter(c=>!selected||selected.includes(c.id.split('.')[0]))){
@@ -92,7 +92,7 @@ if(!partial){
   check(referencedDiagrams.size===21,'Todos os 21 diagramas ativos usados nos READMEs');
   // Runtime, skill definitions and prompt templates must remain byte-for-byte unchanged.
   if(historicalFreeze){
-  const baseFiles=execFileSync('git',['ls-tree','-r','--name-only','f5461d8','ambiente_fonte'],{cwd:ROOT}).toString().trim().split('\n');
+  const baseFiles=execFileSync('git',['ls-tree','-r','--name-only','f5461d8','ambiente_databricks'],{cwd:ROOT}).toString().trim().split('\n');
   for(const file of baseFiles.filter(f=>!readmes.includes(f)&&!f.includes('hub_readmes_visual_assets/'))){
     const old=execFileSync('git',['show',`f5461d8:${file}`],{cwd:ROOT,maxBuffer:10*1024*1024});
     const current=await fs.readFile(path.join(ROOT,file)).catch(error=>{if(error.code==='ENOENT')return null;throw error;});

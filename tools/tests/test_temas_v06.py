@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BRIDGE = ROOT / "tools/readme_visuals/theme_bridge.py"
 GENERATOR = ROOT / "tools/readme_visuals/theme_assets.mjs"
-ASSISTANT = ROOT / "ambiente_fonte/.assistant"
+ASSISTANT = ROOT / "ambiente_databricks/.assistant"
 ASSETS_JSON = ASSISTANT / "hub_padroes/identidade_visual/assets.json"
 THEME_ID = "hub-legado-editorial"
 EPOCH = "1700000000"
@@ -121,7 +121,7 @@ class TemasV06Tests(unittest.TestCase):
         env = os.environ.copy()
         env["SOURCE_DATE_EPOCH"] = EPOCH
         env["PYTHON"] = sys.executable
-        target = "ambiente_fonte/.assistant/hub_readmes_visual_assets/v06-forbidden"
+        target = "ambiente_databricks/.assistant/hub_readmes_visual_assets/v06-forbidden"
         run = subprocess.run(
             ["node", str(GENERATOR), "--theme-id", THEME_ID, "--output", target],
             cwd=ROOT, text=True, capture_output=True, env=env,

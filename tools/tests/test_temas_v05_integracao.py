@@ -15,7 +15,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / 'ambiente_fonte/.assistant'))
+sys.path.insert(0, str(ROOT / 'ambiente_databricks/.assistant'))
 from hub_snippets.visual.tema import load_reference_theme
 from hub_snippets.visual.theme_lab import (
     ThemeLabError, build_ipywidgets_lab, build_preview, create_theme_lab,

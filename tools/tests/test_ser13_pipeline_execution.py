@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSISTANT = Path(os.environ.get("SER13_CANDIDATE_ASSISTANT_ROOT",
-                                ROOT / "ambiente_fonte/.assistant"))
+                                ROOT / "ambiente_databricks/.assistant"))
 SKILL = ASSISTANT / "skills/hub-ml-pipeline-builder"
 
 

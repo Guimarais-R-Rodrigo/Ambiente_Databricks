@@ -9,8 +9,8 @@ política. Este catálogo é um índice, não uma sexta skill invocável.
 | Família | Fonte | Uso | Vai ao Databricks? |
 |---|---|---|---|
 | Mantenedor | este catálogo e suas cinco pastas | validar, renderizar, preparar publicação e gates | não |
-| Produto | [catálogo do produto](../../ambiente_fonte/.assistant/skills/README.md) | skills `hub-ml-*` usadas no Genie Code | sim |
-| Exemplar | [exemplo de skill](../../ambiente_fonte/.assistant/hub_padroes/skill/exemplo/SKILL.md) | material didático não roteável, fora do inventário de skills reais | transportado como exemplo |
+| Produto | [catálogo do produto](../../ambiente_databricks/.assistant/skills/README.md) | skills `hub-ml-*` usadas no Genie Code | sim |
+| Exemplar | [exemplo de skill](../../ambiente_databricks/.assistant/hub_padroes/skill/exemplo/SKILL.md) | material didático não roteável, fora do inventário de skills reais | transportado como exemplo |
 
 Carregar uma skill não executa comandos nem concede autorização. O cliente,
 versão, modo e configuração determinam a descoberta; uma cópia presente não

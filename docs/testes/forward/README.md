@@ -32,7 +32,7 @@ O caso `11N-r2` foi aprovado no critério do teste — a skill alvo ficou de for
 —, embora a skill ideal também não tenha sido carregada. É item de vigilância,
 não motivo para reclassificar o resultado.
 
-O [catálogo corrente](../../../ambiente_fonte/.assistant/skills/README.md) inclui Micromodelos, adicionada depois desse protocolo. As [evidências Micromodelos](../../sprints/micromodelos/README.md) e os [screenings SER/B1](../../sprints/skill_enforcement_rollout/README.md) têm seus próprios casos. Não inferir 45/45 a partir de 39/39, da matriz 42 ou de outra campanha.
+O [catálogo corrente](../../../ambiente_databricks/.assistant/skills/README.md) inclui Micromodelos, adicionada depois desse protocolo. As [evidências Micromodelos](../../sprints/micromodelos/README.md) e os [screenings SER/B1](../../sprints/skill_enforcement_rollout/README.md) têm seus próprios casos. Não inferir 45/45 a partir de 39/39, da matriz 42 ou de outra campanha.
 
 ## Estado da integração — 12/09/2026
 
@@ -40,7 +40,7 @@ Concierge integrado ao Git; seus casos básicos e a matriz detalhada permanecem
 PENDENTES no Genie Code. Reexecute também as vizinhas e os casos afetados pelo
 mapa de instruções atualizado. Sem nova evidência, não declare 42/42 nem
 homologação de todo o catálogo. A matriz detalhada vive no
-[pacote canônico](../../../ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/README.md).
+[pacote canônico](../../../ambiente_databricks/.assistant/skills/hub-ml-concierge/tests/README.md).
 
 ## Executar uma rodada
 

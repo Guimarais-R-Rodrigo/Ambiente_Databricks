@@ -2,7 +2,7 @@
 name: render-simulado
 description: >-
   Confere o plano local e regenera .artifacts/simulado/ a partir de
-  ambiente_fonte/ após edição aprovada, com inventário e autorização de
+  ambiente_databricks/ após edição aprovada, com inventário e autorização de
   substituição. Não publica no Databricks nem edita o espelho à mão.
 ---
 
@@ -40,7 +40,7 @@ Antes de qualquer escrita:
    outro subdiretório gerado da mesma raiz; escapes e symlinks são recusados.
 2. Inventarie **toda** essa árvore, inclusive arquivos ocultos, ignorados e não
    rastreados, diretórios extras/vazios, outros usuários e links simbólicos.
-   Compare caminhos e hashes com os dois itens publicáveis de `ambiente_fonte/`,
+   Compare caminhos e hashes com os dois itens publicáveis de `ambiente_databricks/`,
    com `README_GERADO.md` e com os filtros `IGNORAR` do owner. `git status` sozinho
    não mostra tudo que será removido.
 3. Classifique diferenças esperadas do derivado e extras de origem incerta.
@@ -85,7 +85,7 @@ conforme [ADR-0009](../../../docs/decisions/ADR-0009-identidade-e-pacote-de-impl
 
 Os dois itens de produto são copiados **byte a byte**, sem headers injetados.
 O marcador fica fora do payload. Caches/bytecode e demais padrões `IGNORAR`
-não entram na cópia; `ambiente_fonte/README.md` também não é item publicável.
+não entram na cópia; `ambiente_databricks/README.md` também não é item publicável.
 Após exit 0 e `OK: N arquivos renderizados em .artifacts/simulado/`, confira
 inventário, hashes fonte/espelho, ausência de extras e diff autorizado. Execute
 `python tools/render_simulado.py --check` (com o mesmo `--output-root`, se usado):

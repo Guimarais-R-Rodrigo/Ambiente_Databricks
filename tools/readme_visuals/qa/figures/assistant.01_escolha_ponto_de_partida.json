@@ -12,7 +12,7 @@
   "question": "Qual componente atende melhor à necessidade atual?",
   "alt": "Bússola de decisão que conduz de cinco necessidades explícitas ao componente mais adequado.",
   "caption": "Método, briefing, função reutilizável, diagnóstico e criação de componente têm pontos de partida diferentes e podem se complementar.",
-  "owner_readme": "ambiente_fonte/.assistant/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/README.md",
   "anchor": "como-escolher-o-ponto-de-partida",
   "approved_signature": false,
   "texts": [

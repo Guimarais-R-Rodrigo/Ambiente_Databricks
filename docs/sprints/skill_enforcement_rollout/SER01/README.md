@@ -1,6 +1,6 @@
 # SER01 — criar-objeto: rollout L2 → L3
 
-> **Nota administrativa — 06/10/2026.** SER01 integrada pela PR #108 em `d2988e97`. Na [policy vigente](../../../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json), Criar Objeto tem `current_level=L3`, `rollout_mode=audit` e `scope_mode=stage_specific`. A superfície `object_validation` é repo-side; publicar o verifier não instala essa primitive no workspace. O bloco de autoridade candidato abaixo é histórico e não descreve o nível atual.
+> **Nota administrativa — 06/10/2026.** SER01 integrada pela PR #108 em `d2988e97`. Na [policy vigente](../../../../ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json), Criar Objeto tem `current_level=L3`, `rollout_mode=audit` e `scope_mode=stage_specific`. A superfície `object_validation` é repo-side; publicar o verifier não instala essa primitive no workspace. O bloco de autoridade candidato abaixo é histórico e não descreve o nível atual.
 
 ## Registro histórico preservado
 

@@ -10,7 +10,7 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOLS = ROOT / "tools"
-SOURCE = ROOT / "ambiente_fonte"
+SOURCE = ROOT / "ambiente_databricks"
 ASSISTANT = SOURCE / ".assistant"
 POLICY = ASSISTANT / "hub_padroes" / "skill_enforcement" / "policy.json"
 
@@ -96,8 +96,8 @@ class SE08OperationalTests(unittest.TestCase):
         template = (ASSISTANT/"hub_padroes"/"skill"/"template.md").read_text(encoding="utf-8")
         skills_readme = (ASSISTANT/"skills"/"README.md").read_text(encoding="utf-8")
         policy_readme = (ASSISTANT/"hub_padroes"/"skill_enforcement"/"README.md").read_text(encoding="utf-8")
-        manual = (ASSISTANT/"MANUAL_TECNICO.md").read_text(encoding="utf-8")
-        root_manual = (ROOT/"MANUAL_TECNICO.md").read_text(encoding="utf-8")
+        manual = (ASSISTANT/"MANUAL_TECNICO_V2.md").read_text(encoding="utf-8")
+        root_manual = ROOT/"MANUAL_TECNICO.md"
         playbook = (ROOT/"docs"/"playbooks"/"replicacao-trabalho.md").read_text(encoding="utf-8")
         checklist = (ROOT/"docs"/"playbooks"/"checklist-replicacao.md").read_text(encoding="utf-8")
         root_readme = (ROOT/"README.md").read_text(encoding="utf-8")
@@ -105,13 +105,13 @@ class SE08OperationalTests(unittest.TestCase):
         for text in (template, skills_readme, policy_readme, manual):
             self.assertIn("current_level", text)
             self.assertIn("target_level", text)
-        # Maintenance command belongs to the maintainer owner, not the user Manual.
+        # Maintenance execution belongs to its owner; V2 may describe historical command semantics.
         maintainer = (ROOT/"tools"/"skill_enforcement"/"README.md").read_text(encoding="utf-8")
         self.assertIn("--profile se08", maintainer)
-        self.assertNotIn("--profile se08", manual)
+        self.assertNotIn("--profile se08", manual.split('<a id="contratos-operacionais-integrados">', 1)[1])
         with self.assertRaises(AssertionError):
             self.assertIn("--profile se08", maintainer.replace("--profile se08", "REMOVED"))
-        self.assertEqual(manual, root_manual)
+        self.assertFalse(root_manual.exists())
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)
         self.assertIn("15 skills", playbook)

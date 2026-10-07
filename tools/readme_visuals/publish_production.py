@@ -39,7 +39,7 @@ import publicar_free as full_publisher  # noqa: E402
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT_ROOT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+ASSISTANT_ROOT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 ASSET_REL = "hub_readmes_visual_assets"
 ASSET_ROOT = ASSISTANT_ROOT / ASSET_REL
 QA_ROOT = REPO_ROOT / "tools" / "readme_visuals" / "qa"
@@ -317,7 +317,7 @@ def load_baseline(
         "--name-only",
         full_commit,
         "--",
-        "ambiente_fonte/.assistant",
+        "ambiente_databricks/.assistant",
     )
     if listing.returncode:
         raise PublicationError("Git falhou ao inventariar o baseline")
@@ -330,7 +330,7 @@ def load_baseline(
     result: dict[str, bytes] = {}
     for relative in sorted(set(relative_paths)):
         relative = _safe_relative(relative)
-        repo_relative = f"ambiente_fonte/.assistant/{relative}"
+        repo_relative = f"ambiente_databricks/.assistant/{relative}"
         if repo_relative not in names:
             continue
         shown = _git("show", f"{full_commit}:{repo_relative}")
@@ -349,8 +349,8 @@ def source_provenance(records: Mapping[str, LocalFile]) -> dict[str, object]:
     command = ["status", "--porcelain", "--"]
     command.extend(
         [
-            *(f"ambiente_fonte/.assistant/{relative}" for relative in ACTIVE_READMES),
-            f"ambiente_fonte/.assistant/{ASSET_REL}",
+            *(f"ambiente_databricks/.assistant/{relative}" for relative in ACTIVE_READMES),
+            f"ambiente_databricks/.assistant/{ASSET_REL}",
         ]
     )
     status = _git(*command)

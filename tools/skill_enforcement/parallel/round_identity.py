@@ -6,7 +6,7 @@ from typing import Any, Mapping
 from .contract import digest_json
 from .process import ROOT
 from .registry import DEFAULT_REGISTRY, load_registry
-POLICY=ROOT/"ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
+POLICY=ROOT/"ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json"
 ROUND_START_SCHEMA="SER-B0-ROUND-START-1"; RELEASE_SPEC_SCHEMA="SER-B0-RELEASE-SPEC-1"
 def _utc(): return datetime.now(timezone.utc).isoformat()
 def _git(*args):

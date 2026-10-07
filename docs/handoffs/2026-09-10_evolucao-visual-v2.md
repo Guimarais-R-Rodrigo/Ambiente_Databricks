@@ -10,7 +10,7 @@ O usuário aprovou as cinco assinaturas da Sprint 0 e os cabeçalhos CRM/Squad.
 A integração segue o [plano de execução](../sprints/2026-09-10-evolucao-visual-v2.md),
 preservando a organização editorial dos cinco guias, com dois READMEs físicos
 na sprint de topo. A fonte única dos recursos ativos é
-`ambiente_fonte/.assistant/hub_readmes_visual_assets/`.
+`ambiente_databricks/.assistant/hub_readmes_visual_assets/`.
 
 - `headers/`: dois PNGs compartilhados e arte-base original; CRM serve a guias
   e notebooks gerais; Squad é opção para notebooks específicos, sem empilhar banners.

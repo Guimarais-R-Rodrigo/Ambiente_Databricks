@@ -153,7 +153,7 @@ class PolicyIOTests(unittest.TestCase):
         script.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(Path(policy.__file__), script)
         shutil.copyfile(ROOT / "tools" / "project_policy.py", script.parents[1] / "project_policy.py")
-        (self.root / "cli" / "ambiente_fonte" / ".assistant" / "skills").mkdir(parents=True, exist_ok=True)
+        (self.root / "cli" / "ambiente_databricks" / ".assistant" / "skills").mkdir(parents=True, exist_ok=True)
         return subprocess.run([sys.executable, "-B", str(script), "--policy", str(self.path), *arguments],
                               capture_output=True, text=True, encoding="utf-8", timeout=30)
 

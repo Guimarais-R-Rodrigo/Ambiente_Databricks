@@ -35,7 +35,7 @@ jobs:
         run: |
           python -m pip install -r tools/requirements-dev.txt
           python -m pip install 'ipywidgets>=8,<9'
-          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
       - name: Dependências do compositor visual
         run: |

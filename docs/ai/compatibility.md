@@ -1,6 +1,6 @@
 # Compatibilidade: contrato documentado e evidência real
 
-Data da candidata: 06/10/2026. A seleção inicial é proposta conservadora do plano:
+Baseline da candidata: 06/10/2026. Perfil de manutenção atualizado em 07/10/2026. A seleção inicial é proposta conservadora do plano:
 Codex CLI, Claude Code, Gemini CLI e Grok Build. Não presume que o usuário possui
 os quatro clientes. Todos permanecem gates obrigatórios propostos; nenhum foi
 retirado do escopo para converter indisponibilidade em N/A. O mantenedor e usuário
@@ -12,6 +12,7 @@ devem confirmar os clientes/modelos efetivamente adotados antes da homologação
 | Claude Code | CLAUDE.md importa AGENTS.md; .claude/skills gerada | cliente ausente | BLOCKED: instalar/configurar somente com autorização própria e testar |
 | Gemini CLI | GEMINI.md importa ./AGENTS.md; .agents/skills documentada | cliente ausente | BLOCKED: cliente e sessão autorizada necessários |
 | Grok Build | AGENTS nativo documentado; descoberta compatível .claude/skills é candidata | cliente ausente | BLOCKED: grok inspect, coexistência e cinco nomes únicos precisam de prova |
+| GitHub Copilot no VS Code | AGENTS.md + .agents/skills canônicas; .claude/skills coexistem para Claude Code | documentação oficial conferida em 07/10; descoberta/invocação neste cliente NOT_RUN | registrar VS Code/extensão, harness, modelo, Customizations/References e cinco nomes únicos; nenhuma configuração aplicada |
 | Windows | arquivos UTF-8/LF sem symlinks exigidos | não há host Windows nem PowerShell neste executor | BLOCKED: clone real comum em Windows |
 | Linux | paths sensíveis a caixa, arquivos ordinários | testes locais automatizados separados da matriz nativa | ver relatório de execução |
 
@@ -60,3 +61,20 @@ e em subdiretório, com positivos/negativos por mecanismo. O operador tem de tra
 logs sanitizados de discovery/import/skills e efeito observado; autorrelato isolado
 não basta. Não contornar ACL, sandbox, quota ou política gerenciada para passar.
 Fontes e incertezas: [registro oficial](standards/README.md).
+
+## Perfil adotado para o computador do trabalho — 07/10/2026
+
+O usuário escolheu GitHub Copilot no VS Code. [Instruções oficiais](https://code.visualstudio.com/docs/agent-customization/custom-instructions)
+documentam AGENTS.md e a configuração `chat.useAgentsMdFile`; [skills oficiais](https://code.visualstudio.com/docs/agent-customization/agent-skills)
+documentam `.github/skills`, `.claude/skills` e `.agents/skills`. O harness
+selecionado influencia a descoberta. Neste repositório, a fonte editorial continua
+em `.agents/skills`, e `.claude/skills` é adaptador gerado para Claude Code.
+Não criar uma terceira cópia de política em `.github/copilot-instructions.md`.
+
+Antes de usar no trabalho, conferir no cliente instalado se cada uma das cinco
+skills aparece uma vez e se AGENTS foi lido. Inspecionar Customizations, References
+e a leitura/invocação efetiva, conforme o [protocolo](native-test-protocol.md).
+A coexistência documentada dos diretórios não comprova deduplicação. Um modelo
+Claude selecionado no Copilot usa o carregador do Copilot; não se confunde com
+Claude Code. O ensaio nativo está NOT_RUN. As linhas de ausência de cliente/Windows
+acima são observações do executor da baseline de 06/10, não inventário desta máquina.

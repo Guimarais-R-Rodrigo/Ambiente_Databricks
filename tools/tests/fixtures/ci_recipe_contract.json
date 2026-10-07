@@ -40,10 +40,10 @@
       "job_id": "databricks-app-v10",
       "check_name": "databricks-app-v10",
       "commands": [
-        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
         "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
         "python -B tools/tests/test_temas_v10.py -v",
-        "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n",
+        "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n",
         "python -B tools/tests/test_visual_legado_v00.py",
         "python -B tools/temas_v10_app.py --output .artifacts/v10-app",
         "python -B tools/temas_v10_app.py --verify .artifacts/v10-app",
@@ -76,7 +76,7 @@
       "job_id": "homologacao-v12",
       "check_name": "homologacao-v12",
       "commands": [
-        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
         "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
         "python -B tools/tests/test_temas_v12.py -v",
         "python -B tools/tests/test_temas_v12_evidencia_real.py -v",
@@ -139,7 +139,7 @@
       "commands": [
         "python -m pip install -r tools/requirements-dev.txt",
         "python -B -m unittest discover -s tools/tests -p 'test_micromodelo*.py' -v\npython -B tools/tests/test_aceite_micromodelos_trabalho.py -v\n",
-        "python -B tools/validate_assistant.py --root ambiente_fonte",
+        "python -B tools/validate_assistant.py --root ambiente_databricks",
         "echo 'Os testes Micromodelos validam contratos e ensaio sintético do produto extraído; não acessam Databricks, Unity Catalog, MLflow, ACLs, dados reais ou publicação externa.'"
       ],
       "artifacts": [],
@@ -161,7 +161,7 @@
       "job_id": "readiness-v14",
       "check_name": "readiness-v14",
       "commands": [
-        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
         "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
         "python -B tools/tests/test_temas_v14_s0.py -v",
         "python -B tools/temas_v14_ownership.py --check\npython -B tools/tests/test_temas_v14_s1.py -v\n",
@@ -357,7 +357,7 @@
       "commands": [
         "python -m pip install -r tools/requirements-dev.txt",
         "set -euo pipefail\npython -B tools/temas_v02_check.py\npython -B tools/temas_v01_contract.py\npython -B tools/tests/test_temas_v02.py\n",
-        "python -B ambiente_fonte/.assistant/hub_snippets/visual/tema/exemplo_tema.py"
+        "python -B ambiente_databricks/.assistant/hub_snippets/visual/tema/exemplo_tema.py"
       ],
       "artifacts": [],
       "env": {
@@ -487,7 +487,7 @@
         "python -B tools/tests/test_temas_v08.py -v",
         "python -B tools/tests/test_visual_legado_v00.py",
         "python -B tools/validate_assistant.py --conferir-readme",
-        "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_fonte/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n",
+        "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_databricks/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n",
         "echo 'V08 integra skills, padrões e Manual ao Sistema de Temas; não altera runtime, não publica Databricks e não homologa browser/acessibilidade.'"
       ],
       "artifacts": [],
@@ -549,7 +549,7 @@
       "job_id": "contrato-operacional-v13",
       "check_name": "contrato-operacional-v13",
       "commands": [
-        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
         "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
         "python -B tools/tests/test_temas_v13_s1.py -v",
         "python -B tools/temas_v13_operacional.py",
@@ -597,10 +597,10 @@
       "job_id": "aibi-v11",
       "check_name": "aibi-v11",
       "commands": [
-        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
+        "python -m pip install -r tools/requirements-dev.txt\npython -m pip install 'ipywidgets>=8,<9'\npython -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt\n",
         "npm install --global pnpm@10.34.5\npnpm --dir tools/readme_visuals install --frozen-lockfile\n",
         "python -B tools/tests/test_temas_v11.py -v",
-        "python - <<'PY'\nfrom pathlib import Path\npath = Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')\ncompile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V11 compilada em memória')\nPY\n",
+        "python - <<'PY'\nfrom pathlib import Path\npath = Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')\ncompile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V11 compilada em memória')\nPY\n",
         "python -B tools/tests/test_visual_legado_v00.py",
         "python -B tools/validate_assistant.py --conferir-readme",
         "echo 'V11 projeta temas para capacidades AI/BI sem chamar Databricks, publicar dashboards, alterar workspace theme ou prometer propagação automática.'"

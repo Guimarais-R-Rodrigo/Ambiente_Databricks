@@ -59,7 +59,7 @@ Esses números são baseline histórico da SE00. Não são metas nem resultados 
 
 O contrato canônico vive em:
 
-`ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`
+`ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`
 
 Recursos declaram `module` e `symbol` separadamente para tornar a API pública verificável. Em particular, `index_generator` resolve para `hub_snippets.visual.index_generator.gerar_indice_eda`; a SE01 não altera o inventário congelado da SE00 para corrigir retrospectivamente evidência histórica.
 
@@ -76,7 +76,7 @@ Políticas:
 
 Durante a experimentação, o probe temporário existiu em:
 
-`ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/capability_probe.py`
+`ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/scripts/capability_probe.py`
 
 Ele era read-only e testava uma única capacidade: um script relativo da Agent Skill localizar `.assistant`, importar `hub_snippets.constants.format_br.fmt_int`, executar `fmt_int(1234)` e retornar o marcador `SEF_CAPABILITY_PROBE_V0_1` com `writes_performed=false`.
 
@@ -143,7 +143,7 @@ Qualquer afirmação de que a EDA “está enforced” nesta sprint é incorreta
 - `tools/skill_enforcement/validate_contracts.py`;
 - `tools/skill_enforcement/README.md`;
 - `tools/tests/test_skill_enforcement_se01.py`;
-- `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`;
+- `ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`;
 - `TESTES.md`, `RESULTADOS.md` e `CHECKPOINT.md`.
 
 O capability probe temporário não faz parte dessa lista porque foi aposentado antes da homologação.

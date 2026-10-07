@@ -21,7 +21,7 @@
   "diferencas_protegidas": [],
   "estado_sprint": "CANDIDATA_PENDENTE_DE_AUDITORIA_E_ACEITE",
   "falhas_visuais_preexistentes": [
-    "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
+    "ENOENT: arquivo esperado pelo validador global ausente: ambiente_databricks/.assistant/CATALOGO_HELPERS.md"
   ],
   "gate_tecnico": "FAIL_OU_BLOQUEADO",
   "inventario": {
@@ -58,13 +58,13 @@
   "qa_visual": {
     "base": {
       "failures": [
-        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
+        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_databricks/.assistant/CATALOGO_HELPERS.md"
       ],
       "status": "nao_confirmado"
     },
     "candidata": {
       "failures": [
-        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
+        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_databricks/.assistant/CATALOGO_HELPERS.md"
       ],
       "status": "nao_confirmado"
     }

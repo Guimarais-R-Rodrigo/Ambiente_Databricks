@@ -8,14 +8,14 @@ críticas também estão no [núcleo](../../../AGENTS.md); este detalhe não as 
 | Camada | Local/owner | Contrato |
 |---|---|---|
 | Canônica | Git deste repositório | única fonte editorial editável |
-| Produto | `ambiente_fonte/` | `.assistant/` e `.assistant_instructions.md` editáveis apenas em escopo de produto |
+| Produto | `ambiente_databricks/` | `.assistant/` e `.assistant_instructions.md` editáveis apenas em escopo de produto |
 | Derivada | `.artifacts/simulado/` | espelho produzido por `tools/render_simulado.py`, nunca à mão |
 | Operacional | workspaces Free/trabalho | cópias publicadas, não canônicas |
 | Congelada | `Ambiente_Antigo/` e entregas históricas | referência read-only; quarentena local não publicável |
 
 Melhoria descoberta no workspace precisa ser registrada na fonte sanitizada antes
 de ser incorporada/republicada. Não importar indiscriminadamente estado remoto.
-O Manual é escrito no produto, copiado de forma idêntica à raiz e renderizado;
+O Manual Técnico V2 é escrito no produto, tem partes de leitura conferidas e é renderizado;
 veja [regra editorial](documentacao.md#manual-tecnico).
 
 ## Dados
@@ -97,8 +97,10 @@ trabalho. Falta de permissão/capacidade bloqueia somente a ação dependente.
 
 ## Referências congeladas no produto
 
-Os metadados fact_sources de visual_contracts.yaml conservam nomes legados nesta
-campanha: seus bytes pertencem ao payload congelado. Consulte replacement_routes
-em [control-map.json](../control-map.json) para encontrar o owner novo. Isso não
-transforma paths antigos em loaders vivos nem autoriza editar o produto. O exemplar
-de skill transportado continua template, sem contar como procedimento operacional.
+Na campanha IA de 06/10, os metadados `fact_sources` de `visual_contracts.yaml`
+foram preservados no payload congelado. Na faxina de 07/10, autorizada também
+para o produto, essas rotas passaram aos owners atuais em `docs/ai/` e à fonte
+`ambiente_databricks/`. A baseline e seus hashes históricos continuam intactos;
+`--migration-freeze` reproduz o contrato antigo e não aprova esta revisão nova.
+O exemplar de skill transportado continua template, sem contar como procedimento
+operacional. Ver [execução](../../manutencao/execucao-faxina-2026-10-07.md).

@@ -75,7 +75,7 @@ GERADO, VALIDADO_NO_REPOSITORIO, AUTORIZADO e ESCRITO são distintos;
 
 ## Allowlist
 
-- Fonte: `ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/` — SKILL.md,
+- Fonte: `ambiente_databricks/.assistant/skills/hub-ml-criar-objeto/` — SKILL.md,
   release_manifest.json, scripts/run.py, scripts/_windows_writer.py.
 - Derivado: os mesmos quatro paths sob `Novo_Ambiente_Simulado/Users/usuario-free/.assistant/`,
   gerados somente por tools/render_simulado.py.

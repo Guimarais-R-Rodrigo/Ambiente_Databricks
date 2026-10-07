@@ -1,0 +1,57 @@
+# Leitura dos manuais em partes
+
+Edição documental de 07/10/2026. Os capítulos e referências permanecem integrais nos livros da raiz e nas partes abaixo.
+
+## MT
+- [Índice detalhado](MT-indice.md)
+- [Livro completo](../../MANUAL_TECNICO_V2.md)
+- [MT-guia-leitura-tecnico](MT-guia-leitura-tecnico.md)
+- [MT-parte-i](MT-parte-i.md)
+- [MT-parte-ii](MT-parte-ii.md)
+- [MT-parte-iii](MT-parte-iii.md)
+- [MT-parte-iv](MT-parte-iv.md)
+- [MT-parte-v](MT-parte-v.md)
+- [MT-parte-vi](MT-parte-vi.md)
+- [MT-parte-vii](MT-parte-vii.md)
+- [MT-atlas-01](MT-atlas-01.md)
+- [MT-atlas-02](MT-atlas-02.md)
+- [MT-atlas-03](MT-atlas-03.md)
+- [MT-atlas-04](MT-atlas-04.md)
+- [MT-atlas-05](MT-atlas-05.md)
+- [MT-mt05-mt06-code-map](MT-mt05-mt06-code-map.md)
+- [MT-mt07-mt08-code-map](MT-mt07-mt08-code-map.md)
+- [MT-mt09-code-map](MT-mt09-code-map.md)
+- [MT-mt10-current-api-additions-map](MT-mt10-current-api-additions-map.md)
+- [MT-mt10-mt11-code-map](MT-mt10-mt11-code-map.md)
+- [MT-mt12-notebook-map](MT-mt12-notebook-map.md)
+- [MT-mt14-b1-code-map](MT-mt14-b1-code-map.md)
+- [MT-mt14-enforcement-code-map](MT-mt14-enforcement-code-map.md)
+- [MT-mt15-b1-field-map](MT-mt15-b1-field-map.md)
+- [MT-mt15-contract-field-map](MT-mt15-contract-field-map.md)
+- [MT-mt20-mt22-current-components-map](MT-mt20-mt22-current-components-map.md)
+- [MT-mt21-fullpath-map](MT-mt21-fullpath-map.md)
+- [MT-mt23-field-map](MT-mt23-field-map.md)
+- [MT-mt23-mt24-code-map](MT-mt23-mt24-code-map.md)
+- [MT-mt23-mt24-identity-inventory](MT-mt23-mt24-identity-inventory.md)
+- [MT-mt24-bridge-field-map](MT-mt24-bridge-field-map.md)
+- [MT-mt25-asset-field-map](MT-mt25-asset-field-map.md)
+- [MT-mt25-asset-inventory](MT-mt25-asset-inventory.md)
+- [MT-mt27-testing-dependencies-map](MT-mt27-testing-dependencies-map.md)
+- [MT-catalogo-arquivos](MT-catalogo-arquivos.md)
+- [MT-api-python](MT-api-python.md)
+- [MT-glossario](MT-glossario.md)
+## MU
+- [Índice detalhado](MU-indice.md)
+- [Livro completo](../../MANUAL_DO_USUARIO.md)
+- [MU-guia-leitura-usuario](MU-guia-leitura-usuario.md)
+- [MU-parte-i](MU-parte-i.md)
+- [MU-parte-ii](MU-parte-ii.md)
+- [MU-parte-iii](MU-parte-iii.md)
+- [MU-parte-iv](MU-parte-iv.md)
+- [MU-parte-v](MU-parte-v.md)
+- [MU-parte-vi](MU-parte-vi.md)
+- [Proveniência histórica](MT-proveniencia.md)
+
+## Referência operacional integrada ao V2
+
+[Catálogo, termos, exemplos portáveis e contratos operacionais](MT_REFERENCIA_OPERACIONAL.md) preservam a navegação da edição anterior dentro do livro vigente.

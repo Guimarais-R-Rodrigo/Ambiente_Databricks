@@ -1,7 +1,7 @@
 # Checklist de contribuição — objeto novo do Hub
 
 Uso do mantenedor em checkout Git completo. Complementa o
-[checklist do artefato](../../ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md),
+[checklist do artefato](../../ambiente_databricks/.assistant/skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md),
 sem conceder publicação ou homologação. As ferramentas abaixo não são publicadas
 com `.assistant/`; pendências vindas do workspace devem chegar aqui.
 
@@ -13,7 +13,7 @@ com `.assistant/`; pendências vindas do workspace devem chegar aqui.
 - [ ] Novo snippet/script/prompt já nasce com README no contrato vigente; não criar dispensa de migração
 
 ## Atualizar inventários e autoria
-- [ ] Ficha de `MANUAL_TECNICO.md`, API e dependências conferidas na fonte canônica
+- [ ] Ficha de `MANUAL_TECNICO_V2.md`, API e dependências conferidas na fonte canônica
 - [ ] Tabela da coleção `hub_snippets/README.md` ou `hub_scripts/README.md` atualizada
 - [ ] Skill nos inventários `skills/README.md` e `.assistant/README.md`
 - [ ] Inventário usado pelo publicador (`EXPECTED_SKILLS`, quando aplicável) coerente com o código atual; não alterar por contagem presumida

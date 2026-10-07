@@ -19,7 +19,7 @@ SCHEMA_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "execution_contract.sc
 PUBLISHER_PATH = REPO_ROOT / "tools" / "publicar_free.py"
 CONTRACT_PATH = (
     REPO_ROOT
-    / "ambiente_fonte"
+    / "ambiente_databricks"
     / ".assistant"
     / "skills"
     / "hub-ml-eda-profissional"
@@ -27,7 +27,7 @@ CONTRACT_PATH = (
 )
 SKILL_PATH = CONTRACT_PATH.parent / "SKILL.md"
 PROBE_PATH = CONTRACT_PATH.parent / "scripts" / "capability_probe.py"
-ASSISTANT_ROOT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+ASSISTANT_ROOT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 
 spec = importlib.util.spec_from_file_location("sef_validate_contracts", VALIDATOR_PATH)
 validator = importlib.util.module_from_spec(spec)

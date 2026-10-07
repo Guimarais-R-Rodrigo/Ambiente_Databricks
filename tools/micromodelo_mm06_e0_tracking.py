@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "ambiente_fonte/.assistant")]
+sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "ambiente_databricks/.assistant")]
 os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
 
 import mlflow

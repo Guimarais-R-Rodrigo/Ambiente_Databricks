@@ -122,4 +122,4 @@ streamlit run app.py
 
 Esse modo não comprova autenticação Databricks, ACL ou persistência UC. Nunca habilite-o em produção. O namespace por hash não fornece criptografia ou ACL por usuário: confirme identidade encaminhada e permissões reais do App, service principal e Volume.
 
-[Guia de uso do App](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/README.md).
+[Guia de uso do App](../../../ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/README.md).

@@ -13,7 +13,7 @@ from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+SOURCE_ASSISTANT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 SKILL = "hub-ml-eda-profissional"
 SOURCE_SKILL = SOURCE_ASSISTANT / "skills" / SKILL
 RUNNER_PATH = SOURCE_SKILL / "scripts" / "run.py"
@@ -396,7 +396,7 @@ class SkillEnforcementSE03Tests(unittest.TestCase):
             (root / "tools").mkdir()
             for name in ("render_simulado.py", "project_policy.py", "simulado.py", "notebook_marker.py"):
                 shutil.copyfile(REPO_ROOT / "tools" / name, root / "tools" / name)
-            source = root / "ambiente_fonte"
+            source = root / "ambiente_databricks"
             (source / ".assistant").mkdir(parents=True)
             (source / ".assistant/example.txt").write_text("synthetic\n")
             (source / ".assistant_instructions.md").write_text("instructions\n")

@@ -1,4 +1,4 @@
-"""Lot5 narrow retirement, with original evidence and source exceptions retained."""
+"""Retirement lineage remains frozen; later cleanup has an exact, proven delta."""
 from __future__ import annotations
 
 from collections import Counter
@@ -10,6 +10,10 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / 'docs/historico/mirror-retirement.json'
+BASE = '8dd8da57de89122241890b8b6b059fd2f9be25d0'
+OLD_SOURCE = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml'
+SOURCE = OLD_SOURCE.replace('ambiente_fonte/', 'ambiente_databricks/')
+PROTOTYPE = 'novas_funcionalidades/skills/hub-ml-concierge/docs/fontes.md'
 
 
 def digest_records(data):
@@ -19,31 +23,68 @@ def digest_records(data):
 
 class MirrorRetirementTests(unittest.TestCase):
     def setUp(self):
-        self.manifest = json.loads(MANIFEST.read_text())
-        self.control = json.loads((ROOT / 'docs/ai/control-map.json').read_text())
+        self.manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
+        self.control = json.loads((ROOT / 'docs/ai/control-map.json').read_text(encoding='utf-8'))
+        self.base_control = json.loads(self.blob('docs/ai/control-map.json'))
+
+    def blob(self, path):
+        return subprocess.check_output(['git', 'cat-file', 'blob', f'{BASE}:{path}'], cwd=ROOT)
 
     def test_only_seven_duplicate_mirror_exceptions_retired(self):
         manifest = self.manifest
         self.assertEqual((98, 91, 7), (manifest['before_records'], manifest['after_records'], manifest['retired_count']))
         current = self.control['historical_exceptions']
-        self.assertEqual(len(current), 91)
-        self.assertEqual(digest_records(current), manifest['remaining_records_sha256'])
+        original = self.base_control['historical_exceptions']
+        self.assertEqual(len(original), 91)
+        self.assertEqual(digest_records(original), manifest['remaining_records_sha256'])
+        retired = [item for item in original if item['path'] in (OLD_SOURCE, PROTOTYPE)]
+        self.assertEqual(Counter(item['path'] for item in retired), Counter({OLD_SOURCE: 7, PROTOTYPE: 3}))
+        expected = [item for item in original if item['path'] not in (OLD_SOURCE, PROTOTYPE)]
+        self.assertEqual(current, expected)  # All other owners, hashes and reasons are unchanged.
+        self.assertEqual(len(current), 81)
         self.assertFalse(any(item['path'] == manifest['retired_path'] for item in current))
         self.assertEqual(len(manifest['retired_records']), 7)
         self.assertTrue(all(item['path'] == manifest['retired_path'] for item in manifest['retired_records']))
 
-    def test_each_source_exception_retained_with_same_hash_origin_and_reason(self):
-        source = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml'
-        current = [item for item in self.control['historical_exceptions'] if item['path'] == source]
+    def test_seven_source_exceptions_migrate_to_canonical_owners_with_original_provenance(self):
+        original = [item for item in self.base_control['historical_exceptions'] if item['path'] == OLD_SOURCE]
         def project(item, retired=False):
             return (item['line'], item['line_sha256'], item['legacy_source_sha256'] if retired else
                     hashlib.sha256(item['legacy_source'].encode()).hexdigest(), item['replacement'], item['category'], item['reason'])
-        self.assertEqual(Counter(project(item) for item in current),
+        self.assertEqual(Counter(project(item) for item in original),
                          Counter(project(item, True) for item in self.manifest['retired_records']))
-        text = (ROOT / source).read_text().splitlines()
-        for item in current:
-            self.assertEqual(hashlib.sha256(text[item['line'] - 1].encode()).hexdigest(), item['line_sha256'])
-            self.assertIn(item['legacy_source'], text[item['line'] - 1])
+        before = self.blob(OLD_SOURCE).decode('utf-8').splitlines()
+        after = (ROOT / SOURCE).read_text(encoding='utf-8').splitlines()
+        routes = {'.claude/' + 'rules/genie-code-oficial.md': 'docs/ai/references/databricks-genie-code.md',
+                  '.claude/' + 'rules/fonte-de-verdade.md': 'docs/ai/rules/fontes-e-derivados.md'}
+        expected = self.blob(OLD_SOURCE).replace(b'ambiente_fonte/', b'ambiente_databricks/')
+        for old, owner in routes.items():
+            expected = expected.replace(old.encode(), owner.encode())
+        self.assertEqual((ROOT / SOURCE).read_bytes(), expected)
+        for item in original:
+            index = item['line'] - 1
+            self.assertEqual(hashlib.sha256(before[index].encode()).hexdigest(), item['line_sha256'])
+            self.assertIn(item['legacy_source'], before[index])
+            owner = routes[item['legacy_source']]
+            self.assertIn(owner, item['replacement'])
+            self.assertTrue((ROOT / owner).is_file())
+            self.assertIn(owner, after[index])
+            self.assertNotIn(item['legacy_source'], after[index])
+
+    def test_three_prototype_exceptions_retire_with_recoverable_hashes(self):
+        retired = [item for item in self.base_control['historical_exceptions'] if item['path'] == PROTOTYPE]
+        self.assertEqual(len(retired), 3)
+        manifest = json.loads((ROOT / 'docs/historico/concierge-manifest.json').read_text(encoding='utf-8'))
+        entry = next(item for item in manifest['entries'] if item['path'] == PROTOTYPE)
+        blob = subprocess.check_output(['git', 'cat-file', 'blob', f"{manifest['source_commit']}:{PROTOTYPE}"], cwd=ROOT)
+        self.assertEqual(blob, self.blob(PROTOTYPE))
+        self.assertEqual(hashlib.sha256(blob).hexdigest(), entry['sha256'])
+        self.assertEqual(len(blob), entry['bytes'])
+        lines = blob.decode('utf-8').splitlines()
+        for item in retired:
+            self.assertEqual(hashlib.sha256(lines[item['line'] - 1].encode()).hexdigest(), item['line_sha256'])
+            self.assertIn(item['legacy_source'], lines[item['line'] - 1])
+        self.assertFalse((ROOT / 'novas_funcionalidades').exists())
 
     def test_no_old_mirror_tracking_or_symlink_alias(self):
         tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'Novo_Ambiente_Simulado'], cwd=ROOT)

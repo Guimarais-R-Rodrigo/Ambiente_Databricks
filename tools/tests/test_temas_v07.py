@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT_ROOT = ROOT / "ambiente_fonte/.assistant"
+ASSISTANT_ROOT = ROOT / "ambiente_databricks/.assistant"
 sys.path.insert(0, str(ASSISTANT_ROOT))
 
 from hub_snippets.ml.curves_plotly import (

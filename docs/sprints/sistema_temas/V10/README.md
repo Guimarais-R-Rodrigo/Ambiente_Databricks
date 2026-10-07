@@ -1,6 +1,6 @@
 # V10 — Databricks App de gestão visual
 
-> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. Para uso do App, consulte o [guia distribuído](../../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/README.md).
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. Para uso do App, consulte o [guia distribuído](../../../../ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/README.md).
 
 ## Registro histórico preservado
 

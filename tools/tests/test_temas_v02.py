@@ -18,7 +18,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / 'ambiente_fonte/.assistant'
+PRODUCT = ROOT / 'ambiente_databricks/.assistant'
 sys.path.insert(0, str(PRODUCT))
 sys.path.insert(0, str(ROOT / 'tools'))
 from hub_snippets.visual.tema import (
@@ -413,7 +413,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
     def test_layout_changed_manual(self):
         from temas_v02_check import check_layout
         original=Path.read_bytes
-        def read(path):return b'changed' if path==ROOT/'MANUAL_TECNICO.md' else original(path)
+        def read(path):return b'changed' if path==ROOT/'ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md' else original(path)
         with patch.object(Path,'read_bytes',read):
             with self.assertRaisesRegex(ValueError,'V02_MANUAL'):check_layout()
 

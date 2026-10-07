@@ -6,7 +6,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2] / "ambiente_fonte/.assistant"
+ROOT = Path(__file__).resolve().parents[2] / "ambiente_databricks/.assistant"
 sys.path.insert(0, str(ROOT))
 SKILL = ROOT / "skills/hub-ml-feature-engineering"
 

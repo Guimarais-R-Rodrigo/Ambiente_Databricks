@@ -9,7 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "ambiente_fonte/.assistant"))
+sys.path.insert(0, str(ROOT / "ambiente_databricks/.assistant"))
 
 import plotly.graph_objects as go
 import plotly.io as pio

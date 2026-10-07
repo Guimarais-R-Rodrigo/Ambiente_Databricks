@@ -76,7 +76,7 @@ WORKFLOW_REQUIRED_SNIPPETS = {
         "python -B -m unittest tools/tests/test_micromodelo_mm01.py -v",
         "python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v",
         "python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v",
-        "python -B tools/validate_assistant.py --root ambiente_fonte",
+        "python -B tools/validate_assistant.py --root ambiente_databricks",
     ),
     ".github/workflows/temas-v00-ci.yml": (
         "python -B tools/tests/test_inventario_visual.py",
@@ -91,7 +91,7 @@ WORKFLOW_REQUIRED_SNIPPETS = {
         "python -B tools/temas_v02_check.py",
         "python -B tools/temas_v01_contract.py",
         "python -B tools/tests/test_temas_v02.py",
-        "python -B ambiente_fonte/.assistant/hub_snippets/visual/tema/exemplo_tema.py",
+        "python -B ambiente_databricks/.assistant/hub_snippets/visual/tema/exemplo_tema.py",
     ),
     ".github/workflows/temas-v10-ci.yml": (
         "python -B tools/tests/test_temas_v10.py -v",
@@ -149,7 +149,7 @@ CRITICAL_INPUTS = (
     "tools/requirements-dev.txt",
     "tools/requirements-temas-dev.txt",
     "tools/readme_visuals/pnpm-lock.yaml",
-    "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt",
+    "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt",
     "docs/sprints/micromodelos/MM01/MATRIZ_ACEITE_FINAL.md",
     "docs/sprints/micromodelos/MM01/TESTES.md",
 )
@@ -557,14 +557,14 @@ def command_plan(python: str) -> list[Step]:
     )
     compile_v10 = (
         "from pathlib import Path; "
-        "paths=[Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),"
-        "Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py')]; "
+        "paths=[Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),"
+        "Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py')]; "
         "[compile(p.read_text(encoding='utf-8'),str(p),'exec') for p in paths]; "
         "print('OK: sintaxe V10 compilada em memoria')"
     )
     compile_v11 = (
         "from pathlib import Path; "
-        "p=Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py'); "
+        "p=Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py'); "
         "compile(p.read_text(encoding='utf-8'),str(p),'exec'); "
         "print('OK: sintaxe V11 compilada em memoria')"
     )
@@ -584,14 +584,14 @@ def command_plan(python: str) -> list[Step]:
     return [
         Step("BOOTSTRAP_PYTHON", "ci.yml", (py, "-m", "pip", "install", "-r", "tools/requirements-dev.txt")),
         Step("BOOTSTRAP_IPYWIDGETS", "temas-v10/v11/v12/v13", (py, "-m", "pip", "install", "ipywidgets>=8,<9")),
-        Step("BOOTSTRAP_APP", "temas-v10/v11/v12/v13", (py, "-m", "pip", "install", "-r", "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt")),
+        Step("BOOTSTRAP_APP", "temas-v10/v11/v12/v13", (py, "-m", "pip", "install", "-r", "ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt")),
         Step("BOOTSTRAP_PNPM", "ci.yml", ("npm", "install", "--global", "pnpm@" + PNPM_VERSION)),
         Step("BOOTSTRAP_VISUAL", "ci.yml", ("pnpm", "--dir", "tools/readme_visuals", "install", "--frozen-lockfile")),
         Step("CERT_SELFTEST", "MM01 Local Certification v1", (*py_b, "-m", "unittest", "tools/tests/test_mm01_local_certify.py", "-v")),
         Step("MM01_CANONICAL", "micromodelos-mm01-ci.yml", (*py_b, "-m", "unittest", "tools/tests/test_micromodelo_mm01.py", "-v")),
         Step("MM01_R02", "micromodelos-mm01-ci.yml", (*py_b, "-m", "unittest", "tools/tests/test_micromodelo_mm01_r02.py", "-v")),
         Step("MM01_R03", "micromodelos-mm01-ci.yml", (*py_b, "-m", "unittest", "tools/tests/test_micromodelo_mm01_r03.py", "-v")),
-        Step("MM01_VALIDATE_ASSISTANT", "micromodelos-mm01-ci.yml", (*py_b, "tools/validate_assistant.py", "--root", "ambiente_fonte")),
+        Step("MM01_VALIDATE_ASSISTANT", "micromodelos-mm01-ci.yml", (*py_b, "tools/validate_assistant.py", "--root", "ambiente_databricks")),
         Step("CI_LOCAL", "ci.yml", (py, "tools/ci_local.py")),
         Step("V00_INVENTORY", "temas-v00-ci.yml", (*py_b, "tools/tests/test_inventario_visual.py"), env_common),
         Step("V00_LEGACY", "temas-v00-ci.yml", (*py_b, "tools/tests/test_visual_legado_v00.py"), env_common),
@@ -601,7 +601,7 @@ def command_plan(python: str) -> list[Step]:
         Step("V02_CHECK", "temas-v02-ci.yml", (*py_b, "tools/temas_v02_check.py"), env_common),
         Step("V02_V01_CONTRACT", "temas-v02-ci.yml", (*py_b, "tools/temas_v01_contract.py"), env_common),
         Step("V02_TESTS", "temas-v02-ci.yml", (*py_b, "tools/tests/test_temas_v02.py"), env_common),
-        Step("V02_EXAMPLE", "temas-v02-ci.yml", (*py_b, "ambiente_fonte/.assistant/hub_snippets/visual/tema/exemplo_tema.py"), env_common),
+        Step("V02_EXAMPLE", "temas-v02-ci.yml", (*py_b, "ambiente_databricks/.assistant/hub_snippets/visual/tema/exemplo_tema.py"), env_common),
         Step("V10_TEST", "temas-v10-ci.yml", (*py_b, "tools/tests/test_temas_v10.py", "-v"), env_common),
         Step("V10_COMPILE", "temas-v10-ci.yml", (py, "-B", "-c", compile_v10), env_common),
         Step("V10_REGRESSIONS", "temas-v10-ci.yml", (*py_b, "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_temas*.py", "-v"), env_common),

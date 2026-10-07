@@ -24,7 +24,7 @@ from unittest.mock import patch
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT = ROOT / "ambiente_fonte/.assistant"
+ASSISTANT = ROOT / "ambiente_databricks/.assistant"
 SKILL = "skills/hub-ml-criar-objeto"
 RUNNER = f"{SKILL}/scripts/run.py"
 BASE = "d49c8728f0e47adc15f7f78293c9fcc58c809a15"

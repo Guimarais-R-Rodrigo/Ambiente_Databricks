@@ -54,7 +54,7 @@ for(const a of baseline.assets)for(const f of a.files){
   const rel=f.path.replace(/^baseline\//,'');
   check(sha(await fs.readFile(path.join(ASSET,rel)))===f.sha256,`ativo de produção preservado: ${rel}`);
 }
-const readmes=['README.md',...['','hub_snippets/','hub_scripts/','skills/','hub_prompts/'].map(r=>`ambiente_fonte/.assistant/${r}README.md`)];
+const readmes=['README.md',...['','hub_snippets/','hub_scripts/','skills/','hub_prompts/'].map(r=>`ambiente_databricks/.assistant/${r}README.md`)];
 for(const f of readmes){const previous=execFileSync('git',['show',`${m.baseline_commit}:${f}`],{cwd:ROOT});check(sha(previous)===sha(await fs.readFile(path.join(ROOT,f))),`README ativo preservado: ${f}`);}
 for(const file of ['README_SPRINT_0.md','README_COMPARACOES.md','CONTRATOS_21_FIGURAS.md','SISTEMA_VISUAL.md','ESTADO_SPRINT_0.md']){
   let data;try{data=await fs.readFile(path.join(OUT,file),'utf8');}catch{check(false,`documento presente: ${file}`);continue;}

@@ -10,8 +10,8 @@
       "files": [
         {"path": "docs/ai/rules/fontes-e-derivados.md", "reason": "Fonte editável e fronteiras de geração/publicação"},
         {"path": "docs/ai/rules/documentacao.md", "reason": "Contrato editorial e preservação de evidência"},
-        {"path": "ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md", "reason": "Estrutura canônica do README de objeto"},
-        {"path": "ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md", "reason": "Critérios editoriais do objeto"},
+        {"path": "ambiente_databricks/.assistant/hub_padroes/readme/template_objeto.md", "reason": "Estrutura canônica do README de objeto"},
+        {"path": "ambiente_databricks/.assistant/hub_padroes/readme/checklist_objeto.md", "reason": "Critérios editoriais do objeto"},
         {"path": "tools/readme_objeto_contract.py", "reason": "Owner executável do contrato e ratchet"}
       ],
       "exclusions": [
@@ -19,8 +19,8 @@
         "Manual completo, outros objetos, espelhos e histórico ficam fora desta rota inicial; a seleção não comprova cobertura de dependências."
       ],
       "expand": [
-        "Repita --include com os paths exatos do README, implementação, exemplo e testes do objeto em ambiente_fonte/ e tools/tests/.",
-        "Consulte a seção pertinente do Manual canônico; se necessário, inclua ambiente_fonte/.assistant/MANUAL_TECNICO.md explicitamente.",
+        "Repita --include com os paths exatos do README, implementação, exemplo e testes do objeto em ambiente_databricks/ e tools/tests/.",
+        "Consulte a seção pertinente do Manual canônico; se necessário, inclua ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md explicitamente.",
         "Para comparação entre domínios ou história integral, gere outro bundle com --mode canonical; security acrescenta hashes e full inclui camadas textuais omitidas."
       ]
     },

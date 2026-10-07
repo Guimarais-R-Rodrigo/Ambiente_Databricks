@@ -58,7 +58,7 @@ Os três estados da tabela não são sinônimos, e a diferença decide o que faz
 |---|---|---|
 | `PASS` | executou como esperado | nenhuma |
 | `OPTIONAL_MISSING` | biblioteca opcional não instalada neste ambiente | nenhuma no laboratório; instalar com versão fixada no projeto que precisar do módulo |
-| `FAIL` | defeito real no código ou incompatibilidade com o runtime | corrigir no `ambiente_fonte/` e reexecutar |
+| `FAIL` | defeito real no código ou incompatibilidade com o runtime | corrigir no `ambiente_databricks/` e reexecutar |
 
 Por isso a rodada 5 fecha o gate com **64 PASS / 0 FAIL / 7 opcionais ausentes**:
 são 71 verificações, e as 7 restantes não são falhas. Para diagnosticar um `FAIL`
@@ -74,7 +74,7 @@ concreto, veja [Como ler uma falha](#como-ler-uma-falha).
 **14 dos 14 verificados em runtime**, cada um com chamada real — ajuste de
 modelo, projeção ou previsão, não apenas import. O inventário com a prova de
 execução de cada biblioteca está em
-`ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt`.
+`ambiente_databricks/.assistant/hub_snippets/requirements-optional.txt`.
 
 `prophet_wrapper` era o único pendente. Em **14/08** falhava com
 `AttributeError: 'Prophet' object has no attribute 'stan_backend'` — o backend de
@@ -126,7 +126,7 @@ Foi essa rodada que motivou fixar as versões em `requirements-optional.txt`. O
 arquivo hoje traz o conjunto que funcionou; antes dela listava só nomes, e nessa
 forma não era instalável neste ambiente.
 
-### Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
+### Defeitos reais encontrados e corrigidos no `ambiente_databricks/`
 
 Nenhum deles era detectável pela validação estática (AST compilava na máquina
 local com Python 3.12):

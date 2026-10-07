@@ -14,6 +14,15 @@ ai = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(ai)
 
 class AIControlsTests(unittest.TestCase):
+
+    def fixture_symlink(self, path, target, **kwargs):
+        try:
+            path.symlink_to(target, **kwargs)
+        except OSError as exc:
+            if getattr(exc, 'winerror', None) == 1314:
+                self.skipTest('Windows sem privilegio de symlink (WinError 1314); gate de producao inalterado')
+            raise
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix='ai controls with spaces ')
         self.root = Path(self.tmp.name)
@@ -25,18 +34,18 @@ class AIControlsTests(unittest.TestCase):
         for name in ai.SKILLS:
             self.write(f'.agents/skills/{name}/SKILL.md', f'---\nname: {name}\ndescription: Procedimento sintético {name}.\n---\n# Procedimento\n[Guia](../../../docs/ai/README.md)\n')
         self.write('.agents/skills/validar-assistant/resources/example.txt', 'resource bytes\n')
-        self.write('ambiente_fonte/.assistant/example.txt', 'synthetic product\n')
+        self.write('ambiente_databricks/.assistant/example.txt', 'synthetic product\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'synthetic product\n')
-        self.write('ambiente_fonte/.assistant_instructions.md', 'synthetic instructions\n')
+        self.write('ambiente_databricks/.assistant_instructions.md', 'synthetic instructions\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant_instructions.md', 'synthetic instructions\n')
         from simulado import MARKER
         self.write('.artifacts/simulado/README_GERADO.md', MARKER)
         self.write('.gitignore', '.artifacts/\n')
-        protected_roots = ['ambiente_fonte', '.artifacts/simulado']
+        protected_roots = ['ambiente_databricks', '.artifacts/simulado']
         protected = {p.relative_to(self.root).as_posix(): ai.digest(p.read_bytes())
                      for prefix in protected_roots for p in (self.root / prefix).rglob('*') if p.is_file()}
         self.baseline = {'product_pair_count': 1,
-            'product_pairs': [{'source': 'ambiente_fonte/.assistant/example.txt',
+            'product_pairs': [{'source': 'ambiente_databricks/.assistant/example.txt',
                                'mirror': '.artifacts/simulado/Users/usuario-free/.assistant/example.txt'}],
             'protected_roots': protected_roots, 'protected': protected}
         self.json(ai.BASELINE, self.baseline)
@@ -305,14 +314,14 @@ class AIControlsTests(unittest.TestCase):
 
     def test_source_edit_can_update_owned_adapter(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text() + '\nUpdated source.\n')
+        p.write_text(p.read_text() + '\nUpdated source.\n', encoding='utf-8', newline='\n')
         self.assertFails('ADAPTER_DRIFT')
         self.assertTrue(ai.generate(self.root))
         self.assertEqual(self.check()['status'], 'PASS')
 
     def test_edited_adapter_rejected_without_mutation(self):
         p = self.root / '.claude/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text() + '\nUnowned edit.\n')
+        p.write_text(p.read_text() + '\nUnowned edit.\n', encoding='utf-8', newline='\n')
         before = self.tree()
         self.assertFails('UNMANAGED_OR_EDITED')
         with self.assertRaisesRegex(ai.ContractError, 'UNMANAGED_OR_EDITED'):
@@ -355,13 +364,13 @@ class AIControlsTests(unittest.TestCase):
     def test_source_symlink_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/resources/example.txt'
         p.unlink()
-        p.symlink_to(self.root / 'AGENTS.md')
+        self.fixture_symlink(p, self.root / 'AGENTS.md')
         self.assertFails('SYMLINK')
 
     def test_destination_symlink_rejected(self):
         p = self.root / '.claude/skills/validar-assistant/resources/example.txt'
         p.unlink()
-        p.symlink_to(self.root / 'AGENTS.md')
+        self.fixture_symlink(p, self.root / 'AGENTS.md')
         before = self.tree()
         with self.assertRaisesRegex(ai.ContractError, 'SYMLINK'):
             ai.generate(self.root)
@@ -370,7 +379,7 @@ class AIControlsTests(unittest.TestCase):
     def test_ancestor_symlink_rejected(self):
         original = self.root / '.claude'
         original.rename(self.root / 'other')
-        original.symlink_to(self.root / 'other', target_is_directory=True)
+        self.fixture_symlink(original, self.root / 'other', target_is_directory=True)
         self.assertFails('SYMLINK')
 
     def test_hardlink_external_output_and_manifest_block_all_writes(self):
@@ -405,7 +414,7 @@ class AIControlsTests(unittest.TestCase):
         last.unlink()
         last.hardlink_to(first)
         source = self.root / '.agents/skills/forward-test-skills/shared.txt'
-        source.write_text('changed resource\n')
+        source.write_text('changed resource\n', encoding='utf-8', newline='\n')
         before = self.tree()
         with self.assertRaisesRegex(ai.ContractError, 'HARDLINK_OUTPUT'):
             ai.generate(self.root)
@@ -417,7 +426,7 @@ class AIControlsTests(unittest.TestCase):
         self.addCleanup(external.cleanup)
         foreign = Path(external.name) / 'foreign-claude'
         original.rename(foreign)
-        original.symlink_to(foreign, target_is_directory=True)
+        self.fixture_symlink(original, foreign, target_is_directory=True)
         source = self.root / '.agents/skills/forward-test-skills/SKILL.md'
         source.write_bytes(source.read_bytes() + b'\nSynthetic update.\n')
         before = {p.relative_to(foreign).as_posix(): p.read_bytes()
@@ -446,37 +455,37 @@ class AIControlsTests(unittest.TestCase):
 
     def test_skill_name_mismatch_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('name: validar-assistant', 'name: wrong'))
+        p.write_text(p.read_text().replace('name: validar-assistant', 'name: wrong'), encoding='utf-8', newline='\n')
         self.assertFails('SKILL_METADATA')
 
     def test_empty_description_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description:'))
+        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description:'), encoding='utf-8', newline='\n')
         self.assertFails('SKILL_METADATA')
 
     def test_permissions_not_portable_frontmatter(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('description:', 'allowed-tools: Bash\ndescription:'))
+        p.write_text(p.read_text().replace('description:', 'allowed-tools: Bash\ndescription:'), encoding='utf-8', newline='\n')
         self.assertFails('SKILL_METADATA')
 
     def test_core_line_budget_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text() + '\n' * 151)
+        p.write_text(p.read_text() + '\n' * 151, encoding='utf-8', newline='\n')
         self.assertFails('CORE_BUDGET')
 
     def test_core_byte_budget_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text() + 'x' * 12289)
+        p.write_text(p.read_text() + 'x' * 12289, encoding='utf-8', newline='\n')
         self.assertFails('CORE_BUDGET')
 
     def test_missing_critical_invariant_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text().replace('Dados sintéticos', 'Unrestricted data'))
+        p.write_text(p.read_text().replace('Dados sintéticos', 'Unrestricted data'), encoding='utf-8', newline='\n')
         self.assertFails('CORE_INVARIANT_MISSING')
 
     def test_direct_history_import_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text() + '\n@CHANGELOG.md\n')
+        p.write_text(p.read_text() + '\n@CHANGELOG.md\n', encoding='utf-8', newline='\n')
         self.assertFails('CORE_IMPORT_NOT_PORTABLE')
 
     def test_transitive_history_import_rejected(self):
@@ -485,7 +494,7 @@ class AIControlsTests(unittest.TestCase):
 
     def test_universal_history_prose_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text() + '\nAntes de qualquer tarefa leia CHANGELOG.md\n')
+        p.write_text(p.read_text() + '\nAntes de qualquer tarefa leia CHANGELOG.md\n', encoding='utf-8', newline='\n')
         self.assertFails('UNIVERSAL_HISTORY')
 
     def test_duplicate_legacy_bootstrap_rejected(self):
@@ -556,18 +565,18 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('STALE_HISTORICAL_EXCEPTION')
 
     def test_runtime_one_side_changed_rejected(self):
-        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
+        self.write('ambiente_databricks/.assistant/example.txt', 'mutated\n')
         self.assertFails('PRODUCT_PARITY')
 
     def test_runtime_both_sides_changed_fails_migration_freeze(self):
-        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
+        self.write('ambiente_databricks/.assistant/example.txt', 'mutated\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'mutated\n')
         self.assertFails('PROTECTED_CHANGED', migration_freeze=True)
 
     def test_runtime_and_manifest_hash_tampering_rejected(self):
-        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
+        self.write('ambiente_databricks/.assistant/example.txt', 'mutated\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'mutated\n')
-        self.baseline['protected']['ambiente_fonte/.assistant/example.txt'] = ai.digest(b'mutated\n')
+        self.baseline['protected']['ambiente_databricks/.assistant/example.txt'] = ai.digest(b'mutated\n')
         self.json(ai.BASELINE, self.baseline)
         self.assertFails('BASELINE_EVIDENCE_CHANGED', migration_freeze=True)
 
@@ -577,34 +586,34 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('PRODUCT_INVENTORY_EMPTY_OR_INCOMPLETE')
 
     def test_future_authorized_product_changes_not_frozen_by_normal_check(self):
-        self.write('ambiente_fonte/.assistant/example.txt', 'authorized future change\n')
+        self.write('ambiente_databricks/.assistant/example.txt', 'authorized future change\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'authorized future change\n')
         self.assertEqual(self.check()['status'], 'PASS')
 
     def test_added_runtime_both_sides_fails_freeze_inventory(self):
-        self.write('ambiente_fonte/.assistant/new_runtime.py', 'pass\n')
+        self.write('ambiente_databricks/.assistant/new_runtime.py', 'pass\n')
         self.write('.artifacts/simulado/Users/usuario-free/.assistant/new_runtime.py', 'pass\n')
         self.assertFails('PROTECTED_INVENTORY_CHANGED', migration_freeze=True)
 
     def test_duplicate_frontmatter_key_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('name: validar-assistant', 'name: validar-assistant\nname: validar-assistant'))
+        p.write_text(p.read_text().replace('name: validar-assistant', 'name: validar-assistant\nname: validar-assistant'), encoding='utf-8', newline='\n')
         self.assertFails('FRONTMATTER_DUPLICATE_KEY')
 
     def test_invalid_yaml_frontmatter_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description: [unterminated'))
+        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description: [unterminated'), encoding='utf-8', newline='\n')
         self.assertFails('FRONTMATTER_SCALAR')
 
     def test_folded_description_preserved(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description: >-\n  Valid folded\n  description.'))
+        p.write_text(p.read_text().replace('description: Procedimento sintético validar-assistant.', 'description: >-\n  Valid folded\n  description.'), encoding='utf-8', newline='\n')
         ai.generate(self.root)
         self.assertEqual(self.check()['status'], 'PASS')
 
     def test_missing_image_resource_rejected(self):
         p = self.root / '.agents/skills/validar-assistant/SKILL.md'
-        p.write_text(p.read_text() + '\n![Missing](resources/missing.png)\n')
+        p.write_text(p.read_text() + '\n![Missing](resources/missing.png)\n', encoding='utf-8', newline='\n')
         ai.generate(self.root)
         self.assertFails('LINK_MISSING')
 
@@ -618,7 +627,7 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('EVIDENCE_EXCLUSION_NOT_ALLOWLISTED')
 
     def test_scan_rejects_untracked_symlink_before_read(self):
-        (self.root / 'new.md').symlink_to(self.root / 'AGENTS.md')
+        self.fixture_symlink(self.root / 'new.md', self.root / 'AGENTS.md')
         self.assertFails('SYMLINK')
 
     def test_case_mismatch_is_detected_lexically(self):
@@ -630,7 +639,7 @@ class AIControlsTests(unittest.TestCase):
         original = path.read_text()
         for scalar in ('123', '1.2', "'   '"):
             with self.subTest(scalar=scalar):
-                path.write_text(original.replace('description: Procedimento sintético validar-assistant.', 'description: ' + scalar))
+                path.write_text(original.replace('description: Procedimento sintético validar-assistant.', 'description: ' + scalar), encoding='utf-8', newline='\n')
                 self.assertFails('FRONTMATTER_SCALAR|SKILL_METADATA')
 
     def test_crlf_source_skill_rejected_before_generation(self):
@@ -657,12 +666,12 @@ class AIControlsTests(unittest.TestCase):
         original = p.read_text()
         for extra in ('- @CHANGELOG.md', 'Leia @CHANGELOG.md antes de agir.'):
             with self.subTest(extra=extra):
-                p.write_text(original + '\n' + extra + '\n')
+                p.write_text(original + '\n' + extra + '\n', encoding='utf-8', newline='\n')
                 self.assertFails('CORE_IMPORT_NOT_PORTABLE')
 
     def test_multiline_mandatory_history_prose_rejected(self):
         p = self.root / 'AGENTS.md'
-        p.write_text(p.read_text() + '\nAntes de qualquer tarefa,\nleia [histórico](CHANGELOG.md).\n')
+        p.write_text(p.read_text() + '\nAntes de qualquer tarefa,\nleia [histórico](CHANGELOG.md).\n', encoding='utf-8', newline='\n')
         self.assertFails('UNIVERSAL_HISTORY')
 
     def test_fake_observed_evidence_cannot_promote_claim(self):

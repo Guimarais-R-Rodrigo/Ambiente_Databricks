@@ -12,7 +12,7 @@
   "question": "Como relevância e menção explícita conduzem à skill?",
   "alt": "Duas rotas independentes, relevância e menção com @, convergindo no carregamento de uma Agent Skill.",
   "caption": "A description ajuda o roteamento; a menção com @ torna a escolha explícita.",
-  "owner_readme": "ambiente_fonte/.assistant/skills/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/skills/README.md",
   "anchor": "como-o-genie-code-e-o-usuario-utilizam-as-skills",
   "approved_signature": false,
   "texts": [

@@ -3,7 +3,7 @@
 Esta pasta explica **por que o ambiente é assim**, **o que já foi comprovado** e
 **como executar uma operação com segurança**. Ela não é publicada no Databricks:
 quem usa o produto começa em
-[`ambiente_fonte/.assistant/README.md`](../ambiente_fonte/.assistant/README.md);
+[`ambiente_databricks/.assistant/README.md`](../ambiente_databricks/.assistant/README.md);
 quem mantém ou aprova mudanças começa aqui.
 
 ## Escolha sua rota
@@ -11,6 +11,7 @@ quem mantém ou aprova mudanças começa aqui.
 | Sua pergunta | Documento dono |
 |---|---|
 | “Como mantenho o projeto?” | [Rotas IA](ai/README.md) e [ferramentas](../tools/README.md) |
+| “Como entendo CI, ferramentas e a proposta de simplificação?” | [Manutenção](manutencao/README.md) |
 | “Como preparo uma entrega?” | [Replicação](../.agents/skills/replicar-trabalho/SKILL.md) e [runbook](playbooks/replicacao-trabalho.md) |
 | “Qual regressão já foi encontrada?” | [Classes de defeito e guardas](auditoria/README.md#classes-de-defeito-que-viraram-guardas) |
 | “O que mudou de modo relevante?” | [Marcos](../CHANGELOG.md); [cronologia integral arquivada](historico/changelog/README.md) |
@@ -25,7 +26,7 @@ quem mantém ou aprova mudanças começa aqui.
 
 ```mermaid
 flowchart LR
-  D["Decisão<br/>ADRs"] --> I["Implementação<br/>ambiente_fonte + tools"]
+  D["Decisão<br/>ADRs"] --> I["Implementação<br/>ambiente_databricks + tools"]
   I --> E["Evidência<br/>testes + auditorias"]
   E --> O["Operação<br/>playbooks"]
   O --> H["Continuidade<br/>handoffs + changelog"]

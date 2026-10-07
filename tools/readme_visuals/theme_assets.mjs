@@ -8,8 +8,8 @@ import YAML from 'yaml';
 
 const TOOL=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(TOOL,'../..');
-const ASSET=path.join(ROOT,'ambiente_fonte/.assistant/hub_readmes_visual_assets');
-const ASSISTANT=path.join(ROOT,'ambiente_fonte/.assistant');
+const ASSET=path.join(ROOT,'ambiente_databricks/.assistant/hub_readmes_visual_assets');
+const ASSISTANT=path.join(ROOT,'ambiente_databricks/.assistant');
 const ARTIFACT_ROOT=path.join(ROOT,'.artifacts/visual-v2/theme-variants');
 const GENERATOR_VERSION=1;
 const FAMILY_GROUPS={top:['raiz','assistant'],snippets:['snippets'],scripts:['scripts'],skills:['skills'],prompts:['prompts']};

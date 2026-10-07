@@ -75,7 +75,7 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual({"workflow_dispatch", "pull_request", "push"}, set(events))
         self.assertIsNone(events["workflow_dispatch"])
         self.assertEqual(["main"], events["push"]["branches"])
-        self.assertEqual({"paths": ["tools/**", "ambiente_fonte/**", ".github/workflows/**",
+        self.assertEqual({"paths": ["tools/**", "ambiente_databricks/**", ".github/workflows/**",
                                     "docs/ai/**", "docs/playbooks/**"]}, events["pull_request"])
         self.assertEqual({"contents": "read"}, workflow["permissions"])
         self.assertEqual({"preparar"}, set(workflow["jobs"]))
@@ -276,7 +276,9 @@ class CIWorkflowTests(unittest.TestCase):
             gate=ci.failure_gate(upstream)
             for result in ("success", "failure", "cancelled", "skipped", "", "neutral", "unknown"):
                 with self.subTest(upstream=upstream,result=result):
-                    process=subprocess.run(["bash","-c",gate["run"]],env={**os.environ,"UPSTREAM_RESULT":result})
+                    # Windows CreateProcess searches System32 before PATH for a
+                    # bare executable; use the discovered Git Bash, not the WSL shim.
+                    process=subprocess.run([shutil.which("bash"),"-c",gate["run"]],env={**os.environ,"UPSTREAM_RESULT":result})
                     self.assertEqual(result=="success",process.returncode==0)
 
     def test_missing_dependency_mapping_failure_gate_and_exclusive_mutants(self):

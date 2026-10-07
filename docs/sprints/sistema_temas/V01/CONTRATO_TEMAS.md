@@ -1,7 +1,7 @@
 # Contrato candidato de temas — V01
 
 Status: especificação verificável 0.1.0, não instalada. O [ADR-0013](../../../decisions/ADR-0013-sistema-de-temas.md)
-registra a decisão proposta; o [schema](../../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json) é a fonte dos campos.
+registra a decisão proposta; o [schema](../../../../ambiente_databricks/.assistant/hub_padroes/identidade_visual/theme.schema.json) é a fonte dos campos.
 A [referência derivada](TOKENS.md) detalha cada token. Não existe configuração
 concorrente em Python, YAML ou TOML nesta sprint.
 

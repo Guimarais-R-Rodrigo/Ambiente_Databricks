@@ -10,7 +10,7 @@ from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+SOURCE_ASSISTANT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 SKILL = "hub-ml-eda-profissional"
 SKILL_DIR = SOURCE_ASSISTANT / "skills" / SKILL
 RUNNER_PATH = SKILL_DIR / "scripts" / "run.py"
@@ -298,7 +298,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
     def test_speed_pressure_instructions_require_postflight(self):
         skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
         global_text = (
-            REPO_ROOT / "ambiente_fonte" / ".assistant_instructions.md"
+            REPO_ROOT / "ambiente_databricks" / ".assistant_instructions.md"
         ).read_text(encoding="utf-8")
         self.assertIn("Pressão por rapidez", skill_text)
         self.assertIn("faça rápido", skill_text)
@@ -312,7 +312,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
     def test_explicit_skill_selection_forbids_manual_carve_out(self):
         skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
         global_text = (
-            REPO_ROOT / "ambiente_fonte" / ".assistant_instructions.md"
+            REPO_ROOT / "ambiente_databricks" / ".assistant_instructions.md"
         ).read_text(encoding="utf-8")
         self.assertIn("Conflito explícito de bypass", skill_text)
         self.assertIn('não reclassifique a mesma EDA como "manual e fora da skill"', skill_text)
@@ -415,7 +415,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
 
     def test_instruction_layers_forbid_manual_fallback_and_parallel_auditor(self):
         skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
-        global_text = (REPO_ROOT / "ambiente_fonte" / ".assistant_instructions.md").read_text(
+        global_text = (REPO_ROOT / "ambiente_databricks" / ".assistant_instructions.md").read_text(
             encoding="utf-8"
         )
         audit_text = (

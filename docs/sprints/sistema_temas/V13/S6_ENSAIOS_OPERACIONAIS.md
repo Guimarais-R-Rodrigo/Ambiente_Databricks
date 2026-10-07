@@ -255,7 +255,7 @@ A antiga asserção `V13_S6_NOT_STARTED=1` passa a ser somente comentário hist�
 
 A candidata:
 
-- não altera `ambiente_fonte/`;
+- não altera `ambiente_databricks/`;
 - não edita `Novo_Ambiente_Simulado/`;
 - não altera schema/tokens/bindings/papéis;
 - não altera S1/S2/S3/S4/S5 históricos;

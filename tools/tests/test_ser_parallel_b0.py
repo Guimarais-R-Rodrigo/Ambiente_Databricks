@@ -17,7 +17,7 @@ from tools.skill_enforcement.parallel import launcher, process, preflight, round
 
 
 def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN", required=True, command_ids=None):
-    row={"task_schema":contract.TASK_SCHEMA_VERSION,"task_id":task_id,"role":role,"stage":"B0.6","skill":"synthetic","candidate_sha":"a"*40,"command_ids":command_ids if command_ids is not None else ["b0:pilot:pass"],"depends_on":deps or [],"read_roots":["tools"],"write_roots":[],"protected_paths":["ambiente_fonte"],"resource_class":resource,"exclusivity_key":key,"required":required,"expected_effect":"NONE","failure_scope":failure_scope}
+    row={"task_schema":contract.TASK_SCHEMA_VERSION,"task_id":task_id,"role":role,"stage":"B0.6","skill":"synthetic","candidate_sha":"a"*40,"command_ids":command_ids if command_ids is not None else ["b0:pilot:pass"],"depends_on":deps or [],"read_roots":["tools"],"write_roots":[],"protected_paths":["ambiente_databricks"],"resource_class":resource,"exclusivity_key":key,"required":required,"expected_effect":"NONE","failure_scope":failure_scope}
     if not required: row["not_applicable_reason"]="preapproved synthetic optional case"
     return row
 
@@ -474,12 +474,12 @@ class IndependentAuditRegressionTests(unittest.TestCase):
 
     def test_direct_test_file_with_nonpackage_path_normalizes_from_module_file(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root=Path(tmp);tests=root/"ambiente_fonte/.assistant/hub_snippets/tests";tests.mkdir(parents=True)
+            root=Path(tmp);tests=root/"ambiente_databricks/.assistant/hub_snippets/tests";tests.mkdir(parents=True)
             p=tests/"test_core.py";p.write_text("import unittest\nclass X(unittest.TestCase):\n def test_ok(self): pass\n",encoding="utf-8")
             with mock.patch.object(coverage,"ROOT",root):
                 ids,errors,_=coverage._collect_command([sys.executable,p.relative_to(root).as_posix()])
             self.assertEqual([],errors)
-            self.assertEqual(["ambiente_fonte/.assistant/hub_snippets/tests/test_core.py::X.test_ok"],ids)
+            self.assertEqual(["ambiente_databricks/.assistant/hub_snippets/tests/test_core.py::X.test_ok"],ids)
 
     def test_override_schema_is_closed_and_requires_successors(self):
         self.assertTrue(coverage._validate_override("x",{"classification":"OTHER","historical_sha":"x","reason":"","successor_ids":[]}))

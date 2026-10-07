@@ -1,6 +1,6 @@
 """Renderiza .artifacts/simulado/ como espelho da árvore do workspace.
 
-Copia ambiente_fonte/ (fonte canônica) para a árvore exata que o workspace
+Copia ambiente_databricks/ (fonte canônica) para a árvore exata que o workspace
 Databricks espera, de modo que a replicação seja uma cópia mecânica:
 
     .artifacts/simulado/Users/<username>/.assistant_instructions.md
@@ -29,12 +29,12 @@ from project_policy import SAFE_SIMULATED_USERNAME, SIMULATED_ROOT, simulated_ro
 
 DEFAULT_USERNAME = SAFE_SIMULATED_USERNAME
 
-SOURCE = Path("ambiente_fonte")
+SOURCE = Path("ambiente_databricks")
 TARGET_ROOT = SIMULATED_ROOT
 from simulado import MARKER, inventory, parity_errors
 
 # Artefatos de execução local não são produto: rodar um helper dentro de
-# ambiente_fonte/ cria __pycache__, e sem este filtro o lixo era copiado para o
+# ambiente_databricks/ cria __pycache__, e sem este filtro o lixo era copiado para o
 # simulado e publicado no workspace.
 IGNORAR = shutil.ignore_patterns(
     "__pycache__", "*.pyc", "*.pyo", ".pytest_cache", ".ruff_cache", ".DS_Store"
@@ -52,7 +52,7 @@ def main() -> int:
     args = parser.parse_args()
 
     # Preserve lexical ancestors until inventory() has rejected source links.
-    # Resolving here hid a linked ambiente_fonte before the destructive write.
+    # Resolving here hid a linked ambiente_databricks before the destructive write.
     repo_root = Path(__file__).absolute().parents[1]
     source = repo_root / SOURCE
 

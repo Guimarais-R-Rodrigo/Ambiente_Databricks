@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[2])
 parser.add_argument('--capturar', action='store_true')
 args, remaining = parser.parse_known_args()
-sys.path.insert(0, str(args.root / 'ambiente_fonte/.assistant'))
+sys.path.insert(0, str(args.root / 'ambiente_databricks/.assistant'))
 
 import plotly.graph_objects as go
 import plotly.io as pio

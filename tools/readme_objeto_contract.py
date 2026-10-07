@@ -123,10 +123,10 @@ def _git(repo: Path, *args: str, allow_missing: bool = False) -> str | None:
 
 def _ids_at(repo: Path, rev: str) -> set[str]:
     paths = _git(repo, "ls-tree", "-r", "--name-only", rev,
-                 "ambiente_fonte/.assistant") or ""
+                 "ambiente_databricks/.assistant") or ""
     ids = set()
     for name in paths.splitlines():
-        path = Path(name).relative_to("ambiente_fonte/.assistant")
+        path = Path(name).relative_to("ambiente_databricks/.assistant")
         parts = path.parts
         if ((len(parts) == 4 and parts[0] == "hub_snippets" and parts[1] in CATEGORIES)
             or (len(parts) == 3 and parts[0] in {"hub_scripts", "hub_prompts"})):

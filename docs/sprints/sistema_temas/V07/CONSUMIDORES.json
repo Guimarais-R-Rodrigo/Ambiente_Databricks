@@ -41,7 +41,7 @@
   "consumers": [
     {
       "id": "display.dataframe_styled",
-      "path": "ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py",
       "classification": "already_supported_v04",
       "routes": [
         "display_styled_resolvido"
@@ -56,7 +56,7 @@
     },
     {
       "id": "display.correlation_matrix",
-      "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
       "classification": "supported_v07",
       "routes": [
         "plot_correlation_resolvido",
@@ -72,7 +72,7 @@
     },
     {
       "id": "display.distribution_grid",
-      "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
       "classification": "supported_v07",
       "routes": [
         "plot_distributions_resolvido",
@@ -88,7 +88,7 @@
     },
     {
       "id": "ml.curves_plotly",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
       "classification": "supported_v07",
       "routes": [
         "plot_roc_curve_resolvido",
@@ -108,7 +108,7 @@
     },
     {
       "id": "ml.performance_monitor",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
       "classification": "supported_v07",
       "routes": [
         "PerformanceMonitor.plot_timeline_resolvido"
@@ -126,7 +126,7 @@
     },
     {
       "id": "ml.umap_viz",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
       "classification": "supported_v07",
       "routes": [
         "plot_umap_clusters_resolvido"
@@ -142,7 +142,7 @@
     },
     {
       "id": "ml.vintage_analysis",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
       "classification": "supported_v07",
       "routes": [
         "plot_vintage_curves_resolvido",
@@ -159,7 +159,7 @@
     },
     {
       "id": "ml.kaplan_meier",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
       "classification": "exception_deferred",
       "routes": [],
       "tokens": [],
@@ -170,7 +170,7 @@
     },
     {
       "id": "ml.shap_explainer",
-      "path": "ambiente_fonte/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
+      "path": "ambiente_databricks/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
       "classification": "exception_deferred",
       "routes": [],
       "tokens": [],
@@ -182,15 +182,15 @@
   ],
   "excluded_nonruntime": [
     {
-      "path": "ambiente_fonte/.assistant/hub_padroes/notebook/template.py",
+      "path": "ambiente_databricks/.assistant/hub_padroes/notebook/template.py",
       "reason": "template de autoria, não consumidor runtime ativo"
     },
     {
-      "path": "ambiente_fonte/.assistant/hub_padroes/snippet/taxa_resposta_campanha/taxa_resposta_campanha.py",
+      "path": "ambiente_databricks/.assistant/hub_padroes/snippet/taxa_resposta_campanha/taxa_resposta_campanha.py",
       "reason": "exemplo de padrão, não consumidor runtime promovido"
     },
     {
-      "path_prefix": "ambiente_fonte/.assistant/hub_readmes_visual_assets/",
+      "path_prefix": "ambiente_databricks/.assistant/hub_readmes_visual_assets/",
       "reason": "assets/editorial cobertos pela pipeline V06 e fora do fechamento de consumidores runtime V07"
     }
   ]

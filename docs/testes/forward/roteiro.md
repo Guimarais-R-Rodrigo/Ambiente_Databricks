@@ -108,7 +108,7 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 2. **Claude** coleta os arquivos via CLI, preenche
    `resultados/<data>_rodada1.md`, e classifica cada teste em PASS/FAIL.
 3. **Claude** ajusta a `description` de cada skill que colidiu (no
-   `ambiente_fonte/`), valida, re-renderiza o simulado e republica no workspace.
+   `ambiente_databricks/`), valida, re-renderiza o simulado e republica no workspace.
 4. **Você** repete **apenas os testes que falharem** (chats novos) — rodada 2.
 5. Meta: **39/39** PASS → gate fechado → próximo passo é o runbook de replicação.
    Os 36 primeiros já fecharam em 14/08; faltam os três da Skill 13.
@@ -758,5 +758,5 @@ Não afirme que uma menção a outra skill a executou.
 ```
 
 A matriz de qualidade e segurança completa está em
-`ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/casos_aceite.json`.
+`ambiente_databricks/.assistant/skills/hub-ml-concierge/tests/casos_aceite.json`.
 Resultados devem ser registrados separadamente das expectativas.

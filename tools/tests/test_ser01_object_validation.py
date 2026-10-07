@@ -337,7 +337,7 @@ class RepositoryIntegrationTests(unittest.TestCase):
         self.evidence = Path(raw).resolve()
         self.evidence.mkdir(parents=True, exist_ok=True)
         self.assertFalse(self.evidence.is_relative_to(ROOT.resolve()))
-        self.assistant = ROOT / "ambiente_fonte/.assistant"
+        self.assistant = ROOT / "ambiente_databricks/.assistant"
 
     def execute(self, data):
         data["base_sha"] = self.base
@@ -421,7 +421,7 @@ class RepositoryIntegrationTests(unittest.TestCase):
         self.assertTrue(any(c["name"] == "canonical_public_api" and c["status"] == "FAIL" for c in report["checks"]))
         self.assertNotIn("object_validation_receipt", report)
         self.assertEqual(report["original_before"], report["original_after"])
-        overlay = self.evidence / label / "overlay/ambiente_fonte/.assistant" / rel
+        overlay = self.evidence / label / "overlay/ambiente_databricks/.assistant" / rel
         self.assertEqual(data["files"][rel].encode("utf-8"), overlay.read_bytes())
 
     def test_real_aggregator_validation(self):

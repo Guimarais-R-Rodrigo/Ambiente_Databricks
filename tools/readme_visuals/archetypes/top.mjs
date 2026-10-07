@@ -3,12 +3,12 @@ import { C, txt, lines, icon, panel, arrow, line, note } from '../lib.mjs';
 export async function architecture(s) {
   const p=s.draw;
   txt(s,p,'FONTE VERSIONADA',56,66,{size:34,weight:700});
-  p.path('M 66 176 H 336 L 376 217 V 553 H 66 Z').fill(C.panel).stroke({color:C.hub_custom,width:3});
-  p.path('M 336 176 V 217 H 376').fill(C.panel_high).stroke({color:C.hub_custom,width:2});
+  p.path('M 66 176 H 414 L 454 217 V 553 H 66 Z').fill(C.panel).stroke({color:C.hub_custom,width:3});
+  p.path('M 414 176 V 217 H 454').fill(C.panel_high).stroke({color:C.hub_custom,width:2});
   await icon(s,p,'folder-git-2',94,208,58,C.hub_custom);
-  txt(s,p,'ambiente_fonte/',94,321,{size:32,weight:700,maxWidth:274});
+  txt(s,p,'ambiente_databricks/',94,321,{size:32,weight:700,maxWidth:346});
   lines(s,p,['Instruções','Skills','Biblioteca','Guias'],94,385,{size:32,color:C.muted,gap:45});
-  arrow(p,[[376,352],[480,352]],{color:C.hub_custom,width:5});
+  arrow(p,[[454,352],[480,352]],{color:C.hub_custom,width:5});
   txt(s,p,'publicar e conferir',56,127,{size:32,color:C.muted});
   // The workspace contains two planes; it is not a universal execution chain.
   p.path('M 491 105 L 530 77 H 1544 V 664 H 491 Z').fill(C.background_elevated).stroke({color:C.line,width:3});

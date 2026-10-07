@@ -34,14 +34,14 @@ PACKAGE = ROOT / 'docs/sprints/sistema_temas/V01'
 
 
 # API de manutenção preservada, com implementação única no núcleo V02.
-sys.path.insert(0, str(ROOT / 'ambiente_fonte/.assistant'))
+sys.path.insert(0, str(ROOT / 'ambiente_databricks/.assistant'))
 from hub_snippets.visual.tema.tema import (
     ThemeError as ContractError, _fail, _strict_json as strict_json,
     _MAX_BYTES as MAX_BYTES, _MAX_DEPTH as MAX_DEPTH, _ENGINE as CANDIDATE_ENGINE,
     _read_json as read_json, _schema_validator as schema_validator,
     _validate_theme as validate_theme, _safe_file as safe_file,
 )
-SCHEMA_PATH = ROOT / 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json'
+SCHEMA_PATH = ROOT / 'ambiente_databricks/.assistant/hub_padroes/identidade_visual/theme.schema.json'
 
 
 def check_assets(theme: dict, registry: dict, root: Path = ROOT) -> int:
@@ -70,7 +70,7 @@ def check_asset_registry(registry: dict, root: Path = ROOT) -> int:
     nem um hash trocado junto com a imagem. O cadastro V01 deve refletir exatamente
     os dois manifestos existentes. Não aprova nem altera esses manifestos.
     """
-    asset_root = 'ambiente_fonte/.assistant/hub_readmes_visual_assets/'
+    asset_root = 'ambiente_databricks/.assistant/hub_readmes_visual_assets/'
     headers = read_json(safe_file(root, asset_root + 'specs/approved_headers.json'))
     signatures = read_json(safe_file(root, asset_root + 'specs/approved_signatures.json'))
     expected: dict[str, str] = {}
@@ -189,7 +189,9 @@ def dictionary(schema: dict) -> str:
               '**Pontos de integração:** '+ '; '.join(f'`{p}`' for p in meta['consumers']) + '.',
               f"**Efeito previsto:** {meta['effect']}.",
               f"**Origem do default:** `{meta['default_origin']}`.", '']
-    return '\n'.join(lines).rstrip()+'\n'
+    # V01 is a frozen historical projection. Its metadata uses the directory
+    # name of that campaign; operational_dictionary emits the current namespace.
+    return ('\n'.join(lines).rstrip()+'\n').replace('ambiente_databricks/', 'ambiente_fonte/')
 
 
 
@@ -316,7 +318,7 @@ def _operational_editorial_support(key: str) -> str:
 
 def operational_dictionary(schema: dict, *, root: Path = ROOT) -> str:
     """Emite somente a referência de uso; não modifica schema, temas ou snapshots."""
-    mapping = read_json(root / 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json')
+    mapping = read_json(root / 'ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json')
     aibi = {item['hub_token']: item for item in mapping['mappings']}
     notebook = schema['$defs']['notebookTokens']['properties']
     known = _OPERATIONAL_NO_NOTEBOOK_CONSUMER | {
@@ -423,7 +425,7 @@ def check_links(package: Path = PACKAGE, root: Path = ROOT) -> int:
 
 
 def check_package(package: Path = PACKAGE, root: Path = ROOT) -> dict:
-    schema = read_json(root/'ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json')
+    schema = read_json(root/'ambiente_databricks/.assistant/hub_padroes/identidade_visual/theme.schema.json')
     schema_validator(schema)
     policy=read_json(package/'politica_workflow.json');validate_policy(policy)
     registry=read_json(package/'referencias_assets.json')
@@ -461,9 +463,9 @@ def main() -> int:
     args=parser.parse_args()
     try:
         if args.print_dictionary:
-            print(dictionary(read_json(SCHEMA_PATH)),end='')
+            sys.stdout.buffer.write(dictionary(read_json(SCHEMA_PATH)).encode('utf-8'))
         elif args.print_operational_dictionary:
-            print(operational_dictionary(read_json(SCHEMA_PATH)), end='')
+            sys.stdout.buffer.write(operational_dictionary(read_json(SCHEMA_PATH)).encode('utf-8'))
         else:
             print(json.dumps(check_package(),ensure_ascii=False,indent=2))
         return 0

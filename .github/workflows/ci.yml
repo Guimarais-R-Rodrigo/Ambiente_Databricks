@@ -71,7 +71,7 @@ jobs:
 
           tools/requirements-temas-dev.txt
 
-          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
           '
     - uses: actions/setup-node@v4
@@ -116,7 +116,7 @@ jobs:
 
           tools/requirements-temas-dev.txt
 
-          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
           '
     - uses: actions/setup-node@v4
@@ -131,7 +131,7 @@ jobs:
 
         '
     - name: Dependências exclusivas App
-      run: python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+      run: python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
     - name: Gerar e conferir saída ignorada
       run: 'python -B tools/validate_assistant.py --conferir-readme
 
@@ -163,7 +163,7 @@ jobs:
 
           tools/requirements-temas-dev.txt
 
-          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
           '
     - uses: actions/setup-node@v4
@@ -208,7 +208,7 @@ jobs:
 
           tools/requirements-temas-dev.txt
 
-          ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+          ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
           '
     - uses: actions/setup-node@v4
@@ -223,7 +223,7 @@ jobs:
 
         '
     - name: Dependências exclusivas App
-      run: python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+      run: python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
     - name: Gerar e conferir saída ignorada
       run: 'python -B tools/validate_assistant.py --conferir-readme
 
@@ -561,7 +561,7 @@ jobs:
     - name: Proibir mudança runtime na V08
       if: (github.event_name == 'pull_request' && startsWith(github.head_ref, 'codex/temas-v08')) || (github.event_name == 'push' && startsWith(github.ref_name, 'codex/temas-v08'))
       shell: bash
-      run: "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_fonte/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n"
+      run: "changed=\"$(git diff --name-only \"$V08_BASE_SHA\"..HEAD)\"\nforbidden=\"$(printf '%s\\n' \"$changed\" | grep -E '^ambiente_databricks/\\.assistant/(hub_snippets|hub_scripts)/.*\\.py$' || true)\"\nif [ -n \"$forbidden\" ]; then\n  echo 'V08_RUNTIME_EDIT_FORBIDDEN'\n  printf '%s\\n' \"$forbidden\"\n  exit 1\nfi\necho 'V08_RUNTIME_EDIT=0'\n"
     - name: Escopo
       run: echo 'V08 integra skills, padrões e Manual ao Sistema de Temas; não altera runtime, não publica Databricks e não homologa browser/acessibilidade.'
     name: transversal-v08
@@ -657,7 +657,7 @@ jobs:
 
         python -m pip install ''ipywidgets>=8,<9''
 
-        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+        python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
         '
     - name: Dependências do compositor V06
@@ -677,7 +677,7 @@ jobs:
     - name: V10 — App, identidade, persistência e bundle
       run: python -B tools/tests/test_temas_v10.py -v
     - name: Sintaxe do shell Streamlit sem bytecode no produto
-      run: "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n"
+      run: "python - <<'PY'\nfrom pathlib import Path\npaths = [\n    Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),\n    Path('ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),\n]\nfor path in paths:\n    compile(path.read_text(encoding='utf-8'), str(path), 'exec')\nprint('OK: sintaxe V10 compilada em memória')\nPY\n"
     - name: Compatibilidade visual V00
       run: python -B tools/tests/test_visual_legado_v00.py
     - name: Montar bundle derivado do App
@@ -720,7 +720,7 @@ jobs:
 
         python -m pip install ''ipywidgets>=8,<9''
 
-        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+        python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
         '
     - name: Dependências do compositor V06
@@ -744,7 +744,7 @@ jobs:
 
         from pathlib import Path
 
-        path = Path(''ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py'')
+        path = Path(''ambiente_databricks/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py'')
 
         compile(path.read_text(encoding=''utf-8''), str(path), ''exec'')
 
@@ -791,7 +791,7 @@ jobs:
 
         python -m pip install ''ipywidgets>=8,<9''
 
-        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+        python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
         '
     - name: Dependências do compositor V06
@@ -860,7 +860,7 @@ jobs:
 
         python -m pip install ''ipywidgets>=8,<9''
 
-        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+        python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
         '
     - name: Dependências do compositor visual
@@ -1020,7 +1020,7 @@ jobs:
 
         python -m pip install ''ipywidgets>=8,<9''
 
-        python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+        python -m pip install -r ambiente_databricks/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
 
         '
     - name: Dependências do compositor visual

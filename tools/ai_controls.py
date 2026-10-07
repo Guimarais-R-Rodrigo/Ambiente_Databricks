@@ -537,7 +537,7 @@ def check(root: Path, *, release: bool = False, migration_freeze: bool = False, 
     errors = parity_errors(root)
     if errors:
         raise ContractError('PRODUCT_PARITY: ' + '; '.join(errors))
-    pairs = [name for name, item in payload_inventory(root / 'ambiente_fonte', source=True).items()
+    pairs = [name for name, item in payload_inventory(root / 'ambiente_databricks', source=True).items()
              if item['object_type'] != 'DIRECTORY']
     baseline = read_json(safe(root, BASELINE))
     if not baseline.get('product_pairs') or len(baseline['product_pairs']) != baseline['product_pair_count']:

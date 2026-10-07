@@ -18,7 +18,7 @@ from unittest.mock import patch
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCT = ROOT / 'ambiente_fonte/.assistant'
+PRODUCT = ROOT / 'ambiente_databricks/.assistant'
 sys.path.insert(0, str(ROOT / 'tools'))
 import temas_v01_contract as contract
 from markdown_contract import markdown_links
@@ -148,7 +148,7 @@ class OperationalTokenTests(unittest.TestCase):
         self.assertIn('quantidade ímpar', self.text)
         self.assertIn('SHAP/Matplotlib e Kaplan–Meier', self.text)
         self.assertIn('não autenticação nem concessão de permissão', self.text)
-        self.assertNotRegex(self.text, r'\bV\d{2}\b|PLANEJADO_V|tools/|docs/sprints/|ambiente_fonte/|\*\*Entrega:')
+        self.assertNotRegex(self.text, r'\bV\d{2}\b|PLANEJADO_V|tools/|docs/sprints/|ambiente_databricks/|\*\*Entrega:')
         self.assertNotIn('Nenhum controle abaixo está instalado', self.text)
 
     def test_operational_projection_is_reproducible_and_nonmutating(self):

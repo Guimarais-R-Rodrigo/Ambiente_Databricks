@@ -12,7 +12,7 @@
   "question": "Como interpretar o retorno de data_quality_check?",
   "alt": "Três estados do data_quality_check seguidos de um gate separado de política consumidora.",
   "caption": "PASS indica apenas que as verificações configuradas não encontraram violações; WARN e FAIL também exigem interpretação da política consumidora.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_scripts/README.md",
   "anchor": "leitura-visual-do-veredito",
   "approved_signature": false,
   "texts": [

@@ -9,7 +9,7 @@ import sys
 
 REPO_ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "tools"))
-ASSISTANT_ROOT=REPO_ROOT/"ambiente_fonte"/".assistant"
+ASSISTANT_ROOT=REPO_ROOT/"ambiente_databricks"/".assistant"
 SKILLS_ROOT=ASSISTANT_ROOT/"skills"
 DEFAULT_POLICY=ASSISTANT_ROOT/"hub_padroes"/"skill_enforcement"/"policy.json"
 LEVELS=("L0","L1","L2","L3","L4")

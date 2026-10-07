@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SKILL = ROOT / "ambiente_fonte/.assistant/skills/hub-ml-baseline-ml"
+SKILL = ROOT / "ambiente_databricks/.assistant/skills/hub-ml-baseline-ml"
 
 
 def load(path, name):

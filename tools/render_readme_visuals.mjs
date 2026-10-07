@@ -16,13 +16,13 @@ const sharp = require("sharp");
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
-const currentManifest = await fs.readFile(path.join(ROOT, "ambiente_fonte/.assistant/hub_readmes_visual_assets/manifest.yaml"), "utf8");
+const currentManifest = await fs.readFile(path.join(ROOT, "ambiente_databricks/.assistant/hub_readmes_visual_assets/manifest.yaml"), "utf8");
 if (/^version:\s*2\s*$/m.test(currentManifest)) {
   throw new Error("Renderer v1 retired. Use node tools/readme_visuals/production.mjs --family all.");
 }
 const BASE = path.join(
   ROOT,
-  "ambiente_fonte",
+  "ambiente_databricks",
   ".assistant",
   "hub_readmes_visual_assets",
   "readmes",

@@ -40,7 +40,7 @@ O renderer reaproveita `tools/readme_visuals/lib.mjs`, os arquétipos existentes
 - `parametric_equivalent`: renderização por tokens é byte a byte equivalente ao PNG ativo.
 - `variant_review_required`: renderização é válida, mas difere do ativo e precisa de nova revisão antes de qualquer promoção.
 
-O registro canônico dessas regras é `ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/theme_generation.yaml`.
+O registro canônico dessas regras é `ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/theme_generation.yaml`.
 
 ## Reprodutibilidade
 

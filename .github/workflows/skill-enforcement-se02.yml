@@ -5,12 +5,12 @@ on:
     types: [opened, reopened, synchronize, ready_for_review]
     paths:
       - 'tools/**'
-      - 'ambiente_fonte/**'
+      - 'ambiente_databricks/**'
       - '.github/workflows/**'
       - 'docs/ai/**'
-      - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
-      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - 'ambiente_fonte/**'
+      - "ambiente_databricks/.assistant/hub_scripts/skill_execution/**"
+      - "ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/**"
+      - 'ambiente_databricks/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "tools/tests/test_skill_enforcement_se02.py"
@@ -22,12 +22,12 @@ on:
     branches: [main]
     paths:
       - 'tools/**'
-      - 'ambiente_fonte/**'
+      - 'ambiente_databricks/**'
       - '.github/workflows/**'
       - 'docs/ai/**'
-      - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
-      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
-      - 'ambiente_fonte/**'
+      - "ambiente_databricks/.assistant/hub_scripts/skill_execution/**"
+      - "ambiente_databricks/.assistant/skills/hub-ml-eda-profissional/**"
+      - 'ambiente_databricks/**'
       - "tools/skill_enforcement/**"
       - "tools/tests/test_skill_enforcement_se01.py"
       - "tools/tests/test_skill_enforcement_se02.py"

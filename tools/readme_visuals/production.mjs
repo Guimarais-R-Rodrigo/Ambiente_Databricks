@@ -73,7 +73,7 @@ if(metadata.length===contracts.length){
   if(process.argv.includes('--retire-legacy')){
     const baseline=JSON.parse(await fs.readFile(path.join(OUT,'baseline/manifest.json'),'utf8'));
     const currentPaths=new Set(metadata.flatMap(a=>[a.source,a.published]));
-    const productRoot=path.join(ROOT,'ambiente_fonte');
+    const productRoot=path.join(ROOT,'ambiente_databricks');
     const consumers=[path.join(ROOT,'README.md'),...(await fs.readdir(productRoot,{recursive:true})).filter(p=>p.endsWith('.md')).map(p=>path.join(productRoot,p))];
     const consumerTexts=await Promise.all(consumers.map(async file=>({file,body:await fs.readFile(file,'utf8')})));
     const retired=[];

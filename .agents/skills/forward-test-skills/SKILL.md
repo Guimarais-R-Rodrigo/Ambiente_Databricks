@@ -17,7 +17,7 @@ clientes de código. Essas avaliações precisam de campanhas próprias.
 
 Leia o [índice vigente](../../../docs/testes/forward/README.md), o
 [roteiro histórico e suas ressalvas](../../../docs/testes/forward/roteiro.md)
-e o [catálogo atual do produto](../../../ambiente_fonte/.assistant/skills/README.md).
+e o [catálogo atual do produto](../../../ambiente_databricks/.assistant/skills/README.md).
 Precisa de SHA escolhido, descrições e inventário desse SHA, publicação
 verificada no destino autorizado e chat Genie disponível. Sem comprovar qual
 versão foi publicada, não atribua a ela o resultado. Cota/interface indisponível
@@ -91,7 +91,7 @@ a nova cópia ao manifesto da campanha. Preserve a matriz histórica e inclua
 SHA, IDs, prompt/corpus, sessão, esperado, observado, evidência e veredito.
 
 Falha P/N: primeiro confira instrumento, corpus e vizinhas. Se uma correção de
-`description` for necessária e autorizada, edite em `ambiente_fonte/`, valide,
+`description` for necessária e autorizada, edite em `ambiente_databricks/`, valide,
 renderize com preflight, publique com autorização e repita os casos afetados e
 vizinhos em chats novos. Não altere produto automaticamente para fechar este
 teste. Falha de menção: confira path, frontmatter, duplicatas e versão publicada.

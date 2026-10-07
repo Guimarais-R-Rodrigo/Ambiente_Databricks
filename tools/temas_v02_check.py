@@ -8,7 +8,7 @@ import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / 'ambiente_fonte/.assistant'))
+sys.path.insert(0, str(ROOT / 'ambiente_databricks/.assistant'))
 from hub_snippets.visual.tema import tema
 from api_publica import api_publica, conteudo_init
 import temas_v01_contract as contract
@@ -16,7 +16,7 @@ import temas_v01_contract as contract
 
 def check_layout(root: Path = ROOT) -> dict:
     root = Path(root)
-    product = root / 'ambiente_fonte/.assistant'
+    product = root / 'ambiente_databricks/.assistant'
     pattern = product / 'hub_padroes/identidade_visual'
     obj = product / 'hub_snippets/visual/tema'
     required = [pattern/'theme.schema.json', pattern/'assets.json', pattern/'TOKENS.md',
@@ -42,16 +42,20 @@ def check_layout(root: Path = ROOT) -> dict:
     registry=tema._read_json(root/'docs/sprints/sistema_temas/V01/referencias_assets.json')
     for entries in registry['sets'].values():
         for entry in entries:
-            entry['path']=entry['path'].removeprefix('ambiente_fonte/.assistant/')
+            entry['path']=entry['path'].removeprefix('ambiente_databricks/.assistant/')
     if tema._read_json(pattern/'assets.json') != registry:
         raise ValueError('V02_ASSETS: manifesto não corresponde à fonte declarada.')
     if (obj/'__init__.py').read_text(encoding='utf-8') != conteudo_init('tema',api_publica(obj/'tema.py')):
         raise ValueError('V02_API: fachada não é exaustiva.')
     if contract.validate_theme is not tema._validate_theme:
         raise ValueError('V02_VALIDATOR: validação V01 não usa o núcleo comum.')
-    manual=(product/'MANUAL_TECNICO.md').read_bytes()
-    if manual != (root/'MANUAL_TECNICO.md').read_bytes():
-        raise ValueError('V02_MANUAL: cópia raiz divergente.')
+    manual=(product/'MANUAL_TECNICO_V2.md').read_bytes()
+    manifest=json.loads((product/'manuais_v2/MANIFESTO.json').read_text(encoding='utf-8'))
+    record=next(item for item in manifest['files'] if item['path']=='MANUAL_TECNICO_V2.md')
+    if hashlib.sha256(manual).hexdigest()!=record['sha256'] or len(manual)!=record['bytes']:
+        raise ValueError('V02_MANUAL: livro diverge do manifesto editorial.')
+    if (root/'MANUAL_TECNICO.md').exists() or (product/'MANUAL_TECNICO.md').exists():
+        raise ValueError('V02_MANUAL: edição antiga ainda ativa.')
     if b'hub_snippets.visual.tema' not in manual:
         raise ValueError('V02_MANUAL: objeto não consta no catálogo canônico.')
     import ast

@@ -41,7 +41,7 @@ class CoreExecutionTests(unittest.TestCase):
         cls.addClassCleanup(cls.temp.cleanup)
         cls.addClassCleanup(restore_fixture_imports)
         cls.root = Path(cls.temp.name)
-        for relative in ("tools/tests/runtime", "ambiente_fonte/.assistant"):
+        for relative in ("tools/tests/runtime", "ambiente_databricks/.assistant"):
             shutil.copytree(ROOT / relative, cls.root / relative,
                             ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copy2(TOOLS / "run_core_tests.py", cls.root / "tools/run_core_tests.py")

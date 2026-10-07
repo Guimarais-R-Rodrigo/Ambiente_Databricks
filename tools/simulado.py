@@ -11,7 +11,7 @@ PUBLISHABLE = (".assistant_instructions.md", ".assistant")
 IGNORE_NAMES = {"__pycache__", ".pytest_cache", ".ruff_cache", ".DS_Store"}
 MARKER = (
     "# GERADO POR tools/render_simulado.py — NÃO EDITAR À MÃO\n\n"
-    "Este diretório é derivado de `ambiente_fonte/`. Qualquer edição manual\n"
+    "Este diretório é derivado de `ambiente_databricks/`. Qualquer edição manual\n"
     "será perdida no próximo render. Fonte de verdade: o repositório git\n"
     "(regra `docs/ai/rules/fontes-e-derivados.md`).\n"
 )
@@ -78,7 +78,7 @@ def parity_errors(repo: Path, output_root: Path | str | None = None,
     try:
         target = simulated_root(repo, output_root)
         user = validate_username_component(username)
-        expected = inventory(repo / "ambiente_fonte", source=True)
+        expected = inventory(repo / "ambiente_databricks", source=True)
         for path in target.rglob("*"):
             if path.is_symlink():
                 raise ValueError(f"link simbólico recusado: {path.relative_to(target)}")

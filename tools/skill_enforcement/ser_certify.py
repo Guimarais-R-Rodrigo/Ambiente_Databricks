@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT_ROOT = ROOT / "ambiente_fonte" / ".assistant"
+ASSISTANT_ROOT = ROOT / "ambiente_databricks" / ".assistant"
 POLICY = ASSISTANT_ROOT / "hub_padroes/skill_enforcement/policy.json"
 SKILL = "hub-ml-criar-objeto"
 SURFACE = "object_validation"

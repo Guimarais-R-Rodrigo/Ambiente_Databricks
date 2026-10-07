@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 2026-10-07 — Faxina para manutenção no trabalho (Codex)
+
+Fonte renomeada para `ambiente_databricks/`, com código, testes, CI e instruções migrados; protótipo Concierge duplicado retirado com recuperação Git verificável; Manual Técnico V2 adotado como edição única vigente (ADR-0028/0029). Workflows e ferramentas catalogados, perfil Copilot VS Code documentado e referências históricas preservadas com prova específica. [Execução e validação](docs/manutencao/execucao-faxina-2026-10-07.md).
 Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem aos owners abaixo; resultados antigos continuam válidos apenas para o SHA, ambiente e escopo registrados.
 
 - Direção e decisões: [índice de ADRs](docs/decisions/README.md).
@@ -9,8 +13,10 @@ Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem
 
 ## 2026-10-07
 
+- (Codex) Documenta os 20 workflows e prepara diagnóstico de simplificação para Copilot no VS Code e Databricks, com triagem de docs/tools e plano por sprints. Renomeações, remoções e consolidação dos manuais permanecem propostas. [Análise e limites](docs/manutencao/analise-faxina-2026-10-07.md).
+
 - (Codex) Acrescenta o Manual Técnico V2 e o Manual do Usuário completos, com partes de consulta e mapas técnicos sanitizados; base examinada `983c9936f139402a0130f290653ae713d65a3ac7`.
-  Preserva `MANUAL_TECNICO.md`; a entrega documental não comprova runtime, publicação, CI remoto ou homologação. [Edição e limites](ambiente_fonte/.assistant/manuais_v2/MANTER_EDICAO.md).
+  Preserva `MANUAL_TECNICO.md`; a entrega documental não comprova runtime, publicação, CI remoto ou homologação. [Edição e limites](ambiente_databricks/.assistant/manuais_v2/MANTER_EDICAO.md).
 
 - (Codex) Correção integrada de contenção local, guardas de CI/instruções IA e execução integral core; rotas documentais e certificadores históricos explicitados, com metadados reduzidos opt-in no contexto de tarefa. Preserva runtime, evidência congelada e policy; publicação e homologação exigem provas próprias. [Decisão e limites](docs/decisions/ADR-0027-correcao-controles-auditoria-integrada.md).
 

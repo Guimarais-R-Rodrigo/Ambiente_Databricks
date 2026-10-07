@@ -11,7 +11,7 @@ from unittest.mock import patch
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
-ASSISTANT=ROOT/"ambiente_fonte"/".assistant"
+ASSISTANT=ROOT/"ambiente_databricks"/".assistant"
 POLICY=ASSISTANT/"hub_padroes"/"skill_enforcement"/"policy.json"
 
 def _is_junction(path):

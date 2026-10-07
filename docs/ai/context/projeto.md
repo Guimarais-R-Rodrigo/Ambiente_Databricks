@@ -15,7 +15,7 @@ arquitetura e contribuição; [ambientes](ambientes.md) separa o que cada prova 
 ## Convencoes
 
 As convenções técnicas do produto estão em
-[ambiente_fonte/.assistant_instructions.md](../../../ambiente_fonte/.assistant_instructions.md):
+[ambiente_databricks/.assistant_instructions.md](../../../ambiente_databricks/.assistant_instructions.md):
 prosa PT-BR, PySpark/Spark SQL, Plotly, MLflow, serverless quando compatível,
 prevenção de leakage obrigatória e números brasileiros na narrativa. Consulte
 essa fonte ao editar o produto; uma convenção não autoriza efeito, instalação ou
@@ -59,7 +59,7 @@ seguem a versão canônica do produto.
 | READMEs de objeto | [Índice da frente](../../sprints/readmes_objetos/README.md) | `tools/validate_assistant.py` e `tools/readme_objeto_contract.py` |
 | Temas | [Índice da frente](../../sprints/sistema_temas/README.md) | contratos, gates e evidência da revisão atual |
 | Micromodelos | [Índice](../../sprints/micromodelos/README.md), [plano de laboratório](../../sprints/micromodelos/PLANO_EXECUCAO_LAB.md) | SHA/campanha e limites da prova |
-| Capacidade executável | [policy.json](../../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) e [SER](../../sprints/skill_enforcement_rollout/README.md) | `current_level` é presente; `target_level` é roadmap |
+| Capacidade executável | [policy.json](../../../ambiente_databricks/.assistant/hub_padroes/skill_enforcement/policy.json) e [SER](../../sprints/skill_enforcement_rollout/README.md) | `current_level` é presente; `target_level` é roadmap |
 | Inventário gerido | [project_policy.py](../../../tools/project_policy.py) | nomes atuais e saída efetiva do validador |
 
 Não carregar sprints ou histórico inteiro em toda sessão. Consulte o owner

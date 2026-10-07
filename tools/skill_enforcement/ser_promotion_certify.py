@@ -22,7 +22,7 @@ from typing import Any, Mapping
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSISTANT = ROOT / "ambiente_fonte" / ".assistant"
+ASSISTANT = ROOT / "ambiente_databricks" / ".assistant"
 POLICY = ASSISTANT / "hub_padroes/skill_enforcement/policy.json"
 SKILL = "hub-ml-criar-objeto"
 SURFACE = "object_validation"

@@ -16,14 +16,14 @@ import validate_assistant
 import publicar_free
 import ci_local
 
-HUB = ROOT / 'ambiente_fonte/.assistant'
+HUB = ROOT / 'ambiente_databricks/.assistant'
 SKILL = HUB / 'skills/hub-ml-concierge'
 
 
 class ConciergeIntegrationTests(unittest.TestCase):
     def test_policy_and_discovery_folders_agree(self) -> None:
         problems: list[str] = []
-        n = validate_assistant.check_skill_frontmatter(ROOT / 'ambiente_fonte', problems)
+        n = validate_assistant.check_skill_frontmatter(ROOT / 'ambiente_databricks', problems)
         self.assertIn('hub-ml-concierge', EXPECTED_SKILL_NAMES)
         self.assertEqual(problems, [])
         self.assertEqual(n, len(EXPECTED_SKILL_NAMES))
@@ -39,14 +39,15 @@ class ConciergeIntegrationTests(unittest.TestCase):
         # Presença de texto delimita o contrato; não prova seleção pelo modelo.
 
     def test_personal_instructions_have_optional_route(self) -> None:
-        text = (ROOT / 'ambiente_fonte/.assistant_instructions.md').read_text(encoding='utf-8')
+        text = (ROOT / 'ambiente_databricks/.assistant_instructions.md').read_text(encoding='utf-8')
         self.assertIn('| Descobrir o que o Hub oferece, por onde começar ou como combinar recursos | `hub-ml-concierge` |', text)
         self.assertIn('Concierge é opcional', text)
         self.assertLessEqual(len(text), 20000)
 
     def test_manual_inventory_and_reading_copy(self) -> None:
-        text = (HUB / 'MANUAL_TECNICO.md').read_text(encoding='utf-8')
-        self.assertEqual((HUB / 'MANUAL_TECNICO.md').read_bytes(), (ROOT / 'MANUAL_TECNICO.md').read_bytes())
+        text = (HUB / 'MANUAL_TECNICO_V2.md').read_text(encoding='utf-8')
+        self.assertFalse((HUB / 'MANUAL_TECNICO.md').exists())
+        self.assertFalse((ROOT / 'MANUAL_TECNICO.md').exists())
         self.assertEqual(text.count('| `hub-ml-concierge` |'), 1)
         self.assertIn('### 28.5. Concierge:', text)
         # Availability and observed evidence replace a stale release-status snapshot.

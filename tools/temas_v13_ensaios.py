@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-PRODUCT = ROOT / "ambiente_fonte" / ".assistant"
+PRODUCT = ROOT / "ambiente_databricks" / ".assistant"
 AIBI = PRODUCT / "hub_padroes" / "identidade_visual" / "aibi"
 for _path in (ROOT, PRODUCT, AIBI):
     if str(_path) not in sys.path:
@@ -61,7 +61,7 @@ REAL_ENVIRONMENT_CASES = (
     ("V12-AIBI-02", "workspace_theme"),
 )
 ARTIFACT_ROOT = ROOT / ".artifacts"
-_THEME_ROOT = "ambiente_fonte/.assistant"
+_THEME_ROOT = "ambiente_databricks/.assistant"
 _THEME_REL = "hub_padroes/identidade_visual/exemplos/legado_notebook.json"
 _THEME_PATH = ROOT / _THEME_ROOT / _THEME_REL
 

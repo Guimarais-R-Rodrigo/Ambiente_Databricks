@@ -3,7 +3,7 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "ambiente_fonte/.assistant"
+SOURCE = ROOT / "ambiente_databricks/.assistant"
 MIRROR = ROOT / ".artifacts/simulado/Users/usuario-free/.assistant"
 
 RELATIVE_PATHS = [

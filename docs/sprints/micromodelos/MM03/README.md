@@ -1,6 +1,6 @@
 # MM03 — descoberta metadata-only
 
-> **Nota administrativa — 06/10/2026.** MM03 integrada pela PR #110 em `3214a131`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_fonte/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
+> **Nota administrativa — 06/10/2026.** MM03 integrada pela PR #110 em `3214a131`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_databricks/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
 
 ## Registro histórico preservado
 

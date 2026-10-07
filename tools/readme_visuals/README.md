@@ -106,9 +106,9 @@ os comandos da seção anterior.
 
 ## Entradas e saídas
 
-- Conteúdo e papéis: `ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/` e `visual_system/`.
+- Conteúdo e papéis: `ambiente_databricks/.assistant/hub_readmes_visual_assets/specs/` e `visual_system/`.
 - Layout: `lib.mjs` e `archetypes/signatures.mjs`.
-- Pacote vigente: [contratos e transcrição](../../ambiente_fonte/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md).
+- Pacote vigente: [contratos e transcrição](../../ambiente_databricks/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md).
 
 O diretório de saída é fixo e o baseline vem de um commit explícito. O renderer recusa um baseline local adulterado. Os READMEs ativos não são escritos por estas ferramentas.
 

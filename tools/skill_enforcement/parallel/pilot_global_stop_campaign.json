@@ -36,7 +36,7 @@
       ],
       "write_roots": [],
       "protected_paths": [
-        "ambiente_fonte",
+        "ambiente_databricks",
         "tools/skill_enforcement/parallel"
       ],
       "resource_class": "light",
@@ -63,7 +63,7 @@
       ],
       "write_roots": [],
       "protected_paths": [
-        "ambiente_fonte",
+        "ambiente_databricks",
         "tools/skill_enforcement/parallel"
       ],
       "resource_class": "light",
@@ -90,7 +90,7 @@
       ],
       "write_roots": [],
       "protected_paths": [
-        "ambiente_fonte",
+        "ambiente_databricks",
         "tools/skill_enforcement/parallel"
       ],
       "resource_class": "light",
@@ -117,7 +117,7 @@
       ],
       "write_roots": [],
       "protected_paths": [
-        "ambiente_fonte",
+        "ambiente_databricks",
         "tools/skill_enforcement/parallel"
       ],
       "resource_class": "light",
@@ -144,7 +144,7 @@
       ],
       "write_roots": [],
       "protected_paths": [
-        "ambiente_fonte",
+        "ambiente_databricks",
         "tools/skill_enforcement/parallel"
       ],
       "resource_class": "external_effect",

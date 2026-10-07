@@ -40,7 +40,7 @@ SUPPORTED_CONDITIONS = {
 }
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
+SOURCE_ASSISTANT = REPO_ROOT / "ambiente_databricks" / ".assistant"
 SKILLS_ROOT = SOURCE_ASSISTANT / "skills"
 
 if str(SOURCE_ASSISTANT) not in sys.path:

@@ -139,7 +139,7 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(len(self.theme['tokens']['palette.curves_legacy']),6)
         self.assertEqual(len(self.theme['tokens']['palette.categorical']),10)
     def test_source_constants_default_values(self):
-        p=ROOT/'ambiente_fonte/.assistant/hub_snippets/constants/colors/colors.py'
+        p=ROOT/'ambiente_databricks/.assistant/hub_snippets/constants/colors/colors.py'
         spec=importlib.util.spec_from_file_location('v01_colors_fixture',p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         for token,name in {'brand.primary':'AZUL_CAIXA','text.secondary':'TEXTO_SECUNDARIO','palette.categorical':'PALETA_CATEGORICA','palette.sequential':'PALETA_SEQUENCIAL','palette.diverging':'PALETA_DIVERGENTE'}.items():
             self.assertEqual(self.theme['tokens'][token],getattr(m,name))

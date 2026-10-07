@@ -8,7 +8,7 @@ Confirme HEAD, worktree, arquivos permitidos e efeitos autorizados. Leia `AGENTS
 
 ## 2. Editar e validar a fonte
 
-Edite o produto em `ambiente_fonte/`; nunca repare o espelho à mão. Manual é autorado na fonte e sua cópia de leitura na raiz precisa continuar idêntica. Rode `python tools/validate_assistant.py`, checks focais e `python tools/ci_local.py --verbose` quando aplicável. Diferencie PASS, FAIL, bloqueado e não executado. Não use saída sob teste como seu próprio oráculo.
+Edite o produto em `ambiente_databricks/`; nunca repare o espelho à mão. Manual é autorado na fonte e sua cópia de leitura na raiz precisa continuar idêntica. Rode `python tools/validate_assistant.py`, checks focais e `python tools/ci_local.py --verbose` quando aplicável. Diferencie PASS, FAIL, bloqueado e não executado. Não use saída sob teste como seu próprio oráculo.
 
 ## 3. Gerar em árvore isolada
 
@@ -41,5 +41,5 @@ A [replicação no trabalho](replicacao-trabalho.md), seu [checklist](checklist-
 ## Fontes
 
 - [Entrada e ciclo de contribuição](../../README.md#ciclo-de-contribuição)
-- [Fonte do produto](../../ambiente_fonte/README.md)
+- [Fonte do produto](../../ambiente_databricks/README.md)
 - [Publicação e conferência](../decisions/ADR-0005-publicacao-propria-no-free.md) / [critério de conteúdo](../decisions/ADR-0008-criterios-de-conferencia-da-publicacao.md)

@@ -12,7 +12,7 @@
   "question": "O que sustenta um reuso confiável?",
   "alt": "Ponte de reuso apoiada por interface previsível, execução consciente e evidência reproduzível.",
   "caption": "Dependências, efeitos, parâmetros, limites e resultados precisam permanecer observáveis.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_snippets/README.md",
   "anchor": "o-contrato-de-reuso",
   "approved_signature": false,
   "texts": [

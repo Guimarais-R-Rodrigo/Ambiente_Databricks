@@ -12,7 +12,7 @@
   "question": "Qual família de briefing corresponde ao resultado esperado?",
   "alt": "Roteador editorial que relaciona quatro tipos de resultado às famílias de briefing adequadas.",
   "caption": "O catálogo textual continua canônico; a figura ensina como escolher a família.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_prompts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_prompts/README.md",
   "anchor": "familias-do-ciclo-de-dados",
   "approved_signature": false,
   "texts": [

@@ -12,7 +12,7 @@
   "question": "Como o briefing evolui até uma entrega verificável?",
   "alt": "Storyboard em cinco estágios desde a escolha do briefing até a validação da entrega.",
   "caption": "A execução ocorre dentro do escopo e da política definidos no estágio de revisão.",
-  "owner_readme": "ambiente_fonte/.assistant/hub_prompts/README.md",
+  "owner_readme": "ambiente_databricks/.assistant/hub_prompts/README.md",
   "anchor": "passo-a-passo-operacional-do-briefing-ao-resultado",
   "approved_signature": false,
   "texts": [

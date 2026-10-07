@@ -1,6 +1,6 @@
 # Sistema de Temas — V01: contrato e experiência proposta
 
-> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. O [Visual Lab](../../../../ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/README.md) é a rota de uso atual, distinta da especificação histórica.
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. O [Visual Lab](../../../../ambiente_databricks/.assistant/hub_snippets/visual/theme_lab/README.md) é a rota de uso atual, distinta da especificação histórica.
 
 ## Registro histórico preservado
 

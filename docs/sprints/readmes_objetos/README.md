@@ -18,8 +18,8 @@ como entregas independentes a mesclar novamente.
 
 | Objetivo | Documento |
 |---|---|
-| Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
-| Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
+| Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_databricks/.assistant/hub_padroes/readme/template_objeto.md) |
+| Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_databricks/.assistant/hub_padroes/readme/checklist_objeto.md) |
 | Ver a matriz final da auditoria | [Matriz R13](MATRIZ_AUDITORIA_R13.md) |
 | Conhecer achados e limitações finais | [Achados R13](ACHADOS_R13.md) |
 | Ver o fechamento técnico | [Relatório R13](RELATORIO_R13.md) |

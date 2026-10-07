@@ -8,7 +8,7 @@ import sys
 import unittest
 from pathlib import Path
 
-DEFAULT = Path(__file__).resolve().parents[2] / "ambiente_fonte/.assistant"
+DEFAULT = Path(__file__).resolve().parents[2] / "ambiente_databricks/.assistant"
 ASSISTANT = Path(os.environ.get("SER12_ASSISTANT_ROOT", str(DEFAULT))).resolve()
 if str(ASSISTANT) not in sys.path:
     sys.path.insert(0, str(ASSISTANT))
