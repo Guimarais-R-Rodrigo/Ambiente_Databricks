@@ -9,6 +9,9 @@ Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem
 
 ## 2026-10-07
 
+- (Codex) Acrescenta o Manual Técnico V2 e o Manual do Usuário completos, com partes de consulta e mapas técnicos sanitizados; base examinada `983c9936f139402a0130f290653ae713d65a3ac7`.
+  Preserva `MANUAL_TECNICO.md`; a entrega documental não comprova runtime, publicação, CI remoto ou homologação. [Edição e limites](ambiente_fonte/.assistant/manuais_v2/MANTER_EDICAO.md).
+
 - (Codex) Correção integrada de contenção local, guardas de CI/instruções IA e execução integral core; rotas documentais e certificadores históricos explicitados, com metadados reduzidos opt-in no contexto de tarefa. Preserva runtime, evidência congelada e policy; publicação e homologação exigem provas próprias. [Decisão e limites](docs/decisions/ADR-0027-correcao-controles-auditoria-integrada.md).
 
 ## 2026-10-06
