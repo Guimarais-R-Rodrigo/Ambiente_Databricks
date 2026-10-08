@@ -49,7 +49,7 @@ REPO_IGNORE = {
 }
 
 # Não cobre o nome da instituição usado como constante de domínio na paleta
-# visual (`AZUL_CAIXA` e afins), exceção registrada no PLANO_HUB.md §2.2. O
+# visual (`AZUL_CAIXA` e afins), exceção em CHANGELOG.md#paleta-institucional. O
 # ADR-0009, por outro lado, exige identidade pessoal neutra no conteúdo ativo e
 # derivado; e-mail/username real não é mais exceção implícita.
 #
@@ -185,8 +185,9 @@ def check_saida_colada(root: Path, problems: list[str]) -> tuple[int, int]:
     justamente a linha que contradizia a prosa em volta.
 
     **Falha, não aviso**, desde 2026-08-18. A dívida das Sprints 1, 4 e 6 — os
-    11 notebooks listados em `PLANO_HUB.md` §12.1 — foi fechada executando os
-    onze como job no Free e colando a transcrição na célula que lê o resultado.
+    11 notebooks listados na §12.1 do plano histórico — foi fechada executando
+    os onze como job no Free e colando a transcrição na célula que lê o resultado.
+    Recuperação do plano: Git 09ecdc1e, conforme o ADR-0030.
     A escada estava escrita aqui desde o começo: *promover a falha quando
     `sem_bloco` chegar a zero*. Chegou.
     """

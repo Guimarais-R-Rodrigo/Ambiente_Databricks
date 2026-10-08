@@ -2,13 +2,10 @@
 
 Esta é a entrada única para entender como o ambiente pessoal se tornou o Hub
 atual. Reúne a intenção do antigo `PLANO_HUB.md`, a evolução por etapas e os
-marcos do changelog. Leia a trajetória para conhecer o projeto; consulte os
-registros originais somente quando precisar reconstruir uma decisão ou prova.
+marcos do changelog. Leia a trajetória; consulte os registros originais para investigar decisões ou provas.
 
 A síntese foi consolidada em **07/10/2026 por Codex**, na base `6ac0060dfcd09134634abe204474debb5757e231`.
-Ela interpreta a trajetória; os marcos datados abaixo preservam seus relatos.
-Planos, quantidades e testes antigos descrevem sua época e não certificam a
-base atual. Estado corrente pertence aos [owners vivos](docs/ai/context/projeto.md#owners-vivos),
+A síntese interpreta a trajetória; marcos e testes antigos descrevem sua época, sem certificar a base atual. Estado corrente pertence aos [owners vivos](docs/ai/context/projeto.md#owners-vivos),
 decisões ao [índice de ADRs](docs/decisions/README.md) e uso ao
 [Manual Técnico V2](ambiente_databricks/.assistant/MANUAL_TECNICO_V2.md).
 
@@ -58,13 +55,10 @@ existentes. Em 30/09, passou a módulo distribuído no Hub. Consulte os owners d
 [Micromodelos](docs/sprints/micromodelos/README.md); a skill de Micromodelos
 permanece `L1/audit` até comprovação própria para promoção.
 
-O enforcement de skills evoluiu para contratos estruturados, provas por
-superfície e certificação prospectiva. SEF/SER distinguiu declaração de recurso,
-execução observada, qualificação local e promoção de policy. B0 e os perfis B1
-receberam evidências delimitadas; seus aceites não autorizam efeitos nem
-homologam automaticamente outro ambiente. As condições vigentes ficam nos
-owners de [SEF](docs/sprints/skill_enforcement/README.md) e
-[SER](docs/sprints/skill_enforcement_rollout/README.md).
+SEF/SER introduziu contratos estruturados, provas por superfície e certificação
+prospectiva. B0/B1 receberam aceites delimitados, sem autorização de efeitos,
+promoção de policy ou homologação automática de outro ambiente; veja os owners
+[SEF](docs/sprints/skill_enforcement/README.md) e [SER](docs/sprints/skill_enforcement_rollout/README.md).
 
 ### Outubro de 2026 — manutenção por tarefa e preparação para o trabalho
 
@@ -125,6 +119,12 @@ evidência antiga, autoria e resultados datados não são reescritos.
 Os relatos abaixo estão em ordem decrescente de data. Dentro do mesmo dia,
 novos marcos entram primeiro. Uma etapa posterior pode substituir um estado
 anterior; isso não altera o relato original.
+
+## 2026-10-08 — Retirada do localizador histórico (Codex)
+
+Exclui `PLANO_HUB.md`; regras e índices passam ao consolidado. Preserva dois hrefs
+históricos por recuperação Git estrita, mantendo fontes e as 30 exceções anteriores.
+[Decisão, execução e limites](docs/decisions/ADR-0031-retirada-localizador-plano-hub.md).
 
 ## 2026-10-07 — História consolidada (Codex)
 

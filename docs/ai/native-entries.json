@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.2",
+  "revision": "2026-10-08.1",
   "entries": [
     {
       "path": "AGENTS.md",
@@ -8,8 +8,8 @@
       "role": "core",
       "owner": "docs/ai/README.md",
       "load_condition": "Entrada do projeto conforme cliente e configuração; descoberta nativa não certificada.",
-      "sha256": "1d765be9937ac996fd8f83ce3276a68d9557e29468b78f79e6e70c860e696b28",
-      "review_reason": "Rename autorizado ambiente_fonte -> ambiente_databricks; mesmos mecanismos e invariantes, revisão de contexto completo registrada na execução da faxina.",
+      "sha256": "3e634bf9ad65d518c66c535c486e60b10ae80c750894ea02f55e78a1497b0841",
+      "review_reason": "Retirada autorizada do localizador PLANO_HUB: referência da paleta migra ao CHANGELOG; mesmos invariantes e mecanismos, revisão própria A0 de contexto completo (ADR-0031).",
       "shadows": []
     },
     {

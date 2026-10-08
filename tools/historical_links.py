@@ -29,7 +29,7 @@ def frozen(source: str) -> bool:
             or source.startswith("docs/sprints/") and Path(source).name != "README.md")
 
 
-def load(root: Path) -> set[tuple[str, str]]:
+def load_faxina(root: Path) -> set[tuple[str, str]]:
     """Fail closed on any invented, stale, altered or unrecoverable entry."""
     manifest_path = root / MANIFEST
     if not manifest_path.exists():
@@ -77,3 +77,59 @@ def load(root: Path) -> set[tuple[str, str]]:
             raise ValueError("HISTORICAL_TARGET_CHANGED")
         accepted.add(key)
     return accepted
+
+
+PLAN_MANIFEST = "docs/manutencao/referencias-historicas-plano-hub.json"
+PLAN_SOURCE_COMMIT = "6ac0060dfcd09134634abe204474debb5757e231"
+PLAN_TARGET_COMMIT = "09ecdc1eaf9ed7cd8acf7a4db3a6443eb47337fd"
+PLAN_TARGET_HASH = "4307e9c3dd6301b7b04733f6ebaebaa8d6ab41215550e6817bb0b68b39ac125f"
+PLAN_PAIRS = {
+    ("docs/handoffs/2026-09-09_plano-consolidado.md", "../../PLANO_HUB.md"),
+    ("docs/manutencao/organizacao-tools-raiz-workflows-2026-10-07.md", "../../PLANO_HUB.md"),
+}
+
+
+def load_plan(root: Path) -> set[tuple[str, str]]:
+    """Recover only two approved historical hrefs; no directory-wide exemption."""
+    path = root / PLAN_MANIFEST
+    if not path.exists():
+        return set()  # Fixtures without the new ledger have no new exceptions.
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    if (manifest.get("schema_version") != 1
+            or manifest.get("source_commit") != PLAN_SOURCE_COMMIT
+            or manifest.get("target_commit") != PLAN_TARGET_COMMIT
+            or manifest.get("target") != "PLANO_HUB.md"
+            or manifest.get("target_sha256") != PLAN_TARGET_HASH):
+        raise ValueError("PLAN_HISTORY_SCHEMA_OR_REVISION")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or len(entries) != 2:
+        raise ValueError("PLAN_HISTORY_COUNT")
+    pairs = [(e["source"], e["href"]) for e in entries]
+    if len(set(pairs)) != 2 or set(pairs) != PLAN_PAIRS:
+        raise ValueError("PLAN_HISTORY_SOURCE_OR_HREF")
+    target = root / "PLANO_HUB.md"
+    if target.exists() or target.is_symlink():
+        raise ValueError("PLAN_HISTORY_ENTRY_NOT_NEEDED")
+    obj = git(root, "rev-parse", f"{PLAN_TARGET_COMMIT}:PLANO_HUB.md").decode().strip()
+    if obj != manifest.get("object_id") or git(root, "cat-file", "-t", obj).strip() != b"blob":
+        raise ValueError("PLAN_HISTORY_TARGET_OBJECT")
+    if digest(git(root, "cat-file", "blob", obj)) != PLAN_TARGET_HASH:
+        raise ValueError("PLAN_HISTORY_TARGET_CHANGED")
+    for entry in entries:
+        source = root / entry["source"]
+        if not source.resolve().is_relative_to(root.resolve()) or source.is_symlink():
+            raise ValueError("PLAN_HISTORY_ESCAPE")
+        original = git(root, "show", f"{PLAN_SOURCE_COMMIT}:{entry['source']}")
+        if source.read_bytes() != original or digest(original) != entry["source_sha256"]:
+            raise ValueError("PLAN_HISTORY_SOURCE_CHANGED")
+        if entry["href"] not in set(markdown_destinations(original.decode("utf-8"))):
+            raise ValueError("PLAN_HISTORY_HREF_INVENTED")
+        local = local_destination_path(entry["href"])
+        if local is None or posixpath.normpath(posixpath.join(posixpath.dirname(entry["source"]), local)) != "PLANO_HUB.md":
+            raise ValueError("PLAN_HISTORY_TARGET_OR_ESCAPE")
+    return set(pairs)
+
+
+def load(root: Path) -> set[tuple[str, str]]:
+    """Combine independent strict ledgers without widening the faxina contract."""
+    return load_faxina(root) | load_plan(root)

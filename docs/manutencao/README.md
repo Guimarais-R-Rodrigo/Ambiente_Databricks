@@ -8,6 +8,7 @@ instalado, comece pelo [guia do produto](../../ambiente_databricks/.assistant/RE
 | Executar validação, render ou preparar pacote | [Ferramentas](../../tools/README.md) e [skills do mantenedor](../../.agents/skills/README.md) |
 | Entender espelho gerado e perfis de CI | [Saída gerada](saida-gerada.md) |
 | Avaliar arquivos da raiz e reorganizar ferramentas | [Diagnóstico e plano por sprints](organizacao-tools-raiz-workflows-2026-10-07.md) |
+| Conferir a retirada do localizador histórico | [Execução e gates de 08/10](execucao-retirada-plano-hub-2026-10-08.md) |
 | Planejar a eliminação do localizador histórico da raiz | [Inventário e plano de retirada](retirada-plano-hub-2026-10-08.md) |
 | Entender cada workflow | [Catálogo de workflows](../../.github/workflows/README.md) |
 | Criar um objeto com contrato e exemplo | [Checklist](CHECKLIST_OBJETO_NOVO.md) |

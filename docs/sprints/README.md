@@ -21,7 +21,7 @@ reescritos para acompanhar o produto.
 
 ## Como ler
 
-1. Comece pelo plano e registro de execução em [`PLANO_HUB.md`](../../PLANO_HUB.md).
+1. Comece pela [trajetória consolidada](../../CHANGELOG.md); consulte o plano integral congelado indicado nela para as tabelas de execução antigas.
 2. Abra a sprint do componente que deseja investigar.
 3. Use a auditoria citada no relatório para conferir o contraditório da rodada.
 4. Para o estado atual, volte ao [README raiz](../../README.md) ou aos

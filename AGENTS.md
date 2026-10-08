@@ -16,7 +16,8 @@ replicação manual no trabalho. Cada efeito precisa estar no escopo autorizado.
 - Nenhum identificador corporativo, username real do trabalho, path corporativo,
   PII ou segredo entra no Git, evidência compartilhada ou Free. Use placeholders
   e fixtures sintéticas. A única exceção de identidade é o nome da instituição
-  na paleta visual (`AZUL_CAIXA` e afins, `PLANO_HUB.md` §2.2); `CORPORATE_RE`
+  na paleta visual (`AZUL_CAIXA` e afins,
+  [decisão da paleta](CHANGELOG.md#paleta-institucional)); `CORPORATE_RE`
   não deve proibi-la. A exceção não autoriza qualquer outro identificador.
 - No Free, somente dados sintéticos. Dados reais ficam no ambiente corporativo
   autorizado, sob Unity Catalog, regras de PII, compliance e governança local.
