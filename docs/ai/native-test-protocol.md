@@ -13,8 +13,8 @@ versão/modelo, OS, CWD e modo. Não alterar settings pessoais ou acionar public
    deve vazar. Codex deve exercitar AGENTS.override; os outros seguem seu loader.
 3. T19/T20: registrar imports e coexistência; corromper import em fixture e exigir
    falha. Grok requer grok inspect; não presumir @ nem dedup de CLAUDE.
-4. T21: inventário real das cinco skills, uma vez cada, caso positivo, negativo de
-   intenção e pré-condição ausente das cinco; observar chamada/leitura real.
+4. T21: inventário real das skills canônicas atuais, uma vez cada, caso positivo,
+   negativo de intenção e pré-condição ausente de cada uma; observar leitura real.
 5. T22: auditoria cega precisa de corpus permitido e sessão inicial demonstrados.
    Histórico pré-carregado invalida o rótulo; pode continuar como contexto completo.
 6. T23: repetir regra crítica antes/depois de retomada/compactação; distinguir
@@ -41,8 +41,10 @@ contraditório. Upload e instruções persistentes requerem autorização própr
 ## Copilot no VS Code — perfil de trabalho
 
 Aplicar T17–T21 no checkout atualizado, registrando versão do VS Code, extensão
-Copilot, harness, modelo e configurações efetivas. Conferir AGENTS e cinco skills
-únicas em Customizations/References e observar uma invocação real. Repetir com
-`.agents/skills` e `.claude/skills` coexistindo; duplicação é FAIL a resolver
+Copilot, harness, modelo e configurações efetivas. Conferir AGENTS e as oito skills
+únicas em Customizations/References e observar as invocações reais. Na revisão
+de 08/10/2026 não existe adaptador Claude Code: a fonte é `.agents/skills`.
+Confira também Planejador Hub e Revisor Hub e as ferramentas de leitura efetivas.
+Duplicação ou ferramenta de escrita disponível nesses agentes é FAIL a resolver
 para esse perfil. Não inferir suporte pela marca do modelo nem alterar settings
 sem necessidade/escopo próprio. Estado desta entrega: NOT_RUN no cliente destino.

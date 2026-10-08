@@ -1,14 +1,13 @@
 # Skills de manutenção do repositório
 
-Estas cinco skills orientam quem mantém o Git. A fonte editorial é
-`.agents/skills/`; cópias de descoberta por cliente são adaptadores, não outra
-política. Este catálogo é um índice, não uma sexta skill invocável.
+Estas oito skills orientam quem mantém o Git. A fonte editorial é
+`.agents/skills/`; o Copilot usa essa fonte diretamente. Não há cópias geradas para Claude Code. Este catálogo é um índice, não uma skill invocável.
 
 ## Famílias e limites
 
 | Família | Fonte | Uso | Vai ao Databricks? |
 |---|---|---|---|
-| Mantenedor | este catálogo e suas cinco pastas | validar, renderizar, preparar publicação e gates | não |
+| Mantenedor | este catálogo e suas oito pastas | validar, renderizar, preparar publicação e gates | não |
 | Produto | [catálogo do produto](../../ambiente_databricks/.assistant/skills/README.md) | skills `hub-ml-*` usadas no Genie Code | sim |
 | Exemplar | [exemplo de skill](../../ambiente_databricks/.assistant/hub_padroes/skill/exemplo/SKILL.md) | material didático não roteável, fora do inventário de skills reais | transportado como exemplo |
 
@@ -26,10 +25,12 @@ esperado, não testes reais de todos os clientes.
 | publicar ou conferir o laboratório Free | [publicar-free](publicar-free/SKILL.md) | fases e destino explícitos; inventário/tipos e conteúdo separados |
 | testar seleção de skills no Genie | [forward-test-skills](forward-test-skills/SKILL.md) | casos positivos, negativos e menção com evidência observada |
 | preparar ou conduzir cópia pessoal ao trabalho | [replicar-trabalho](replicar-trabalho/SKILL.md) | kit, runbook e gates humanos por destino |
+| preparar configuração individual do trabalho | [preparar-ambiente-trabalho](preparar-ambiente-trabalho/SKILL.md) | perfil e destinos conferidos localmente |
+| incrementar a fonte do Hub | [evoluir-hub](evoluir-hub/SKILL.md) | implementação, documentação e evidência |
+| revisar mudança antes da entrega | [revisar-entrega](revisar-entrega/SKILL.md) | achados, gates e limites explícitos |
 
 `revisar-docs-oficiais` permanece **proposta, sem pasta e sem SKILL.md**.
-Não é invocável. Documentar fontes oficiais ou revisá-las não cria uma sexta
-skill. Um pedido de EDA/modelagem em dados é uma intenção de produto, não de
+Não é invocável. Documentar fontes oficiais ou revisá-las não cria uma skill adicional. Um pedido de EDA/modelagem em dados é uma intenção de produto, não de
 manutenção; siga o catálogo do produto.
 
 ## Usar ou alterar uma skill
@@ -37,7 +38,7 @@ manutenção; siga o catálogo do produto.
 1. Leia o [contrato do repositório](../../AGENTS.md), a skill pertinente e os
    owners que ela aponta. Execute comandos da raiz do checkout completo.
 2. Edite somente `.agents/skills/<nome>/SKILL.md` e recursos locais necessários.
-   Integre adaptadores pelo mecanismo de geração aprovado, sem edição paralela.
+   Não duplique a fonte em diretórios de outros clientes.
 3. Use `name` igual ao nome da pasta e `description` com gatilho e exclusões.
    O frontmatter portátil contém apenas `name` e `description`. Campos de
    ferramentas, hooks, modelo ou permissões de um fornecedor não são controles
@@ -50,7 +51,7 @@ manutenção; siga o catálogo do produto.
 6. Registre a evidência no owner da tarefa; use o [critério de marcos](../../docs/ai/templates/changelog-entry.md)
    para o [CHANGELOG](../../CHANGELOG.md). Falha de
    ambiente ou etapa não executada não é PASS. Rollback restaura fonte, catálogo
-   e adaptadores como conjunto coerente, preservando mudanças alheias.
+   e controles como conjunto coerente, preservando mudanças alheias.
 
 Certificação de enforcement segue o [procedimento próprio](../../tools/skill_enforcement/README.md).
 Validação estática, teste de descoberta do mantenedor, roteamento Genie,

@@ -10,6 +10,9 @@ pelo projeto; manter instrumentos históricos com sua linhagem explícita. Uma
 ferramenta histórica não deve ser usada para certificar o HEAD atual por analogia.
 Este catálogo orienta a manutenção e não substitui o catálogo de helpers do Manual.
 
+O [índice individual da raiz](INDICE_ARQUIVOS.md) complementa as famílias abaixo.
+A classificação documental não implica que os módulos já foram movidos para subpastas.
+
 ## Próxima ação
 
 | Objetivo | Entrada | Efeito e condição |
@@ -19,7 +22,7 @@ Este catálogo orienta a manutenção e não substitui o catálogo de helpers do
 | Examinar espelho | `python -B tools/render_simulado.py` | Plano local sem escrita; `--check` confere derivado existente |
 | Gerar espelho | `render_simulado.py --write` | Substitui o destino gerido; inventariar extras e preservar conflitos antes |
 | Conferir automação de CI | `python -B tools/ci_workflows.py --check` | Leitura local; receitas e DAG; ver [workflows](../.github/workflows/README.md) |
-| Conferir instruções IA | `python -B tools/ai_controls.py --check` | Leitura local; `--generate` escreve somente adaptadores geridos |
+| Conferir instruções IA | `python -B tools/ai_controls.py --check` | Leitura local da fonte canônica; `--generate` retirado, falha sem escrever |
 | Preparar transferência | [kit de trabalho](kit_transicao_trabalho.py) e [runbook](../docs/playbooks/replicacao-trabalho.md) | Preparação local é distinta de importação/promoção no destino |
 | Recuperar prova do protótipo retirado | `python -B tools/verify_concierge_history.py` | Confere blobs no histórico Git completo, sem restaurar arquivos |
 

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "source_commit": "6ac0060dfcd09134634abe204474debb5757e231",
+  "target_commit": "09ecdc1eaf9ed7cd8acf7a4db3a6443eb47337fd",
+  "target": "PLANO_HUB.md",
+  "object_id": "3b739b4f0246405df044cc8e6ffe9e9bce906ac2",
+  "target_sha256": "4307e9c3dd6301b7b04733f6ebaebaa8d6ab41215550e6817bb0b68b39ac125f",
+  "entries": [
+    {
+      "source": "docs/handoffs/2026-09-09_plano-consolidado.md",
+      "source_sha256": "d240349835bae6663971c06affebd48456f58bfa3b105ca89419a75ad4c4c23d",
+      "href": "../../PLANO_HUB.md"
+    },
+    {
+      "source": "docs/manutencao/organizacao-tools-raiz-workflows-2026-10-07.md",
+      "source_sha256": "c1e2ecd10e2565e1a3b8ddd5daa0f5cd0961247389ec7326809429b67b432c9d",
+      "href": "../../PLANO_HUB.md"
+    }
+  ]
+}

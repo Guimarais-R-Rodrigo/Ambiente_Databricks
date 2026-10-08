@@ -24,7 +24,7 @@ Nada de identificadores corporativos, PII, username/path real do trabalho ou
 segredos no Git, Free, prompts/skills ou evidência compartilhada. Use placeholders;
 backup/erros brutos corporativos permanecem no destino autorizado. Quarentena não
 é corpus de auditoria pública. A exceção `AZUL_CAIXA` e nomes equivalentes da paleta
-(PLANO_HUB §2.2) permanece; `CORPORATE_RE` não deve alcançá-la. Nenhuma outra
+([decisão da paleta](../../../CHANGELOG.md#paleta-institucional)) permanece; `CORPORATE_RE` não deve alcançá-la. Nenhuma outra
 identidade corporativa é permitida por essa exceção (ADR-0003/0009).
 
 Free usa somente sintéticos; trabalho usa dados reais sob política/UC/PII e escopo

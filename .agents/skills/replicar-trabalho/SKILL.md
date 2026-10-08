@@ -2,8 +2,8 @@
 name: replicar-trabalho
 description: >-
   Prepara o kit e orienta a replicação pessoal do Hub ao workspace do trabalho
-  pelo runbook manual, com backup, staging e gates humanos. Não usa CLI
-  corporativa, não promove por conta própria e não publica para a squad.
+  pelo runbook manual, com backup, staging e gates humanos. Planeja destinos
+  locais para a CLI, sem promover por conta própria ou publicar para a squad.
 ---
 
 # Replicar no workspace do trabalho
@@ -18,7 +18,8 @@ Esses documentos são os owners da operação; esta skill não cria um instalado
 paralelo nem substitui seus gates.
 
 Use para preparar transferência ou orientar atualização **pessoal** autorizada
-no outro computador, sem presumir CLI Databricks corporativa. Um pedido de kit
+no outro computador. A CLI foi informada como disponível; sua versão e acesso
+precisam ser observados antes de adotar transporte por CLI. Um pedido de kit
 local não autoriza transporte, upload, instalação, promoção, consultas UC,
 MLflow ou compartilhamento. Adoção pela squad/instruções de workspace exige
 governança própria; não é extensão automática da instalação pessoal.
@@ -122,3 +123,12 @@ ACL/configuração nem efeitos externos, como eventual run MLflow habilitado.
 - **Pré-requisito ausente:** checkout sujo, saída existente, backup não
   conferido, gate SE08 ou autorização ausente. Bloquear a etapa dependente,
   preservando PENDENTE/NAO_TESTADO e sem promoção silenciosa.
+
+## Preparação individual com CLI disponível — 08/10/2026
+
+Leia o [guia corporativo](../../../docs/playbooks/copilot-trabalho.md).
+Execute `python -m tools.trabalho.workspace --check` e `--plan` para resolver
+destinos locais com o perfil esperado. Cada usuário mantém instalação própria.
+O plano é offline; não substitui backup, staging, gate SE08 ou aceite humano.
+Até a confirmação da versão e dos tipos remotos, o transporte segue o runbook
+manual. Não use importação recursiva com overwrite como atualização seletiva.

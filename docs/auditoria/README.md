@@ -76,7 +76,7 @@ lacuna. Gates BLOCKED e FAIL continuam no owner da frente, sem semáforo global.
 | 2026-09-09 | [implantação do plano consolidado](2026-09-09_implantacao-plano/02_codex.md) | segunda origem, rodada Codex | gates locais aprovados; achados residuais e plano corretivo; contraditório pendente |
 
 As auditorias das sprints ficam junto dos respectivos relatórios e estão
-indexadas em [`PLANO_HUB.md`](../../PLANO_HUB.md). Esta tabela cobre apenas
+indexadas no plano integral congelado, recuperável pela [história consolidada](../../CHANGELOG.md). Esta tabela cobre apenas
 rodadas temáticas.
 
 ## Como interpretar “auditado”

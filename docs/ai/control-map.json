@@ -4,41 +4,9 @@
   "baseline_sha": "f2843eafae84d44cd751f307101de84f11981bd7",
   "core": "AGENTS.md",
   "source_owner": ".agents/skills/",
-  "adapter_owner": "tools/ai_controls.py",
-  "adapters": [
-    {
-      "source": ".agents/skills/forward-test-skills",
-      "destination": ".claude/skills/forward-test-skills",
-      "transformation": "identity body/resources; provenance comment after preserved YAML frontmatter; same relative directory depth"
-    },
-    {
-      "source": ".agents/skills/publicar-free",
-      "destination": ".claude/skills/publicar-free",
-      "transformation": "identity body/resources; provenance comment after preserved YAML frontmatter; same relative directory depth"
-    },
-    {
-      "source": ".agents/skills/render-simulado",
-      "destination": ".claude/skills/render-simulado",
-      "transformation": "identity body/resources; provenance comment after preserved YAML frontmatter; same relative directory depth"
-    },
-    {
-      "source": ".agents/skills/replicar-trabalho",
-      "destination": ".claude/skills/replicar-trabalho",
-      "transformation": "identity body/resources; provenance comment after preserved YAML frontmatter; same relative directory depth"
-    },
-    {
-      "source": ".agents/skills/validar-assistant",
-      "destination": ".claude/skills/validar-assistant",
-      "transformation": "identity body/resources; provenance comment after preserved YAML frontmatter; same relative directory depth"
-    }
-  ],
-  "adopted_outputs": {
-    ".claude/skills/forward-test-skills/SKILL.md": "5a64d34e1a6e42a8e6015e53f8d141ba0e948853b54462799d58fd5aec16a06a",
-    ".claude/skills/publicar-free/SKILL.md": "e7a837c818426246a3d30ddfc0b573ca499b9506ff5f0d7f70a6bc78277a128b",
-    ".claude/skills/render-simulado/SKILL.md": "ba416af10ee583167f59c21693d00a23326e40f8b34f705baf4f56f644fa466d",
-    ".claude/skills/replicar-trabalho/SKILL.md": "83411820568e3c2da624ebea9281286f794cd1a0726dd6349bc1ff67385a0f79",
-    ".claude/skills/validar-assistant/SKILL.md": "dccc8206566431b85b3d820b5a2b00cf01ff8ec5d9a836af332f7ed3ed23c4d4"
-  },
+  "adapter_owner": "Retired by ADR-0032; canonical skills read directly",
+  "adapters": [],
+  "adopted_outputs": {},
   "critical_invariants": [
     "fonte canônica",
     "ambiente_databricks/",
@@ -67,7 +35,9 @@
     ".claude/templates/adr.md",
     ".claude/templates/auditoria.md",
     ".claude/templates/changelog-entry.md",
-    ".claude/templates/handoff.md"
+    ".claude/templates/handoff.md",
+    "CLAUDE.md",
+    ".claude/skills/.generated.json"
   ],
   "requirements": [
     {
@@ -8022,15 +7992,6 @@
       "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
     },
     {
-      "path": "PLANO_HUB.md",
-      "line": 614,
-      "line_sha256": "2d792709ad83cb7e6debcf34ecc0366dde6302e7cb327e42f7ba4e339dc39ecc",
-      "legacy_source": ".claude/rules/genie-code-oficial.md",
-      "replacement": "docs/ai/references/databricks-genie-code.md",
-      "category": "dated_historical_evidence",
-      "reason": "Exact dated statement, source inventory or closed-campaign recorder preserved; current routing is AGENTS/docs/ai. No directory-wide exclusion."
-    },
-    {
       "path": "docs/ai/compatibility.md",
       "line": 26,
       "line_sha256": "e4eecd10402c4735db5605c53f7fd0631430fa9ff1342cd0a126a1f26cb25d97",
@@ -8662,7 +8623,7 @@
   ],
   "replacement_routes": {
     "AGENTS.md": "AGENTS.md",
-    "CLAUDE.md": "CLAUDE.md (raiz, @AGENTS.md)",
+    "CLAUDE.md": "AGENTS.md; Claude Code adapter retired 2026-10-08",
     "GEMINI.md": "GEMINI.md (raiz, @./AGENTS.md)",
     ".claude/CLAUDE.md": "docs/ai/README.md + mapa em AGENTS.md",
     ".claude/rules/docs-e-readmes.md": "docs/ai/rules/documentacao.md",

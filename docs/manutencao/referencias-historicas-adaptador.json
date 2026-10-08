@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "source_commit": "8ee3a61bfa9b638e15bcc5de41a8f87c10e37682",
+  "target": ".claude/skills/forward-test-skills/SKILL.md",
+  "target_sha256": "f9657b7abf3a31634b384cba867e16147cd07d81df3499f313ec7d906a1054e5",
+  "entries": [
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/GENIE_RODADAS_GUIADAS_2026-09-29.md",
+      "source_sha256": "aa116e7b2ecd12d3c6845f8c5517111d6ced3caff2f5e4e939e4c7fe4e801208",
+      "href": "../../../.claude/skills/forward-test-skills/SKILL.md"
+    },
+    {
+      "source": "docs/sprints/skill_enforcement_rollout/CONTINUACAO_LOCAL_FREE_2026-09-28.md",
+      "source_sha256": "cf5199e6827906bbcbeff50964a5d853d6e4120ab3e56950b1ad32ab199a42c4",
+      "href": "../../../.claude/skills/forward-test-skills/SKILL.md"
+    }
+  ]
+}

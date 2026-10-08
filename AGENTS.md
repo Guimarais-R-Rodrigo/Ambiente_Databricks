@@ -16,7 +16,8 @@ replicação manual no trabalho. Cada efeito precisa estar no escopo autorizado.
 - Nenhum identificador corporativo, username real do trabalho, path corporativo,
   PII ou segredo entra no Git, evidência compartilhada ou Free. Use placeholders
   e fixtures sintéticas. A única exceção de identidade é o nome da instituição
-  na paleta visual (`AZUL_CAIXA` e afins, `PLANO_HUB.md` §2.2); `CORPORATE_RE`
+  na paleta visual (`AZUL_CAIXA` e afins,
+  [decisão da paleta](CHANGELOG.md#paleta-institucional)); `CORPORATE_RE`
   não deve proibi-la. A exceção não autoriza qualquer outro identificador.
 - No Free, somente dados sintéticos. Dados reais ficam no ambiente corporativo
   autorizado, sob Unity Catalog, regras de PII, compliance e governança local.
@@ -69,7 +70,7 @@ arquitetura exigem ADR e a retomada incompleta exige handoff verificável.
 - Usar Free/trabalho ou interpretar resultado: [ambientes](docs/ai/context/ambientes.md).
 - Mudar afirmação Databricks: [referência oficial](docs/ai/references/databricks-genie-code.md).
 - Validar, renderizar, publicar, testar roteamento ou replicar:
-  [cinco skills do mantenedor](.agents/skills/README.md), nunca skills do runtime.
+  [skills do mantenedor](.agents/skills/README.md), nunca skills do runtime.
 
 Este núcleo é independente dos adaptadores; a precedência real depende do
 cliente. O contrato editorial não promete autoload nem suporte já demonstrado.

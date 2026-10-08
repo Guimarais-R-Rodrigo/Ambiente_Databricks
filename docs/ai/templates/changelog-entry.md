@@ -12,8 +12,13 @@ rebase e recibos pertencem ao owner da execução: teste/auditoria datados, hand
 quando há trabalho aberto, ou commit/PR para manutenção trivial. Não criar outro
 diário obrigatório nem duplicar a mesma evidência em vários índices.
 
-Metas editoriais: até 12 marcos, 120 linhas e 12 KiB, mantendo os ciclos recentes.
-Ao exceder, faça outro snapshot verificável com índice, commit e hashes antes de
+A entrada consolidada também contém uma síntese da trajetória do plano,
+conforme o ADR-0030. Atualize essa síntese somente ao consolidar uma nova etapa;
+não acrescente diário, inventário ou comandos nela.
+
+Metas editoriais da entrada consolidada: até 12 marcos recentes, 200 linhas e
+16 KiB no total, contando a síntese. Ao exceder, preserve a trajetória e faça
+outro snapshot verificável dos marcos, com índice, commit e hashes, antes de
 curar a raiz. São metas de leitura, não limites de modelo nem permissão para
 excluir fatos. [Arquivo preservado](../../historico/changelog/README.md).
 
