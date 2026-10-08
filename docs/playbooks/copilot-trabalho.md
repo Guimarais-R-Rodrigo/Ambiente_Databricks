@@ -26,9 +26,9 @@ do serviço, leitura de AGENTS, seleção de skills ou ferramentas dos agentes.
 Ensaie os dois targets separadamente; Copilot continua o alvo principal do projeto.
 
 A janela Agents mostra aviso de uma personalização do usuário que precisa de
-migração. Abra **Review Migrations** para identificar item, origem e proposta;
-não aplique migração nem substitua arquivos sem reconciliar esse conteúdo com o
-contrato do projeto. A árvore visível parece um kit de transposição com pastas
+migração. O operador esclareceu que a personalização existente era apenas um
+teste: ela não é prova de descoberta do projeto nem exige migração nesta entrega.
+A árvore visível parece um kit de transposição com pastas
 de importação e notebooks de aceite. Confirme que o ensaio de descoberta usa a
 raiz do clone completo, contendo AGENTS.md, `.agents/skills/` e `.github/agents/`.
 Um kit operacional não comprova presença das instruções do mantenedor.

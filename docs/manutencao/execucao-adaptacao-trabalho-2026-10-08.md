@@ -103,3 +103,39 @@ Verificação local: `python tools/validate_assistant.py` retornou exit 0,
 zero falhas e zero avisos; log ignorado
 `.artifacts/adaptacao-interfaces-validacao.log`. Diff limitado ao guia e a este
 owner; sem nova mudança executável, ADR ou marco no changelog.
+
+## Continuidade — GitHub e pacote de transporte
+
+Em 08/10/2026, Rodrigo autorizou prosseguir com GitHub e preparar um ZIP para
+o trabalho. Codex publicou a branch e abriu o PR #129, a partir de `2077874b`.
+A primeira execução remota encontrou duas regressões: linhas vazias separavam
+ADRs da tabela, e o teste de aposentadoria do espelho ainda esperava a exceção
+do localizador PLANO_HUB, retirado pelo ADR-0031. Corrigidas a tabela e a expectativa
+do teste com prova do registro exato (linha/hash), mantendo o manifesto histórico
+e todos os outros registros. Nenhum gate foi dispensado.
+
+O operador esclareceu que a personalização vista no Copilot era apenas um teste;
+o guia incorpora esse esclarecimento sem alterar settings. Autorrevisão A0.
+
+A preparação do transporte auditou 6.399 blobs alcançáveis pelo HEAD original.
+Não encontrou o path de quarentena, mas encontrou identificadores pessoais em
+versões antigas. O ZIP autorizado usa somente os arquivos versionados atuais,
+sem banco Git, ignorados ou perfis. A conferência da árvore atual não encontrou
+padrões pessoais, corporativos ou tokens nos padrões examinados; não equivale
+a garantia universal de ausência de segredo. Hashes e SHA ficam no manifesto
+externo do pacote. Transporte do histórico original permanece BLOQUEADO;
+os gates históricos não podem ser aprovados num ZIP sem esses objetos.
+
+Evidência local ignorada: `.artifacts/ci-kit-python312.log`, auditorias de
+transporte e `.artifacts/entrega-validacao-local.log` (zero falhas/avisos na base).
+Verificações da correção e resultado remoto ficam na continuidade abaixo.
+
+Correção conferida por `python -m unittest tools.tests.test_ai_mirror_retirement
+tools.tests.test_readme_audit_routes -q`: nove testes PASS. `git diff --check`
+e `python tools/validate_assistant.py --conferir-readme` passaram, este último
+com zero falhas/avisos. A tentativa local de descoberta completa dos READMEs
+executou 79 testes, com três skips e uma falha de import: a dependência instalada
+`typing_extensions` não atende `typevar(default=...)` exigido por `referencing`.
+Essa conferência ampla local está BLOQUEADA por dependência; não houve instalação
+nem relaxamento. O CI usa as dependências declaradas e precisa passar antes do
+merge. Logs ignorados `entrega-readmes.log` e `entrega-validacao-corrigida.log`.

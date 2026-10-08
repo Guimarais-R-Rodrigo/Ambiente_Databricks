@@ -30,7 +30,7 @@ class MirrorRetirementTests(unittest.TestCase):
     def blob(self, path):
         return subprocess.check_output(['git', 'cat-file', 'blob', f'{BASE}:{path}'], cwd=ROOT)
 
-    def test_only_seven_duplicate_mirror_exceptions_retired(self):
+    def test_retirement_lineage_and_exact_later_cleanup(self):
         manifest = self.manifest
         self.assertEqual((98, 91, 7), (manifest['before_records'], manifest['after_records'], manifest['retired_count']))
         current = self.control['historical_exceptions']
@@ -39,9 +39,18 @@ class MirrorRetirementTests(unittest.TestCase):
         self.assertEqual(digest_records(original), manifest['remaining_records_sha256'])
         retired = [item for item in original if item['path'] in (OLD_SOURCE, PROTOTYPE)]
         self.assertEqual(Counter(item['path'] for item in retired), Counter({OLD_SOURCE: 7, PROTOTYPE: 3}))
-        expected = [item for item in original if item['path'] not in (OLD_SOURCE, PROTOTYPE)]
+        # ADR-0031 also retired exactly one exception belonging to the deleted
+        # locator. Keep the original retirement manifest frozen and prove this
+        # later delta separately, without allowing unrelated records to vanish.
+        locator = [item for item in original if item['path'] == 'PLANO_HUB.md']
+        self.assertEqual(len(locator), 1)
+        self.assertEqual(locator[0]['line'], 614)
+        self.assertEqual(locator[0]['line_sha256'],
+                         '2d792709ad83cb7e6debcf34ecc0366dde6302e7cb327e42f7ba4e339dc39ecc')
+        self.assertFalse((ROOT / 'PLANO_HUB.md').exists())
+        expected = [item for item in original if item['path'] not in (OLD_SOURCE, PROTOTYPE, 'PLANO_HUB.md')]
         self.assertEqual(current, expected)  # All other owners, hashes and reasons are unchanged.
-        self.assertEqual(len(current), 81)
+        self.assertEqual(len(current), 80)
         self.assertFalse(any(item['path'] == manifest['retired_path'] for item in current))
         self.assertEqual(len(manifest['retired_records']), 7)
         self.assertTrue(all(item['path'] == manifest['retired_path'] for item in manifest['retired_records']))

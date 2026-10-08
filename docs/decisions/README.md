@@ -50,9 +50,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0027](ADR-0027-correcao-controles-auditoria-integrada.md) | contenção, contratos de execução, rastreabilidade e reconciliação após auditoria integrada | implementação local autorizada em 07/10/2026; publicação e homologação separadas |
 | [0028](ADR-0028-manual-tecnico-v2-canonico.md) | Manual Técnico V2 como única edição técnica vigente; catálogo e termos integrados | execução local autorizada em 07/10/2026; substitui edição e cópia raiz previstas no ADR-0010 |
 | [0029](ADR-0029-faxina-fonte-e-prototipo.md) | fonte ambiente_databricks e retirada recuperável do protótipo | execução local autorizada em 07/10/2026 |
-
 | [0030](ADR-0030-historia-consolidada.md) | plano e changelog reunidos numa entrada de construção histórica, com recuperação Git | execução local autorizada em 07/10/2026 |
-
 | [0031](ADR-0031-retirada-localizador-plano-hub.md) | retirada do localizador e recuperação estrita de dois hrefs históricos | execução local autorizada em 08/10/2026 |
 | [0032](ADR-0032-preparacao-individual-copilot-trabalho.md) | configuração pessoal, Copilot e retirada do adaptador Claude Code | execução local autorizada; integração corporativa pendente |
 
