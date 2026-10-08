@@ -16,7 +16,24 @@ o mantenedor não executou comandos no computador corporativo.
 | VS Code | `1.140.0` | release oficial correspondente localizada |
 | GitHub | acesso por `github.com`, projetos internos fechados | destino informado; licença/plano e políticas da organização não determinados |
 | Extensão Databricks | `databricks.databricks@2.20.0` na listagem fornecida | versão correspondente no Marketplace oficial; conexão nativa NOT_RUN |
-| Copilot | `github.copilot` e `github.copilot-chat` não aparecem na listagem fornecida | conferir Chat/harness no cliente; não concluir ausência ou suporte só pela listagem |
+| Copilot | IDs não aparecem na listagem; capturas mostram interfaces Copilot e Local | presença visual confirmada; resposta do serviço e descoberta do projeto NOT_RUN |
+
+O operador apresentou duas capturas em 08/10/2026: janela Agents com Session
+Target **Copilot**, Agent e modelo Auto; Chat lateral com Session Target **Local**,
+Agent e Auto. Isso confirma presença dessas interfaces e seletores no computador
+de destino, apesar da ausência dos IDs Copilot na listagem. Não demonstra resposta
+do serviço, leitura de AGENTS, seleção de skills ou ferramentas dos agentes.
+Ensaie os dois targets separadamente; Copilot continua o alvo principal do projeto.
+
+A janela Agents mostra aviso de uma personalização do usuário que precisa de
+migração. Abra **Review Migrations** para identificar item, origem e proposta;
+não aplique migração nem substitua arquivos sem reconciliar esse conteúdo com o
+contrato do projeto. A árvore visível parece um kit de transposição com pastas
+de importação e notebooks de aceite. Confirme que o ensaio de descoberta usa a
+raiz do clone completo, contendo AGENTS.md, `.agents/skills/` e `.github/agents/`.
+Um kit operacional não comprova presença das instruções do mantenedor.
+Capturas e caminhos corporativos não são incorporados ao Git; este registro
+retém somente observações sanitizadas da interface.
 
 Fontes consultadas em 08/10/2026:
 [Databricks CLI v1.19.0](https://github.com/databricks/cli/releases/tag/v1.19.0) e

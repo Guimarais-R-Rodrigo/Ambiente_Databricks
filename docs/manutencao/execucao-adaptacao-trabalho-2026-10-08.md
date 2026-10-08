@@ -84,3 +84,22 @@ com zero falhas/avisos. A revisão final, com as observações de extensões, ta
 passou com zero falhas/avisos; log `.artifacts/adaptacao-extensoes-validacao.log`.
 Não se repetem testes executáveis por mudança apenas
 documental. GitHub corporativo, runtime, perfil e instalação continuam NOT_RUN.
+
+## Continuidade — interfaces apresentadas pelo operador
+
+Em 08/10/2026, na base `91352f68`, recebidas duas capturas: Agents com target
+Copilot e Chat lateral com target Local; ambas mostram Agent e Auto. Evidência
+visual confirma interfaces e seletores, não consulta ao modelo nem descoberta
+das instruções. Nenhuma captura, identidade, conta ou path corporativo foi copiado
+para o repositório.
+
+Registrados no guia: aviso de uma personalização pendente de migração e inferência
+de que a pasta visível é um kit operacional. Próxima ação do operador: identificar
+o item em Review Migrations, sem aplicar alteração, e confirmar a raiz do clone
+antes dos ensaios de descoberta. Produto, configurações nativas e workspaces
+permanecem sem alterações nesta continuidade.
+
+Verificação local: `python tools/validate_assistant.py` retornou exit 0,
+zero falhas e zero avisos; log ignorado
+`.artifacts/adaptacao-interfaces-validacao.log`. Diff limitado ao guia e a este
+owner; sem nova mudança executável, ADR ou marco no changelog.
