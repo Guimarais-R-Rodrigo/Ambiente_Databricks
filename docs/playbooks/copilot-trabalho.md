@@ -5,6 +5,29 @@ Premissas informadas por Rodrigo: GitHub corporativo fechado, `gh` e Databricks
 CLI disponíveis, Copilot no VS Code, extensão Databricks e instalação pessoal
 de cada colega. Cliente e permissões reais permanecem NOT_RUN até observação.
 
+## Informações do computador de trabalho — 08/10/2026
+
+Rodrigo informou as versões abaixo nesta sessão. São informações do operador;
+o mantenedor não executou comandos no computador corporativo.
+
+| Componente | Informação recebida | Conferência documental |
+|---|---|---|
+| Databricks CLI | `1.19.0` | release oficial correspondente localizada |
+| VS Code | `1.140.0` | release oficial correspondente localizada |
+| GitHub | acesso por `github.com`, projetos internos fechados | destino informado; licença/plano e políticas da organização não determinados |
+| Extensão Databricks | `databricks.databricks@2.20.0` na listagem fornecida | versão correspondente no Marketplace oficial; conexão nativa NOT_RUN |
+| Copilot | `github.copilot` e `github.copilot-chat` não aparecem na listagem fornecida | conferir Chat/harness no cliente; não concluir ausência ou suporte só pela listagem |
+
+Fontes consultadas em 08/10/2026:
+[Databricks CLI v1.19.0](https://github.com/databricks/cli/releases/tag/v1.19.0) e
+[VS Code 1.140](https://code.visualstudio.com/updates/v1_140).
+Versão da extensão conferida no
+[Marketplace Databricks](https://marketplace.visualstudio.com/items?itemName=databricks.databricks).
+A release do VS Code documenta seleção do harness Copilot no chat; disponibilidade
+e funcionamento precisam ser observados com as extensões e políticas instaladas.
+O endereço GitHub informado permite preparar o fluxo para `github.com`, sem
+presumir plano Enterprise, Actions habilitado, runners ou permissões de publicação.
+
 ## Preparar o clone
 
 Transporte o checkout com histórico Git aprovado e completo. Um ZIP seguido de
@@ -40,6 +63,28 @@ Informe apenas versões de Git/gh/Databricks/VS Code e das extensões Copilot e
 Databricks. No navegador corporativo, confira se o GitHub usa `github.com` ou
 outro domínio; basta informar essa classificação, sem enviar endereço interno.
 Não é necessário determinar a licença Enterprise por inferência.
+
+CLI, VS Code e classe do domínio já foram informados em 08/10. Para completar
+as versões das extensões, no PowerShell do VS Code:
+
+```powershell
+code --list-extensions --show-versions | Select-String -Pattern '^(databricks\.databricks|github\.copilot(?:-chat)?)@'
+```
+
+Envie apenas as linhas dessas extensões. O comando não autentica, não consulta
+o workspace e não altera configurações. Se não retornar uma extensão esperada,
+confira sua entrada no painel Extensões (`Ctrl+Shift+X`), incluindo ID e versão;
+ausência na listagem não prova ausência em outro perfil/host do VS Code.
+
+A listagem completa recebida em 08/10 confirmou Databricks `2.20.0` e não
+mostrou os IDs Copilot. A extensão `github.vscode-pull-request-github` é outra
+entrada e não comprova disponibilidade do Copilot. Abra o Chat com `Ctrl+Alt+I`
+ou menu Chat → Open Chat; confira se existe Copilot no Session Target e um
+seletor de modelos. Informe apenas se o chat funciona ou se pede entrada/habilitação,
+sem enviar conta, caminho ou outras informações pessoais. Não é necessário
+instalar extensão ou alterar configuração para essa verificação de interface.
+Fontes: [Chat](https://code.visualstudio.com/docs/agents/run/chat-view) e
+[setup Copilot](https://code.visualstudio.com/docs/setup/copilot).
 
 Após autorização local para leitura autenticada, use a sintaxe da ajuda instalada
 para `databricks auth describe --profile <perfil-local>` e

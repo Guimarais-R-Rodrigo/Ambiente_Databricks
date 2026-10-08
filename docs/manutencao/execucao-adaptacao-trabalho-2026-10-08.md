@@ -20,7 +20,7 @@ do computador corporativo. Branch `codex/organizacao-tools-20261007`, base
 | Sprint | Estado | Próxima prova |
 |---|---|---|
 | configuração pessoal | implementação local | preencher no trabalho; confirmar perfil/host |
-| superfície corporativa | NOT_RUN | versões CLI/VS Code/extensões e classe do domínio GitHub |
+| superfície corporativa | CLI/VS Code/domínio informados pelo operador; nativo NOT_RUN | versões das extensões e provas de acesso/carregamento |
 | extensão e transferência CLI | dependente do ambiente | representação FILE/NOTEBOOK, destino, staging e backup |
 | Copilot | arquivos preparados; nativo NOT_RUN | instruções, oito skills, agentes e restrição de ferramentas observados |
 | GitHub corporativo | NOT_RUN | repositório autorizado, histórico completo, runners/checks, revisão e PR |
@@ -55,3 +55,32 @@ sem classificação/alterado e recuperação de referências adulteradas ou obso
 Arquivos de apoio local ignorados: `.artifacts/retirada-claude.json` e logs de
 validação/testes. Inventário de remoção confere bytes com HEAD antes de excluir
 e preserva extras pessoais. O ledger versionado verifica duas fontes congeladas.
+
+## Continuidade — versões informadas em 08/10/2026
+
+Na base `4c300dc8fb2fba41ab2f6a4aa6d943e65626a276`, checkout limpo,
+Rodrigo informou Databricks CLI `1.19.0`, VS Code `1.140.0` e acesso a GitHub
+por `github.com`. Codex conferiu as releases oficiais correspondentes, citadas
+no guia vigente. A revisão modifica somente este owner e o guia, sem novo
+comportamento executável ou mudança de produto; dispensa novo ADR e marco no
+changelog. Autorrevisão A0 de contexto completo.
+
+Foi solicitada listagem filtrada das versões de Databricks/Copilot no VS Code.
+Esse comando é local e somente leitura. Não foi solicitada saída de perfil,
+host corporativo, token, username ou path pessoal. Versões informadas e fontes
+oficiais não aprovam autenticação, ACL, FILE/NOTEBOOK, sync ou descoberta nativa.
+Sem essas provas, a configuração nativa e o transporte remoto continuam pendentes.
+
+Em seguida, o operador forneceu a listagem completa de extensões. Registrada
+somente a informação técnica relevante: Databricks `2.20.0`; IDs Copilot ausentes
+nessa listagem. Não incorporados prompt de terminal, usuário ou caminho local.
+A versão Databricks foi conferida no Marketplace oficial. O guia acrescenta
+verificação do Chat/harness, sem presumir ausência do Copilot, instalar componentes
+ou iniciar autenticação. A extensão GitHub Pull Requests não é prova de Copilot.
+
+Validação da continuidade: `python tools/validate_assistant.py`, log local ignorado
+`.artifacts/adaptacao-versoes-validacao.log`; a primeira revisão documental passou
+com zero falhas/avisos. A revisão final, com as observações de extensões, também
+passou com zero falhas/avisos; log `.artifacts/adaptacao-extensoes-validacao.log`.
+Não se repetem testes executáveis por mudança apenas
+documental. GitHub corporativo, runtime, perfil e instalação continuam NOT_RUN.
