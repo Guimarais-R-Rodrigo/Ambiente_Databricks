@@ -70,7 +70,7 @@ arquitetura exigem ADR e a retomada incompleta exige handoff verificável.
 - Usar Free/trabalho ou interpretar resultado: [ambientes](docs/ai/context/ambientes.md).
 - Mudar afirmação Databricks: [referência oficial](docs/ai/references/databricks-genie-code.md).
 - Validar, renderizar, publicar, testar roteamento ou replicar:
-  [cinco skills do mantenedor](.agents/skills/README.md), nunca skills do runtime.
+  [skills do mantenedor](.agents/skills/README.md), nunca skills do runtime.
 
 Este núcleo é independente dos adaptadores; a precedência real depende do
 cliente. O contrato editorial não promete autoload nem suporte já demonstrado.

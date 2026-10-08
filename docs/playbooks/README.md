@@ -7,6 +7,7 @@ resultado de teste, ele pode e deve ser atualizado quando a operação muda.
 
 | Objetivo | Playbook |
 |---|---|
+| Preparar perfil, caminhos e Copilot no trabalho | [Clone individual](copilot-trabalho.md) |
 | Alterar, validar, renderizar e publicar | [Ciclo de vida](ciclo-de-vida.md) |
 | Levar o pacote aprovado ao workspace do trabalho | [Replicação no trabalho](replicacao-trabalho.md) |
 | Conferir cada pré-condição da replicação | [Checklist de replicação](checklist-replicacao.md) |

@@ -54,6 +54,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0030](ADR-0030-historia-consolidada.md) | plano e changelog reunidos numa entrada de construção histórica, com recuperação Git | execução local autorizada em 07/10/2026 |
 
 | [0031](ADR-0031-retirada-localizador-plano-hub.md) | retirada do localizador e recuperação estrita de dois hrefs históricos | execução local autorizada em 08/10/2026 |
+| [0032](ADR-0032-preparacao-individual-copilot-trabalho.md) | configuração pessoal, Copilot e retirada do adaptador Claude Code | execução local autorizada; integração corporativa pendente |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

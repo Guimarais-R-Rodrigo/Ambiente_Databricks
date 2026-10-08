@@ -132,4 +132,44 @@ def load_plan(root: Path) -> set[tuple[str, str]]:
 
 def load(root: Path) -> set[tuple[str, str]]:
     """Combine independent strict ledgers without widening the faxina contract."""
-    return load_faxina(root) | load_plan(root)
+    return load_faxina(root) | load_plan(root) | load_claude(root)
+
+
+CLAUDE_BASE = "8ee3a61bfa9b638e15bcc5de41a8f87c10e37682"
+CLAUDE_TARGET = ".claude/skills/forward-test-skills/SKILL.md"
+CLAUDE_PAIRS = {
+    ("docs/sprints/skill_enforcement_rollout/GENIE_RODADAS_GUIADAS_2026-09-29.md",
+     "../../../.claude/skills/forward-test-skills/SKILL.md"),
+    ("docs/sprints/skill_enforcement_rollout/CONTINUACAO_LOCAL_FREE_2026-09-28.md",
+     "../../../.claude/skills/forward-test-skills/SKILL.md"),
+}
+
+
+def load_claude(root: Path) -> set[tuple[str, str]]:
+    """Two byte-frozen sprint links recover the removed adapter from Git."""
+    path = root / 'docs/manutencao/referencias-historicas-adaptador.json'
+    if not path.exists():
+        return set()
+    data = json.loads(path.read_text(encoding='utf-8'))
+    entries = data.get('entries', [])
+    pairs = [(e['source'], e['href']) for e in entries]
+    if (data.get('schema_version') != 1 or data.get('source_commit') != CLAUDE_BASE
+            or data.get('target') != CLAUDE_TARGET or len(pairs) != 2
+            or set(pairs) != CLAUDE_PAIRS):
+        raise ValueError('ADAPTER_HISTORY_SCHEMA')
+    original_target = git(root, 'show', f'{CLAUDE_BASE}:{CLAUDE_TARGET}')
+    if digest(original_target) != data.get('target_sha256'):
+        raise ValueError('ADAPTER_HISTORY_TARGET_CHANGED')
+    for entry in entries:
+        source = root / entry['source']
+        original = git(root, 'show', f"{CLAUDE_BASE}:{entry['source']}")
+        if source.is_symlink() or source.read_bytes() != original or digest(original) != entry['source_sha256']:
+            raise ValueError('ADAPTER_HISTORY_SOURCE_CHANGED')
+        if entry['href'] not in set(markdown_destinations(original.decode('utf-8'))):
+            raise ValueError('ADAPTER_HISTORY_HREF_INVENTED')
+        local = local_destination_path(entry['href'])
+        if local is None or posixpath.normpath(posixpath.join(posixpath.dirname(entry['source']), local)) != CLAUDE_TARGET:
+            raise ValueError('ADAPTER_HISTORY_ESCAPE')
+        if (source.parent / local).exists():
+            raise ValueError('ADAPTER_HISTORY_STALE')
+    return set(pairs)

@@ -120,6 +120,13 @@ Os relatos abaixo estão em ordem decrescente de data. Dentro do mesmo dia,
 novos marcos entram primeiro. Uma etapa posterior pode substituir um estado
 anterior; isso não altera o relato original.
 
+## 2026-10-08 — Preparação individual para o trabalho (Codex)
+
+- Configuração pessoal ignorada, comparação de host e plano offline por arquivo.
+  Três skills e dois agentes preparam manutenção com Copilot no VS Code; adaptadores
+  Claude Code retirados com rastreabilidade histórica. Integração corporativa e
+  transferência CLI aguardam confirmação do cliente. [ADR-0032](docs/decisions/ADR-0032-preparacao-individual-copilot-trabalho.md) · [Execução](docs/manutencao/execucao-adaptacao-trabalho-2026-10-08.md).
+
 ## 2026-10-08 — Retirada do localizador histórico (Codex)
 
 Exclui `PLANO_HUB.md`; regras e índices passam ao consolidado. Preserva dois hrefs

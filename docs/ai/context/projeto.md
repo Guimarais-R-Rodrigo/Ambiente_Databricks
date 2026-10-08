@@ -45,6 +45,9 @@ diagramas e tabelas, com a qualidade do README raiz como referência.
 - [ADR-0025](../../decisions/ADR-0025-arquitetura-instrucoes-ia.md) muda somente a
   hierarquia editorial CLAUDE/.claude do ADR-0001. Git canônico, derivação,
   rastreabilidade, dados e decisões do produto permanecem preservados.
+- A revisão de 08/10/2026 (ADR-0032) retira o adaptador Claude Code, prepara
+  configuração individual e adota Copilot no VS Code. Integração corporativa
+  e descoberta nativa permanecem pendentes de provas no computador do trabalho.
 
 A [arquitetura por tarefa e retenção](../../decisions/ADR-0026-arquitetura-projeto-e-historia.md)
 separa marcos estratégicos, provas datadas e contexto de tarefa. O protótipo

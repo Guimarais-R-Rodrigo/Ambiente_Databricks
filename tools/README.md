@@ -264,10 +264,10 @@ Estado e procedimentos: [V02](../docs/sprints/sistema_temas/V02/README.md).
 
 ## Controles de instruções de IA
 
-`python tools/ai_controls.py --check` confere núcleo, rotas, claims, adaptadores e paridade sem escrever ou usar rede.
+`python tools/ai_controls.py --check` confere núcleo, rotas, claims, skills canônicas e paridade sem escrever ou usar rede.
 `--check --release` exige revisão oficial recente; não certifica sessões nativas.
 `--check --migration-freeze` confere os bytes congelados exclusivamente para a campanha de 06/10/2026.
-`--generate` atualiza somente adaptadores geridos e recusa cópia editada ou arquivo alheio.
+`--generate` foi retirado e falha sem escrever; `--check` lê a fonte canônica diretamente.
 Fontes: [guia](../docs/ai/README.md), [padrões](../docs/ai/standards/README.md).
 
 ## Identidade e descoberta B0
@@ -301,3 +301,8 @@ distingue diagnóstico MM01, regressões atuais, SER pós-promoção e falhas hi
 workflows sem instalar dependências, executar gates ou gerar bundle. Exit 1
 indica incompatibilidade com v1; exit 0 indica somente inputs compatíveis.
 Nenhum desses modos emite certificação PASS.
+
+## Configuração individual no trabalho
+
+[tools/trabalho](trabalho/README.md) valida o perfil local e planeja destinos pessoais;
+[config](../config/README.md) contém o modelo sem credenciais.

@@ -194,8 +194,8 @@ normas do molde    : 78 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 289 arquivos
 instrucoes         : 12630/20000 caracteres
-repo (identidade)  : 1772 arquivos varridos no repositório editável/derivado
-repo (links)       : 2113 links fora da raiz analisada
+repo (identidade)  : 1781 arquivos varridos no repositório editável/derivado
+repo (links)       : 2111 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
@@ -225,3 +225,11 @@ Use o [índice de documentação](docs/README.md) para navegar por decisões, au
 Em setembro de 2026, o plano V14 foi integrado pela PR #70; S0 pela PR #71, no commit `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`; e S1 pela PR #72 (`79f53ba1`). Essas integrações não preenchem os slots `BLOCKED`, não encerram `A11-01 = FAIL` nem decidem go-live. O estado e as evidências atuais permanecem no documento de Temas indicado nesta página.
 
 </details>
+
+## Manter o clone no trabalho
+
+Comece pelo [guia Copilot e Databricks](docs/playbooks/copilot-trabalho.md).
+Cada colega preenche sua [configuração local](config/README.md), usa as
+[skills de manutenção](.agents/skills/README.md) e mantém instalação pessoal.
+Perfil e destinos são validados por ferramentas locais; o ambiente corporativo
+precisa de verificações próprias antes da integração remota.

@@ -15,6 +15,8 @@ venv/
 # --- Ambiente local ------------------------------------------------------
 .claude/settings.local.json
 *.local.json
+.databricks/
+databricks.env
 .env
 .env.*
 

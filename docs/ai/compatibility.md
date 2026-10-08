@@ -1,5 +1,9 @@
 # Compatibilidade: contrato documentado e evidência real
 
+Estado vigente: [revisão de 08/10](#revisão-vigente--08102026).
+As tabelas e notas anteriores abaixo registram a candidata histórica; o perfil
+adotado pelo usuário agora é Copilot no VS Code, sem adaptador Claude Code.
+
 Baseline da candidata: 06/10/2026. Perfil de manutenção atualizado em 07/10/2026. A seleção inicial é proposta conservadora do plano:
 Codex CLI, Claude Code, Gemini CLI e Grok Build. Não presume que o usuário possui
 os quatro clientes. Todos permanecem gates obrigatórios propostos; nenhum foi
@@ -78,3 +82,18 @@ A coexistência documentada dos diretórios não comprova deduplicação. Um mod
 Claude selecionado no Copilot usa o carregador do Copilot; não se confunde com
 Claude Code. O ensaio nativo está NOT_RUN. As linhas de ausência de cliente/Windows
 acima são observações do executor da baseline de 06/10, não inventário desta máquina.
+
+## Revisão vigente — 08/10/2026
+
+Por decisão do usuário, Claude Code não será usado. Seu shim e adaptadores foram
+retirados; a arquitetura anterior descrita em 07/10 é registro da etapa anterior.
+Copilot no VS Code usa AGENTS.md e as oito skills canônicas em `.agents/skills/`.
+Os dois agentes de planejamento/revisão ficam em `.github/agents/`.
+O gerador foi retirado e o gate lê a fonte diretamente. Gemini permanece com seu
+shim atual. Alegações de descoberta Grok por cópia Claude não se aplicam à árvore
+atual; suporte não foi certificado. Modelo Claude dentro do Copilot usa o harness
+selecionado e não exige o adaptador de Claude Code.
+
+Cliente corporativo, descoberta, nomes de ferramentas e invocação: NOT_RUN.
+Procedimento, fontes oficiais e coleta sanitizada no
+[guia vigente](../playbooks/copilot-trabalho.md).

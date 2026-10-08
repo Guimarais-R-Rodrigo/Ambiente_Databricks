@@ -5,6 +5,7 @@ instalado, comece pelo [guia do produto](../../ambiente_databricks/.assistant/RE
 
 | Objetivo | Onde continuar |
 |---|---|
+| Preparar o clone individual com Copilot e Databricks | [Entrega local e pendências](execucao-adaptacao-trabalho-2026-10-08.md) |
 | Executar validação, render ou preparar pacote | [Ferramentas](../../tools/README.md) e [skills do mantenedor](../../.agents/skills/README.md) |
 | Entender espelho gerado e perfis de CI | [Saída gerada](saida-gerada.md) |
 | Avaliar arquivos da raiz e reorganizar ferramentas | [Diagnóstico e plano por sprints](organizacao-tools-raiz-workflows-2026-10-07.md) |

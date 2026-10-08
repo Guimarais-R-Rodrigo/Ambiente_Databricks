@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.1",
+  "revision": "2026-10-08.2",
   "entries": [
     {
       "path": "AGENTS.md",
@@ -8,18 +8,8 @@
       "role": "core",
       "owner": "docs/ai/README.md",
       "load_condition": "Entrada do projeto conforme cliente e configuração; descoberta nativa não certificada.",
-      "sha256": "3e634bf9ad65d518c66c535c486e60b10ae80c750894ea02f55e78a1497b0841",
-      "review_reason": "Retirada autorizada do localizador PLANO_HUB: referência da paleta migra ao CHANGELOG; mesmos invariantes e mecanismos, revisão própria A0 de contexto completo (ADR-0031).",
-      "shadows": []
-    },
-    {
-      "path": "CLAUDE.md",
-      "mechanism": "claude-instructions",
-      "role": "shim",
-      "owner": "docs/ai/README.md",
-      "load_condition": "Entrada do projeto conforme cliente e configuração; descoberta nativa não certificada.",
-      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
-      "review_reason": "Inventário inicial reconciliado com a arquitetura vigente; nenhuma nova entrada ativada.",
+      "sha256": "016a9f95af997c1baf761da7e9cb4998e6da496b35608975a4fc620a67b8df2a",
+      "review_reason": "ADR-0032: catálogo ampliado para oito skills; invariantes preservados; retirada de adaptador Claude autorizada pelo usuário.",
       "shadows": []
     },
     {
@@ -30,6 +20,26 @@
       "load_condition": "Entrada do projeto conforme cliente e configuração; descoberta nativa não certificada.",
       "sha256": "42fbbc9d55ee0d149c90e4bf93abe8b7278a5482b232be6f5bfc59cc0465e694",
       "review_reason": "Inventário inicial reconciliado com a arquitetura vigente; nenhuma nova entrada ativada.",
+      "shadows": []
+    },
+    {
+      "path": ".github/agents/planejador-hub.agent.md",
+      "mechanism": "copilot-custom-agent",
+      "role": "scoped-rule",
+      "owner": "docs/playbooks/copilot-trabalho.md",
+      "load_condition": "Seleção manual do agente no Copilot VS Code; cliente nativo NOT_RUN",
+      "sha256": "9810db9a98e6746e8401407fc82188953a60da681eec41e811d4527b28479f08",
+      "review_reason": "ADR-0032: ferramentas de leitura declaradas, sem modelo ou efeitos automáticos; A0 contexto completo",
+      "shadows": []
+    },
+    {
+      "path": ".github/agents/revisor-hub.agent.md",
+      "mechanism": "copilot-custom-agent",
+      "role": "scoped-rule",
+      "owner": "docs/playbooks/copilot-trabalho.md",
+      "load_condition": "Seleção manual do agente no Copilot VS Code; cliente nativo NOT_RUN",
+      "sha256": "b019d49fe00fc6e8b87ef2bd6eb798cab71f1504efa3d4f97bacad3ddd28a945",
+      "review_reason": "ADR-0032: ferramentas de leitura declaradas, sem modelo ou efeitos automáticos; A0 contexto completo",
       "shadows": []
     }
   ]

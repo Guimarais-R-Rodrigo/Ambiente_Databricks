@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "profile": "PREENCHER_PERFIL",
+  "expected_host": "https://workspace.example.invalid",
+  "development_root": "/Users/USUARIO_EXEMPLO/hub-dev",
+  "installation_root": "/Users/USUARIO_EXEMPLO/hub-pessoal"
+}

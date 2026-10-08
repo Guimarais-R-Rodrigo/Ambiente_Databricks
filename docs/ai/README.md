@@ -24,9 +24,9 @@ publicado no Databricks e não carregam referências automaticamente.
 
 ## Owners
 
-- [Catálogo do mantenedor](../../.agents/skills/README.md): exatamente cinco procedimentos
+- [Catálogo do mantenedor](../../.agents/skills/README.md): oito procedimentos
   desta camada. `revisar-docs-oficiais` continua proposta inexistente; consultar
-  fontes e manter registro não cria uma sexta skill.
+  fontes e manter registro não cria uma skill adicional.
 - [Política executável](../../tools/project_policy.py): nomes de skills e diretórios
   geridos do produto. Não usar as quantidades de campanhas antigas.
 - [Validador](../../tools/validate_assistant.py) e
@@ -42,7 +42,7 @@ publicado no Databricks e não carregam referências automaticamente.
 
 AGENTS contém invariantes; `context/` fornece contexto e observações separadas;
 `rules/` detalha condições de trabalho; `references/` distingue fontes oficiais
-de convenções; `templates/` contém quatro modelos parametrizados. As cinco skills
+de convenções; `templates/` contém quatro modelos parametrizados. As oito skills
 canônicas ficam em `.agents/skills/`, com automação em `tools/`. A árvore
 `ambiente_databricks/.assistant/` e a instrução irmã pertencem ao runtime.
 
@@ -66,13 +66,12 @@ das origens antigas é trabalho do integrador, após cobertura e consumidores.
 
 ## Guardas locais de manutenção
 
-`python tools/ai_controls.py --generate` faz o preflight de todos os destinos e
-manifesto antes da primeira escrita: tipo, ownership, hash anterior, symlinks
-(inclusive ancestrais) e hardlinks com `st_nlink > 1`. Um hardlink bloqueia o lote,
-inclusive quando liga dois outputs geridos. Preserve o nome e os bytes externos;
-não remova o vínculo alheio para contornar a falha. A proteção é local e não
-certifica contenção contra mudanças concorrentes de filesystem nem junctions
-Windows sem ensaio nesse host. `--check` continua somente leitura.
+`python tools/ai_controls.py --check` valida diretamente as skills canônicas,
+o núcleo, as entradas nativas e a rastreabilidade. O gerador de adaptadores foi
+retirado: `--generate` falha com diagnóstico de migração sem escrever.
+O [guia do trabalho](../playbooks/copilot-trabalho.md) orienta configuração,
+Copilot e instalação pessoal. A extensão e o transporte por CLI aguardam prova
+no cliente corporativo; configuração válida não equivale a instalação.
 
 O [inventário de entradas nativas](native-entries.json) classifica os candidatos
 AGENTS/override, CLAUDE/local, GEMINI e regras Markdown de famílias de clientes,
